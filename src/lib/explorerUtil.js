@@ -6,14 +6,25 @@ import { downloadSvg } from '../components/util/svg';
 
 export const DEFAULT_SOURCES = '';
 
-export const DEFAULT_COLLECTION = 9139487;
+export const DEFAULT_COLLECTION = 58722749;
 
-export const DEFAULT_COLLECTION_OBJECT_ARRAY = [{ id: DEFAULT_COLLECTION, tags_id: DEFAULT_COLLECTION, label: 'U.S. Top News' }];
+export const DEFAULT_COLLECTION_OBJECT_ARRAY = [{ id: DEFAULT_COLLECTION, tags_id: DEFAULT_COLLECTION, label: 'U.S. Top Online News 2017' }];
 
 export const PICK_COLLECTION = 0;
 export const PICK_SOURCE = 1;
 export const PICK_COUNTRY = 2;
 export const PICK_ADVANCED = 3;
+
+
+export const QUERY_LABEL_CHARACTER_LIMIT = 30;
+export const QUERY_LABEL_AUTOMAGIC_DISPLAY_LIMIT = 27;
+
+export const KEYWORD = 'q';
+export const MEDIA = 'media';
+export const DATES = ['startDate', 'endDate'];
+
+export const LEFT = 0;
+export const RIGHT = 1;
 
 export function generateQueryParamObject(query, skipEncoding) {
   return {
@@ -28,7 +39,7 @@ export function generateQueryParamObject(query, skipEncoding) {
 }
 
 export function generateQueryParamString(queries) {
-  const queriesForUrl = queries.map(generateQueryParamObject);
+  const queriesForUrl = queries.map(q => generateQueryParamObject(q, false));
   return JSON.stringify(queriesForUrl);
 }
 
@@ -67,8 +78,7 @@ export function queryChangedEnoughToUpdate(queries, nextQueries, results, nextRe
 }
 
 // TODO: implement this logic from Dashboard
-const MAX_QUERY_LABEL_LENGTH = 60;
-export const autoMagicQueryLabel = query => decodeURIComponent(trimToMaxLength(query.q, MAX_QUERY_LABEL_LENGTH));
+export const autoMagicQueryLabel = query => decodeURIComponent(trimToMaxLength(query.q, QUERY_LABEL_AUTOMAGIC_DISPLAY_LIMIT));
 
 
 // This handles samples or user-generated queries for you.  To handle quotes and utf and such, we do this

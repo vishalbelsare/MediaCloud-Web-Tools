@@ -4,6 +4,7 @@ from flask import jsonify, request
 import flask_login
 
 from server import app, TOOL_API_KEY
+from server.views import WORD_COUNT_DOWNLOAD_LENGTH
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, is_user_logged_in
 from server.util import csv
 from server.util.tags import is_metadata_tag_set, format_metadata_fields
@@ -23,7 +24,8 @@ logger = logging.getLogger(__name__)
 @api_error_handler
 def topic_media(topics_id):
     if access_public_topic(topics_id):
-        media_list = topic_media_list(TOOL_API_KEY, topics_id, snapshots_id=None, timespans_id=None, foci_id=None, sort=None, limit=None, link_id=None)
+        media_list = topic_media_list(TOOL_API_KEY, topics_id, snapshots_id=None, timespans_id=None, foci_id=None,
+                                      sort=None, limit=None, link_id=None)
     elif is_user_logged_in():
         media_list = topic_media_list(user_mediacloud_key(), topics_id)
     else:
@@ -52,7 +54,7 @@ def topic_media_csv(topics_id):
     sort = validated_sort(request.args.get('sort'))
     snapshots_id, timespans_id, foci_id, q = filters_from_args(request.args)
     return _stream_media_list_csv(user_mediacloud_key(), 'media', topics_id, sort=sort,
-        snapshots_id=snapshots_id, timespans_id=timespans_id, foci_id=foci_id, q=q)
+                                  snapshots_id=snapshots_id, timespans_id=timespans_id, foci_id=foci_id, q=q)
 
 
 @app.route('/api/topics/<topics_id>/media/<media_id>/sentences/count', methods=['GET'])
@@ -66,14 +68,13 @@ def topic_media_sentence_count(topics_id, media_id):
 @flask_login.login_required
 def topic_media_sentence_count_csv(topics_id, media_id):
     return stream_sentence_count_csv(user_mediacloud_key(), 'media-'+str(media_id)+'-sentence-counts',
-        topics_id, fq="media_id:"+media_id)
+                                     topics_id, fq="media_id:"+media_id)
 
 
 @app.route('/api/topics/<topics_id>/media/<media_id>/stories', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
 def media_stories(topics_id, media_id):
-    user_mc = user_admin_mediacloud_client()
     sort = validated_sort(request.args.get('sort'))
     limit = request.args.get('limit')
     stories = topic_story_list(user_mediacloud_key(), topics_id,
@@ -84,8 +85,7 @@ def media_stories(topics_id, media_id):
 @app.route('/api/topics/<topics_id>/media/<media_id>/stories.csv', methods=['GET'])
 @flask_login.login_required
 def media_stories_csv(topics_id, media_id):
-    timespans_id = request.args.get('timespanId')
-    q = request.args.get('q')
+    snapshots_id, timespans_id, foci_id, q = filters_from_args(request.args)
     return stream_story_list_csv(user_mediacloud_key(), 'media-'+media_id+'-stories', topics_id,
                                  media_id=media_id, timespans_id=timespans_id, q=q)
 
@@ -94,7 +94,6 @@ def media_stories_csv(topics_id, media_id):
 @flask_login.login_required
 @api_error_handler
 def media_inlinks(topics_id, media_id):
-    user_mc = user_admin_mediacloud_client()
     sort = validated_sort(request.args.get('sort'))
     limit = request.args.get('limit')
     inlinks = topic_story_list(user_mediacloud_key(), topics_id,
@@ -105,8 +104,7 @@ def media_inlinks(topics_id, media_id):
 @app.route('/api/topics/<topics_id>/media/<media_id>/inlinks.csv', methods=['GET'])
 @flask_login.login_required
 def media_inlinks_csv(topics_id, media_id):
-    timespans_id = request.args.get('timespanId')
-    q = request.args.get('q')
+    snapshots_id, timespans_id, foci_id, q = filters_from_args(request.args)
     return stream_story_list_csv(user_mediacloud_key(), 'media-'+media_id+'-inlinks', topics_id,
                                  link_to_media_id=media_id, timespans_id=timespans_id, q=q)
 
@@ -115,7 +113,6 @@ def media_inlinks_csv(topics_id, media_id):
 @flask_login.login_required
 @api_error_handler
 def media_outlinks(topics_id, media_id):
-    user_mc = user_admin_mediacloud_client()
     sort = validated_sort(request.args.get('sort'))
     limit = request.args.get('limit')
     outlinks = topic_story_list(user_mediacloud_key(), topics_id,
@@ -126,18 +123,14 @@ def media_outlinks(topics_id, media_id):
 @app.route('/api/topics/<topics_id>/media/<media_id>/outlinks.csv', methods=['GET'])
 @flask_login.login_required
 def media_outlinks_csv(topics_id, media_id):
-    timespans_id = request.args.get('timespanId')
-    q = request.args.get('q')
+    snapshots_id, timespans_id, foci_id, q = filters_from_args(request.args)
     return stream_story_list_csv(user_mediacloud_key(), 'media-'+media_id+'-outlinks', topics_id,
                                  link_from_media_id=media_id, timespans_id=timespans_id, q=q)
 
 
-
 def _stream_media_list_csv(user_mc_key, filename, topics_id, **kwargs):
-    '''
-    Helper method to stream a list of media back to the client as a csv.  Any args you pass in will be
-    simply be passed on to a call to topicMediaList.
-    '''
+    # Helper method to stream a list of media back to the client as a csv.  Any args you pass in will be
+    # simply be passed on to a call to topicMediaList.
     add_metadata = False  # off for now because this is SUPER slow
     all_media = []
     more_media = True
@@ -158,7 +151,7 @@ def _stream_media_list_csv(user_mc_key, filename, topics_id, **kwargs):
                     media_info = user_mc.media(media_item['media_id'])
                     for eachItem in media_info['media_source_tags']:
                         if is_metadata_tag_set(eachItem['tag_sets_id']):
-                            format_metadata_fields(media_item, eachItem['tag_sets_id'], eachItem['tag'])
+                            format_metadata_fields(media_item, eachItem)
 
             all_media = all_media + media_list
 
@@ -187,6 +180,7 @@ def media_words(topics_id, media_id):
 def media_words_csv(topics_id, media_id):
     query = add_to_user_query('media_id:'+media_id)
     ngram_size = request.args['ngram_size'] if 'ngram_size' in request.args else 1  # default to word count
-    word_counts = topic_ngram_counts(user_mediacloud_key(), topics_id, ngram_size=ngram_size, q=query)
+    word_counts = topic_ngram_counts(user_mediacloud_key(), topics_id, ngram_size=ngram_size, q=query,
+                                     num_words=WORD_COUNT_DOWNLOAD_LENGTH)
     return csv.stream_response(word_counts, WORD_COUNT_DOWNLOAD_COLUMNS,
                                'topic-{}-media-{}-sampled-ngrams-{}-word'.format(topics_id, media_id, ngram_size))

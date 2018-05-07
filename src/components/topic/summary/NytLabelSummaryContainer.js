@@ -28,9 +28,6 @@ const BUBBLES_TO_SHOW = 5;
 const localMessages = {
   title: { id: 'topic.summary.nytLabels.title', defaultMessage: 'Top Themes' },
   descriptionIntro: { id: 'topic.summary.nytLabels.help.title', defaultMessage: 'The top themes that stories within this Topic are about, as determined by our machine learning models trained on news media.' },
-  description: { id: 'topic.summary.nytLabels.help.text',
-    defaultMessage: '<p>This bubble chart shows you the top themes covered in the stories within this topic. This is useful as a high-level view of the themes the articles about.  We\'ve trained a set of machine learning models based on the <a target="_new" href="https://catalog.ldc.upenn.edu/ldc2008t19">Annotated NYT Corpus</a>.  This lets us take an article and have these models guess what themes the article is about.  We filter for themes that have the highest relevace scores, and tag each story with those themes.  This chart grabs a sample of those stories and counts the most commonly used themes.  Click the download button in the top right to download a full CSV showing the frequency of all the themes we found.</p>',
-  },
   notEnoughData: { id: 'topic.summary.nytLabels.notEnoughData',
     defaultMessage: 'Sorry, but only {pct} of the stories have been processed to add themes.  We can\'t gaurantee the accuracy of partial results, so we can\'t show a report of the top themes right now.  If you are really curious, you can download the CSV using the link in the top-right of this box, but don\'t trust those numbers as fully accurate. Email us if you want us to process this topic to add themes.',
   },
@@ -206,7 +203,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeDescribedDataCard(localMessages.descriptionIntro, localMessages.description)(
+      composeDescribedDataCard(localMessages.descriptionIntro, messages.nytThemeHelpDetails)(
         composeAsyncContainer(
           NytLabelSummaryContainer
         )

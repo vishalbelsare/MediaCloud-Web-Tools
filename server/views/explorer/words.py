@@ -4,15 +4,12 @@ import flask_login
 import json
 
 from server import app
+from server.views import WORD_COUNT_SAMPLE_SIZE, WORD_COUNT_DOWNLOAD_LENGTH, WORD_COUNT_UI_LENGTH
 from server.util.request import api_error_handler
 import server.util.csv as csv
 from server.views.explorer import parse_as_sample, parse_query_with_args_and_sample_search, parse_query_with_keywords, \
     load_sample_searches, file_name_for_download
 import server.views.explorer.apicache as apicache
-
-# load the shared settings file
-DEFAULT_NUM_WORDS = 100
-DEFAULT_SAMPLE_SIZE = 5000
 
 logger = logging.getLogger(__name__)
 
@@ -99,7 +96,7 @@ def api_explorer_demo_compare_words():
     return jsonify({"list": results})
 
 
-def query_wordcount(query, ngram_size=1, num_words=DEFAULT_NUM_WORDS, sample_size=DEFAULT_SAMPLE_SIZE):
+def query_wordcount(query, ngram_size=1, num_words=WORD_COUNT_UI_LENGTH, sample_size=WORD_COUNT_SAMPLE_SIZE):
     word_data = apicache.word_count(query, ngram_size, num_words, sample_size)
     # add in word2vec results
     words = [w['term'] for w in word_data]
@@ -113,8 +110,8 @@ def query_wordcount(query, ngram_size=1, num_words=DEFAULT_NUM_WORDS, sample_siz
 
 def stream_wordcount_csv(filename, query, ngram_size=1):
     # use bigger values for CSV download
-    num_words = 500
-    sample_size = 10000
+    num_words = WORD_COUNT_DOWNLOAD_LENGTH
+    sample_size = WORD_COUNT_SAMPLE_SIZE
     word_counts = query_wordcount(query, ngram_size, num_words, sample_size)
     for w in word_counts:
         w['sample_size'] = sample_size

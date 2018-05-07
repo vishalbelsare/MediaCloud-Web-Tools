@@ -9,18 +9,20 @@ from werkzeug.utils import secure_filename
 import csv as pycsv
 from multiprocessing import Pool
 
-from server import app, config
+from server import app, config, TOOL_API_KEY
 from server.util.config import ConfigException
 from server.auth import user_admin_mediacloud_client, user_mediacloud_key, user_name
 from server.util.request import json_error_response, form_fields_required, api_error_handler
 from server.views.sources.collection import allowed_file
 from server.views.sources import COLLECTIONS_TEMPLATE_PROPS_EDIT, COLLECTIONS_TEMPLATE_METADATA_PROPS
 from server.util.tags import VALID_METADATA_IDS, METADATA_PUB_COUNTRY_NAME, \
-    format_name_from_label, cached_tags_in_tag_set, media_with_tag
+    format_name_from_label, tags_in_tag_set, media_with_tag
+
 logger = logging.getLogger(__name__)
 
 MEDIA_UPDATE_POOL_SIZE = 15  # number of parallel processes to use while batch updating media sources
 MEDIA_METADATA_UPDATE_POOL_SIZE = 10  # number of parallel processes to use while batch updating media metadata
+
 
 @app.route('/api/collections/<collection_id>/update', methods=['POST'])
 @form_fields_required('name', 'description')
@@ -131,6 +133,11 @@ def _parse_sources_from_csv_upload(filepath):
                                    k, v in newline.items() if v not in ['', None]}
                 empties = {k: v for k, v in newline.items() if v in ['', None]}
 
+                # source urls have to start with the http, so add it if the user didn't
+                if newline_decoded['url'][:7] not in [u'http://', 'http://'] and \
+                                newline_decoded['url'][:8] not in [u'https://', 'https://']:
+                    newline_decoded['url'] = u'http://{}'.format(newline_decoded['url'])
+
                 if updatedSrc:
                     newline_decoded.update(empties)
                     sources_to_update.append(newline_decoded)
@@ -152,6 +159,11 @@ def _update_source_worker(source_info):
                          and k not in COLLECTIONS_TEMPLATE_METADATA_PROPS}
     response = user_mc.mediaUpdate(media_id, source_no_metadata_no_id)
     return response
+
+
+def _create_media_worker(media_list):
+    user_mc = user_admin_mediacloud_client()
+    return user_mc.mediaCreate(media_list)
 
 
 def _create_or_update_sources(source_list_from_csv, create_new):
@@ -178,7 +190,18 @@ def _create_or_update_sources(source_list_from_csv, create_new):
         for src in sources_to_create:
             sources_to_create_no_metadata.append(
                 {k: v for k, v in src.items() if k not in COLLECTIONS_TEMPLATE_METADATA_PROPS})
-        creation_responses = user_mc.mediaCreate(sources_to_create_no_metadata)
+        # parallelize media creation to make it faster
+        chunk_size = 5  # @ 10, each call takes over a minute; @ 5 each takes around ~40 secs
+        media_to_create_batches = [sources_to_create_no_metadata[x:x + chunk_size]
+                                   for x in xrange(0, len(sources_to_create_no_metadata), chunk_size)]
+        pool = Pool(processes=MEDIA_UPDATE_POOL_SIZE)  # process updates in parallel with worker function
+        creation_batched_responses = pool.map(_create_media_worker, media_to_create_batches)
+        creation_responses = []
+        for responses in creation_batched_responses:
+            creation_responses = creation_responses + responses
+        pool.terminate()  # extra safe garbage collection attemp
+        # creation_responses = user_mc.mediaCreate(sources_to_create_no_metadata)
+        # now group creation attempts by outcome
         for idx, response in enumerate(creation_responses):
             src = sources_to_create[idx]
             src['status'] = 'found and updated this source' if response['status'] == 'existing' else response['status']
@@ -195,7 +218,7 @@ def _create_or_update_sources(source_list_from_csv, create_new):
             results.append(src)
     # process all the entries we think are updates in parallel so it happens quickly
     if len(sources_to_update) > 0:
-        use_pool = False #causing a system exit 
+        use_pool = True
         if use_pool:
             pool = Pool(processes=MEDIA_UPDATE_POOL_SIZE)    # process updates in parallel with worker function
             update_responses = pool.map(_update_source_worker, sources_to_update)  # blocks until they are all done
@@ -271,7 +294,7 @@ def update_metadata_for_sources(source_list):
     for m in VALID_METADATA_IDS:
         mid = m.values()[0]
         mkey = m.keys()[0]
-        tag_codes = cached_tags_in_tag_set(mid)
+        tag_codes = tags_in_tag_set(TOOL_API_KEY, mid)
         for source in source_list:
             if mkey in source:
                 metadata_tag_name = source[mkey]
@@ -290,7 +313,7 @@ def update_metadata_for_sources(source_list):
     # now do all the tags in parallel batches so it happens quickly
     if len(tags) > 0:
         chunks = [tags[x:x + 50] for x in xrange(0, len(tags), 50)]  # do 50 tags in each request
-        use_pool = False
+        use_pool = True
         if use_pool:
             pool = Pool(processes=MEDIA_METADATA_UPDATE_POOL_SIZE )  # process updates in parallel with worker function
             pool.map(_tag_media_worker, chunks)  # blocks until they are all done

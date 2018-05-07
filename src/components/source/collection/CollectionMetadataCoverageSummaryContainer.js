@@ -41,8 +41,8 @@ const localMessages = {
 class CollectionMetadataCoverageSummaryContainer extends React.Component {
 
   downloadCsv = () => {
-    const { collectionId } = this.props;
-    const url = `/api/collections/${collectionId}/metadatacoverage.csv`;
+    const { collection } = this.props;
+    const url = `/api/collections/${collection.tags_id}/metadatacoverage.csv`;
     window.location = url;
   }
 
@@ -58,7 +58,7 @@ class CollectionMetadataCoverageSummaryContainer extends React.Component {
     } else {
       content = (
         <Row>
-          <Col lg={2}>
+          <Col lg={6}>
             <MetadataCoverageItem
               title={formatMessage(localMessages.pubCountryTitle)}
               sources={sources}
@@ -67,7 +67,7 @@ class CollectionMetadataCoverageSummaryContainer extends React.Component {
               notTaggedText={formatMessage(localMessages.pubCountryNotTagged)}
             />
           </Col>
-          <Col lg={2}>
+          <Col lg={6}>
             <MetadataCoverageItem
               title={formatMessage(localMessages.pubStateTitle)}
               sources={sources}
@@ -76,7 +76,7 @@ class CollectionMetadataCoverageSummaryContainer extends React.Component {
               notTaggedText={formatMessage(localMessages.pubStateNotTagged)}
             />
           </Col>
-          <Col lg={2}>
+          <Col lg={6}>
             <MetadataCoverageItem
               title={formatMessage(localMessages.pLanguageTitle)}
               sources={sources}
@@ -85,7 +85,7 @@ class CollectionMetadataCoverageSummaryContainer extends React.Component {
               notTaggedText={formatMessage(localMessages.pLanguageNotTagged)}
             />
           </Col>
-          <Col lg={2}>
+          <Col lg={6}>
             <MetadataCoverageItem
               title={formatMessage(localMessages.pCountryOfFocusTitle)}
               sources={sources}
@@ -94,7 +94,7 @@ class CollectionMetadataCoverageSummaryContainer extends React.Component {
               notTaggedText={formatMessage(localMessages.pCountryOfFocusNotTagged)}
             />
           </Col>
-          <Col lg={2}>
+          <Col lg={6}>
             <MetadataCoverageItem
               title={formatMessage(localMessages.mediaTypeTitle)}
               sources={sources}
@@ -130,9 +130,8 @@ CollectionMetadataCoverageSummaryContainer.propTypes = {
   // from state
   fetchStatus: PropTypes.string.isRequired,
   // from parent
-  collectionId: PropTypes.number.isRequired,
   collection: PropTypes.object.isRequired,
-  sources: PropTypes.array.isRequired,
+  sources: PropTypes.array,
   // from dispatch
   asyncFetch: PropTypes.func.isRequired,
   // from composition
@@ -140,10 +139,9 @@ CollectionMetadataCoverageSummaryContainer.propTypes = {
   helpButton: PropTypes.node.isRequired,
 };
 
-const mapStateToProps = (state, ownprops) => ({
-  fetchStatus: state.sources.collections.selected.collectionDetails.fetchStatus,
-  sources: ownprops.sources,
-  collection: state.sources.collections.selected.collectionDetails.object,
+const mapStateToProps = state => ({
+  fetchStatus: state.sources.collections.selected.collectionSourceList.fetchStatus,
+  sources: state.sources.collections.selected.collectionSourceList.sources,
 });
 
 const mapDispatchToProps = dispatch => ({

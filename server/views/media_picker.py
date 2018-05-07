@@ -6,7 +6,7 @@ from operator import itemgetter
 import time
 
 from server.cache import cache, key_generator
-from media_search import collection_search
+from media_search import collection_search, media_search
 from server import app, mc
 from server.auth import user_has_auth_role, ROLE_MEDIA_EDIT
 from server.util.tags import VALID_COLLECTION_TAG_SETS_IDS
@@ -16,25 +16,9 @@ from server.util.tags import cached_media_with_tag_page
 
 logger = logging.getLogger(__name__)
 
-MAX_SOURCES = 20
 MAX_COLLECTIONS = 20
 MEDIA_SEARCH_POOL_SIZE = len(VALID_COLLECTION_TAG_SETS_IDS)
 STORY_COUNT_POOL_SIZE = 20  # number of parallel processes to use while fetching historical sentence counts for sources
-
-
-def source_details_worker(info):
-    # getting media health is super fast, so we don't even need to cache it
-    health = mc.mediaHealth(info['media_id'])  # this has aggregate story counts to use instead of querying for them
-    weekly_story_count = 0 if len(health) is 0 else int(health['num_stories_w']) # sometimes health is an empty list - WTF
-    collection_info = {
-        'media_id': info['media_id'],
-        'label': info['name'],
-        'name': info['name'],
-        'url': info['url'],
-        'public_notes': info['public_notes'],
-        'weekly_story_count': weekly_story_count,
-    }
-    return collection_info
 
 
 @app.route('/api/mediapicker/sources/search', methods=['GET'])
@@ -42,30 +26,12 @@ def source_details_worker(info):
 @arguments_required('media_keyword')
 @api_error_handler
 def api_mediapicker_source_search():
-    t0 = time.time()
-    use_pool = True
     search_str = request.args['media_keyword']
     cleaned_search_str = None if search_str == '*' else search_str
     tags = None
     if 'tags' in request.args:
         tags = request.args['tags'].split(',')
-    t1 = time.time()
-    matching_sources = mc.mediaList(name_like=cleaned_search_str, tags_id=tags, rows=MAX_SOURCES)
-    t2 = time.time()
-    if use_pool:
-        pool = Pool(processes=STORY_COUNT_POOL_SIZE)
-        matching_sources = pool.map(source_details_worker, matching_sources)
-        pool.close()
-    else:
-        matching_sources = [source_details_worker(s) for s in matching_sources]
-    t3 = time.time()
-    matching_sources = sorted(matching_sources, key=itemgetter('weekly_story_count'), reverse=True)
-    t4 = time.time()
-    logger.debug("total: {}".format(t4 - t0))
-    logger.debug("  load: {}".format(t1-t0))
-    logger.debug("  search: {}".format(t2 - t1))
-    logger.debug("  source_health: {}".format(t3 - t2))
-    logger.debug("  sort: {}".format(t4 - t3))
+    matching_sources = media_search(cleaned_search_str, tags)
     return jsonify({'list': matching_sources})
 
 

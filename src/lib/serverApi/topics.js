@@ -1,11 +1,15 @@
 import { createApiPromise, createPostingApiPromise, acceptParams } from '../apiUtil';
 
-export function topicsList(linkId) {
-  return createApiPromise('/api/topics/listFilterCascade', linkId ? { linkId } : undefined);
+export function topicsPersonalList(linkId) {
+  return createApiPromise('/api/topics/personal', linkId ? { linkId } : undefined);
 }
 
 export function topicsPublicList() {
-  return createApiPromise('/api/topics/list');
+  return createApiPromise('/api/topics/public');
+}
+
+export function topicsFavoriteList() {
+  return createApiPromise('/api/topics/favorites');
 }
 
 export function topicsAdminList() {

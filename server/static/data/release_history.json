@@ -1,6 +1,423 @@
 {
   "releases": [
     {
+      "date": "2018-05-02",
+      "version": "v2.9.1",
+      "notes": [
+        {
+          "apps": ["explorer", "topics"],
+          "type": "Feature",
+          "note": "Warn people that <a href=\"https://mediacloud.org/news/2018/4/12/switching-to-story-based-searching-on-may-12th\" target=\"_new\">we are switching to story-based searches</a>."
+        },
+        {
+          "apps": ["topics"],
+          "type": "Fix",
+          "note": "Fix shortcut that lets you seach a Topic in Explorer."
+        },
+        {
+          "apps": ["sources", "explorer", "topics"],
+          "type": "Fix",
+          "note": "Use the same word-count, and tag-count, sample sizes everywhere."
+        },
+        {
+          "apps": ["sources"],
+          "type": "Fix",
+          "note": "You can import sources from one collection into another again."
+        }
+      ]
+    },
+    {
+      "date": "2018-04-27",
+      "version": "v2.9.0",
+      "notes": [
+        {
+          "apps": ["explorer", "topics"],
+          "type": "Feature",
+          "note": "Link to list of <a href=\"https://mediacloud.org/support/theme-list\">the 600 themes</a> we code for."
+        },
+        {
+          "apps": ["sources"],
+          "type": "Fix",
+          "note": "Clarify attention chart on collection page."
+        },
+        {
+          "apps": ["sources", "explorer", "topics"],
+          "type": "Feature",
+          "note": "Update default collection to new Pew US Mainstream list for 2017."
+        },
+        {
+          "apps": ["topics", "explorer"],
+          "type": "Fix",
+          "note": "Remove some confusing internal data from story list CSV download."
+        },
+        {
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Layout and text improvements on word comparison chart."
+        },
+        {
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Speedup on showing languaeg results in Explorer."
+        },
+        {
+          "apps": ["topics"],
+          "type": "Fix",
+          "note": "Re-organized topic homepage to load faster."
+        }        
+      ]
+    },
+    {
+      "date": "2018-04-25",
+      "version": "v2.8.1",
+      "notes": [
+        {
+          "apps": ["topics"],
+          "type": "Fix",
+          "note": "Downloading topic story lists works again, and includes more data."
+        },
+        {
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Better explanatory text next to visualizations in Explorer."
+        },
+        {
+          "apps": ["sources", "explorer", "topics"],
+          "type": "Fix",
+          "note": "Updated our featured collections to be more current."
+        },
+        {
+          "apps": ["topics"],
+          "type": "Fix",
+          "note": "Picking media sources and collections while creating a topic works better."
+        }
+      ]
+    },
+    {
+      "date": "2018-04-19",
+      "version": "v2.8.0",
+      "notes": [
+        {
+          "apps": ["sources", "explorer"],
+          "type": "Feature",
+          "note": "Sources now show the number of stories per day, and the date of the first story."
+        },
+        {
+          "apps": ["sources"],
+          "type": "Feature",
+          "note": "New screen to help admins review sources within a collection."
+        },
+        {
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Changed 'Sample Stories' to 'Random Stories' to clarify what is on the list."
+        },
+        {
+          "apps": ["explorer"],
+          "type": "Feature",
+          "note": "Story list download CSV now includes the themes detected."
+        }
+      ]
+    },
+    {
+      "date": "2018-04-06",
+      "version": "v2.7.6",
+      "notes": [
+        {
+          "apps": ["sources", "topics"],
+          "type": "Feature",
+          "note": "New Source Manager & Topic Mapper homepage sections try to explain what they do better."
+        },
+        {
+          "apps": ["sources", "explorer"],
+          "type": "Feature",
+          "note": "Better list of featured collections.",
+          "details": "The list of featured collections that see on the Source Manager homepage, and when picking media, was getting a bit stale.  We've updated that list to include more recent collections, and to help you get a sense of what is available for you to use in Media Cloud."
+        },
+        {
+          "apps": ["sources"],
+          "type": "Feature",
+          "note": "Now Source Manager menu item to see all of our geographic collections."
+        },
+        {
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Trying to add media to an Explorer query no longer resets the keywords."
+        },
+        {
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Demo Explorer searches default to the past month now (instead of the past two weeks)."
+        },
+        {
+          "apps": ["sources"],
+          "type": "Fix",
+          "note": "The source page in Source Manager now shows story counts over the last year.",
+          "details": "This is a better way to understand if a source is current or not."
+        }
+      ]
+    },
+    {
+      "date": "2018-04-04",
+      "version": "v2.7.5",
+      "notes": [
+        {
+          "apps": ["sources"],
+          "type": "Fix",
+          "note": "You can the sources in a collection again."
+        },
+        {
+          "apps": ["sources"],
+          "type": "Fix",
+          "note": "Collections now show public/private status correctly."
+        }
+      ]
+    },
+    {
+      "date": "2018-03-27",
+      "version": "v2.7.3",
+      "notes": [
+        {
+          "apps": ["topics"],
+          "type": "Fix",
+          "note": "Better feedback about min/max sizes while creating topics."
+        },
+        {
+          "apps": ["sources"],
+          "type": "Feature",
+          "note": "Redid the source and collection homepages."
+        }
+      ]
+    },
+    {
+      "date": "2018-03-26",
+      "version": "v2.7.2",
+      "notes": [
+        {
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Support multiple quoted phrases in searches."
+        },
+        {
+          "apps": ["topics"],
+          "type": "Fix",
+          "note": "Better feedback when a topic you create is in the queue to run.",
+          "details": "This is not an error; you're just in line behind some other topics to run.  The note at the top tells you details about that."
+        }
+      ]
+    },
+    {
+      "date": "2018-03-26",
+      "version": "v2.7.1",
+      "notes": [
+        {
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Update sample searches and example images."
+        }
+      ]
+    },
+    {
+      "date": "2018-03-25",
+      "version": "v2.7.0",
+      "notes": [
+        {
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Sped up source searching."
+        },
+        {
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Fixed default collection names on new Explorer queries."
+        },
+        {
+          "apps": ["topics"],
+          "type": "Feature",
+          "note": "Add option to view topic in Explorer to Topic control bar."
+        },
+        {
+          "apps": ["sources"],
+          "type": "Feature",
+          "note": "List geographic collections by country.",
+          "details": "Visit the Source Manager, then click the menu and select the 'Browse Geographic Collections' menu option."
+        },
+        {
+          "apps": ["sources"],
+          "type": "Fix",
+          "note": "Speed up uploading a CSV of sources to a collection."
+        },
+        {
+          "apps": ["sources"],
+          "type": "Fix",
+          "note": "Link from source/collection page to Explorer, not Dashboard."
+        },
+        {
+          "apps": ["sources"],
+          "type": "Fix",
+          "note": "Automatically add http:// to source urls when uploaded in CSV."
+        },
+        {
+          "apps": ["sources"],
+          "type": "Fix",
+          "note": "Add stories per week to source detail page.",
+          "details": "This is really helpful if you are trying to find the most useful sources in our system."
+        },
+        {
+          "apps": ["sources"],
+          "type": "Fix",
+          "note": "Remove misleading source health indications.",
+          "details": "The health measurement was based on some math about average stories per week that didn't work well.  Until we come up with a better solution we have removed that for now, so you're not told a source is 'unhealthy' when in fact it is working quite well."
+        }
+      ]
+    },
+    {
+      "date": "2018-03-19",
+      "version": "v2.6.0",
+      "notes": [
+        { 
+          "apps": ["topics"],
+          "type": "Fix",
+          "note": "Media stories/inlinks/outlinks are downloadable again."
+        },
+        { 
+          "apps": ["explorer"],
+          "type": "Feature",
+          "note": "Allow you to copy keywords/date/media to all queries."
+        },
+        { 
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Return more results while searching for sources."
+        },
+        { 
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Faster langauge results when comparing multiple queries."
+        },
+        { 
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Better cursor when clicking a day on the attention over time chart."
+        },
+        { 
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Force short query names so the UI doesn't wrap weirdly."
+        },
+        { 
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Consistent text when renaming queries."
+        },
+        { 
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Better summaries on the little query tabs about sources/collections."
+        },
+        { 
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "When you add a new query it copies the date from the last one."
+        },
+        { 
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Lets you edit query names after adding new queries."
+        }        
+      ]
+    },
+    {
+      "date": "2018-03-16",
+      "version": "v2.5.1",
+      "notes": [
+        { 
+          "apps": ["sources"],
+          "type": "Fix",
+          "note": "Users can save new collections again."
+        }
+      ]
+    },
+    {
+      "date": "2018-03-12",
+      "version": "v2.5.0",
+      "notes": [
+        { 
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Click on a point on the attention chart to see more details.",
+          "details": "This replicates a feature we used to have on the Dashboard tool.  Click a data point on an Explorer attention chart and you'll see a sample of stories and a word cloud for just that time period.  This can help you identify what happened on a specific day."
+        },
+        { 
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Comparative word cloud now reloads after new search is run."
+        },
+        { 
+          "apps": ["explorer", "topics"],
+          "type": "Feature",
+          "note": "Theme charts are now normalized so they aren't misleading.",
+          "details": "Sometimes the bubbles were really big, even though the number of stories with a certain theme were quite small.  We're now showing these as a ratio on top of a grey circle that represents the total number of stories, so you won't be misled by a big bubble only showing a small quantity.  This also helps compare theme results across different Explorer searches."
+        },
+        { 
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Theme downloads now work for multiple queries."
+        },
+        { 
+          "apps": ["explorer", "topics", "sources"],
+          "type": "Feature",
+          "note": "New release notes menu and webpage to show recent changes."
+        },
+        { 
+          "apps": ["sources"],
+          "type": "Feature",
+          "note": "Created <a href=\"https://github.com/mitmedialab/MediaCloud-Web-Tools/blob/master/doc/collections-csv-data-dictonary.md\">a data-dictionary</a> to document the collections CSV file format."
+        },
+        { 
+          "apps": ["explorer"],
+          "type": "Feature",
+          "note": "You can now search in all Media Cloud sources, even though this is a bad idea.",
+          "details": "Our collection of media sources is closely aligned with topics we have researched before, and doesn't represent a balanced list of media sources that represent the media ecosystem online. For instance, because we have done deep research on gender and reproductive rights, we have an over-representation of blogs and media outlets that cover those issues. The same is true for public health and international development. You should try to avoid searching all sources. Click 'Add Media' and pick some specific sources, or country-based collections to localize your search and get more representative results."
+        },
+        { 
+          "apps": ["topics"],
+          "type": "Fix",
+          "note": "Maps and entity lists now work for larger topics."
+        },
+        { 
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Fix reloading explorer results pages."
+        },
+        { 
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Save search button now works in Firefox."
+        },
+        { 
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Better handling of unicode file names."
+        },
+        { 
+          "apps": ["sources"],
+          "type": "Fix",
+          "note": "Reduce jumpiness of source search autocomplete."
+        },
+        { 
+          "apps": ["sources"],
+          "type": "Fix",
+          "note": "Listing geographic collections and metadata is much faster."
+        },
+        { 
+          "apps": ["sources"],
+          "type": "Fix",
+          "note": "Fixed link to Sources app on the Tools page."
+        }
+      ]
+    },
+    {
       "date": "2018-03-04",
       "version": "v2.4.10",
       "notes": [

@@ -3,6 +3,8 @@ import React from 'react';
 import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl';
 import ReactHighcharts from 'react-highcharts';
 import initHighcharts from './initHighcharts';
+import { getBrandDarkColor } from '../../styles/colors';
+import { getVisDate } from '../../lib/dateUtil';
 
 initHighcharts();
 
@@ -19,7 +21,7 @@ const localMessages = {
   tooltipText: { id: 'chart.sentencesOverTime.tooltipText', defaultMessage: 'Average {count} {count, plural, =1 {sentence} other {sentences} }/day' },
   seriesTitle: { id: 'chart.sentencesOverTime.seriesTitle', defaultMessage: 'avg sentences/day' },
   totalCount: { id: 'chart.sentencesOverTime.totalCount',
-    defaultMessage: 'We have collected {total, plural, =0 {No sentences} one {One sentence} other {{formattedTotal} sentences} }.',
+    defaultMessage: 'We have collected {total, plural, =0 {No sentences} one {One sentence} other {{formattedTotal} sentences}}.',
   },
 };
 
@@ -33,6 +35,7 @@ class AttentionOverTimeChart extends React.Component {
     const { formatMessage, formatNumber } = this.props.intl;
     const config = {
       title: formatMessage(localMessages.chartTitle),
+      lineColor: getBrandDarkColor(),
       chart: {
         type: 'spline',
         zoomType: 'x',
@@ -64,6 +67,12 @@ class AttentionOverTimeChart extends React.Component {
           const rounded = formatNumber(this.y, { style: 'decimal', maximumFractionDigits: 2 });
           const seriesName = this.series.name ? formatMessage(localMessages.tooltipSeriesName, { name: this.series.name }) : '';
           const val = formatMessage(localMessages.tooltipText, { count: rounded });
+          const thisDate = getVisDate(new Date(this.category));
+          const nextDate = getVisDate(new Date(this.category + this.series.pointInterval));
+          const intervalDays = this.series.pointInterval / SECS_PER_DAY;
+          if (intervalDays > 1) {
+            this.series.tooltipOptions.xDateFormat = `Date Range: ${thisDate} to ${nextDate}`;
+          }
           return (`${seriesName}<br/>${val}`);
         },
       },
@@ -83,6 +92,7 @@ class AttentionOverTimeChart extends React.Component {
     // setup up custom chart configuration
     const config = this.getConfig();
     config.chart.height = height;
+    let classNameForPath = 'sentences-over-time-chart';
     if (filename !== undefined) {
       config.exporting.filename = filename;
     } else {
@@ -90,6 +100,9 @@ class AttentionOverTimeChart extends React.Component {
     }
     if ((health !== null) && (health !== undefined)) {
       config.xAxis.plotLines = health.map(h => ({ className: 'health-plot-line', ...h }));
+    }
+    if ((lineColor !== null) && (lineColor !== undefined)) {
+      config.lineColor = lineColor;
     }
     if (onDataPointClick) {
       config.plotOptions.series.allowPointSelect = true;
@@ -105,6 +118,7 @@ class AttentionOverTimeChart extends React.Component {
           },
         },
       };
+      classNameForPath = 'sentences-over-time-chart-with-node-info';
     }
     let allSeries = null;
     if (data !== undefined) {
@@ -118,7 +132,7 @@ class AttentionOverTimeChart extends React.Component {
       allSeries = [{
         id: 0,
         name: filename,
-        color: lineColor,
+        color: config.lineColor,
         data: values,
         pointStart: dates[0],
         pointInterval: intervalMs,
@@ -143,7 +157,7 @@ class AttentionOverTimeChart extends React.Component {
     }
     // render out the chart
     return (
-      <div className="sentences-over-time-chart">
+      <div className={classNameForPath}>
         {totalInfo}
         <ReactHighcharts config={config} />
       </div>

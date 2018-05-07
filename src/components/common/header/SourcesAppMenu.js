@@ -13,7 +13,7 @@ import { getAppName } from '../../../config';
 import { getUserRoles, hasPermissions, PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
 
 const localMessages = {
-  menuTitle: { id: 'sources.menu.title', defaultMessage: 'Sources' },
+  menuTitle: { id: 'sources.menu.title', defaultMessage: 'Source Manager' },
   home: { id: 'sources.menu.items.home', defaultMessage: 'Sources Home' },
   newCollection: { id: 'sources.menu.items.newCollection', defaultMessage: 'Create a Collection' },
   search: { id: 'sources.menu.items.search', defaultMessage: 'Search Sources and Collections' },
@@ -66,6 +66,12 @@ const SourcesAppMenu = (props) => {
       <Menu>
         <MenuItem onClick={() => { props.handleItemClick('home', true); }}>
           <FormattedMessage {...messages.home} />
+        </MenuItem>
+        <MenuItem onClick={() => { props.handleItemClick('collections/country-and-state', true); }}>
+          <FormattedMessage {...localMessages.geographicCollections} />
+        </MenuItem>
+        <MenuItem onClick={() => { props.handleItemClick('collections/media-cloud', true); }}>
+          <FormattedMessage {...localMessages.otherCollections} />
         </MenuItem>
         <MenuItem onClick={() => { props.handleItemClick('search', true); }}>
           <FormattedMessage {...messages.search} />

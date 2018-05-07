@@ -9,6 +9,12 @@ export default new Config().extend('config/webpack.base.config.babel.js').merge(
 
   devtool: 'cheap-module-source-map',
 
+  entry: {
+    app_js: [
+      'babel-polyfill',
+    ],
+  },
+
   bail: true, // stop after the first error
 
   module: {

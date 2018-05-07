@@ -3,11 +3,12 @@ from flask import request, jsonify
 import flask_login
 
 from server import app, TOOL_API_KEY
+from server.views import WORD_COUNT_DOWNLOAD_LENGTH
 import server.util.csv as csv
 from server.util.request import api_error_handler
 from server.auth import user_mediacloud_key, is_user_logged_in
 from server.views.topics.sentences import stream_sentence_count_csv
-from server.views.topics.stories import stream_story_list_csv
+
 from server.views.topics.apicache import topic_word_counts, topic_story_list, topic_sentence_counts, \
     topic_sentence_sample, add_to_user_query, WORD_COUNT_DOWNLOAD_COLUMNS, topic_ngram_counts
 from server.views.topics import access_public_topic
@@ -56,7 +57,8 @@ def topic_words(topics_id):
 def topic_words_csv(topics_id):
     query = add_to_user_query(None)
     ngram_size = request.args['ngram_size'] if 'ngram_size' in request.args else 1  # default to word count
-    word_counts = topic_ngram_counts(user_mediacloud_key(), topics_id, ngram_size=ngram_size, q=query)
+    word_counts = topic_ngram_counts(user_mediacloud_key(), topics_id, ngram_size=ngram_size, q=query,
+                                     num_words=WORD_COUNT_DOWNLOAD_LENGTH)
     return csv.stream_response(word_counts, WORD_COUNT_DOWNLOAD_COLUMNS,
                                'topic-{}-sampled-ngrams-{}-word'.format(topics_id, ngram_size))
 

@@ -33,6 +33,8 @@ const CollectionForm = (props) => {
       <CollectionMediaForm
         initialValues={initialValues}
         submitButton={submitButton}
+        sources={initialValues.sources}
+        enableReinitialize
       />
     );
   } else {

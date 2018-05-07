@@ -11,8 +11,8 @@ const RecentNewsItem = props => (
         <span className={`news-type news-${props.item.type.toLowerCase()}`}>{props.item.type}</span>
       </Col>
       <Col lg={8}>
-        {props.item.note}
-        <small>{props.item.details}</small>
+        <span dangerouslySetInnerHTML={{ __html: props.item.note }} />
+        <small dangerouslySetInnerHTML={{ __html: props.item.details }} />
       </Col>
       <Col lg={1}>
         <span className="item-app-list">

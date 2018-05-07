@@ -10,13 +10,14 @@ import messages from '../../../resources/messages';
 import QueryForm from './QueryForm';
 import AppButton from '../../common/AppButton';
 import ItemSlider from '../../common/ItemSlider';
+import StorySwitchoverNotice from '../../common/StorySwitchoverNotice';
 import QueryPickerItem from './QueryPickerItem';
 import { updateFeedback } from '../../../actions/appActions';
 import QueryHelpDialog from '../../common/help/QueryHelpDialog';
-import { selectQuery, updateQuery, addCustomQuery, loadUserSearches, saveUserSearch, deleteUserSearch, markAsDeletedQuery } from '../../../actions/explorerActions';
+import { selectQuery, updateQuery, addCustomQuery, loadUserSearches, saveUserSearch, deleteUserSearch, markAsDeletedQuery, copyAndReplaceQueryField } from '../../../actions/explorerActions';
 import { AddQueryButton } from '../../common/IconButton';
-import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
-import { DEFAULT_COLLECTION_OBJECT_ARRAY, autoMagicQueryLabel, generateQueryParamString } from '../../../lib/explorerUtil';
+import { getDateRange, solrFormat, PAST_MONTH } from '../../../lib/dateUtil';
+import { DEFAULT_COLLECTION_OBJECT_ARRAY, autoMagicQueryLabel, generateQueryParamString, KEYWORD, DATES, MEDIA } from '../../../lib/explorerUtil';
 
 const localMessages = {
   mainTitle: { id: 'explorer.querypicker.mainTitle', defaultMessage: 'Query List' },
@@ -40,7 +41,8 @@ class QueryPicker extends React.Component {
     }
   } */
   addAQuery(newQueryObj) {
-    const { addAQuery } = this.props;
+    const { addAQuery, selected } = this.props;
+    this.handleSelectedQueryChange(selected, selected.index);
     addAQuery(newQueryObj);
   }
   focusRequested = field => field.focus();
@@ -56,8 +58,11 @@ class QueryPicker extends React.Component {
   }
   // called by query picker to update things like label or color
   updateQueryProperty(query, propertyName, newValue) {
-    const { updateCurrentQuery } = this.props;
-    const updatedQuery = { ...query };
+    const { updateCurrentQuery, formQuery } = this.props;
+    const updatedQuery = {
+      ...query,
+      ...formQuery,
+    };
     updatedQuery[propertyName] = newValue;
     if (propertyName === 'label') { // no longer auto-name query if the user has intentionally changed it
       updatedQuery.autoNaming = false;
@@ -71,11 +76,13 @@ class QueryPicker extends React.Component {
 
   handleColorChange = (newColorInfo) => {
     // when user changes color we want to change it on all charts right away
-    const { selected, updateCurrentQuery } = this.props;
+    const { selected, formQuery, updateCurrentQuery } = this.props;
     const updatedQuery = {
       ...selected,
+      ...formQuery,
       color: newColorInfo.value,
     };
+    // this.handleSelectedQueryChange(selected, selected.index);
     updateCurrentQuery(updatedQuery, 'color');
   }
   handleMediaDelete = (toBeDeletedObj) => {
@@ -96,8 +103,11 @@ class QueryPicker extends React.Component {
 
   handleMediaChange = (sourceAndCollections) => {
     // the user has picked new sources and/or collections so we need to save in order to update the list onscreen
-    const { selected, updateCurrentQueryThenReselect } = this.props;
-    const updatedQuery = { ...selected };
+    const { selected, formQuery, updateCurrentQueryThenReselect } = this.props;
+    const updatedQuery = {
+      ...selected,
+      ...formQuery,
+    };
     const updatedSources = sourceAndCollections.filter(m => m.type === 'source' || m.media_id);
     const updatedCollections = sourceAndCollections.filter(m => m.type === 'collection' || m.tags_id);
     updatedQuery.collections = updatedCollections;
@@ -172,7 +182,7 @@ class QueryPicker extends React.Component {
   }
 
   render() {
-    const { isLoggedIn, selected, queries, isEditable, handleLoadUserSearches, handleLoadSelectedSearch, handleDeleteUserSearch, savedSearches } = this.props;
+    const { isLoggedIn, selected, queries, isEditable, handleLoadUserSearches, handleLoadSelectedSearch, handleDeleteUserSearch, savedSearches, handleCopyAll } = this.props;
     const { formatMessage } = this.props.intl;
     let queryPickerContent; // editable if demo mode
     let queryFormContent; // hidden if demo mode
@@ -204,7 +214,13 @@ class QueryPicker extends React.Component {
       // provide the add Query button, load with default values when Added is clicked
       if (isLoggedIn || isEditable) {
         const colorPallette = idx => d3.schemeCategory10[idx % 10];
-        const dateObj = getPastTwoWeeksDateRange();
+        const dateObj = getDateRange(PAST_MONTH);
+        dateObj.start = solrFormat(dateObj.start);
+        dateObj.end = solrFormat(dateObj.end);
+        if (unDeletedQueries.length > 0) {
+          dateObj.start = unDeletedQueries[unDeletedQueries.length - 1].startDate;
+          dateObj.end = unDeletedQueries[unDeletedQueries.length - 1].endDate;
+        }
         const newIndex = queries.length; // all queries, including 'deleted' ones
         const genDefColor = colorPallette(newIndex);
         const newQueryLabel = `Query ${String.fromCharCode('A'.charCodeAt(0) + newIndex)}`;
@@ -285,8 +301,10 @@ class QueryPicker extends React.Component {
             handleLoadSelectedSearch={handleLoadSelectedSearch}
             handleSaveSearch={l => this.saveThisSearch(l)}
             handleDeleteSearch={l => handleDeleteUserSearch(l)}
+            handleCopyAll={property => handleCopyAll(property, selected, queries)}
             isEditable={canSelectMedia}
             focusRequested={this.focusRequested}
+            // TODO change to on
           />
         );
       }
@@ -296,6 +314,9 @@ class QueryPicker extends React.Component {
         <div>
           {queryPickerContent}
           {queryFormContent}
+          <Grid>
+            <StorySwitchoverNotice />
+          </Grid>
         </div>
       );
     }
@@ -324,6 +345,7 @@ QueryPicker.propTypes = {
   sendAndSaveUserSearch: PropTypes.func.isRequired,
   handleDeleteUserSearch: PropTypes.func.isRequired,
   handleDeleteQuery: PropTypes.func.isRequired,
+  handleCopyAll: PropTypes.func.isRequired,
   updateOneQuery: PropTypes.func.isRequired,
   // from parent
   isEditable: PropTypes.bool.isRequired,
@@ -364,6 +386,23 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       dispatch(addCustomQuery(query));
       dispatch(selectQuery(query));
     }
+  },
+  handleCopyAll: (whichFilter, selected, queries) => {
+    // formQuery
+    let field = null;
+    if (whichFilter === KEYWORD) {
+      field = { q: selected[whichFilter] };
+    } else if (whichFilter === DATES) {
+      field = { startDate: selected.startDate, endDate: selected.endDate };
+    } else if (whichFilter === MEDIA) {
+      field = { collections: selected.collections, sources: selected.sources };
+    }
+    queries.map((query) => {
+      if (selected.index !== query.index) {
+        return dispatch(copyAndReplaceQueryField({ whichFilter, index: query.index, field }));
+      }
+      return null;
+    });
   },
   handleLoadUserSearches: () => {
     dispatch(loadUserSearches());

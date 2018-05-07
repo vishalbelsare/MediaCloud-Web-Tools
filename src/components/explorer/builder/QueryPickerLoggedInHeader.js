@@ -6,26 +6,31 @@ import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
 import ColorPicker from '../../common/ColorPicker';
+import messages from '../../../resources/messages';
+import { QUERY_LABEL_CHARACTER_LIMIT } from '../../../lib/explorerUtil';
 
+const localMessages = {
+  title: { id: 'explorer.querypicker.title', defaultMessage: 'Rename Query' },
+};
 
 class QueryPickerLoggedInHeader extends React.Component {
   render() {
     const { query, isDeletable, onColorChange, onDelete, onLabelEditRequest } = this.props;
-    // const { formatMessage } = this.props.intl;
+    const { formatMessage } = this.props.intl;
     let nameInfo = <div />;
     let menuChildren = null;
     let iconOptions = null;
     if (isDeletable()) { // if this is not the only QueryPickerItem
       menuChildren = (
         <div>
-          <MenuItem primaryText="Edit Query Label" onTouchTap={() => onLabelEditRequest()} />
-          <MenuItem primaryText="Delete" onTouchTap={() => onDelete(query)} />
+          <MenuItem primaryText={formatMessage(localMessages.title)} onTouchTap={() => onLabelEditRequest()} />
+          <MenuItem primaryText={formatMessage(messages.delete)} onTouchTap={() => onDelete(query)} />
         </div>
       );
     } else {
       menuChildren = (
         <div>
-          <MenuItem primaryText="Edit Query Label" onTouchTap={() => onLabelEditRequest()} />
+          <MenuItem primaryText={formatMessage(localMessages.title)} onTouchTap={() => onLabelEditRequest()} />
         </div>
       );
     }
@@ -40,7 +45,10 @@ class QueryPickerLoggedInHeader extends React.Component {
           {menuChildren}
         </IconMenu>
       );
-
+      let abbrevQuery = query.label;
+      if (abbrevQuery.length > QUERY_LABEL_CHARACTER_LIMIT) {
+        abbrevQuery = abbrevQuery.slice(0, QUERY_LABEL_CHARACTER_LIMIT).concat('...');
+      }
       if (query) {
         nameInfo = (
           <div>
@@ -51,7 +59,7 @@ class QueryPickerLoggedInHeader extends React.Component {
             <span
               className="query-picker-name"
             >
-              {query.label}
+              {abbrevQuery}
             </span>
             {iconOptions}
           </div>

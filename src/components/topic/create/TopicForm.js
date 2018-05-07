@@ -30,69 +30,80 @@ const localMessages = {
   SandC: { id: 'topic.create.sAndC', defaultMessage: 'Media' },
 };
 
-const TopicForm = (props) => {
-  const { topicId, onSubmit, handleSubmit, pristine, submitting, asyncValidating, initialValues, title, intro, mode, onMediaChange, onMediaDelete } = props;
-  const { formatMessage } = props.intl;
-  const emptyArray = initialValues.sourcesAndCollections ? initialValues.sourcesAndCollections : [];
-  let mediaPicker = null;
-  let mediaLabel = <label htmlFor="media"><FormattedMessage {...localMessages.SandC} /></label>;
-  mediaPicker = <MediaPickerDialog initMedia={emptyArray} onConfirmSelection={selections => onMediaChange(selections)} />;
-  mediaLabel = <label htmlFor="media"><FormattedMessage {...localMessages.selectSandC} /></label>;
+class TopicForm extends React.Component {
+  shouldComponentUpdate = (nextProps) => {
+    const { initialValues } = this.props;
+    return (initialValues.sourcesAndCollections !== nextProps.initialValues.sourcesAndCollections ||
+      initialValues !== nextProps.initialValues);
+  }
+  render() {
+    const { initialValues, topicId, onSubmit, handleSubmit, pristine, submitting, asyncValidating, title, intro, mode, onMediaChange } = this.props;
+    const { formatMessage } = this.props.intl;
+    const selectedMedia = initialValues.sourcesAndCollections ? initialValues.sourcesAndCollections : [];
+    let mediaPicker = null;
+    let mediaLabel = <label htmlFor="media"><FormattedMessage {...localMessages.SandC} /></label>;
+    mediaPicker = (
+      <MediaPickerDialog
+        initMedia={selectedMedia} // {selected.media ? selected.media : cleanedInitialValues.media}
+        onConfirmSelection={selections => onMediaChange(selections)}
+      />
+    );
+    mediaLabel = <label htmlFor="media"><FormattedMessage {...localMessages.selectSandC} /></label>;
 
-  return (
-    <form className="create-topic" name="topicForm" onSubmit={handleSubmit(onSubmit.bind(this))}>
-      <input type="hidden" name="topicId" value={topicId} />
-      <Row><Col lg={12}><hr /></Col></Row>
-      <Row>
-        <Col lg={10}>
-          <TopicDetailForm
-            initialValues={initialValues}
-            mode={mode}
-          />
-        </Col>
-        <Col lg={2}>
-          <a target="_new" href="http://bit.ly/creating-topics-guide">
-            <figure className="document-download">
-              <img alt={formatMessage(localMessages.downloadUserGuide)} src={assetUrl('/static/img/topic-mapper-user-guide.png')} height="160" />
-              <figcaption><FormattedMessage {...localMessages.downloadUserGuide} /></figcaption>
-            </figure>
-          </a>
-        </Col>
-      </Row>
-      <Row><Col lg={12}><hr /></Col></Row>
-      <Row><Col lg={6}>
-        <div className="media-field-wrapper">
-          {mediaLabel}
-          <SourceCollectionsMediaForm
-            title={title}
-            intro={intro}
-            className="query-field"
-            form="topicForm"
-            destroyOnUnmount={false}
-            name="sourcesAndCollections"
-            onDelete={onMediaDelete}
-            initialValues={initialValues.sourcesAndCollections}
-            allowRemoval
-          />
-          {mediaPicker}
-        </div>
-      </Col></Row>
-      <Row><Col lg={12}><hr /></Col></Row>
-      <Row>
-        <Col lg={12}>
-          <AppButton
-            style={{ marginTop: 30 }}
-            type="submit"
-            disabled={pristine || submitting || asyncValidating === true}
-            label={initialValues.buttonLabel}
-            primary
-          />
-        </Col>
-      </Row>
+    return (
+      <form className="create-topic" name="topicForm" onSubmit={handleSubmit(onSubmit.bind(this))}>
+        <input type="hidden" name="topicId" value={topicId} />
+        <Row><Col lg={12}><hr /></Col></Row>
+        <Row>
+          <Col lg={10}>
+            <TopicDetailForm
+              initialValues={initialValues}
+              mode={mode}
+            />
+          </Col>
+          <Col lg={2}>
+            <a target="_new" href="http://bit.ly/creating-topics-guide">
+              <figure className="document-download">
+                <img alt={formatMessage(localMessages.downloadUserGuide)} src={assetUrl('/static/img/topic-mapper-user-guide.png')} height="160" />
+                <figcaption><FormattedMessage {...localMessages.downloadUserGuide} /></figcaption>
+              </figure>
+            </a>
+          </Col>
+        </Row>
+        <Row><Col lg={12}><hr /></Col></Row>
+        <Row><Col lg={6}>
+          <div className="media-field-wrapper">
+            {mediaLabel}
+            <SourceCollectionsMediaForm
+              title={title}
+              intro={intro}
+              className="query-field"
+              form="topicForm"
+              destroyOnUnmount={false}
+              name="sourcesAndCollections"
+              initialValues={initialValues.sourcesAndCollections} // to and from MediaPicker
+              allowRemoval
+            />
+            {mediaPicker}
+          </div>
+        </Col></Row>
+        <Row><Col lg={12}><hr /></Col></Row>
+        <Row>
+          <Col lg={12}>
+            <AppButton
+              style={{ marginTop: 30 }}
+              type="submit"
+              disabled={pristine || submitting || asyncValidating === true}
+              label={initialValues.buttonLabel}
+              primary
+            />
+          </Col>
+        </Row>
 
-    </form>
-  );
-};
+      </form>
+    );
+  }
+}
 
 TopicForm.propTypes = {
   // from compositional chain
@@ -113,9 +124,8 @@ TopicForm.propTypes = {
   intro: PropTypes.string.isRequired,
   validate: PropTypes.func.isRequired,
   topicNameSearch: PropTypes.object,
-  mode: PropTypes.string.isRequired,  // one of the TOPIC_FORM_MODE_ constants - needed to show warnings while editing
+  mode: PropTypes.string.isRequired,
   onMediaChange: PropTypes.func.isRequired,
-  onMediaDelete: PropTypes.func.isRequired,
 };
 
 function validate(values, props) {

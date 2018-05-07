@@ -8,12 +8,14 @@ import composeIntlForm from '../../common/IntlForm';
 import AppButton from '../../common/AppButton';
 import ColorPicker from '../../common/ColorPicker';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
+import CopyAllComponent from '../../common/CopyAllComponent';
 import SourceCollectionsFieldList from '../../common/mediaPicker/SourceCollectionsFieldList';
 import MediaPickerDialog from '../../common/mediaPicker/MediaPickerDialog';
 import QueryHelpDialog from '../../common/help/QueryHelpDialog';
 import SavedSearchControls from './SavedSearchControls';
 import { emptyString, validDate } from '../../../lib/formValidators';
 import { isStartDateAfterEndDate } from '../../../lib/dateUtil';
+import { KEYWORD, MEDIA, DATES } from '../../../lib/explorerUtil';
 
 const localMessages = {
   mainTitle: { id: 'explorer.queryBuilder.maintitle', defaultMessage: 'Create Query' },
@@ -33,6 +35,12 @@ const localMessages = {
   startDateWarning: { id: 'explorer.queryBuilder.warning.startDate', defaultMessage: 'Start Date must be before End Date' },
   invalidDateWarning: { id: 'explorer.queryBuilder.warning.invalidDate', defaultMessage: 'Use the YYYY-MM-DD format' },
   noMediaSpecified: { id: 'explorer.queryBuilder.warning.noMediaSpecified', defaultMessage: 'Searching all media - generally not a great idea' },
+  copyQueryKeywordTitle: { id: 'explorer.queryform.copyQueryQ', defaultMessage: 'Copy Query Keywords' },
+  copyQueryDatesTitle: { id: 'explorer.queryform.copyQueryDates', defaultMessage: 'Copy Query Dates' },
+  copyQueryMediaTitle: { id: 'explorer.queryform.copyQueryMedia', defaultMessage: 'Copy Query Media' },
+  copyQueryKeywordMsg: { id: 'explorer.queryform.title.copyQueryQ', defaultMessage: 'Are you sure you want to copy these keywords to all your queries? This will replace the keyword for all your queries.' },
+  copyQueryDatesMsg: { id: 'explorer.queryform.title.copyQueryDates', defaultMessage: 'Are you sure you want to copy these dates to all your queries? This will replace the dates for all your queries.' },
+  copyQueryMediaMsg: { id: 'explorer.queryform.title.copyQueryMedia', defaultMessage: 'Are you sure you want to copy these media to all your queries? This will replace the media for all your queries.' },
 };
 
 /*
@@ -64,7 +72,8 @@ class QueryForm extends React.Component {
 
   render() {
     const { initialValues, onWillSearch, isEditable, selected, buttonLabel, onMediaDelete, onDateChange, handleLoadSearches, handleDeleteSearch, handleLoadSelectedSearch, savedSearches, searchNickname, handleSaveSearch,
-      submitting, handleSubmit, onSave, onColorChange, onMediaChange, renderTextField, renderTextFieldWithFocus } = this.props;
+      submitting, handleSubmit, onSave, onColorChange, onMediaChange, renderTextField, renderTextFieldWithFocus, handleCopyAll } = this.props;
+    const { formatMessage } = this.props.intl;
     const cleanedInitialValues = initialValues ? { ...initialValues } : {};
     if (cleanedInitialValues.disabled === undefined) {
       cleanedInitialValues.disabled = false;
@@ -88,7 +97,7 @@ class QueryForm extends React.Component {
     const currentColor = selected.color; // for ColorPicker
     const currentQ = selected.q;
     let mediaPicker = null;
-    let mediaLabel = <label htmlFor="sources"><FormattedMessage {...localMessages.SandC} /></label>;
+    let mediaLabel = formatMessage(localMessages.SandC);
     if (isEditable) {
       mediaPicker = (
         <MediaPickerDialog
@@ -97,7 +106,7 @@ class QueryForm extends React.Component {
           setQueryFormChildDialogOpen={this.setQueryFormChildDialogOpen}
         />
       );
-      mediaLabel = <label htmlFor="sources"><FormattedMessage {...localMessages.selectSandC} /></label>;
+      mediaLabel = formatMessage(localMessages.selectSandC);
     }
     if (!selected) { return null; }
     // if we have a ref field, we have intend to set the focus to a particular field - the query field
@@ -109,7 +118,7 @@ class QueryForm extends React.Component {
             <Row>
               <Col lg={5}>
                 <div className="q-field-wrapper">
-                  <label htmlFor="q"><FormattedMessage {...localMessages.query} /></label>
+                  <CopyAllComponent label={formatMessage(localMessages.query)} title={formatMessage(localMessages.copyQueryKeywordTitle)} msg={formatMessage(localMessages.copyQueryKeywordMsg)} onOk={() => handleCopyAll(KEYWORD)} />
                   <Field
                     className="query-field"
                     name="q"
@@ -138,7 +147,7 @@ class QueryForm extends React.Component {
               <Col lg={1} />
               <Col lg={6}>
                 <div className="media-field-wrapper">
-                  {mediaLabel}
+                  <CopyAllComponent label={mediaLabel} title={formatMessage(localMessages.copyQueryMediaTitle)} msg={formatMessage(localMessages.copyQueryMediaMsg)} onOk={() => handleCopyAll(MEDIA)} />
                   <SourceCollectionsFieldList
                     className="query-field"
                     form="queryForm"
@@ -151,8 +160,10 @@ class QueryForm extends React.Component {
                   />
                   {mediaPicker}
                 </div>
+                <div>
+                  <CopyAllComponent label={formatMessage(localMessages.dates)} title={formatMessage(localMessages.copyQueryDatesTitle)} msg={formatMessage(localMessages.copyQueryDatesMsg)} onOk={() => handleCopyAll(DATES)} />
+                </div>
                 <div className="dates-field-wrapper">
-                  <label htmlFor="startDate"><FormattedMessage {...localMessages.dates} /></label>
                   <Field
                     className="query-field start-date-wrapper"
                     maxLength="12"
@@ -213,6 +224,14 @@ class QueryForm extends React.Component {
 }
 
 QueryForm.propTypes = {
+  // from context
+  intl: PropTypes.object.isRequired,
+  renderTextField: PropTypes.func.isRequired,
+  renderSelectField: PropTypes.func.isRequired,
+  renderTextFieldWithFocus: PropTypes.func.isRequired,
+  searchNickname: PropTypes.string.isRequired,
+  savedSearches: PropTypes.array,
+
   // from parent
   selected: PropTypes.object.isRequired,
   onSave: PropTypes.func.isRequired,
@@ -221,17 +240,11 @@ QueryForm.propTypes = {
   buttonLabel: PropTypes.string.isRequired,
   initialValues: PropTypes.object,
   onWillSearch: PropTypes.func,
-  // from context
-  intl: PropTypes.object.isRequired,
-  renderTextField: PropTypes.func.isRequired,
-  renderSelectField: PropTypes.func.isRequired,
-  renderTextFieldWithFocus: PropTypes.func.isRequired,
-  searchNickname: PropTypes.string.isRequired,
   handleLoadSearches: PropTypes.func.isRequired,
   handleLoadSelectedSearch: PropTypes.func.isRequired,
   handleSaveSearch: PropTypes.func.isRequired,
   handleDeleteSearch: PropTypes.func.isRequired,
-  savedSearches: PropTypes.array,
+  handleCopyAll: PropTypes.func.isRequired,
   onMediaDelete: PropTypes.func.isRequired,
   onDateChange: PropTypes.func.isRequired,
   // from form healper

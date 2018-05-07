@@ -5,14 +5,14 @@ const messages = {
 
   blogToolName: { id: 'app.blog.name', defaultMessage: 'Blog' },
   blogToolDescription: { id: 'app.blog.description', defaultMessage: 'Read updates on our research, projects, and ideas from us and our partners' },
-  sourcesToolName: { id: 'app.sources.name', defaultMessage: 'Sources' },
-  sourcesToolDescription: { id: 'app.sources.description', defaultMessage: 'Browse the media sources and collections in our database, and suggest more to add' },
-  topicsToolName: { id: 'app.topics.name', defaultMessage: 'Topics' },
-  topicsToolDescription: { id: 'app.topics.description', defaultMessage: 'Investigate a specific media topic in-depth, seeing the most influential sources, stories, and how language is used' },
+  sourcesToolName: { id: 'app.sources.name', defaultMessage: 'Source Manager' },
+  sourcesToolDescription: { id: 'app.sources.description', defaultMessage: 'Browse the media sources and collections in our database, and suggest more to add.' },
+  topicsToolName: { id: 'app.topics.name', defaultMessage: 'Topic Mapper' },
+  topicsToolDescription: { id: 'app.topics.description', defaultMessage: 'Dive deeply into coverage of issue with more stories, influence metrics, and techniques for finding different narratives.' },
   toolsAppName: { id: 'app.tools.name', defaultMessage: 'Tools' },
   toolsAppDescription: { id: 'app.tools.description', defaultMessage: 'Support for MediaCloud, including FAQs, tools and how to use them' },
   explorerToolName: { id: 'app.explorer.name', defaultMessage: 'Explorer' },
-  explorerToolDescription: { id: 'app.explorer.description', defaultMessage: 'Get a quick overview of how your topic of interest is covered by digital news media' },
+  explorerToolDescription: { id: 'app.explorer.description', defaultMessage: 'Get a quick overview of how your topic of interest is covered by digital news media.' },
   readGuide: { id: 'app.readGuide', defaultMessage: 'Read User Guide' },
 
   c4cmName: { id: 'c4cm.name', defaultMessage: 'MIT Center for Civic Media' },
@@ -54,6 +54,10 @@ const messages = {
   sourceDescription: { id: 'source.description.default', defaultMessage: 'Description' },
   sourceLink: { id: 'source.link.default', defaultMessage: 'Media Source Link' },
   sourceIcon: { id: 'source.icon.default', defaultMessage: 'Logo' },
+  scrapeForFeeds: { id: 'source.details.feeds.scrape', defaultMessage: 'Scrape for New Feeds' },
+  sourceScraping: { id: 'source.deatils.feeds.scraping', defaultMessage: 'We\'ve started to scrape this source' },
+  sourceScrapeFailed: { id: 'source.deatils.feeds.failed', defaultMessage: 'Sorry, for some reason we couldn\'t start the scraping job' },
+  sourceScrapeStatus: { id: 'source.deatils.feeds.scrapeStatus', defaultMessage: 'Feed Scrape Status' },
 
   favoritedCollectionsTitle: { id: 'favorited.collections.title', defaultMessage: 'Starred Collections' },
   favoritedSourcesTitle: { id: 'favorited.souces.title', defaultMessage: 'Starred Sources' },
@@ -88,7 +92,7 @@ const messages = {
 
   topWords: { id: 'topWords', defaultMessage: 'Top Words' },
   wordcloudHelpText: { id: 'wordcloud.help.text',
-    defaultMessage: '<p>This is an ordered word cloud. The words that show up more often appear bigger, and show up first in the list.  This is based on a sample of the stories, not all of them. We have done extensive testing to validate that the sample size is representative of the entire set of results.</p><p>You can click the download button to download a CSV file of word counts from a larger sample of stories.</p><p>We count words based on their stem, but show you the most commonly used stem within the sample.  To be concrete, that means if you see a word like "education" as the top word, that includes any variations of the "educ" stem (ie. educated, education, etc).</p><p>We have removed common english stop-words (ie. "if", "the", etc.), but you might see words in other languages that we don\'t have stop-word lists for.</p>',
+    defaultMessage: '<p>This is an ordered word cloud. The words that show up more often appear bigger, and show up first in the list.  This is based on a sample of the stories, not all of them. We have validated that the sample size is representative of the entire set of results.</p><p>You can download a CSV file of word counts (from a larger sample of stories). You can also download CSV files listing the bigrams (two-word phrases) or trigrams (three-word phrases) used most often.</p><p>Use the view options to render a more standard, unordered, word cloud.</p><p>We count words based on their stem, but show you the most commonly used stem within the sample.  That means if you see a word like "education" as the top word, that includes any variations of the "educ" stem (ie. educated, education, etc).We have removed common english stop-words (ie. "if", "the", etc.), but you might see words in other languages that we don\'t have stop-word lists for.</p><p>',
   },
   wordCloudWord2VecLayoutHelp: { id: 'wordcloud.word2VecHelp', defaultMessage: '<p><b>About the Word2Vec 2D Views</b></p><p>The Word2Vec Map shows you how the most common words are used together. Each word is bigger and darker if it is used more, and it is positioned next to other words it is used with. This "Goolgle News" map is based on a pretrained model of vectors from the Google News project (<a href="https://code.google.com/archive/p/word2vec/">code</a>, <a href="https://arxiv.org/pdf/1310.4546.pdf">citation</a>). On this view, words that are used together more often in general news reporting show up closer together on the map. Looking at physical clusters of words can help you identify potential subtopics that capture different takes on your issue.</p>' },
 
@@ -204,7 +208,7 @@ const messages = {
   passwordTooShort: { id: 'user.passwordTooShort', defaultMessage: 'Passwords must be at least 8 characters long.' },
 
   attentionChartHelpText: { id: 'attentionChart.help.text',
-    defaultMessage: '<p>This chart shows sentences over time. The vertical axis shows the number of sentences that are about the topic in the stories we have collected.</p><p>Roll over the line chart to see the sentences per day in each timespan shown on the graph.</p><p>Click the download button in the top right to download the raw counts in a CSV spreadsheet.  Click the three lines in the top right of the chart to export the chart as an image file.</p>',
+    defaultMessage: '<p>The vertical axis shows the number of sentences that are about the topic in the stories we have collected.</p><p>Roll over the line chart to see the sentences per day in each timespan shown on the graph.</p><p>Click the download button in the top right to download the raw counts in a CSV spreadsheet.  Click the three lines in the top right of the chart to export the chart as an image file.</p>',
   },
 
   wordTreeHelpText: { id: 'wordTree.help.text',
@@ -224,7 +228,7 @@ const messages = {
   entityHelpTitle: { id: 'geo.help.title', defaultMessage: 'About Our Entity Detection' },
   entityHelpContent: { id: 'geo.help.content', defaultMessage: 'We automatically detect the people, organizations, and places in articles using our <a href="https://cliff.mediacloud.org/" target="_top">CLIFF-CLAVIN engine</a>. This tags each story with the people and organizations that it mentions.  We do additional processing and disambiguation to tag stories with the country and state that our custom heuristic algorithm thinks they are about (ie. not each country/state mentioned).' },
 
-  nytThemeHelpDetails: { id: 'nytTheme.help.deatils', defaultMessage: '<p>We run all our english stories through set of trained models to predict what themes they focus on.  To build these models we took the approach of transfer learning - starting with the <a href="https://code.google.com/archive/p/word2vec/">Google News word2vec</a> models and then adapting them to produce based on the <a href="https://catalog.ldc.upenn.edu/ldc2008t19">New York Times annotated corpus</a>.  We score each story against the most common 600 descriptors from the NYT corpus.  Any descriptors that score above 0.2 probability are counted as themes this story focuses on.</p>' },
+  nytThemeHelpDetails: { id: 'nytTheme.help.deatils', defaultMessage: '<p>We run all our english stories through set of trained models to predict what themes they focus on.  To build these models we took the approach of transfer learning - starting with the <a href="https://code.google.com/archive/p/word2vec/" target="_blank">Google News word2vec</a> models and then adapting them to produce based on the <a href="https://catalog.ldc.upenn.edu/ldc2008t19" target="_blank">New York Times annotated corpus</a>.  We score each story against <a href="https://mediacloud.org/support/theme-list" target="_blank">the list of the 600 most used descriptors</a> from the NYT corpus.  Any descriptors that score above 0.2 probability are counted as themes this story focuses on.</p>' },
 
   mediaTypeHelpTitle: { id: 'mediaType.help.title', defaultMessage: 'About Media Type' },
   mediaTypeHelpContent: { id: 'mediaType.help.content', defaultMessage: `
@@ -237,8 +241,9 @@ const messages = {
   },
 
   entityHelpDetails: { id: 'explorer.entities.help.text',
-    defaultMessage: '<p>We identify people using <a href="https://nlp.stanford.edu/software/CRF-NER.shtml">Stanford\'s Named Entity Recognizer</a>. Every story is passed through out <a href="http://cliff.mediacloud.org" target="_top">CLIFF engine</a> to extract all the entities.  Each story is then tagged with the people it mentions, the organizations it mentions, and the countries and states it is about.</p>',
+    defaultMessage: '<p>We identify people using <a href="https://nlp.stanford.edu/software/CRF-NER.shtml">Stanford\'s Named Entity Recognizer</a>. Every story is passed through out <a href="http://cliff.mediacloud.org" target="_top">CLIFF-CLAVIN engine</a> to extract all the entities.  Each story is then tagged with the people it mentions, the organizations it mentions, and the countries and states it is about.</p>',
   },
+  rename: { id: 'explorer.dialog.rename', defaultMessage: 'Rename' },
 
   top5: { id: 'top5', defaultMessage: 'Top 5' },
   top10: { id: 'top10', defaultMessage: 'Top 10' },
@@ -247,6 +252,11 @@ const messages = {
   top25: { id: 'top25', defaultMessage: 'Top 25' },
 
   recentNews: { id: 'recentNews.title', defaultMessage: 'Recent Changes' },
+
+  attention: { id: 'attention', defaultMessage: 'Attention' },
+  peopleAndPlaces: { id: 'peopleAndPlaces', defaultMessage: 'People & Places' },
+  storiesPerDay: { id: 'source.storiesPerDay', defaultMessage: 'Stories per Day' },
+  sourceStartDate: { id: 'source.startDate', defaultMessage: 'First Story' },
 
 };
 

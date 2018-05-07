@@ -6,17 +6,16 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import { fetchCollectionSentenceCount } from '../../../actions/sourceActions';
 import DataCard from '../../common/DataCard';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
-import { getBrandDarkColor } from '../../../styles/colors';
 
 import messages from '../../../resources/messages';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import { DownloadButton } from '../../common/IconButton';
 
 const localMessages = {
-  title: { id: 'sentenceCount.title', defaultMessage: 'Sentences in this Collection' },
+  title: { id: 'sentenceCount.title', defaultMessage: 'Last Year of Coverage' },
   helpTitle: { id: 'collection.summary.sentenceCount.help.title', defaultMessage: 'About Sentences Over Time' },
   helpText: { id: 'collection.summary.sentenceCount.help.text',
-    defaultMessage: '<p>This chart shows you the number of sentences we have collected from the sources in this collection over time. Click on the line to see a summary of the content in this collection for that date.</p>',
+    defaultMessage: '<p>This chart shows you the number of sentences we have collected from the sources in this collection over the last year. Click on the line to see a summary of the content in this collection for that date.</p>',
   },
 };
 
@@ -51,7 +50,6 @@ class CollectionSentenceCountContainer extends React.Component {
           health={health}
           height={250}
           filename={filename}
-          lineColor={getBrandDarkColor()}
           onDataPointClick={this.handleDataPointClick}
         />
       </DataCard>

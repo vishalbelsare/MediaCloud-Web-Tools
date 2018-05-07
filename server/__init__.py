@@ -27,6 +27,7 @@ SERVER_APP_TOOLS = "tools"
 SERVER_APP_EXPLORER = "explorer"
 
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+data_dir = os.path.join(base_dir, 'server', 'static', 'data')
 
 # setup logging
 with open(os.path.join(base_dir, 'config', 'server-logging.json'), 'r') as f:
@@ -172,13 +173,14 @@ def index():
 
 # now load in the appropriate view endpoints, after the app has been initialized
 import server.views.user
-import server.views.stat
+import server.views.app
 import server.views.download
 import server.views.stories
 import server.views.media_search
 import server.views.media_picker
 import server.views.sources.search
 import server.views.notebook.management
+import server.views.metadata
 server_app = config.get('SERVER_APP')
 if (server_app == SERVER_APP_SOURCES) or is_dev_mode():
     import server.views.sources.collection
@@ -189,7 +191,6 @@ if (server_app == SERVER_APP_SOURCES) or is_dev_mode():
     import server.views.sources.sentences
     import server.views.sources.words
     import server.views.sources.geocount
-    import server.views.sources.metadata
 if (server_app == SERVER_APP_TOPICS) or is_dev_mode():
     import server.views.topics.media
     import server.views.topics.sentences

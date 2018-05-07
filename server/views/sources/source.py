@@ -14,7 +14,7 @@ from server.util.tags import TAG_SETS_ID_PUBLICATION_COUNTRY, TAG_SETS_ID_PUBLIC
     TAG_SETS_ID_PRIMARY_LANGUAGE, TAG_SETS_ID_COUNTRY_OF_FOCUS, TAG_SETS_ID_MEDIA_TYPE, TAG_SET_GEOCODER_VERSION, \
     TAG_SET_NYT_LABELS_VERSION, GEO_SAMPLE_SIZE, is_metadata_tag_set
 from server.views.sources import _cached_source_story_count
-from server.views.sources.words import cached_wordcount, stream_wordcount_csv
+from server.views.sources.words import word_count, stream_wordcount_csv
 from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
 from server.views.sources.sentences import cached_recent_sentence_counts, stream_sentence_count_csv
 from server.views.sources.favorites import add_user_favorite_flag_to_sources, add_user_favorite_flag_to_collections
@@ -64,7 +64,7 @@ def source_stats(media_id):
     results['story_count'] = total_story_count
     # health
     media_health = _cached_media_source_health(username, media_id)
-    results['is_healthy'] = media_health['is_healthy'] if 'is_healthy' in media_health else None
+    results['num_stories_90'] = media_health['num_stories_90'] if 'num_stories_90' in media_health else None
     results['start_date'] = media_health['start_date'] if 'start_date' in media_health else None
     info = _media_source_details(media_id)
     user_can_see_private_collections = user_has_auth_role(ROLE_MEDIA_EDIT)
@@ -161,9 +161,7 @@ def source_sentence_count_csv(media_id):
 def api_media_source_sentence_count(media_id):
     health = _cached_media_source_health(user_mediacloud_key(), media_id)
     counts = cached_recent_sentence_counts(user_mediacloud_key(),
-                                           ['media_id:'+str(media_id)],
-                                           _safely_get_health_start_date(health),
-                                           _safely_get_health_end_date(health))
+                                           ['media_id:'+str(media_id)])
     info = {
         'health': health,
         'sentenceCounts': counts
@@ -206,7 +204,7 @@ def media_source_words(media_id):
     if ('q' in request.args) and (len(request.args['q']) > 0):
         query_arg = 'media_id:'+str(media_id) + " AND " + request.args.get('q')
     info = {
-        'wordcounts': cached_wordcount(user_mediacloud_key(), query_arg)
+        'wordcounts': word_count(user_mediacloud_key(), query_arg)
     }
     return jsonify({'results': info})
 

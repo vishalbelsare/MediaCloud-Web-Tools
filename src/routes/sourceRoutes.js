@@ -10,6 +10,7 @@ import CreateCollectionContainer from '../components/source/collection/CreateCol
 import AdvancedSearchContainer from '../components/source/search/AdvancedSearchContainer';
 import SelectCollectionContainer from '../components/source/collection/SelectCollectionContainer';
 import EditCollectionContainer from '../components/source/collection/EditCollectionContainer';
+import ManageSourcesContainer from '../components/source/collection/ManageSourcesContainer';
 import CreateSourceContainer from '../components/source/mediaSource/CreateSourceContainer';
 import SuggestSourceContainer from '../components/source/mediaSource/suggest/SuggestSourceContainer';
 import AllSuggestionsContainer from '../components/source/mediaSource/suggest/AllSuggestionsContainer';
@@ -19,7 +20,7 @@ import SourceFeedContainer from '../components/source/mediaSource/SourceFeedCont
 import CreateSourceFeedContainer from '../components/source/mediaSource/CreateSourceFeedContainer';
 import EditSourceFeedContainer from '../components/source/mediaSource/EditSourceFeedContainer';
 import SelectSourceContainer from '../components/source/mediaSource/SelectSourceContainer';
-import Homepage from '../components/source/homepage/Homepage';
+import SourcesHomepage from '../components/source/homepage/SourcesHomepage';
 import MCCollectionListContainer from '../components/source/collection/list/MCCollectionListContainer';
 import CountryCollectionListContainer from '../components/source/collection/list/CountryCollectionListContainer';
 import PageWrapper from '../components/source/PageWrapper';
@@ -35,7 +36,7 @@ const sourceRoutes = (
 
     <IndexRedirect to="/home" />
 
-    <Route path="/home" component={Homepage} />
+    <Route path="/home" component={SourcesHomepage} />
 
     <Route component={PageWrapper}>
       <Route path="/about" component={About} />
@@ -71,6 +72,7 @@ const sourceRoutes = (
         <IndexRoute component={CollectionDetailsContainer} onEnter={requireAuth} />
         <Route path="edit" component={EditCollectionContainer} onEnter={requireAuth} />
         <Route path="content-history" component={CollectionContentHistory} onEnter={requireAuth} />
+        <Route path="manage-source-list" component={ManageSourcesContainer} onEnter={requireAuth} />
       </Route>
     </Route>
 

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import Title from 'react-title-component';
-import { replace } from 'react-router-redux';
+import { push, replace } from 'react-router-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
@@ -14,10 +14,11 @@ import { addNotice } from '../../actions/appActions';
 import { snapshotIsUsable, TOPIC_SNAPSHOT_STATE_COMPLETED, TOPIC_SNAPSHOT_STATE_QUEUED, TOPIC_SNAPSHOT_STATE_RUNNING,
   TOPIC_SNAPSHOT_STATE_ERROR, TOPIC_SNAPSHOT_STATE_CREATED_NOT_QUEUED } from '../../reducers/topics/selected/snapshots';
 import { LEVEL_INFO, LEVEL_WARNING, LEVEL_ERROR } from '../common/Notice';
+import ModifyTopicDialog from './controlbar/ModifyTopicDialog';
 import TopicUnderConstruction from './TopicUnderConstruction';
-import Permissioned from '../common/Permissioned';
-import { PERMISSION_ADMIN } from '../../lib/auth';
 import TopicHeaderContainer from './TopicHeaderContainer';
+import Permissioned from '../common/Permissioned';
+import { PERMISSION_TOPIC_WRITE } from '../../lib/auth';
 
 const localMessages = {
   needsSnapshotWarning: { id: 'needSnapshot.warning', defaultMessage: 'You\'ve made changes to your Topic that require a new snapshot to be generated!' },
@@ -67,14 +68,19 @@ class TopicContainer extends React.Component {
     return ((topicId !== null) && (filters.snapshotId !== null) && (filters.timespanId !== null));
   }
   render() {
-    const { children, topicInfo, topicId, snapshotCount, handleSpiderRequest, filters } = this.props;
+    const { children, goToUrl, topicInfo, topicId, snapshotCount, handleSpiderRequest, filters, needsNewSnapshot } = this.props;
     const { formatMessage } = this.props.intl;
     const titleHandler = parentTitle => `${topicInfo.name} | ${parentTitle}`;
     // show a big error if there is one to show
     let contentToShow = children;
     if ((topicInfo.state === TOPIC_SNAPSHOT_STATE_RUNNING) && (snapshotCount === 0)) {
       // if the topic is running the initial spider and then show under construction message
-      contentToShow = (<TopicUnderConstruction />);
+      contentToShow = (
+        <div>
+          {children}
+          <TopicUnderConstruction />
+        </div>
+      );
     } else if (topicInfo.state === TOPIC_SNAPSHOT_STATE_CREATED_NOT_QUEUED) {
       contentToShow = (
         <Grid>
@@ -95,23 +101,21 @@ class TopicContainer extends React.Component {
       );
     } else if (topicInfo.state === TOPIC_SNAPSHOT_STATE_QUEUED) {
       contentToShow = (
-        <Grid>
-          <Row>
-            <Col lg={12}>
-              <div className="topic-created-not-queued-error">
-                <h1><FormattedMessage {...localMessages.hasAnError} /></h1>
-                <Permissioned onlyRole={PERMISSION_ADMIN}>
-                  <AppButton
-                    label={formatMessage(localMessages.trySpidering)}
-                    onTouchTap={() => handleSpiderRequest(topicInfo.topics_id)}
-                    type="submit"
-                    primary
-                  />
-                </Permissioned>
-              </div>
-            </Col>
-          </Row>
-        </Grid>
+        <div>
+          <div className="controlbar controlbar-topic">
+            <div className="main">
+              <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
+                <ModifyTopicDialog
+                  topicId={topicId}
+                  onUrlChange={goToUrl}
+                  needsNewSnapshot={needsNewSnapshot}
+                  onSpiderRequest={handleSpiderRequest}
+                />
+              </Permissioned>
+            </div>
+          </div>
+          <TopicUnderConstruction />
+        </div>
       );
     }
     return (
@@ -142,6 +146,7 @@ TopicContainer.propTypes = {
   topicInfo: PropTypes.object,
   needsNewSnapshot: PropTypes.bool.isRequired,
   snapshotCount: PropTypes.number.isRequired,
+  goToUrl: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -156,6 +161,9 @@ const mapStateToProps = (state, ownProps) => ({
 const mapDispatchToProps = (dispatch, ownProps) => ({
   addAppNotice: (info) => {
     dispatch(addNotice(info));
+  },
+  goToUrl: (url) => {
+    dispatch(push(url));
   },
   asyncFetch: () => {
     dispatch(selectTopic(ownProps.params.topicId));

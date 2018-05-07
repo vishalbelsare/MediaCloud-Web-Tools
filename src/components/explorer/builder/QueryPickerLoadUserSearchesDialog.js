@@ -46,7 +46,7 @@ class QueryPickerLoadUserSearchesDialog extends React.Component {
 
   handleLabelChangeAndClose = () => {
     this.setState({ loadSearchDialogOpen: false });
-    this.onSaveConfirm();
+    this.onLoadConfirm();
   };
 
   render() {

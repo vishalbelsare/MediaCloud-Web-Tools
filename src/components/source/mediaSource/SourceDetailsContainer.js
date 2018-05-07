@@ -12,15 +12,16 @@ import SourceGeographyContainer from './SourceGeographyContainer';
 import { anyCollectionTagSets } from '../../../lib/tagUtil';
 import { SOURCE_SCRAPE_STATE_QUEUED, SOURCE_SCRAPE_STATE_RUNNING, SOURCE_SCRAPE_STATE_COMPLETED, SOURCE_SCRAPE_STATE_ERROR } from '../../../reducers/sources/sources/selected/sourceDetails';
 import { InfoNotice, ErrorNotice, WarningNotice } from '../../common/Notice';
-import { jobStatusDateToMoment } from '../../../lib/dateUtil';
+import { jobStatusDateToMoment, getCurrentDate, oneMonthBefore } from '../../../lib/dateUtil';
+import { urlToExplorerQuery } from '../../../lib/urlUtil';
 import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
 import Permissioned from '../../common/Permissioned';
 import AppButton from '../../common/AppButton';
 import SourceMetadataStatBar from '../../common/SourceMetadataStatBar';
+import TabSelector from '../../common/TabSelector';
 
 const localMessages = {
-  searchNow: { id: 'source.basicInfo.searchNow', defaultMessage: 'Search on the Dashboard' },
-  sourceDetailsTitle: { id: 'source.details.title', defaultMessage: 'Media Source: {name}' },
+  searchNow: { id: 'source.basicInfo.searchNow', defaultMessage: 'Search in Explorer' },
   sourceDetailsCollectionsTitle: { id: 'source.details.collections.title', defaultMessage: 'Collections' },
   sourceDetailsCollectionsIntro: { id: 'source.details.collections.intro',
     defaultMessage: 'Here are the collections {name} media source is part of:\n.',
@@ -44,20 +45,21 @@ const localMessages = {
   scraping: { id: 'source.scrape.scraping', defaultMessage: 'We are current trying to scrape this source to discover RSS feeds we can pull content from.' },
   scrapeFailed: { id: 'source.scrape.failed', defaultMessage: 'Our last attempt to scrape this source for RSS feeds failed.' },
   unhealthySource: { id: 'source.warning.unhealthy', defaultMessage: 'It looks like we aren\'t actively tracking this source. Don\'t use it in general queries.' },
+  about: { id: 'source.about', defaultMessage: 'About this Source' },
+  content: { id: 'source.content', defaultMessage: 'Source Content' },
 };
 
 class SourceDetailsContainer extends React.Component {
+  state = {
+    selectedViewIndex: 0,
+  };
 
-  searchOnDashboard = () => {
+  searchInExplorer = () => {
     const { source } = this.props;
-    let dashboardUrl = `https://dashboard.mediacloud.org/#query/["*"]/[{"sources":[${source.media_id}]}]/`;
-    if (source.health && source.health.start_date && source.health.end_date) {
-      dashboardUrl += `["${source.health.start_date.substring(0, 10)}"]/["${source.health.end_date.substring(0, 10)}"]/`;
-    } else {
-      dashboardUrl += '[""]/[""]/';
-    }
-    dashboardUrl += `[{"uid":3,"name":"${source.name}","color":"55868A"}]`;
-    window.open(dashboardUrl, '_blank');
+    const endDate = getCurrentDate();
+    const startDate = oneMonthBefore(endDate);
+    const explorerUrl = urlToExplorerQuery(source.name || source.url, '*', source.id, '', startDate, endDate);
+    window.open(explorerUrl, '_blank');
   }
 
   render() {
@@ -95,8 +97,58 @@ class SourceDetailsContainer extends React.Component {
     }
     const publicNotes = (source.public_notes) ? <FormattedHTMLMessage {...localMessages.publicNotes} values={{ notes: source.public_notes }} /> : null;
     const editorNotes = (source.editor_notes) ? <FormattedHTMLMessage {...localMessages.editorNotes} values={{ notes: source.editor_notes }} /> : null;
+
+    let viewContent;
+    switch (this.state.selectedViewIndex) {
+      case 0:
+        viewContent = (
+          <span>
+            <SourceStatInfo sourceId={source.media_id} />
+            <Row>
+              <Col lg={6} md={6} sm={12} >
+                <SourceMetadataStatBar source={source} columnWidth={6} />
+              </Col>
+              <Col lg={6} md={6} sm={12}>
+                <CollectionList
+                  title={formatMessage(localMessages.sourceDetailsCollectionsTitle)}
+                  intro={formatMessage(localMessages.sourceDetailsCollectionsIntro, {
+                    name: source.name,
+                  })}
+                  collections={source.media_source_tags}
+                />
+              </Col>
+            </Row>
+          </span>
+        );
+        break;
+      case 1:
+        viewContent = (
+          <span>
+            <Row>
+              <Col lg={12}>
+                <SourceSentenceCountContainer sourceId={source.media_id} filename={filename} />
+              </Col>
+            </Row>
+            <Row>
+              <Col lg={12} md={12} sm={12}>
+                <SourceGeographyContainer source={source} />
+              </Col>
+            </Row>
+            <Row>
+              <Col lg={12}>
+                <SourceTopWordsContainer source={source} />
+              </Col>
+            </Row>
+          </span>
+        );
+        break;
+      default:
+        break;
+    }
+
     return (
       <Grid className="details source-details">
+
         <Row>
           <Col lg={9} xs={12}>
             {notice}
@@ -134,40 +186,25 @@ class SourceDetailsContainer extends React.Component {
             </p>
           </Col>
           <Col lg={3} xs={12} className="search-section">
-            <AppButton label={formatMessage(localMessages.searchNow)} primary onClick={this.searchOnDashboard} />
+            <AppButton label={formatMessage(localMessages.searchNow)} primary onClick={this.searchInExplorer} />
             <p>
               <a href={source.url}> {source.url} </a>
             </p>
           </Col>
         </Row>
-        <SourceStatInfo sourceId={source.media_id} />
+
         <Row>
-          <Col lg={6} xs={12}>
-            <SourceTopWordsContainer source={source} />
-          </Col>
-          <Col lg={6} xs={12}>
-            <SourceSentenceCountContainer sourceId={source.media_id} filename={filename} />
-          </Col>
+          <TabSelector
+            tabLabels={[
+              formatMessage(localMessages.about),
+              formatMessage(localMessages.content),
+            ]}
+            onViewSelected={index => this.setState({ selectedViewIndex: index })}
+          />
         </Row>
-        <Row>
-          <Col lg={12} md={12} sm={12}>
-            <SourceGeographyContainer source={source} />
-          </Col>
-        </Row>
-        <Row>
-          <Col lg={6} md={6} sm={12}>
-            <CollectionList
-              title={formatMessage(localMessages.sourceDetailsCollectionsTitle)}
-              intro={formatMessage(localMessages.sourceDetailsCollectionsIntro, {
-                name: source.name,
-              })}
-              collections={source.media_source_tags}
-            />
-          </Col>
-          <Col lg={6} md={6} sm={12} >
-            <SourceMetadataStatBar source={source} columnWidth={6} />
-          </Col>
-        </Row>
+
+        {viewContent}
+
       </Grid>
     );
   }

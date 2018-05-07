@@ -6,6 +6,7 @@ from mediacloud.api import MediaCloud
 
 from server import app
 import server.util.csv as csv
+import server.util.tags as tag_util
 from server.util.request import api_error_handler
 from server.views.explorer import parse_as_sample, parse_query_with_args_and_sample_search,\
     parse_query_with_keywords, load_sample_searches, file_name_for_download
@@ -60,15 +61,14 @@ def explorer_stories_csv():
 def _stream_story_list_csv(filename, query, stories_per_page=500, sort=MediaCloud.SORT_PROCESSED_STORIES_ID,
                            page_limit=None):
     props = ['stories_id', 'publish_date', 'title', 'url', 'language', 'ap_syndicated',
-             'story_date_guess_method', 'story_extractor_version', 'story_geocoder_version', 'story_nyt_themes_version',
-             'media_id', 'media_name', 'media_url',
+             'themes', 'media_id', 'media_name', 'media_url',
              'media_pub_country', 'media_pub_state', 'media_language', 'media_about_country',
              'media_media_type']
     timestamped_filename = csv.safe_filename(filename)
     headers = {
         "Content-Disposition": "attachment;filename=" + timestamped_filename
     }
-    return Response(_story_list_by_page_as_csv_row(query, stories_per_page, sort, page_limit, props),
+    return Response(_story_list_by_page_as_csv_row(query, stories_per_page, sort, 5, props),
                     mimetype='text/csv; charset=utf-8', headers=headers)
 
 
@@ -103,6 +103,12 @@ def _story_list_by_page(query, stories_per_page, sort, page_limit=None):
             # and add in the story metadata too
             for k, v in s['metadata'].iteritems():
                 s[u'story_{}'.format(k)] = v['tag'] if v is not None else None
+
+            story_tag_ids = [t['tags_id'] for t in s['story_tags']]
+            # add in the names of any themes
+            if tag_util.NYT_LABELER_1_0_0_TAG_ID in story_tag_ids:
+                        s['themes'] = ", ".join([t['tag'] for t in s['story_tags']
+                                                if t['tag_sets_id'] == tag_util.NYT_LABELS_TAG_SET_ID])
         yield story_page
         if len(story_page) < stories_per_page:  # this is the last page so bail out
             break

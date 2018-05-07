@@ -4,7 +4,7 @@ import { FormattedMessage, injectIntl, FormattedHTMLMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
 import { Row, Col } from 'react-flexbox-grid/lib';
-import SourceList from '../../common/SourceList';
+import CollectionSourceListContainer from './CollectionSourceListContainer';
 import CollectionSentenceCountContainer from './CollectionSentenceCountContainer';
 import CollectionTopWordsContainer from './CollectionTopWordsContainer';
 import CollectionGeographyContainer from './CollectionGeographyContainer';
@@ -12,10 +12,13 @@ import CollectionSourceRepresentation from './CollectionSourceRepresentation';
 import CollectionSimilarContainer from './CollectionSimilarContainer';
 import CollectionMetadataCoverageSummaryContainer from './CollectionMetadataCoverageSummaryContainer';
 import { hasPermissions, getUserRoles, PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
+import { getCurrentDate, oneMonthBefore } from '../../../lib/dateUtil';
+import { urlToExplorerQuery } from '../../../lib/urlUtil';
 import { WarningNotice } from '../../common/Notice';
+import TabSelector from '../../common/TabSelector';
 
 const localMessages = {
-  searchNow: { id: 'collection.details.searchNow', defaultMessage: 'Search on the Dashboard' },
+  searchNow: { id: 'collection.details.searchNow', defaultMessage: 'Search in Explorer' },
   collectionDetailsTitle: { id: 'collection.details.title', defaultMessage: 'Collection: {name}' },
   noHealth: { id: 'collection.details.noHealth', defaultMessage: 'Sorry, we can\'t show collection-level health yet.' },
   sourceTableTitle: { id: 'collection.details.sourceTable.title', defaultMessage: 'Sources' },
@@ -29,14 +32,21 @@ const localMessages = {
   collectionFavorited: { id: 'collection.favorited', defaultMessage: 'Marked this as a starred collection' },
   collectionUnFavorited: { id: 'collection.unfavorited', defaultMessage: 'Remove this as a starred collection' },
   notPermitted: { id: 'collection.notPermitted', defaultMessage: 'Sorry, this is a private collection.' },
+  sources: { id: 'collection.sourcesTab', defaultMessage: 'Source List' },
+  content: { id: 'collection.contentTab', defaultMessage: 'Collection Content' },
 };
 
 class CollectionDetailsContainer extends React.Component {
+  state = {
+    selectedViewIndex: 0,
+  };
 
-  searchOnDashboard = () => {
+  searchOnExplorer = () => {
     const { collection } = this.props;
-    const dashboardUrl = `https://dashboard.mediacloud.org/#query/["*"]/[{"sets":[${collection.tags_id}]}]/[]/[]/[{"uid":1,"name":"${collection.label}","color":"55868A"}]`;
-    window.open(dashboardUrl, '_blank');
+    const endDate = getCurrentDate();
+    const startDate = oneMonthBefore(endDate);
+    const explorerUrl = urlToExplorerQuery(collection.label || collection.tag, '*', '', collection.id, startDate, endDate);
+    window.open(explorerUrl, '_blank');
   }
 
   render() {
@@ -44,14 +54,54 @@ class CollectionDetailsContainer extends React.Component {
     const { formatMessage } = this.props.intl;
     const filename = `SentencesOverTime-Collection-${collection.tags_id}`;
 
-    if (collection && (collection.show_on_media === 0) && !hasPermissions(getUserRoles(user), PERMISSION_MEDIA_EDIT)) {
+    if (collection && !collection.show_on_media && !hasPermissions(getUserRoles(user), PERMISSION_MEDIA_EDIT)) {
       return (
         <WarningNotice><FormattedHTMLMessage {...localMessages.notPermitted} /></WarningNotice>
       );
     }
 
+    let viewContent;
+    switch (this.state.selectedViewIndex) {
+      case 0:
+        viewContent = (
+          <Row>
+            <Col lg={6} xs={12}>
+              <CollectionSourceListContainer collectionId={collection.tags_id} />
+            </Col>
+            <Col lg={6} xs={12}>
+              <CollectionSourceRepresentation collectionId={collection.tags_id} />
+              <CollectionMetadataCoverageSummaryContainer collection={collection} />
+              <CollectionSimilarContainer collectionId={collection.tags_id} filename={filename} />
+            </Col>
+          </Row>
+        );
+        break;
+      case 1:
+        viewContent = (
+          <span>
+            <Row>
+              <Col lg={6}>
+                <CollectionSentenceCountContainer collectionId={collection.tags_id} filename={filename} />
+              </Col>
+              <Col lg={6}>
+                <CollectionTopWordsContainer collectionId={collection.tags_id} />
+              </Col>
+            </Row>
+            <Row>
+              <Col lg={12}>
+                <CollectionGeographyContainer collectionId={collection.tags_id} collectionName={collection.label} />
+              </Col>
+            </Row>
+          </span>
+        );
+        break;
+      default:
+        break;
+    }
+
     return (
       <div>
+
         <Row>
           <Col lg={8}>
             <p><b>{collection.description}</b></p>
@@ -61,36 +111,22 @@ class CollectionDetailsContainer extends React.Component {
             </p>
           </Col>
           <Col lg={4}>
-            <RaisedButton label={formatMessage(localMessages.searchNow)} primary onClick={this.searchOnDashboard} />
+            <RaisedButton label={formatMessage(localMessages.searchNow)} primary onClick={this.searchOnExplorer} />
           </Col>
         </Row>
+
         <Row>
-          <Col lg={6} xs={12}>
-            <CollectionTopWordsContainer collectionId={collection.tags_id} />
-          </Col>
-          <Col lg={6} xs={12}>
-            <CollectionSentenceCountContainer collectionId={collection.tags_id} filename={filename} />
-          </Col>
+          <TabSelector
+            tabLabels={[
+              formatMessage(localMessages.sources),
+              formatMessage(localMessages.content),
+            ]}
+            onViewSelected={index => this.setState({ selectedViewIndex: index })}
+          />
         </Row>
-        <Row>
-          <Col lg={12} md={12} xs={12}>
-            <CollectionGeographyContainer collectionId={collection.tags_id} collectionName={collection.label} />
-          </Col>
-        </Row>
-        <Row>
-          <Col lg={12} md={12} xs={12}>
-            <CollectionMetadataCoverageSummaryContainer collectionId={collection.tags_id} collection={collection} sources={collection.media} />
-          </Col>
-        </Row>
-        <Row>
-          <Col lg={6} xs={12}>
-            <SourceList collectionId={collection.tags_id} sources={collection.media} />
-          </Col>
-          <Col lg={6} xs={12}>
-            <CollectionSourceRepresentation collectionId={collection.tags_id} />
-            <CollectionSimilarContainer collectionId={collection.tags_id} filename={filename} />
-          </Col>
-        </Row>
+
+        {viewContent}
+
       </div>
     );
   }

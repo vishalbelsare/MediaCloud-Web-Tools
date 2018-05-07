@@ -1,4 +1,4 @@
-import { UPDATE_QUERY, UPDATE_QUERY_COLLECTION_LOOKUP_INFO, UPDATE_QUERY_SOURCE_LOOKUP_INFO, ADD_CUSTOM_QUERY, SELECT_SEARCH_BY_ID, SELECT_SEARCH_BY_PARAMS, MARK_AS_DELETED_QUERY, RESET_QUERIES, REMOVE_DELETED_QUERIES } from '../../../actions/explorerActions';
+import { UPDATE_QUERY, UPDATE_QUERY_COLLECTION_LOOKUP_INFO, UPDATE_QUERY_SOURCE_LOOKUP_INFO, ADD_CUSTOM_QUERY, SELECT_SEARCH_BY_ID, SELECT_SEARCH_BY_PARAMS, MARK_AS_DELETED_QUERY, RESET_QUERIES, REMOVE_DELETED_QUERIES, COPY_AND_REPLACE_QUERY_FIELD } from '../../../actions/explorerActions';
 import { autoMagicQueryLabel } from '../../../lib/explorerUtil';
 
 const INITIAL_STATE = [];
@@ -21,7 +21,17 @@ function queries(state = INITIAL_STATE, action) {
         if (updatedState[queryIndex].autoNaming) {
           updatedState[queryIndex].label = autoMagicQueryLabel(updatedState[queryIndex]);
         }
-        updatedState[queryIndex].autoNaming = (updatedState[queryIndex].q === '*' || updatedState[queryIndex].q === '');
+        if (updatedState[queryIndex].q === '*' || updatedState[queryIndex].q === '') {
+          updatedState[queryIndex].autoNaming = true;
+        }
+        return updatedState;
+      }
+      return null;
+    case COPY_AND_REPLACE_QUERY_FIELD: // replace property
+      if (action.payload.index !== undefined && action.payload.field) {
+        updatedState = [...state];
+
+        updatedState[action.payload.index] = Object.assign({}, updatedState[action.payload.index], action.payload.field);
         return updatedState;
       }
       return null;
@@ -53,7 +63,7 @@ function queries(state = INITIAL_STATE, action) {
       }
       return state;
     case SELECT_SEARCH_BY_PARAMS: // select this set of queries as passed in by URL
-      updatedState = action.payload.map(q => Object.assign({}, q, { autoNaming: q.q === '*' || q.q === '' }));
+      updatedState = action.payload.map(q => Object.assign({}, q, { autoNaming: q.q === '*' || q.q === '' ? true : q.autoNaming }));
       return updatedState;
     case MARK_AS_DELETED_QUERY:
       if (action.payload) {

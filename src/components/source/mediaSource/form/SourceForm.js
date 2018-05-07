@@ -9,11 +9,13 @@ import SourceDetailsForm from './SourceDetailsForm';
 import SourceMetadataForm from './SourceMetadataForm';
 import PickCollectionsForm from './PickCollectionsForm';
 import { emptyString } from '../../../../lib/formValidators';
+import { fetchSourceWithNameExists } from '../../../../actions/sourceActions';
 
 const localMessages = {
   mainTitle: { id: 'source.maintitle', defaultMessage: 'Create New Source' },
   addButton: { id: 'source.add.saveAll', defaultMessage: 'Save New Source' },
   feedback: { id: 'source.add.feedback', defaultMessage: 'We saved your new source' },
+  nameInUseError: { id: 'source.add.duplicateName', defaultMessage: 'Sorry this name is already taken' },
 };
 
 const SourceForm = (props) => {
@@ -70,9 +72,21 @@ function validate(values) {
   return errors;
 }
 
+const asyncValidate = (values, dispatch) => (
+  // verify topic name is unique (should we check URL too?)
+  dispatch(fetchSourceWithNameExists(values.name, values.id))
+    .then((results) => {
+      if (results.nameInUse === true) {
+        const error = { name: localMessages.nameInUseError };
+        throw error;
+      }
+    })
+);
+
 const reduxFormConfig = {
   form: 'sourceForm',
   validate,
+  asyncValidate,
 };
 
 export default

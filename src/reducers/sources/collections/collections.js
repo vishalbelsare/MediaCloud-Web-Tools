@@ -4,7 +4,6 @@ import all from './all';
 import form from './form/form';
 import favorited from './favorited';
 import featured from './featured';
-import popular from './popular';
 
 const collections = combineReducers({
   all,
@@ -12,7 +11,6 @@ const collections = combineReducers({
   form,
   favorited,
   featured,
-  popular,
 });
 
 export default collections;

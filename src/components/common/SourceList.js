@@ -13,59 +13,45 @@ const localMessages = {
   },
 };
 
-class SourceList extends React.Component {
+const SourceList = (props) => {
+  const { sources, title, intro, downloadUrl, extraHeaderColumns, extraColumns } = props;
+  const { formatMessage } = props.intl;
 
-  downloadCsv = () => {
-    const { collectionId, downloadUrl } = this.props;
-    let url = null;
-    if (collectionId) {
-      url = `/api/collections/${collectionId}/sources.csv`;
-    } else {
-      url = downloadUrl;
-    }
-    window.location = url;
-  }
-
-  render() {
-    const { sources, title, intro } = this.props;
-    const { formatMessage } = this.props.intl;
-
-    let titleRefactor = null;
-    if (title) {
-      titleRefactor = title;
-    } else {
-      titleRefactor = (
-        <FormattedMessage
-          {...localMessages.title}
-          values={{ count: sources.length }}
-        />
-      );
-    }
-    let introRefactor = null;
-    if (title) {
-      introRefactor = intro;
-    } else {
-      introRefactor = (
-        <FormattedMessage
-          {...localMessages.intro}
-          values={{ count: sources.length }}
-        />
-      );
-    }
-    return (
-      <DataCard className="source-list">
-        <div className="actions">
-          <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
-        </div>
-        <h2>{titleRefactor}</h2>
-        <p>
-          {introRefactor}
-        </p>
-        <SourceTable sources={sources} />
-      </DataCard>
+  let titleRefactor = null;
+  if (title) {
+    titleRefactor = title;
+  } else {
+    titleRefactor = (
+      <FormattedMessage
+        {...localMessages.title}
+        values={{ count: sources.length }}
+      />
     );
   }
-}
+  let introRefactor = null;
+  if (title) {
+    introRefactor = intro;
+  } else {
+    introRefactor = (
+      <FormattedMessage
+        {...localMessages.intro}
+        values={{ count: sources.length }}
+      />
+    );
+  }
+  return (
+    <DataCard className="source-list">
+      {downloadUrl && <div className="actions">
+        <DownloadButton tooltip={formatMessage(messages.download)} onClick={() => { window.location = downloadUrl; }} />
+      </div>}
+      <h2>{titleRefactor}</h2>
+      <p>
+        {introRefactor}
+      </p>
+      <SourceTable sources={sources} extraHeaderColumns={extraHeaderColumns} extraColumns={extraColumns} />
+    </DataCard>
+  );
+};
 
 SourceList.propTypes = {
   // from composition chain
@@ -74,8 +60,9 @@ SourceList.propTypes = {
   title: PropTypes.string,
   intro: PropTypes.string,
   sources: PropTypes.array.isRequired,
-  collectionId: PropTypes.number,
   downloadUrl: PropTypes.string,
+  extraHeaderColumns: PropTypes.func,
+  extraColumns: PropTypes.func,
 };
 
 export default

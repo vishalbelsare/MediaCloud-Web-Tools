@@ -8,7 +8,7 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import messages from '../../../resources/messages';
 import TopicStoryTable from '../TopicStoryTable';
-import { filteredLocation } from '../../util/location';
+import { filteredLocation, filtersAsUrlParams } from '../../util/location';
 import DataCard from '../../common/DataCard';
 import { DownloadButton } from '../../common/IconButton';
 
@@ -33,7 +33,8 @@ class MediaStoriesContainer extends React.Component {
   }
   downloadCsv = () => {
     const { mediaId, topicId, filters } = this.props;
-    const url = `/api/topics/${topicId}/media/${mediaId}/stories.csv?timespanId=${filters.timespanId}&q=${filters.q}`;
+    const filtersAsParams = filtersAsUrlParams(filters);
+    const url = `/api/topics/${topicId}/media/${mediaId}/stories.csv?${filtersAsParams}`;
     window.location = url;
   }
   render() {

@@ -1,7 +1,7 @@
 [{
     "id": 0,
     "name": "US 2016 MSM Election",
-    "imageName": "fake-data-1.png",
+    "imageName": "clinton-trump.png",
     "queries": [{
         "index": 0,
         "q": "clinton",
@@ -27,7 +27,7 @@
   {
     "id": 1,
     "name": "Comparing US gun coverage",
-    "imageName": "fake-data-2.png",
+    "imageName": "guns.png",
     "queries": [{
         "index": 0,
         "q": "gun*",
@@ -52,32 +52,27 @@
   },
   {
     "id": 2,
-    "name": "Child Marriage in India",
-    "imageName": "fake-data-1.png",
+    "name": "Climate Change in India vs. US",
+    "imageName": "climate-change.png",
     "queries": [{
       "index": 0,
-      "q": "\"child marriage\" or \"child marriages\" or \"child bride\" or \"child brides\" or \"early marriage\" or \"early marriages\"",
-      "startDate": "2016-07-01",
-      "endDate": "2017-07-01",
+      "q": "\"climate change\"",
+      "startDate": "2017-01-01",
+      "endDate": "2018-03-26",
       "collections": [9201395],
       "sources": [],
       "label": "India",
       "color": "#1f77b4"
-    }]
-  },
-  {
-    "id": 3,
-    "name": "Female Genital Mutilation (FGM) in US news sources",
-    "imageName": "fake-data-2.png",
-    "queries": [{
+    },
+    {
       "index": 0,
-      "q": "fgm OR \"female genital mutilation\" OR \"female genital cutting\" OR \"fgc\" OR \"female circumcision\"",
-      "startDate": "2016-07-01",
-      "endDate": "2017-07-01",
-      "collections": [8875027, 2453107, 9139487, 9139458, 8875108, 8878293, 8878292, 8878294],
+      "q": "\"climate change\"",
+      "startDate": "2017-01-01",
+      "endDate": "2018-03-26",
+      "collections": [9139487],
       "sources": [],
-      "label": "FGM",
-      "color": "#1f77b4"
+      "label": "US",
+      "color": "#ff7f0e"
     }]
   }
 ]

@@ -8,6 +8,7 @@ import composeHelpfulContainer from '../../common/HelpfulContainer';
 import messages from '../../../resources/messages';
 import TopicStoryTable from '../TopicStoryTable';
 import DataCard from '../../common/DataCard';
+import { filtersAsUrlParams } from '../../util/location';
 import { DownloadButton } from '../../common/IconButton';
 
 const STORIES_TO_SHOW = 10;
@@ -30,7 +31,8 @@ class MediaInlinksContainer extends React.Component {
   }
   downloadCsv = () => {
     const { mediaId, topicId, filters } = this.props;
-    const url = `/api/topics/${topicId}/media/${mediaId}/inlinks.csv?timespanId=${filters.timespanId}&q=${filters.q}`;
+    const filtersAsParams = filtersAsUrlParams(filters);
+    const url = `/api/topics/${topicId}/media/${mediaId}/inlinks.csv?${filtersAsParams}`;
     window.location = url;
   }
   render() {

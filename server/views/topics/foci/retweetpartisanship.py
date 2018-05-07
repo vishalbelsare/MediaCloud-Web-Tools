@@ -2,11 +2,11 @@ import logging
 from flask import jsonify, request
 import flask_login
 
-from server import app
+from server import app, TOOL_API_KEY
 from server.util.request import api_error_handler, json_error_response, form_fields_required
 from server.views.topics.apicache import topic_story_count
 from server.auth import user_mediacloud_key, user_mediacloud_client
-from server.util.tags import cached_tags_in_tag_set, TAG_SETS_ID_RETWEET_PARTISANSHIP_2016
+from server.util.tags import tags_in_tag_set, TAG_SETS_ID_RETWEET_PARTISANSHIP_2016
 from server.views.topics.foci import FOCAL_TECHNIQUE_BOOLEAN_QUERY
 
 logger = logging.getLogger(__name__)
@@ -44,7 +44,6 @@ def retweet_partisanship_story_counts(topics_id):
 @flask_login.login_required
 @api_error_handler
 def retweet_partisanship_coverage(topics_id):
-    # TODO: add in overall timespan id here so it works in different snapshots
     partisanship_tags = _cached_media_tags(TAG_SETS_ID_RETWEET_PARTISANSHIP_2016)
     # grab the total stories
     total_stories = topic_story_count(user_mediacloud_key(), topics_id)['count']
@@ -56,7 +55,7 @@ def retweet_partisanship_coverage(topics_id):
 
 
 def _cached_media_tags(tag_sets_id):
-    partisanship_tags = cached_tags_in_tag_set(tag_sets_id)
+    partisanship_tags = tags_in_tag_set(TOOL_API_KEY, tag_sets_id)
     for tag in partisanship_tags:
         tag['query'] = u"tags_id_media:{}".format(tag['tags_id'])
     return partisanship_tags
@@ -71,14 +70,16 @@ def create_retweet_partisanship_focal_set(topics_id):
     focal_set_name = request.form['focalSetName']
     focal_set_description = request.form['focalSetDescription']
     focal_technique = FOCAL_TECHNIQUE_BOOLEAN_QUERY
-    new_focal_set = user_mc.topicFocalSetDefinitionCreate(topics_id, focal_set_name, focal_set_description, focal_technique)
+    new_focal_set = user_mc.topicFocalSetDefinitionCreate(topics_id, focal_set_name, focal_set_description,
+                                                          focal_technique)
     if 'focal_set_definitions_id' not in new_focal_set:
         return json_error_response('Unable to create the subtopic set')
     # now make the foci in it - one for each partisanship quintile
     partisanship_tags = _cached_media_tags(TAG_SETS_ID_RETWEET_PARTISANSHIP_2016)
     for tag in partisanship_tags:
         name = tag['label']
-        description = "Media sources that were retweeted more often during the 2016 US election season by people on the {}".format(tag['label'])
+        description = "Media sources that were retweeted more often during the 2016 US election " \
+                      "season by people on the {}".format(tag['label'])
         query = tag['query']
         focal_set_definitions_id = new_focal_set['focal_set_definitions_id']
         # create a new boolean query subtopic based on the tag sets

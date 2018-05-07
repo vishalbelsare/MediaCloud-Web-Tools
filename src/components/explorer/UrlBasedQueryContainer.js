@@ -12,7 +12,7 @@ import { selectBySearchParams, fetchSampleSearches, updateQuerySourceLookupInfo,
   fetchQuerySourcesByIds, fetchQueryCollectionsByIds, demoQuerySourcesByIds, demoQueryCollectionsByIds } from '../../actions/explorerActions';
 // import { FETCH_INVALID, FETCH_SUCCEEDED } from '../../lib/fetchConstants';
 import { DEFAULT_COLLECTION_OBJECT_ARRAY, autoMagicQueryLabel, generateQueryParamString, decodeQueryParamString } from '../../lib/explorerUtil';
-import { getPastTwoWeeksDateRange } from '../../lib/dateUtil';
+import { getDateRange, solrFormat, PAST_MONTH } from '../../lib/dateUtil';
 import { notEmptyString } from '../../lib/formValidators';
 
 const localMessages = {
@@ -32,8 +32,10 @@ function composeUrlBasedQueryContainer() {
       };
       componentWillMount() {
         const { location } = this.props;
-        this.setState({ queryInStore: false }); // necc?
-        this.setQueryFromLocation(location);
+        // if from homepage, allow automagic, if from URL, do not...
+        const autoMagic = location.query.auto === 'true';
+        this.setState({ queryInStore: false }); // if/def automagic here
+        this.updateQueriesFromLocation(location, autoMagic);
       }
       componentWillReceiveProps(nextProps) {
         const { location, lastSearchTime, updateUrl, isLoggedIn } = this.props;
@@ -42,7 +44,7 @@ function composeUrlBasedQueryContainer() {
         if ((nextProps.location.pathname !== location.pathname) && (lastSearchTime === nextProps.lastSearchTime)) {
           this.setState({ queryInStore: false }); // show spinner while parsing and loading query
           // console.log('  url change');
-          this.setQueryFromLocation(location);
+          this.updateQueriesFromLocation(location);
         // if we don't have all the data in the store yet
         } else if (this.state.queryInStore === false) {   // make sure to only do this once
           // console.log('  waiting for media info from server');
@@ -51,59 +53,73 @@ function composeUrlBasedQueryContainer() {
             // console.log('  got media info from server, ready!');
             this.setState({ queryInStore: true });  // mark that the parsing process has finished
           }
+          if (nextProps.queries.filter(q => q.sources.length > 0).length === 0 && nextProps.queries.filter(q => q.collections.length > 0).length === 0) {
+            this.setState({ queryInStore: true });
+            updateUrl(nextProps.queries, isLoggedIn);
+          }
         } else if (lastSearchTime !== nextProps.lastSearchTime) {
           updateUrl(nextProps.queries, isLoggedIn);
         } else {
           // console.log('  other change');
         }
       }
-      setQueryFromLocation(location) {
+      updateQueriesFromLocation(location, autoName) {
         // regular searches are in a queryParam, but samples by id are part of the path
         const url = location.pathname;
         const lastPathPart = url.slice(url.lastIndexOf('/') + 1, url.length);
         const sampleNumber = parseInt(lastPathPart, 10);
         if (!isNaN(sampleNumber)) {
-          this.setQueryFromSample(sampleNumber);
+          this.updateQueriesFromSampleId(sampleNumber);
         } else {
-          this.setQueryFromSearch(location.search);
+          // this is a crazy fix to make embedded quotes work by forcing us to escape them all... partially because
+          // react-router decided to decode url components, partially because the JSON parser isn't that clever
+          const text = location.query.q;
+          const pattern = /:"([^,]*)"[,}]/g;  // gotta end with , or } here to support demo case (})
+          let match = pattern.exec(text);
+          let cleanedText = '';
+          let lastSpot = 0;
+          while (match != null) {
+            const matchText = text.substring(match.index + 2, pattern.lastIndex - 2);
+            const cleanedMatch = matchText.replace(/"/g, '\\"');
+            cleanedText += `${text.substring(lastSpot, match.index)}:"${cleanedMatch}`;
+            lastSpot = pattern.lastIndex - 2;
+            match = pattern.exec(text);
+          }
+          cleanedText += text.substring(lastSpot, text.length);
+          // now that we have a relatively clean url, lets use it!
+          this.updateQueriesFromString(cleanedText, autoName);
         }
       }
-      setQueryFromSearch(search) {
-        const queryAsJsonStr = search.slice(3, search.length);
-        this.setQueryFromString(queryAsJsonStr);
-      }
-      setQueryFromSample(sampleNumber) {
+      updateQueriesFromSampleId(sampleNumber) {
         const { saveQueriesFromParsedUrl, samples, isLoggedIn } = this.props;
         const queriesFromUrl = samples[sampleNumber].queries;
         // push the queries in to the store
         saveQueriesFromParsedUrl(queriesFromUrl, isLoggedIn);
       }
-      setQueryFromString(queryAsJsonStr) {
+      updateQueriesFromString(queryAsJsonStr, autoNaming) {
         const { addAppNotice, saveQueriesFromParsedUrl, isLoggedIn } = this.props;
         const { formatMessage } = this.props.intl;
         let queriesFromUrl;
 
         try {
-          queriesFromUrl = decodeQueryParamString(queryAsJsonStr);
-        } catch (e) { // clunky but a necessary check for Firefox
-          try {
-            queriesFromUrl = decodeQueryParamString(decodeURIComponent(queryAsJsonStr)); // and this doesn't work for quoted search strings in chrome
-          } catch (f) {
-            addAppNotice({ level: LEVEL_ERROR, message: formatMessage(localMessages.errorInURLParams) });
-            return;
-          }
+          queriesFromUrl = decodeQueryParamString(decodeURIComponent(queryAsJsonStr));
+        } catch (f) {
+          addAppNotice({ level: LEVEL_ERROR, message: formatMessage(localMessages.errorInURLParams) });
+          return;
         }
 
         let extraDefaults = {};
         // add in an index, label, and color if they are not there
         if (!isLoggedIn) {  // and demo mode needs some extra stuff too
-          const defaultDates = getPastTwoWeeksDateRange();
+          const dateObj = getDateRange(PAST_MONTH);
           extraDefaults = {
             sources: [],
             collections: DEFAULT_COLLECTION_OBJECT_ARRAY,
-            startDate: defaultDates.start,
-            endDate: defaultDates.end,
+            startDate: solrFormat(dateObj.start),
+            endDate: solrFormat(dateObj.end),
           };
+        } else {
+          extraDefaults = { autoNaming };
         }
         queriesFromUrl = queriesFromUrl.map((query, index) => ({
           ...query, // let anything on URL override label and color

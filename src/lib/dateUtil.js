@@ -6,6 +6,8 @@ const SOLR_DATE_FORMAT = 'YYYY-MM-DDTHH:mm:ssZ';
 
 const SHORT_SOLR_DATE_FORMAT = 'YYYY-MM-DD';
 
+const SHORT_VIS_FORMAT = 'MM/DD';
+
 const GAP_DATE_FORMAT = 'YYYY-MM-DD HH:mm:ssZ';
 
 const DB_DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss';
@@ -31,6 +33,10 @@ export function getCurrentDate() {
   return testdate;
 }
 
+export function getVisDate(dateString) {
+  return moment(dateString).format(SHORT_VIS_FORMAT);
+}
+
 export function getShortDate(dateString) {
   return moment(dateString).format('ll');
 }
@@ -48,6 +54,11 @@ export function oneWeekLater(date) {
   return weekLater;
 }
 
+export function oneMonthBefore(date) {
+  const monthBefore = moment(date).subtract(1, 'month').format(TOPIC_DATE_FORMAT);
+  return monthBefore;
+}
+
 export function isMoreThanAYearInPast(dateInPast) {
   const yearPriorToNow = moment().subtract(1, 'years');
   return yearPriorToNow.isAfter(dateInPast);
@@ -57,6 +68,10 @@ export function isADayDifference(date0, date1) {
   const firstDate = moment(date0);
   const oneDayAfter = firstDate.add(1, 'days');
   return oneDayAfter.isAfter(moment(date1));
+}
+
+export function parseSolrShortDate(dateStr) {
+  return moment(dateStr, SHORT_SOLR_DATE_FORMAT).toDate();
 }
 
 export function solrFormat(date, short = true) {
@@ -155,10 +170,15 @@ export function getDateRange(timePeriod) {
     throw error;
   }
   let targetPeriodStart = null;
-  const targetYear = moment().subtract(1, 'year');
-  const targetMonth = moment().subtract(1, 'month');
-  const targetWeek = moment().subtract(1, 'week');
-  const targetPastTwoWeeks = moment().subtract(2, 'week');
+  const today = moment()
+    .hours(0)
+    .minutes(0)
+    .seconds(0)
+    .milliseconds(0);  // make it a day so caching works better
+  const targetYear = today.clone().subtract(1, 'year');
+  const targetMonth = today.clone().subtract(1, 'month');
+  const targetWeek = today.clone().subtract(1, 'week');
+  const targetPastTwoWeeks = today.clone().subtract(2, 'week');
   switch (timePeriod) {
     case PAST_WEEK: // past week
       targetPeriodStart = targetWeek;
@@ -177,7 +197,7 @@ export function getDateRange(timePeriod) {
     default:
       break;
   }
-  return { start: targetPeriodStart, end: moment() };
+  return { start: targetPeriodStart, end: today };
 }
 
 export function getPastTwoWeeksDateRange() {

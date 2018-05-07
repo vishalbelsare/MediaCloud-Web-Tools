@@ -7,9 +7,11 @@ import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
 import ColorPicker from '../../common/ColorPicker';
+import messages from '../../../resources/messages';
 
 const localMessages = {
   searchHint: { id: 'explorer.querypicker.searchHint', defaultMessage: 'keywords' },
+  register: { id: 'explorer.querypicker.register', defaultMessage: 'Register to Edit' },
 };
 
 class QueryPickerDemoHeader extends React.Component {
@@ -30,10 +32,10 @@ class QueryPickerDemoHeader extends React.Component {
     let menuDelete = null;
     if (query) {
       if (!isThisAProtectedQuery) {
-        menuRegister = <MenuItem primaryText="Register To Edit" onTouchTap={this.sendToLink} />;
+        menuRegister = <MenuItem primaryText={formatMessage(localMessages.register)} onTouchTap={this.sendToLink} />;
       }
       if (!isThisAProtectedQuery && isDeletable()) { // can delete only if this is a custom query (vs sample query) for demo users and this is not the only QueryPickerItem
-        menuDelete = <MenuItem primaryText="Delete" onTouchTap={() => onDelete(query)} />;
+        menuDelete = <MenuItem primaryText={formatMessage(messages.delete)} onTouchTap={() => onDelete(query)} />;
       }
       if (menuRegister !== null || menuDelete !== null) {
         iconOptions = (

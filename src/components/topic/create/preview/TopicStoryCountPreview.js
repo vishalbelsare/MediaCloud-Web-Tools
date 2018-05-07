@@ -12,7 +12,7 @@ import messages from '../../../../resources/messages';
 import { updateFeedback } from '../../../../actions/appActions';
 import { WarningNotice } from '../../../common/Notice';
 import { MAX_RECOMMENDED_STORIES, WARNING_LIMIT_RECOMMENDED_STORIES, MIN_RECOMMENDED_STORIES } from '../../../../lib/formValidators';
-import { hasPermissions, getUserRoles, PERMISSION_TOPIC_ADMIN } from '../../../../lib/auth';
+import { hasPermissions, getUserRoles, PERMISSION_ADMIN } from '../../../../lib/auth';
 
 const BUBBLE_CHART_DOM_ID = 'bubble-chart-keyword-preview-story-total';
 
@@ -42,8 +42,15 @@ class TopicStoryCountPreview extends React.Component {
     const { count, user, query } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
     const maxStories = parseInt(query.max_stories, 10);
-    const whichLabel = hasPermissions(getUserRoles(user), PERMISSION_TOPIC_ADMIN) ? formatMessage(localMessages.adminTotalLabel, { limit: maxStories }) : formatMessage(localMessages.totalLabel, { limit: MAX_RECOMMENDED_STORIES });
-    const whichRolloverText = hasPermissions(getUserRoles(user), PERMISSION_TOPIC_ADMIN) ? formatMessage(localMessages.totalRolloverLabel, { limit: maxStories }) : formatNumber(localMessages.totalRolloverLabel, { limit: MAX_RECOMMENDED_STORIES });
+    let bubbleText;
+    let bubbleRolloverText;
+    if (hasPermissions(getUserRoles(user), PERMISSION_ADMIN)) {
+      bubbleText = formatMessage(localMessages.adminTotalLabel, { limit: maxStories });
+      bubbleRolloverText = formatMessage(localMessages.totalRolloverLabel, { limit: maxStories });
+    } else {
+      bubbleText = formatMessage(localMessages.totalLabel, { limit: MAX_RECOMMENDED_STORIES });
+      bubbleRolloverText = formatNumber(localMessages.totalRolloverLabel, { limit: MAX_RECOMMENDED_STORIES });
+    }
     let content = null;
     let storySizeWarning = null;
     if (count !== null) {
@@ -57,18 +64,18 @@ class TopicStoryCountPreview extends React.Component {
         },
         {
           value: maxStories,
-          aboveText: whichLabel,
-          rolloverText: whichRolloverText,
+          aboveText: bubbleText,
+          rolloverText: bubbleRolloverText,
         },
       ];
 
-      if (count > MAX_RECOMMENDED_STORIES && !hasPermissions(getUserRoles(user), PERMISSION_TOPIC_ADMIN)) { // ADMIN CHECK
+      if (count > MAX_RECOMMENDED_STORIES && !hasPermissions(getUserRoles(user), PERMISSION_ADMIN)) { // ADMIN CHECK
         storySizeWarning = (<WarningNotice><FormattedHTMLMessage {...localMessages.tooManyStories} values={{ limit: MAX_RECOMMENDED_STORIES }} /></WarningNotice>);
-      } else if (count > maxStories && hasPermissions(getUserRoles(user), PERMISSION_TOPIC_ADMIN)) { // ADMIN CHECK
+      } else if (count > maxStories && hasPermissions(getUserRoles(user), PERMISSION_ADMIN)) { // ADMIN CHECK
         storySizeWarning = (<WarningNotice><FormattedHTMLMessage {...localMessages.tooManyStories} values={{ limit: maxStories }} /></WarningNotice>);
       } else if (count > 0.75 * MAX_RECOMMENDED_STORIES) {
         storySizeWarning = (<WarningNotice><FormattedHTMLMessage {...localMessages.warningLimitStories} /></WarningNotice>);
-      } else if (count < MIN_RECOMMENDED_STORIES) {
+      } else if ((count < MIN_RECOMMENDED_STORIES) && !hasPermissions(getUserRoles(user), PERMISSION_ADMIN)) {
         storySizeWarning = (<WarningNotice><FormattedHTMLMessage {...localMessages.notEnoughStories} /></WarningNotice>);
       }
       content = (<BubbleRowChart
@@ -126,17 +133,17 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     }
     dispatch(fetchStoryCountByQuery(infoForQuery))
       .then((result) => {
-        if (!hasPermissions(getUserRoles(user), PERMISSION_TOPIC_ADMIN)) {
+        if (!hasPermissions(getUserRoles(user), PERMISSION_ADMIN)) {  // only apply checks to non-admins
           if (result.count > MAX_RECOMMENDED_STORIES) {
             dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.tooManyStories) }));
           } else if (result.count < MAX_RECOMMENDED_STORIES && result.count > WARNING_LIMIT_RECOMMENDED_STORIES) {
             dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.warningLimitStories) }));
+          } else if (result.count < MIN_RECOMMENDED_STORIES) {
+            dispatch(updateFeedback({
+              open: true,
+              message: ownProps.intl.formatMessage(localMessages.notEnoughStories),
+            }));
           }
-        } else if (result.count < MIN_RECOMMENDED_STORIES) {
-          dispatch(updateFeedback({
-            open: true,
-            message: ownProps.intl.formatMessage(localMessages.notEnoughStories),
-          }));
         }
       });
   },

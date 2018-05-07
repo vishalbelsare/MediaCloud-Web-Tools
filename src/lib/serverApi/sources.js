@@ -20,6 +20,10 @@ export function sourceSearch(searchStr) {
   return createApiPromise(`/api/sources/search/${searchStr}`);
 }
 
+export function fetchSourceWithNameExists(searchStr, id) {
+  return createApiPromise('/api/sources/search/name-exists', { searchStr, id });
+}
+
 export function sourceAdvancedSearch(params) {
   const acceptedParams = acceptParams(params, ['searchString', 'tags']);
   const paramStr = generateParamStr({ 'tags[]': acceptedParams.tags });
@@ -53,8 +57,9 @@ export function sourceDetails(id) {
   return createApiPromise(`/api/sources/${id}/details`);
 }
 
-export function collectionDetails(id) {
-  return createApiPromise(`/api/collections/${id}/details`);
+export function collectionDetails(id, params) {
+  const acceptedParams = acceptParams(params, ['getSources']);
+  return createApiPromise(`/api/collections/${id}/details`, acceptedParams);
 }
 
 export function sourceSentenceCount(id) {
@@ -63,6 +68,11 @@ export function sourceSentenceCount(id) {
 
 export function collectionSentenceCount(id) {
   return createApiPromise(`api/collections/${id}/sentences/count`);
+}
+
+export function collectionSourceList(id, params) {
+  const acceptedParams = acceptParams(params, ['details']);
+  return createApiPromise(`api/collections/${id}/sources`, acceptedParams);
 }
 
 export function sourceGeography(id) {

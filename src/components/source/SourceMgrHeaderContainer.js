@@ -18,20 +18,23 @@ const localMessages = {
   collectionStatic: { id: 'collection.unfavorited', defaultMessage: 'Static (won\'t change)' },
 };
 
+const HEADER_CHARACTER_LIMIT = 80;
+
 const SourceMgrHeaderContainer = (props) => {
   const { sourceId, sourceInfo, collectionId, collectionInfo, location, handleSetFavorited } = props;
   const { formatMessage } = props.intl;
   let content = null;
 
   if (!nullOrUndefined(sourceId) || location.pathname.includes('sources')) { // for multiple pathways
+    const sourceNameTrunc = sourceInfo.name.length >= HEADER_CHARACTER_LIMIT - 1 ? sourceInfo.name.slice(0, HEADER_CHARACTER_LIMIT).concat('...') : sourceInfo.name;
     let details = '';
-    details += `ID #${sourceInfo.id}`;
+    details += `${formatMessage(messages.sourceName)} #${sourceInfo.id}`;
     details += ` • ${formatMessage(messages.public)} `; // for now, every media source is public
     details += (sourceInfo.is_monitored) ? ` • ${formatMessage(messages.monitored)}` : '';
     content = (
       <div className="source-header">
         <AppHeader
-          title={`${formatMessage(messages.sourceName)}: ${sourceInfo.name}`}
+          title={sourceNameTrunc}
           subTitle={details}
           isFavorite={sourceInfo.isFavorite}
           onSetFavorited={isFav => handleSetFavorited('source', sourceInfo.id, isFav)}
@@ -39,14 +42,16 @@ const SourceMgrHeaderContainer = (props) => {
       </div>
     );
   } else if (!nullOrUndefined(collectionId) || location.pathname.includes('collections')) {
+    let collLabelTrunc = collectionInfo.label || collectionInfo.tag;
+    collLabelTrunc = collLabelTrunc >= HEADER_CHARACTER_LIMIT - 1 ? collLabelTrunc.slice(0, HEADER_CHARACTER_LIMIT).concat('...') : collLabelTrunc;
     let details = '';
-    details += `ID #${collectionInfo.id}`;
-    details += (collectionInfo.show_on_media === 1) ? ` • ${formatMessage(messages.public)}` : ` • ${formatMessage(messages.private)}`;
-    details += (collectionInfo.is_static === 1) ? ` • ${formatMessage(localMessages.collectionStatic)}` : ` • ${formatMessage(localMessages.collectionDynamic)}`;
+    details += `${formatMessage(messages.collectionName)} #${collectionInfo.id}`;
+    details += (collectionInfo.show_on_media) ? ` • ${formatMessage(messages.public)}` : ` • ${formatMessage(messages.private)}`;
+    details += (collectionInfo.is_static) ? ` • ${formatMessage(localMessages.collectionStatic)}` : ` • ${formatMessage(localMessages.collectionDynamic)}`;
     content = (
       <div className="collection-header">
         <AppHeader
-          title={`${formatMessage(messages.collectionName)}: ${collectionInfo.label || collectionInfo.tag}`}
+          title={collLabelTrunc}
           subTitle={details}
           isFavorite={collectionInfo.isFavorite}
           onSetFavorited={isFav => handleSetFavorited('collection', collectionInfo.id, isFav)}
