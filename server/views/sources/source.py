@@ -16,7 +16,7 @@ from server.util.tags import TAG_SETS_ID_PUBLICATION_COUNTRY, TAG_SETS_ID_PUBLIC
 from server.views.sources import _cached_source_story_count
 from server.views.sources.words import word_count, stream_wordcount_csv
 from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
-from server.views.sources.sentences import cached_recent_sentence_counts, stream_sentence_count_csv
+from server.views.sources.stories_split_by_time import cached_recent_split_stories, stream_split_stories_csv
 from server.views.sources.favorites import add_user_favorite_flag_to_sources, add_user_favorite_flag_to_collections
 
 
@@ -148,23 +148,23 @@ def api_media_source_scrape_feeds(media_id):
     results = user_mc.feedsScrape(media_id)
     return jsonify(results)
 
-@app.route('/api/sources/<media_id>/sentences/sentence-count.csv', methods=['GET'])
+@app.route('/api/sources/<media_id>/split-stories.csv', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
-def source_sentence_count_csv(media_id):
-    return stream_sentence_count_csv(user_mediacloud_key(), 'sentenceCounts-Source-' + media_id, media_id, "media_id")
+def source_split_stories_csv(media_id):
+    return stream_split_stories_csv(user_mediacloud_key(), 'splitStoryCounts-Source-' + media_id, media_id, "media_id")
 
 
-@app.route('/api/sources/<media_id>/sentences/count')
+@app.route('/api/sources/<media_id>/split-stories')
 @flask_login.login_required
 @api_error_handler
-def api_media_source_sentence_count(media_id):
+def api_media_source_split_stories(media_id):
     health = _cached_media_source_health(user_mediacloud_key(), media_id)
-    counts = cached_recent_sentence_counts(user_mediacloud_key(),
+    counts = cached_recent_split_stories(user_mediacloud_key(),
                                            ['media_id:'+str(media_id)])
     info = {
         'health': health,
-        'sentenceCounts': counts
+        'splits': counts
     }
     return jsonify({'results':info})
 
