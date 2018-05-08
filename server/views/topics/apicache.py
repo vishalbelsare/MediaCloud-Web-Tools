@@ -290,7 +290,7 @@ def topic_tag_counts(user_mc_key, topics_id, tag_sets_id, sample_size):
      This supports just timespan_id and q from the request, because it has to use sentenceFieldCount,
      not a topicSentenceFieldCount method that takes filters (which doesn't exit)
     '''
-    # return [] # SUPER HACK!
+    return [] # SUPER HACK!
     snapshots_id, timespans_id, foci_id, q = filters_from_args(request.args)
     timespan_query = "timespans_id:{}".format(timespans_id)
     if (q is None) or (len(q) == 0):
@@ -348,9 +348,9 @@ def _cached_topic_sentence_sample(user_mc_key, topics_id, sample_size=1000, **kw
 def topic_timespan(topics_id, snapshots_id, foci_id, timespans_id):
     '''
     No timespan/single end point, so we need a helper to do it
-    :param snapshots_id: 
-    :param timespans_id: 
-    :param foci_id: 
+    :param snapshots_id:
+    :param timespans_id:
+    :param foci_id:
     :return: info about one timespan as specified
     '''
     timespans = cached_topic_timespan_list(user_mediacloud_key(), topics_id, snapshots_id=snapshots_id, foci_id=foci_id)
@@ -381,4 +381,3 @@ def _mc_client(user_mc_key):
     else:
         local_mc = user_admin_mediacloud_client(user_mc_key)
     return local_mc
-
