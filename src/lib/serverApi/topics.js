@@ -354,3 +354,13 @@ export function topicTopOrgs(topicId, params) {
   const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId', 'sort', 'limit', 'q', 'linkId']);
   return createApiPromise(`/api/topics/${topicId}/entities/organizations`, acceptedParams);
 }
+
+export function matchingStoriesProbableWords(topicId, focalSetName) {
+  // const acceptedParams = acceptParams(params, ['focalSetName']);
+  return createApiPromise(`/api/topics/${topicId}/focal-sets/${focalSetName}/matching-stories/prob-words`);
+}
+
+// TODO
+// export function topicPreviewMatchingStoriesTestSample() {
+//   return createApiPromise(`api/topics/${topicId}/focal-sets/matching-stories/preview/test-sample`)
+// }
