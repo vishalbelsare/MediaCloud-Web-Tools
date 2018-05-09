@@ -1,5 +1,5 @@
 import { createAsyncReducer } from '../../../../lib/reduxHelpers';
-import { FETCH_COLLECTION_SENTENCE_COUNT } from '../../../../actions/sourceActions';
+import { FETCH_COLLECTION_SPLIT_STORY_COUNT } from '../../../../actions/sourceActions';
 import { calcSentences, cleanDateCounts } from '../../../../lib/dateUtil';
 
 const collectionSplitStoryCount = createAsyncReducer({
@@ -7,10 +7,10 @@ const collectionSplitStoryCount = createAsyncReducer({
     total: null,
     list: [],
   },
-  action: FETCH_COLLECTION_SENTENCE_COUNT,
+  action: FETCH_COLLECTION_SPLIT_STORY_COUNT,
   handleSuccess: payload => ({
-    total: calcSentences(payload.results.sentenceCounts),
-    list: cleanDateCounts(payload.results.sentenceCounts),
+    total: calcSentences(payload.results.splitStoryCounts),
+    list: cleanDateCounts(payload.results.splitStoryCounts),
   }),
 });
 export default collectionSplitStoryCount;
