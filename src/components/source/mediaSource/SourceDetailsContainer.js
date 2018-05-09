@@ -6,7 +6,7 @@ import Link from 'react-router/lib/Link';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import CollectionList from '../../common/CollectionList';
 import SourceStatInfo from './SourceStatInfo';
-import SourceSentenceCountContainer from './SourceSentenceCountContainer';
+import SourceSplitStoryCountContainer from './SourceSplitStoryCountContainer';
 import SourceTopWordsContainer from './SourceTopWordsContainer';
 import SourceGeographyContainer from './SourceGeographyContainer';
 import { anyCollectionTagSets } from '../../../lib/tagUtil';
@@ -126,7 +126,7 @@ class SourceDetailsContainer extends React.Component {
           <span>
             <Row>
               <Col lg={12}>
-                <SourceSentenceCountContainer sourceId={source.media_id} filename={filename} />
+                <SourceSplitStoryCountContainer sourceId={source.media_id} filename={filename} />
               </Col>
             </Row>
             <Row>

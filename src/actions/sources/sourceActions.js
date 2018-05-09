@@ -29,7 +29,7 @@ export const resetSourcesByIds = createAction(RESET_SOURCES_BY_IDS);
 
 export const fetchSourceDetails = createAsyncAction(FETCH_SOURCE_DETAILS, api.sourceDetails, id => id);
 
-export const fetchSourceSentenceCount = createAsyncAction(FETCH_SOURCE_SENTENCE_COUNT, api.sourceSentenceCount, id => id);
+export const fetchSourceSplitStoryCount = createAsyncAction(FETCH_SOURCE_SENTENCE_COUNT, api.sourceSplitStoryCount, id => id);
 
 export const fetchSourceTopWords = createAsyncAction(FETCH_SOURCE_TOP_WORDS, api.sourceWordCount, id => id);
 

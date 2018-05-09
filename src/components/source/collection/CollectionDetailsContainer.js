@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import CollectionSourceListContainer from './CollectionSourceListContainer';
-import CollectionSentenceCountContainer from './CollectionSentenceCountContainer';
+import CollectionSplitStoryCountContainer from './CollectionSplitStoryCountContainer';
 import CollectionTopWordsContainer from './CollectionTopWordsContainer';
 import CollectionGeographyContainer from './CollectionGeographyContainer';
 import CollectionSourceRepresentation from './CollectionSourceRepresentation';
@@ -81,7 +81,7 @@ class CollectionDetailsContainer extends React.Component {
           <span>
             <Row>
               <Col lg={6}>
-                <CollectionSentenceCountContainer collectionId={collection.tags_id} filename={filename} />
+                <CollectionSplitStoryCountContainer collectionId={collection.tags_id} filename={filename} />
               </Col>
               <Col lg={6}>
                 <CollectionTopWordsContainer collectionId={collection.tags_id} />

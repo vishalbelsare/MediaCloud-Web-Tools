@@ -7,7 +7,7 @@ import { push } from 'react-router-redux';
 import MenuItem from 'material-ui/MenuItem';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import DataCard from '../../common/DataCard';
-import { fetchCollectionSourceSentenceCounts } from '../../../actions/sourceActions';
+import { fetchCollectionSourceSplitStoryCounts } from '../../../actions/sourceActions';
 import messages from '../../../resources/messages';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import { DownloadButton, ExploreButton } from '../../common/IconButton';
@@ -136,13 +136,13 @@ CollectionSourceRepresentation.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  fetchStatus: state.sources.collections.selected.collectionSourceSentenceCounts.fetchStatus,
-  sources: state.sources.collections.selected.collectionSourceSentenceCounts.sources,
+  fetchStatus: state.sources.collections.selected.collectionSourceSplitStoryCounts.fetchStatus,
+  sources: state.sources.collections.selected.collectionSourceSplitStoryCounts.sources,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   asyncFetch: () => {
-    dispatch(fetchCollectionSourceSentenceCounts(ownProps.collectionId));
+    dispatch(fetchCollectionSourceSplitStoryCounts(ownProps.collectionId));
   },
   navToSource: (element) => {
     dispatch(push(`/sources/${element.data.id}`));

@@ -3,7 +3,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import { fetchCollectionSentenceCount } from '../../../actions/sourceActions';
+import { fetchCollectionSplitStoryCount } from '../../../actions/sourceActions';
 import DataCard from '../../common/DataCard';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
 
@@ -19,7 +19,7 @@ const localMessages = {
   },
 };
 
-class CollectionSentenceCountContainer extends React.Component {
+class CollectionSplitStoryCountContainer extends React.Component {
   downloadCsv = () => {
     const { collectionId } = this.props;
     const url = `/api/collections/${collectionId}/sentences/sentence-count.csv`;
@@ -57,7 +57,7 @@ class CollectionSentenceCountContainer extends React.Component {
   }
 }
 
-CollectionSentenceCountContainer.propTypes = {
+CollectionSplitStoryCountContainer.propTypes = {
   // from state
   fetchStatus: PropTypes.string.isRequired,
   health: PropTypes.array,
@@ -74,15 +74,15 @@ CollectionSentenceCountContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  fetchStatus: state.sources.collections.selected.collectionSentenceCount.fetchStatus,
-  total: state.sources.collections.selected.collectionSentenceCount.total,
-  counts: state.sources.collections.selected.collectionSentenceCount.list,
-  health: state.sources.collections.selected.collectionSentenceCount.health,
+  fetchStatus: state.sources.collections.selected.collectionSplitStoryCount.fetchStatus,
+  total: state.sources.collections.selected.collectionSplitStoryCount.total,
+  counts: state.sources.collections.selected.collectionSplitStoryCount.list,
+  health: state.sources.collections.selected.collectionSplitStoryCount.health,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   asyncFetch: () => {
-    dispatch(fetchCollectionSentenceCount(ownProps.collectionId));
+    dispatch(fetchCollectionSplitStoryCount(ownProps.collectionId));
   },
 });
 
@@ -91,7 +91,7 @@ export default
     connect(mapStateToProps, mapDispatchToProps)(
       composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.attentionChartHelpText])(
         composeAsyncContainer(
-          CollectionSentenceCountContainer
+          CollectionSplitStoryCountContainer
         )
       )
     )

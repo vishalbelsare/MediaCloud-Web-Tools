@@ -62,11 +62,11 @@ export function collectionDetails(id, params) {
   return createApiPromise(`/api/collections/${id}/details`, acceptedParams);
 }
 
-export function sourceSentenceCount(id) {
+export function sourceSplitStoryCount(id) {
   return createApiPromise(`api/sources/${id}/sentences/count`);
 }
 
-export function collectionSentenceCount(id) {
+export function collectionSplitStoryCount(id) {
   return createApiPromise(`api/collections/${id}/sentences/count`);
 }
 
@@ -97,7 +97,7 @@ export function similarCollections(id) {
   return createApiPromise(`api/collections/${id}/similar-collections`);
 }
 
-export function collectionSourceSentenceCounts(id) {
+export function collectionSourceSplitStoryCounts(id) {
   return createApiPromise(`api/collections/${id}/sources/sentences/count`);
 }
 

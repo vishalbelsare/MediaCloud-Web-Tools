@@ -2,7 +2,7 @@ import { createAsyncReducer } from '../../../../lib/reduxHelpers';
 import { FETCH_COLLECTION_SENTENCE_COUNT } from '../../../../actions/sourceActions';
 import { calcSentences, cleanDateCounts } from '../../../../lib/dateUtil';
 
-const collectionSentenceCount = createAsyncReducer({
+const collectionSplitStoryCount = createAsyncReducer({
   initialState: {
     total: null,
     list: [],
@@ -13,4 +13,4 @@ const collectionSentenceCount = createAsyncReducer({
     list: cleanDateCounts(payload.results.sentenceCounts),
   }),
 });
-export default collectionSentenceCount;
+export default collectionSplitStoryCount;

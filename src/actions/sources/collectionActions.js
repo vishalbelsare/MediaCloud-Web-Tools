@@ -37,13 +37,13 @@ export const fetchCollectionDetails = createAsyncAction(FETCH_COLLECTION_DETAILS
 
 export const fetchCollectionToCopy = createAsyncAction(FETCH_COLLECTION_TO_COPY, api.collectionDetails, id => id);
 
-export const fetchCollectionSentenceCount = createAsyncAction(FETCH_COLLECTION_SENTENCE_COUNT, api.collectionSentenceCount, id => id);
+export const fetchCollectionSplitStoryCount = createAsyncAction(FETCH_COLLECTION_SENTENCE_COUNT, api.collectionSplitStoryCount, id => id);
 
 export const fetchCollectionTopWords = createAsyncAction(FETCH_COLLECTION_TOP_WORDS, api.collectionWordCount, id => id);
 
 export const fetchCollectionGeo = createAsyncAction(FETCH_COLLECTION_GEO, api.collectionGeography, id => id);
 
-export const fetchCollectionSourceSentenceCounts = createAsyncAction(FETCH_COLLECTION_SOURCE_SENTENCE_COUNTS, api.collectionSourceSentenceCounts, id => id);
+export const fetchCollectionSourceSplitStoryCounts = createAsyncAction(FETCH_COLLECTION_SOURCE_SENTENCE_COUNTS, api.collectionSourceSplitStoryCounts, id => id);
 
 export const fetchCollectionSourceSentenceHistoricalCounts = createAsyncAction(FETCH_COLLECTION_SOURCE_SENTENCE_HISTORICAL_COUNTS, api.collectionSourceSentenceHistoricalCounts, id => id);
 

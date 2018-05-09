@@ -3,7 +3,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import { fetchSourceSentenceCount } from '../../../actions/sourceActions';
+import { fetchSourceSplitStoryCount } from '../../../actions/sourceActions';
 import DataCard from '../../common/DataCard';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
 
@@ -19,7 +19,7 @@ const localMessages = {
   },
 };
 
-class SourceSentenceCountContainer extends React.Component {
+class SourceSplitStoryCountContainer extends React.Component {
   downloadCsv = () => {
     const { sourceId } = this.props;
     const url = `/api/sources/${sourceId}/sentences/sentence-count.csv`;
@@ -57,7 +57,7 @@ class SourceSentenceCountContainer extends React.Component {
   }
 }
 
-SourceSentenceCountContainer.propTypes = {
+SourceSplitStoryCountContainer.propTypes = {
   // from state
   fetchStatus: PropTypes.string.isRequired,
   health: PropTypes.array,
@@ -82,7 +82,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   asyncFetch: () => {
-    dispatch(fetchSourceSentenceCount(ownProps.sourceId));
+    dispatch(fetchSourceSplitStoryCount(ownProps.sourceId));
   },
 });
 
@@ -91,7 +91,7 @@ export default
     connect(mapStateToProps, mapDispatchToProps)(
       composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.attentionChartHelpText])(
         composeAsyncContainer(
-          SourceSentenceCountContainer
+          SourceSplitStoryCountContainer
         )
       )
     )
