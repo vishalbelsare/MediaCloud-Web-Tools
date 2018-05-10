@@ -42,7 +42,7 @@ class QueryWordSpaceResultsContainer extends React.Component {
         />
         <WordSpace
           words={results[this.state.selectedQueryIndex].list.slice(0, 50)}
-          domId={WORD_SPACE_DOM_ID}
+          domId={`${WORD_SPACE_DOM_ID}-${this.state.selectedQueryIndex}`}
           xProperty="google_w2v_x"
           yProperty="google_w2v_y"
           noDataMsg={localMessages.noGoogleW2VData}

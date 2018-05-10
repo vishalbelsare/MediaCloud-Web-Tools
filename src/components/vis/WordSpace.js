@@ -32,7 +32,8 @@ function drawViz(props) {
   const { words, scaleWords, length, margin, minFontSize, maxFontSize, minColor, maxColor,
           highlightMinColor, highlightMaxColor, highlightFontSizeScale, showTooltips, alreadyNormalized,
           fullExtent, domId, xProperty, yProperty, cosSimThreshold } = props;
-
+  // console.log(words[0].count);
+  // console.log(domId);
   const options = {
     scaleWords,
     length,
@@ -407,9 +408,8 @@ class WordSpace extends React.Component {
     drawViz(this.props);
   }
 
-  shouldComponentUpdate(nextProps) {
-    drawViz(nextProps);
-    return false;
+  componentDidUpdate() {
+    drawViz(this.props);
   }
 
   render() {
