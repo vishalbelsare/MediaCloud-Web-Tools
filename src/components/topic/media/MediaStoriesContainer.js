@@ -11,6 +11,9 @@ import TopicStoryTable from '../TopicStoryTable';
 import { filteredLocation, filtersAsUrlParams } from '../../util/location';
 import DataCard from '../../common/DataCard';
 import { DownloadButton } from '../../common/IconButton';
+import { LEVEL_INFO } from '../../common/Notice';
+import { addNotice } from '../../../actions/appActions';
+import { HELP_STORIES_CSV_COLUMNS } from '../../../lib/helpConstants';
 
 const STORIES_TO_SHOW = 10;
 
@@ -106,6 +109,11 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   sortData: (sort) => {
     dispatch(sortMediaStories(sort));
+  },
+  addAppNotice: () => {
+    let htmlMessage = ownProps.intl.formatMessage(messages.currentlyDownloadingCsv);
+    htmlMessage = `${htmlMessage} <a href="${HELP_STORIES_CSV_COLUMNS}">${ownProps.intl.formatHTMLMessage(messages.learnMoreAboutColumnsCsv)}</a>`;
+    dispatch(addNotice({ level: LEVEL_INFO, htmlMessage }));
   },
 });
 
