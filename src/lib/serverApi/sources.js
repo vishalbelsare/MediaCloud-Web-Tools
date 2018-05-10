@@ -63,11 +63,11 @@ export function collectionDetails(id, params) {
 }
 
 export function sourceSplitStoryCount(id) {
-  return createApiPromise(`api/sources/${id}/sentences/count`);
+  return createApiPromise(`api/sources/${id}/splitStories/count`);
 }
 
 export function collectionSplitStoryCount(id) {
-  return createApiPromise(`api/collections/${id}/sentences/count`);
+  return createApiPromise(`api/collections/${id}/splitStories/count`);
 }
 
 export function collectionSourceList(id, params) {
@@ -98,12 +98,12 @@ export function similarCollections(id) {
 }
 
 export function collectionSourceSplitStoryCounts(id) {
-  return createApiPromise(`api/collections/${id}/sources/sentences/count`);
+  return createApiPromise(`api/collections/${id}/sources/splitStories/count`);
 }
 
 export function collectionSourceSentenceHistoricalCounts(id, params) {
   const acceptedParams = acceptParams(params, ['start', 'end']);
-  return createApiPromise(`/api/collections/${id}/sources/sentences/historical-counts`, acceptedParams);
+  return createApiPromise(`/api/collections/${id}/sources/splitStories/historical-counts`, acceptedParams);
 }
 
 export function createCollection(params) {

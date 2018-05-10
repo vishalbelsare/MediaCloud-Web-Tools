@@ -4,9 +4,9 @@ import collectionDetails from './collectionDetails';
 import collectionTopWords from './collectionTopWords';
 import collectionSplitStoryCount from './collectionSplitStoryCount';
 import collectionGeoTag from './collectionGeoTag';
-import collectionSourceSplitStoryCounts from './collectionSourceSplitStoryCounts';
+import collectionSourceSplitStoryCount from './collectionSourceSplitStoryCount';
 import collectionSimilar from './collectionSimilar';
-import historicalSentenceCounts from './historicalSentenceCounts';
+import historicalSplitStoryCounts from './historicalSplitStoryCounts';
 import collectionSourceList from './collectionSourceList';
 
 const INITIAL_STATE = null;
@@ -26,10 +26,10 @@ const selected = combineReducers({
   collectionTopWords,
   collectionSplitStoryCount,
   collectionGeoTag,
-  collectionSourceSplitStoryCounts,
+  collectionSourceSplitStoryCount,
   collectionSimilar,
   collectionSourceList,
-  historicalSentenceCounts,
+  historicalSplitStoryCounts,
 });
 
 export default selected;
