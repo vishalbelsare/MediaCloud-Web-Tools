@@ -4,6 +4,7 @@ from flask import jsonify, request
 import flask_login
 
 from server import app, TOOL_API_KEY
+from server.views import WORD_COUNT_DOWNLOAD_LENGTH
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, is_user_logged_in
 from server.util import csv
 from server.util.tags import is_metadata_tag_set, format_metadata_fields
@@ -179,6 +180,7 @@ def media_words(topics_id, media_id):
 def media_words_csv(topics_id, media_id):
     query = add_to_user_query('media_id:'+media_id)
     ngram_size = request.args['ngram_size'] if 'ngram_size' in request.args else 1  # default to word count
-    word_counts = topic_ngram_counts(user_mediacloud_key(), topics_id, ngram_size=ngram_size, q=query)
+    word_counts = topic_ngram_counts(user_mediacloud_key(), topics_id, ngram_size=ngram_size, q=query,
+                                     num_words=WORD_COUNT_DOWNLOAD_LENGTH)
     return csv.stream_response(word_counts, WORD_COUNT_DOWNLOAD_COLUMNS,
                                'topic-{}-media-{}-sampled-ngrams-{}-word'.format(topics_id, media_id, ngram_size))

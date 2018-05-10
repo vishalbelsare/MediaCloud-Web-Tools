@@ -9,7 +9,6 @@ import DataCard from '../../common/DataCard';
 import FavoriteToggler from '../../common/FavoriteToggler';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
-import { TOPIC_PUBLIC } from '../../../lib/topicFilterUtil';
 import messages from '../../../resources/messages';
 import { TOPIC_SNAPSHOT_STATE_COMPLETED } from '../../../reducers/topics/selected/snapshots';
 import { ErrorNotice } from '../../common/Notice';
@@ -24,7 +23,7 @@ const localMessages = {
 };
 
 const TopicPreviewList = (props) => {
-  const { topics, linkGenerator, onSetFavorited, currentFilter } = props;
+  const { topics, linkGenerator, onSetFavorited, emptyMsg } = props;
   let content = null;
   let subContent = null;
   if (topics && topics.length > 0) {
@@ -61,9 +60,6 @@ const TopicPreviewList = (props) => {
           ownerListContent = <FormattedMessage {...messages.unknown} />;
         }
 
-        if (currentFilter === TOPIC_PUBLIC && topic.state !== TOPIC_SNAPSHOT_STATE_COMPLETED) {
-          return '';
-        }
         let errorNotice = null;
         if (topic.state !== TOPIC_SNAPSHOT_STATE_COMPLETED) {
           errorNotice = <ErrorNotice><Link to={linkGenerator(topic)}><FormattedMessage {...localMessages.errorInTopic} /></Link></ErrorNotice>;
@@ -98,6 +94,10 @@ const TopicPreviewList = (props) => {
         );
       })
     );
+  } else if (emptyMsg) {
+    content = (
+      <p><FormattedMessage {...emptyMsg} /></p>
+    );
   }
   return (
     <div className="topic-preview-list">
@@ -113,7 +113,7 @@ TopicPreviewList.propTypes = {
   linkGenerator: PropTypes.func,
   topics: PropTypes.array.isRequired,
   onSetFavorited: PropTypes.func,
-  currentFilter: PropTypes.string,
+  emptyMsg: PropTypes.object,
   // from compositional chain
   intl: PropTypes.object.isRequired,
 };

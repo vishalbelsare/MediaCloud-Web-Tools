@@ -3,6 +3,7 @@ from flask import jsonify, request
 import flask_login
 
 from server import app
+from server.views import TAG_COUNT_SAMPLE_SIZE
 from server.util.request import api_error_handler, json_error_response, form_fields_required, arguments_required
 from server.views.topics.apicache import topic_story_count
 from server.auth import user_mediacloud_key, user_mediacloud_client
@@ -12,8 +13,6 @@ from server.util.tags import NYT_LABELS_TAG_SET_ID
 import json
 
 logger = logging.getLogger(__name__)
-
-DEFAULT_SAMPLE_SIZE = 5000
 
 
 def get_top_themes_by_sentence_field_counts(topics_id, num_themes):
@@ -27,7 +26,8 @@ def get_top_themes_by_sentence_field_counts(topics_id, num_themes):
     timespan_query = "timespans_id:{}".format(overall_timespan['timespans_id'])
 
     # get the top themes by the sentence field counts iwth overall timespan
-    top_nyt_tags = _cached_topic_tag_counts(user_mediacloud_key(), topics_id, NYT_LABELS_TAG_SET_ID, DEFAULT_SAMPLE_SIZE, timespan_query)
+    top_nyt_tags = _cached_topic_tag_counts(user_mediacloud_key(), topics_id, NYT_LABELS_TAG_SET_ID,
+                                            TAG_COUNT_SAMPLE_SIZE, timespan_query)
     # get the total stories for a topic
     total_stories = topic_story_count(user_mediacloud_key(), topics_id)['count']
 

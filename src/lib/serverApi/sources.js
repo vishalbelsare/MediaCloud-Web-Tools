@@ -57,8 +57,9 @@ export function sourceDetails(id) {
   return createApiPromise(`/api/sources/${id}/details`);
 }
 
-export function collectionDetails(id) {
-  return createApiPromise(`/api/collections/${id}/details`);
+export function collectionDetails(id, params) {
+  const acceptedParams = acceptParams(params, ['getSources']);
+  return createApiPromise(`/api/collections/${id}/details`, acceptedParams);
 }
 
 export function sourceSentenceCount(id) {

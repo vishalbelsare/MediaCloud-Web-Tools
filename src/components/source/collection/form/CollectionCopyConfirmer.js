@@ -30,7 +30,7 @@ class CollectionCopyConfirmer extends Component {
         <p>
           <FormattedMessage
             {...localMessages.confirm}
-            values={{ name: collection.label, count: collection.media.length }}
+            values={{ name: collection.label, count: collection.sources.length }}
           />
         </p>
         <AppButton
@@ -75,7 +75,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   asyncFetch: () => {
     if (ownProps.collectionId) {
-      dispatch(fetchCollectionToCopy(ownProps.collectionId));
+      const getSources = true;
+      dispatch(fetchCollectionToCopy(ownProps.collectionId, { getSources }));
     }
   },
 });

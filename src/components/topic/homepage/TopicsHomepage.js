@@ -9,7 +9,7 @@ import TopicSearchContainer from '../search/TopicSearchContainer';
 import TopicListContainer from '../list/TopicListContainer';
 import LoginForm from '../../user/LoginForm';
 import TopicIcon from '../../common/icons/TopicIcon';
-import PublicTopicListContainer from '../list/PublicTopicListContainer';
+import PublicTopicsContainer from '../list/PublicTopicsContainer';
 import DataCard from '../../common/DataCard';
 import { AddButton } from '../../common/IconButton';
 import messages from '../../../resources/messages';
@@ -98,7 +98,7 @@ const TopicsHomepage = (props) => {
           <Row>
             <Col lg={12}>
               <h1><FormattedMessage {...localMessages.publicHomeTitle} /></h1>
-              <PublicTopicListContainer />
+              <PublicTopicsContainer />
             </Col>
           </Row>
         </Grid>
