@@ -98,7 +98,7 @@ export function similarCollections(id) {
 }
 
 export function collectionSourceSplitStoryCounts(id) {
-  return createApiPromise(`api/collections/${id}/sources/splitStories/count`);
+  return createApiPromise(`api/collections/${id}/splitStories/count`);
 }
 
 export function collectionSourceSentenceHistoricalCounts(id, params) {
