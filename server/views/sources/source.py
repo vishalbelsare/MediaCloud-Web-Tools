@@ -60,8 +60,8 @@ def source_stats(media_id):
     results = {}
     # story count
     media_query = "(media_id:{})".format(media_id)
-    total_story_count = _cached_source_story_count(username, media_query)
-    results['story_count'] = total_story_count
+    source_specific_story_count = _cached_source_story_count(username, media_query)
+    results['story_count'] = source_specific_story_count
     # health
     media_health = _cached_media_source_health(username, media_id)
     results['num_stories_90'] = media_health['num_stories_90'] if 'num_stories_90' in media_health else None
@@ -73,12 +73,15 @@ def source_stats(media_id):
                                ((c['show_on_media'] == 1) or user_can_see_private_collections))]
     results['collection_count'] = len(visible_collections)
     # geography tags
-    geoRes = user_mc.sentenceFieldCount(media_query, '', field='tags_id_stories', tag_sets_id=TAG_SET_GEOCODER_VERSION, sample_size=GEO_SAMPLE_SIZE)
-    ratio_geo_tagged_count = float(geoRes[0]['count']) / float(total_story_count) if len(geoRes) > 0 else 0
+    #geoRes = user_mc.sentenceFieldCount(media_query, '', field='tags_id_stories', tag_sets_id=TAG_SET_GEOCODER_VERSION, sample_size=GEO_SAMPLE_SIZE)
+    tag_specific_story_count = user_mc.storyTagCount(solr_query=media_query, tag_sets_id=TAG_SET_GEOCODER_VERSION)
+    ratio_geo_tagged_count = float(tag_specific_story_count[0]['count']) / float(source_specific_story_count) if len(tag_specific_story_count) > 0 else 0
     results['geoPct'] = ratio_geo_tagged_count
     # nyt theme
-    nytRes = user_mc.sentenceFieldCount(media_query, '', field='tags_id_stories', tag_sets_id=TAG_SET_NYT_LABELS_VERSION, sample_size=GEO_SAMPLE_SIZE)
-    ratio_nyt_tagged_count = float(nytRes[0]['count']) / float(total_story_count) if len(nytRes) > 0 else 0
+    #nytRes = user_mc.sentenceFieldCount(media_query, '', field='tags_id_stories', tag_sets_id=TAG_SET_NYT_LABELS_VERSION, sample_size=GEO_SAMPLE_SIZE)
+    #nytRes = user_mc.storyRawNytThemeResults([story['stories_id']])
+    tag_specific_story_count = user_mc.storyTagCount(solr_query=media_query, tag_sets_id=TAG_SET_NYT_LABELS_VERSION)
+    ratio_nyt_tagged_count = float(tag_specific_story_count[0]['count']) / float(source_specific_story_count) if len(tag_specific_story_count) > 0 else 0
     results['nytPct'] = ratio_nyt_tagged_count
     return jsonify(results)
 
