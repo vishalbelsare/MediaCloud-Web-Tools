@@ -45,7 +45,7 @@ export const fetchCollectionGeo = createAsyncAction(FETCH_COLLECTION_GEO, api.co
 
 export const fetchCollectionSourceRepresentation = createAsyncAction(FETCH_COLLECTION_SOURCE_REPRESENTATION, api.collectionSourceRepresentation, id => id);
 
-export const fetchCollectionSourceSentenceHistoricalCounts = createAsyncAction(FETCH_COLLECTION_SOURCE_SPLIT_STORY_HISTORICAL_COUNTS, api.collectionSourceSplitStoryHistoricalCounts, id => id);
+export const fetchCollectionSourceSplitStoryHistoricalCounts = createAsyncAction(FETCH_COLLECTION_SOURCE_SPLIT_STORY_HISTORICAL_COUNTS, api.collectionSourceSplitStoryHistoricalCounts, id => id);
 
 export const fetchCollectionSourceList = createAsyncAction(FETCH_COLLECTION_SOURCE_LIST, api.collectionSourceList, details => details);
 

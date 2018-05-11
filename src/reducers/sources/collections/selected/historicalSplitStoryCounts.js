@@ -14,7 +14,7 @@ const historicalSentenceCounts = createAsyncReducer({
   handleSuccess: payload => ({
     counts: payload.counts.map(c => ({
       ...c,
-      sentencesOverTime: cleanDateCounts(c.stories_over_time),
+      storiesOverTime: cleanDateCounts(c.stories_over_time),
     })),
   }),
 });
