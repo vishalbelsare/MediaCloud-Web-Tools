@@ -285,7 +285,7 @@ def collection_source_split_stories(collection_id):
     total_story_count = cached_source_story_count(user_mediacloud_key(), q)
     results = cached_recent_split_stories(user_mediacloud_key(), q)
     interval = 'day' # default, and not currently passed to the calls above
-    return jsonify({'list': results, 'total': total_story_count, 'interval': day})
+    return jsonify({'list': results, 'total': total_story_count, 'interval': interval})
 
 
 @app.route('/api/collections/<collection_id>/stories/split-count.csv')

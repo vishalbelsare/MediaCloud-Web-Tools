@@ -18,10 +18,10 @@ const SERIES_MARKER_THRESHOLD = 30;
 const localMessages = {
   chartTitle: { id: 'chart.sentencesOverTime.title', defaultMessage: 'Attention Over Time' },
   tooltipSeriesName: { id: 'chart.sentencesOverTime.tooltipSeriesName', defaultMessage: 'Series: {name}' },
-  tooltipText: { id: 'chart.sentencesOverTime.tooltipText', defaultMessage: 'Average {count} {count, plural, =1 {sentence} other {sentences} }/day' },
-  seriesTitle: { id: 'chart.sentencesOverTime.seriesTitle', defaultMessage: 'avg sentences/day' },
+  tooltipText: { id: 'chart.sentencesOverTime.tooltipText', defaultMessage: 'Average {count} {count, plural, =1 {stories} other {stories} }/day' },
+  seriesTitle: { id: 'chart.sentencesOverTime.seriesTitle', defaultMessage: 'avg stories/day' },
   totalCount: { id: 'chart.sentencesOverTime.totalCount',
-    defaultMessage: 'We have collected {total, plural, =0 {No sentences} one {One sentence} other {{formattedTotal} sentences}}.',
+    defaultMessage: 'We have collected {total, plural, =0 {No sentences} one {One story} other {{formattedTotal} stories}}.',
   },
 };
 
@@ -93,7 +93,7 @@ class AttentionOverTimeChart extends React.Component {
     // setup up custom chart configuration
     const config = this.getConfig();
     config.chart.height = height;
-    let classNameForPath = 'sentences-over-time-chart';
+    let classNameForPath = 'stories-over-time-chart';
     if (filename !== undefined) {
       config.exporting.filename = filename;
     } else {
