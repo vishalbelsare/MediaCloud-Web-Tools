@@ -20,18 +20,15 @@ def stream_split_stories_csv(user_mc_key, filename, item_id, which):
 
 
 @cache.cache_on_arguments(function_key_generator=key_generator)
-def cached_recent_split_stories(user_mc_key, q='*', fq=None, start_date_str=None, end_date_str=None):
+def cached_recent_split_stories(user_mc_key, q='*', fq=None):
     # Helper to fetch sentences counts over the last year for an arbitrary query
     user_mc = user_admin_mediacloud_client()
-    if start_date_str is None:
+    if fq is None:
         last_n_days = 365
         start_date = datetime.date.today()-datetime.timedelta(last_n_days)
-    else:
-        start_date = datetime.datetime.strptime(start_date_str, '%Y-%m-%d')
-    if end_date_str is None:
         end_date = datetime.date.today()-datetime.timedelta(1)  # yesterday
-    else:
-        end_date = datetime.datetime.strptime(end_date_str, '%Y-%m-%d')
+        fq = user_mc.publish_date(start_date, end_date)
     #TODO check dates - what is the default when not passed in?
+    #fq= or date params?
     results = user_mc.storyCount(solr_query=q, solr_filter=fq, split=True,split_period='day')['counts']
     return results
