@@ -190,21 +190,23 @@ def source_geo_csv(media_id):
 @flask_login.login_required
 @api_error_handler
 def source_wordcount_csv(media_id):
-    query_arg = 'media_id:'+str(media_id)
+    solr_q = 'media_id:'+str(media_id)
+    solr_fq = None
     if ('q' in request.args) and (len(request.args['q']) > 0):
-        query_arg = 'media_id:'+str(media_id) + " AND " + request.args.get('q')
-    return stream_wordcount_csv(user_mediacloud_key(), 'wordcounts-Source-'+media_id, query_arg)
+        solr_fq = request.args['q']
+    return stream_wordcount_csv(user_mediacloud_key(), 'wordcounts-Source-'+media_id, solr_q, solr_fq)
 
 
 @app.route('/api/sources/<media_id>/words')
 @flask_login.login_required
 @api_error_handler
 def media_source_words(media_id):
-    query_arg = 'media_id:'+str(media_id)
+    solr_q = 'media_id:'+str(media_id)
+    solr_fq = None
     if ('q' in request.args) and (len(request.args['q']) > 0):
-        query_arg = 'media_id:'+str(media_id) + " AND " + request.args.get('q')
+        solr_fq = request.args['q']
     info = {
-        'wordcounts': word_count(user_mediacloud_key(), query_arg)
+        'wordcounts': word_count(user_mediacloud_key(), solr_q, solr_fq)
     }
     return jsonify({'results': info})
 

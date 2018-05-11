@@ -375,11 +375,13 @@ def collection_geo_csv(collection_id):
 @flask_login.login_required
 @api_error_handler
 def collection_words(collection_id):
-    query_arg = 'tags_id_media:' + str(collection_id)
+    solr_q = 'tags_id_media:' + str(collection_id)
+    solr_fq = None
+    # add in the publish_date clause if there is one
     if ('q' in request.args) and (len(request.args['q']) > 0):
-        query_arg = 'tags_id_media:' + str(collection_id) + " AND " + request.args.get('q')
+        solr_fq = request.args['q']
     info = {
-        'wordcounts': word_count(user_mediacloud_key, query_arg)
+        'wordcounts': word_count(user_mediacloud_key, solr_q, solr_fq)
     }
     return jsonify({'results': info})
 
@@ -388,10 +390,12 @@ def collection_words(collection_id):
 @flask_login.login_required
 @api_error_handler
 def collection_wordcount_csv(collection_id):
-    query_arg = 'tags_id_media:' + str(collection_id)
+    solr_q = 'tags_id_media:' + str(collection_id)
+    solr_fq = None
+    # add in the publish_date clause if there is one
     if ('q' in request.args) and (len(request.args['q']) > 0):
-        query_arg = 'tags_id_media:' + str(collection_id) + " AND " + request.args.get('q')
-    return stream_wordcount_csv(user_mediacloud_key(), 'wordcounts-Collection-' + collection_id, query_arg)
+        solr_fq = request.args['q']
+    return stream_wordcount_csv(user_mediacloud_key(), 'wordcounts-Collection-' + collection_id, solr_q, solr_fq)
 
 
 @app.route('/api/collections/<collection_id>/similar-collections', methods=['GET'])
