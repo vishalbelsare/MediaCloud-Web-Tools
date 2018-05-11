@@ -34,12 +34,12 @@ def explorer_geo_csv():
     filename = u'sampled-geographic-coverage'
     data = request.form
     if 'searchId' in data:
-        solr_query = parse_as_sample(data['searchId'], data['index'])
+        solr_q, solr_fq = parse_as_sample(data['searchId'], data['index'])
     else:
         query_object = json.loads(data['q'])
-        solr_query = parse_query_with_keywords(query_object)
+        solr_q, solr_fq = parse_query_with_keywords(query_object)
         filename = file_name_for_download(query_object['label'], filename)
-    res = _query_geotags(solr_query)
+    res = _query_geotags(solr_q, solr_fq)
     res = [r for r in res if int(r['tag'].split('_')[1]) in COUNTRY_GEONAMES_ID_TO_APLHA3.keys()]
     for r in res:
         geonamesId = int(r['tag'].split('_')[1])
@@ -61,16 +61,16 @@ def geotag_count():
     if search_id not in [None, -1]:
         SAMPLE_SEARCHES = load_sample_searches()
         current_search = SAMPLE_SEARCHES[search_id]['queries']
-        solr_query = parse_query_with_args_and_sample_search(request.args, current_search)
+        solr_q, solr_fq = parse_query_with_args_and_sample_search(request.args, current_search)
     else:
-        solr_query = parse_query_with_keywords(request.args)
+        solr_q, solr_fq= parse_query_with_keywords(request.args)
 
     # TODO coverage here
     # total_stories = mc.storyCount(solr_query)
     # geotagged_stories = mc.storyCount("({}) AND (tags_id_stories:{})".format(solr_query, CLIFF_CLAVIN_2_3_0_TAG_ID))
     # coverage_pct = float(geotagged_stories) / float(total_stories)
 
-    res = _query_geotags(solr_query)
+    res = _query_geotags(solr_q, solr_fq)
     res = [r for r in res if int(r['tag'].split('_')[1]) in COUNTRY_GEONAMES_ID_TO_APLHA3.keys()]
     for r in res:
         geonames_id = int(r['tag'].split('_')[1])
@@ -88,18 +88,18 @@ def geotag_count():
     return jsonify(res)
 
 
-def _query_geotags(query):
+def _query_geotags(q, fq):
     if is_user_logged_in():   # no user session
         user_mc_key = user_mediacloud_key()
     else:
         user_mc_key = None
-    return _cached_geotags(user_mc_key, query)
+    return _cached_geotags(user_mc_key, q, fq)
 
 
 @cache.cache_on_arguments(function_key_generator=key_generator)
-def _cached_geotags(user_mc_key, query):
+def _cached_geotags(user_mc_key, q, fq):
     if is_user_logged_in():   # no user session
         api_client = user_mediacloud_client()
     else:
         api_client = mc
-    return api_client.sentenceFieldCount('*', query, field='tags_id_stories', tag_sets_id=tag_utl.GEO_TAG_SET, sample_size=tag_utl.GEO_SAMPLE_SIZE)
+    return api_client.sentenceFieldCount(q, fq, field='tags_id_stories', tag_sets_id=tag_utl.GEO_TAG_SET, sample_size=tag_utl.GEO_SAMPLE_SIZE)

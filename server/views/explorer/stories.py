@@ -19,9 +19,9 @@ logger = logging.getLogger(__name__)
 @flask_login.login_required
 @api_error_handler
 def api_explorer_story_sample():
-    solr_query = parse_query_with_keywords(request.args)
+    solr_q, solr_fq = parse_query_with_keywords(request.args)
  
-    story_sample_result = apicache.random_story_list(solr_query, 50)
+    story_sample_result = apicache.random_story_list(solr_q, solr_fq, 50)
     return jsonify(story_sample_result)  
 
 
@@ -46,19 +46,19 @@ def explorer_stories_csv():
     filename = u'stories'
     data = request.form
     if 'searchId' in data:
-        solr_query = parse_as_sample(data['searchId'], data['index'])
+        solr_q, solr_fq = parse_as_sample(data['searchId'], data['index'])
         filename = filename  # don't have this info + current_query['q']
         # for demo users we only download 100 random stories (ie. not all matching stories)
-        return _stream_story_list_csv(filename, solr_query, 100, MediaCloud.SORT_RANDOM, 1)
+        return _stream_story_list_csv(filename, solr_q, solr_fq, 100, MediaCloud.SORT_RANDOM, 1)
     else:
         query_object = json.loads(data['q'])
-        solr_query = parse_query_with_keywords(query_object)
+        solr_q, solr_fq = parse_query_with_keywords(query_object)
         filename = file_name_for_download(query_object['label'], filename)
         # now page through all the stories and download them
-        return _stream_story_list_csv(filename, solr_query)
+        return _stream_story_list_csv(filename, solr_q, solr_fq)
 
 
-def _stream_story_list_csv(filename, query, stories_per_page=500, sort=MediaCloud.SORT_PROCESSED_STORIES_ID,
+def _stream_story_list_csv(filename, q, fq, stories_per_page=500, sort=MediaCloud.SORT_PROCESSED_STORIES_ID,
                            page_limit=None):
     props = ['stories_id', 'publish_date', 'title', 'url', 'language', 'ap_syndicated',
              'themes', 'media_id', 'media_name', 'media_url',
@@ -68,14 +68,14 @@ def _stream_story_list_csv(filename, query, stories_per_page=500, sort=MediaClou
     headers = {
         "Content-Disposition": "attachment;filename=" + timestamped_filename
     }
-    return Response(_story_list_by_page_as_csv_row(query, stories_per_page, sort, 5, props),
+    return Response(_story_list_by_page_as_csv_row(q, fq, stories_per_page, sort, 5, props),
                     mimetype='text/csv; charset=utf-8', headers=headers)
 
 
 # generator you can use to handle a long list of stories row by row (one row per story)
-def _story_list_by_page_as_csv_row(query, stories_per_page, sort, page_limit, props):
+def _story_list_by_page_as_csv_row(q, fq, stories_per_page, sort, page_limit, props):
     yield u','.join(props) + u'\n'  # first send the column names
-    for page in _story_list_by_page(query, stories_per_page, sort, page_limit):
+    for page in _story_list_by_page(q, fq, stories_per_page, sort, page_limit):
         for story in page:
             cleaned_row = csv.dict2row(props, story)
             row_string = u','.join(cleaned_row) + u'\n'
@@ -83,14 +83,14 @@ def _story_list_by_page_as_csv_row(query, stories_per_page, sort, page_limit, pr
 
 
 # generator you can use to do something for each page of story results
-def _story_list_by_page(query, stories_per_page, sort, page_limit=None):
+def _story_list_by_page(q, fq, stories_per_page, sort, page_limit=None):
     last_processed_stories_id = 0  # download oldest first
     page_count = 0
     media_cache = {}  # media_id => media object
     while True:
         if (page_limit is not None) and (page_count >= page_limit):
             break
-        story_page = apicache.story_list_page(query, last_processed_stories_id, stories_per_page, sort)
+        story_page = apicache.story_list_page(q, fq, last_processed_stories_id, stories_per_page, sort)
         for s in story_page:
             # add in media metadata to the story (from lazy cache)
             media_id = s['media_id']
@@ -120,8 +120,8 @@ def _story_list_by_page(query, stories_per_page, sort, page_limit=None):
 @flask_login.login_required
 @api_error_handler
 def api_explorer_story_count():
-    solr_query = parse_query_with_keywords(request.args)
-    story_count_result = apicache.story_count(solr_query)
+    solr_q, solr_fq = parse_query_with_keywords(request.args)
+    story_count_result = apicache.story_count(solr_q, solr_fq)
     return jsonify(story_count_result)  
 
 
@@ -132,11 +132,11 @@ def api_explorer_demo_story_count():
     if search_id not in [None, -1]:
         sample_searches = load_sample_searches()
         current_search = sample_searches[search_id]['queries']
-        solr_query = parse_query_with_args_and_sample_search(request.args, current_search)
+        solr_q, solr_fq = parse_query_with_args_and_sample_search(request.args, current_search)
     else:
-        solr_query = parse_query_with_keywords(request.args)
+        solr_q, solr_fq = parse_query_with_keywords(request.args)
 
-    story_count_result = apicache.story_count(solr_query)
+    story_count_result = apicache.story_count(solr_q, solr_fq)
     # maybe check admin role before we run this?
     return jsonify(story_count_result)  # give them back new data, so they can update the client
 
@@ -148,18 +148,18 @@ def explorer_story_count_csv():
     data = request.form
     if 'searchId' in data:
         # TODO: don't load this query twice because that is kind of dumb
-        solr_query = parse_as_sample(data['searchId'], data['index'])
+        solr_q, solr_fq = parse_as_sample(data['searchId'], data['index'])
         filename = filename  # don't have this info + current_query['q']
         sample_searches = load_sample_searches()
         query_object = sample_searches[data['searchId']]['queries'][data['index']]
         label = query_object['label']
     else:
         query_object = json.loads(data['q'])
-        solr_query = parse_query_with_keywords(query_object)
+        solr_q, solr_fq = parse_query_with_keywords(query_object)
         label = query_object['label']
         filename = file_name_for_download(label, filename)
     # sentence count needs dates to be sent explicitly -TODO check what has priority
-    story_count = apicache.story_count(solr_query)
+    story_count = apicache.story_count(solr_q, solr_fq)
     story_count_results.append({'query': label, 'count': story_count['count']})
     props = ['query', 'count']
     return csv.stream_response(story_count_results, props, filename)

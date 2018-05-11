@@ -24,7 +24,8 @@ ENTITY_DOWNLOAD_COLUMNS = ['label', 'count', 'pct', 'sample_size','tags_id']
 @flask_login.login_required
 @api_error_handler
 def top_entities_people():
-    results = apicache.top_tags_with_coverage(parse_query_with_keywords(request.args), CLIFF_PEOPLE)
+    solr_q, solr_fq = parse_query_with_keywords(request.args)
+    results = apicache.top_tags_with_coverage(solr_q, solr_fq, CLIFF_PEOPLE)
     return jsonify(results)
 
 
@@ -32,7 +33,8 @@ def top_entities_people():
 @flask_login.login_required
 @api_error_handler
 def top_entities_organizations():
-    results = apicache.top_tags_with_coverage(parse_query_with_keywords(request.args), CLIFF_ORGS)
+    solr_q, solr_fq = parse_query_with_keywords(request.args)
+    results = apicache.top_tags_with_coverage(solr_q, solr_fq, CLIFF_ORGS)
     return jsonify(results)
 
 
@@ -55,10 +57,10 @@ def demo_top_tags_with_coverage(tag_sets_id,):
     if search_id not in [None, -1]:
         sample_searches = load_sample_searches()
         current_search = sample_searches[search_id]['queries']
-        q = parse_query_with_args_and_sample_search(request.args, current_search)
+        solr_q, solr_fq = parse_query_with_args_and_sample_search(request.args, current_search)
     else:
-        q = parse_query_with_keywords(request.args)
-    return apicache.top_tags_with_coverage(q, tag_sets_id)
+        solr_q, solr_fq = parse_query_with_keywords(request.args)
+    return apicache.top_tags_with_coverage(solr_q, solr_fq, tag_sets_id)
 
 
 @app.route('/api/explorer/tags/<tag_sets_id>/top-tags.csv', methods=['POST'])
@@ -68,12 +70,12 @@ def explorer_entities_csv(tag_sets_id):
     filename = u'sampled-{}'.format(tag_set['label'])
     data = request.form
     if 'searchId' in data:
-        solr_query = parse_as_sample(data['searchId'], data['index'])
+        solr_q, solr_fq = parse_as_sample(data['searchId'], data['index'])
     else:
         query_object = json.loads(data['q'])
-        solr_query = parse_query_with_keywords(query_object)
+        solr_q, solr_fq = parse_query_with_keywords(query_object)
         filename = file_name_for_download(query_object['label'], filename)
-    top_tag_counts = apicache.top_tags_with_coverage(solr_query, tag_sets_id, TAG_COUNT_DOWNLOAD_LENGTH)['results']
+    top_tag_counts = apicache.top_tags_with_coverage(solr_q, solr_fq, tag_sets_id, TAG_COUNT_DOWNLOAD_LENGTH)['results']
     for tag in top_tag_counts:
         tag['sample_size'] = TAG_COUNT_SAMPLE_SIZE
     return csv.stream_response(top_tag_counts, ENTITY_DOWNLOAD_COLUMNS, filename)
@@ -83,7 +85,8 @@ def explorer_entities_csv(tag_sets_id):
 @flask_login.login_required
 @api_error_handler
 def top_themes():
-    results = apicache.top_tags_with_coverage(parse_query_with_keywords(request.args), NYT_LABELS_TAG_SET_ID)
+    solr_q, solr_fq = parse_query_with_keywords(request.args)
+    results = apicache.top_tags_with_coverage(solr_q, solr_fq, NYT_LABELS_TAG_SET_ID)
     return jsonify(results)
 
 

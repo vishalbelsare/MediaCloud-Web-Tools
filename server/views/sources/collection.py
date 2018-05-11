@@ -290,7 +290,7 @@ def _cached_source_split_sentence_count(user_mc_key, query, split_start, split_e
     return user_mc.sentenceCount(query, split=True, split_start_date=split_start, split_end_date=split_end)
 
 
-@app.route('/api/collections/<collection_id>/splitStories/count')
+@app.route('/api/collections/<collection_id>/stories/split-count')
 @flask_login.login_required
 @api_error_handler
 def collection_source_split_stories(collection_id):
@@ -299,7 +299,7 @@ def collection_source_split_stories(collection_id):
     return jsonify({'sources': results})
 
 
-@app.route('/api/collections/<collection_id>/splitStories/count.csv')
+@app.route('/api/collections/<collection_id>/stories/split-count.csv')
 @flask_login.login_required
 @api_error_handler
 def collection_source_split_stories_csv(collection_id):
@@ -313,10 +313,10 @@ def collection_source_split_stories_csv(collection_id):
 
 
 @cache.cache_on_arguments(function_key_generator=key_generator)
-def _cached_media_with_split_stories(user_mc_key, tag_sets_id):
+def _cached_media_with_split_stories(user_mc_key, collection_id):
     sample_size = 2000  # kind of arbitrary
     # list all sources first
-    sources_by_id = {int(c['media_id']): c for c in media_with_tag(user_mediacloud_key(), tag_sets_id)}
+    sources_by_id = {int(m['media_id']): m for m in media_with_tag(user_mediacloud_key(), collection_id)}
     story_split = mc.storyList('*', 'media_id:' + str(sources_by_id), rows=sample_size, sort=mc.SORT_RANDOM)
     # sum the number of sentences per media source
     #TODO not yet implemented/tested for story_splits
@@ -335,22 +335,24 @@ def _tag_set_info(user_mc_key, tag_sets_id):
     return user_mc.tagSet(tag_sets_id)
 
 
-@app.route('/api/collections/<collection_id>/sentences/count', methods=['GET'])
+@app.route('/api/collections/<collection_id>/sources/representation', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
-def api_collection_sentence_count(collection_id):
-    info = {}
-    info['sentenceCounts'] = cached_recent_sentence_counts(user_mediacloud_key(),
-                                                           ['tags_id_media:' + str(collection_id)])
-    return jsonify({'results': info})
+def api_collection_source_representation(collection_id):
+    source_representation = apicache.collection_source_representation(user_mediacloud_key(), collection_id)
+    return jsonify({'sources': source_representation.values()})
 
 
-@app.route('/api/collections/<collection_id>/sentences/sentence-count.csv', methods=['GET'])
+@app.route('/api/collections/<collection_id>/sources/representation.csv', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
-def collection_sentence_count_csv(collection_id):
-    return stream_sentence_count_csv(user_mediacloud_key(), 'sentenceCounts-Collection-' + collection_id, collection_id,
-                                     "tags_id_media")
+def api_collection_source_representation_csv(collection_id):
+    user_mc = user_mediacloud_client()
+    info = user_mc.tag(collection_id)
+    source_representation = apicache.collection_source_representation(user_mediacloud_key(), collection_id)
+    props = ['media_id', 'media_name', 'media_url', 'stories', 'sample_size', 'story_pct']
+    filename = info['label'] + "-source sentence counts.csv"
+    return csv.stream_response(source_representation, props, filename)
 
 
 @app.route('/api/collections/<collection_id>/geography')
@@ -375,11 +377,13 @@ def collection_geo_csv(collection_id):
 @flask_login.login_required
 @api_error_handler
 def collection_words(collection_id):
-    query_arg = 'tags_id_media:' + str(collection_id)
+    solr_q = 'tags_id_media:' + str(collection_id)
+    solr_fq = None
+    # add in the publish_date clause if there is one
     if ('q' in request.args) and (len(request.args['q']) > 0):
-        query_arg = 'tags_id_media:' + str(collection_id) + " AND " + request.args.get('q')
+        solr_fq = request.args['q']
     info = {
-        'wordcounts': word_count(user_mediacloud_key, query_arg)
+        'wordcounts': word_count(user_mediacloud_key, solr_q, solr_fq)
     }
     return jsonify({'results': info})
 
@@ -388,10 +392,12 @@ def collection_words(collection_id):
 @flask_login.login_required
 @api_error_handler
 def collection_wordcount_csv(collection_id):
-    query_arg = 'tags_id_media:' + str(collection_id)
+    solr_q = 'tags_id_media:' + str(collection_id)
+    solr_fq = None
+    # add in the publish_date clause if there is one
     if ('q' in request.args) and (len(request.args['q']) > 0):
-        query_arg = 'tags_id_media:' + str(collection_id) + " AND " + request.args.get('q')
-    return stream_wordcount_csv(user_mediacloud_key(), 'wordcounts-Collection-' + collection_id, query_arg)
+        solr_fq = request.args['q']
+    return stream_wordcount_csv(user_mediacloud_key(), 'wordcounts-Collection-' + collection_id, solr_q, solr_fq)
 
 
 @app.route('/api/collections/<collection_id>/similar-collections', methods=['GET'])
