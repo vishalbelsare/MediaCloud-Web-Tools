@@ -1,5 +1,6 @@
 import json
 import codecs
+import operator
 
 from server import mc
 from server.cache import cache, key_generator
@@ -42,7 +43,7 @@ def collection_source_representation(mc_api_key, collection_id):
 
 @cache.cache_on_arguments(function_key_generator=key_generator)
 def _cached_collection_source_representation(mc_api_key, collection_id):
-    sample_size = 5000
+    sample_size = 1000
     stories = random_story_list(mc_api_key, 'tags_id_media:' + str(collection_id), rows=sample_size)
     media_representation = {}
     for s in stories:
@@ -58,7 +59,7 @@ def _cached_collection_source_representation(mc_api_key, collection_id):
     for media_id in media_representation:
         media_representation[media_id]['story_pct'] = float(media_representation[media_id]['stories']) / float(
             sample_size)
-    return media_representation
+    return sorted(media_representation.values(), key=operator.itemgetter('stories'))
 
 
 def random_story_list(mc_api_key, q, fq=None, rows=1000):

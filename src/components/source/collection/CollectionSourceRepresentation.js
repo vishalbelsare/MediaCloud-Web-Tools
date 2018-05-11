@@ -73,7 +73,7 @@ class CollectionSourceRepresentation extends React.Component {
           id: s.media_id,
           value: s.story_pct,
           centerText: (idx < TOP_N_LABELS_TO_SHOW) ? s.media_name : null,
-          rolloverText: `${s.name}: ${formatNumber(s.story_pct, { style: 'percent', maximumFractionDigits: 2 })}`,
+          rolloverText: `${s.media_name}: ${formatNumber(s.story_pct, { style: 'percent', maximumFractionDigits: 2 })}`,
           fill: scaleRange(s.story_pct),
         })),
       ];
