@@ -16,8 +16,9 @@ import server.views.sources.apicache as apicache
 from server.util.request import arguments_required, form_fields_required, api_error_handler
 from server.util.tags import TAG_SETS_ID_COLLECTIONS, is_metadata_tag_set, format_name_from_label, \
     format_metadata_fields, media_with_tag
+from server.views.sources.stories_split_by_time import cached_recent_split_stories
 from server.views.sources import SOURCES_TEMPLATE_PROPS_EDIT, \
-    COLLECTIONS_TEMPLATE_PROPS_EDIT, _cached_source_story_count
+    COLLECTIONS_TEMPLATE_PROPS_EDIT, cached_source_story_count
 from server.views.sources.favorites import add_user_favorite_flag_to_collections, add_user_favorite_flag_to_sources
 from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
 from server.views.sources.stories_split_by_time import cached_recent_split_stories, stream_split_stories_csv
@@ -212,14 +213,14 @@ def api_collection_sources_csv(collection_id):
     return csv.download_media_csv(all_media, file_prefix, properties_to_include)
 
 
-@app.route('/api/collections/<collection_id>/sources/sentences/historical-counts')
+@app.route('/api/collections/<collection_id>/sources/story-split/historical-counts')
 @arguments_required('start', 'end')
 @flask_login.login_required
 @api_error_handler
-def collection_source_sentence_historical_counts(collection_id):
+def collection_source_story_split_historical_counts(collection_id):
     start_date_str = request.args['start']
     end_date_str = request.args['end']
-    results = _collection_source_sentence_historical_counts(collection_id, start_date_str, end_date_str)
+    results = _collection_source_story_split_historical_counts(collection_id, start_date_str, end_date_str)
     return jsonify({'counts': results})
 
 
@@ -227,11 +228,12 @@ def collection_source_sentence_historical_counts(collection_id):
 @arguments_required('start', 'end')
 @flask_login.login_required
 @api_error_handler
-def collection_source_sentence_historical_counts_csv(collection_id):
+def collection_source_story_split_historical_counts_csv(collection_id):
     start_date_str = request.args['start']
     end_date_str = request.args['end']
-    results = _collection_source_sentence_historical_counts(collection_id, start_date_str, end_date_str)
+    results = _collection_source_story_split_historical_counts(collection_id, start_date_str, end_date_str)
     date_cols = None
+    #TODO verify this
     for source in results:
         if date_cols is None:
             date_cols = sorted(source['sentences_over_time'].keys())
@@ -244,57 +246,42 @@ def collection_source_sentence_historical_counts_csv(collection_id):
 
 
 # worker function to help in parallel
-def _source_sentence_counts_worker(info):
+def _source_story_split_count_worker(info):
     source = info['media']
     media_query = "(media_id:{}) {}".format(source['media_id'], info['q'])
-    total_story_count = _cached_source_story_count(user_mediacloud_key(), media_query)
-    split_sentence_count = _cached_source_split_sentence_count(user_mediacloud_key, media_query,
-                                                               info['start_date_str'], info['end_date_str'])
-    del split_sentence_count['split']['end']
-    del split_sentence_count['split']['start']
-    del split_sentence_count['split']['gap']
+    date_filter = info['dates']
+    total_story_count = cached_source_story_count(user_mediacloud_key(), media_query)
+    split_story_count = cached_recent_split_stories(user_mediacloud_key, media_query, date_filter)
+
     source_data = {
         'media_id': source['media_id'],
         'media_name': source['name'],
         'media_url': source['url'],
         'total_stories': total_story_count,
-        'total_sentences': split_sentence_count['count'],
-        'sentences_over_time': split_sentence_count['split'],
+        'total_split_stories': split_story_count['count'],
+        'splits_over_time': split_story_count['split'],
     }
     return source_data
 
 
-def _collection_source_sentence_historical_counts(collection_id, start_date_str, end_date_str):
+def _collection_source_story_split_historical_counts(collection_id, start_date_str, end_date_str):
     user_mc = user_mediacloud_client()
     start_date = datetime.datetime.strptime(start_date_str, "%Y-%m-%d").date()
     end_date = datetime.datetime.strptime(end_date_str, "%Y-%m-%d").date()
-    q = " AND ({})".format(user_mc.publish_date_query(start_date, end_date))
     media_list = media_with_tag(user_mediacloud_key(), collection_id)
-    jobs = [{'media': m, 'q': q, 'start_date_str': start_date_str, 'end_date_str': end_date_str} for m in media_list]
+    date_filter = "({})".format(user_mc.publish_date_query(start_date, end_date))
+    jobs = [{'media': m, 'q': q, 'dates': date_filter} for m in media_list]
     # fetch in parallel to make things faster
     pool = Pool(processes=HISTORICAL_COUNT_POOL_SIZE)
-    results = pool.map(_source_sentence_counts_worker, jobs)  # blocks until they are all done
+    results = pool.map(_source_story_split_count_worker, jobs)  # blocks until they are all done
     pool.terminate()  # extra safe garbage collection
     return results
-
-
-@cache.cache_on_arguments(function_key_generator=key_generator)
-def _cached_source_sentence_count(user_mc_key, query):
-    user_mc = user_mediacloud_client()
-    return user_mc.sentenceCount(query)['count']
-
-
-@cache.cache_on_arguments(function_key_generator=key_generator)
-def _cached_source_split_sentence_count(user_mc_key, query, split_start, split_end):
-    user_mc = user_mediacloud_client()
-    return user_mc.sentenceCount(query, split=True, split_start_date=split_start, split_end_date=split_end)
-
 
 @app.route('/api/collections/<collection_id>/stories/split-count')
 @flask_login.login_required
 @api_error_handler
 def collection_source_split_stories(collection_id):
-    q = "tags_id_media: {}".format(collection_id)
+    q = "tags_id_media:{}".format(collection_id)
     results = cached_recent_split_stories(user_mediacloud_key(), q)
     return jsonify({'sources': results})
 
