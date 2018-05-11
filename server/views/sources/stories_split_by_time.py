@@ -33,5 +33,5 @@ def cached_recent_split_stories(user_mc_key, fq, start_date_str=None, end_date_s
     else:
         end_date = datetime.datetime.strptime(end_date_str, '%Y-%m-%d')
     fq.append(user_mc.publish_date_query(start_date, end_date))
-    #results = user_mc.storyCount('*', solr_filter=fq, split=True,split_period='day')['counts']
-    return ""
+    results = user_mc.storyCount('*', solr_filter=fq, split=True,split_period='day')['counts']
+    return results

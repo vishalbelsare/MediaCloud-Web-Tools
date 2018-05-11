@@ -20,7 +20,7 @@ from server.views.sources import SOURCES_TEMPLATE_PROPS_EDIT, \
     COLLECTIONS_TEMPLATE_PROPS_EDIT, _cached_source_story_count
 from server.views.sources.favorites import add_user_favorite_flag_to_collections, add_user_favorite_flag_to_sources
 from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
-from server.views.sources.sentences import cached_recent_sentence_counts, stream_sentence_count_csv
+from server.views.sources.stories_split_by_time import cached_recent_split_stories, stream_split_stories_csv
 from server.views.sources.words import word_count, stream_wordcount_csv
 
 logger = logging.getLogger(__name__)
@@ -290,23 +290,24 @@ def _cached_source_split_sentence_count(user_mc_key, query, split_start, split_e
     return user_mc.sentenceCount(query, split=True, split_start_date=split_start, split_end_date=split_end)
 
 
-@app.route('/api/collections/<collection_id>/sources/sentences/count')
+@app.route('/api/collections/<collection_id>/splitStories/count')
 @flask_login.login_required
 @api_error_handler
-def collection_source_sentence_counts(collection_id):
-    results = _cached_media_with_sentence_counts(user_mediacloud_key(), collection_id)
+def collection_source_split_stories(collection_id):
+    fq_stub = "tags_id: {}".format(collection_id)
+    results = cached_recent_split_stories(user_mediacloud_key(), fq_stub)
     return jsonify({'sources': results})
 
 
-@app.route('/api/collections/<collection_id>/sources/sentences/count.csv')
+@app.route('/api/collections/<collection_id>/splitStories/count.csv')
 @flask_login.login_required
 @api_error_handler
-def collection_source_sentence_counts_csv(collection_id):
+def collection_source_split_stories_csv(collection_id):
     user_mc = user_mediacloud_client()
     info = user_mc.tag(collection_id)
-    results = _cached_media_with_sentence_counts(user_mediacloud_key(), collection_id)
-    props = ['media_id', 'name', 'url', 'sentence_count', 'sentence_pct']
-    filename = info['label'] + "-source sentence counts.csv"
+    results = cached_recent_split_stories(user_mediacloud_key(), collection_id)
+    props = ['media_id', 'name', 'url', 'story_count']
+    filename = info['label'] + "-source split story.csv"
     return csv.stream_response(results, props, filename)
 
 

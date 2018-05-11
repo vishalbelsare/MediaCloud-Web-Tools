@@ -5,6 +5,7 @@ import server.util.tags as tag_utl
 from server.util.geo import COUNTRY_GEONAMES_ID_TO_APLHA3, HIGHCHARTS_KEYS
 from server.cache import cache, key_generator
 from server.auth import user_admin_mediacloud_client
+from server.views.stories import QUERY_LAST_WEEK, QUERY_ENGLISH_LANGUAGE
 
 logger = logging.getLogger(__name__)
 
@@ -12,7 +13,7 @@ logger = logging.getLogger(__name__)
 @cache.cache_on_arguments(function_key_generator=key_generator)
 def cached_geotag_count(user_mc_key, query):
     user_mc = user_admin_mediacloud_client()
-    res = user_mc.sentenceFieldCount('*', query, field='tags_id_stories', tag_sets_id=tag_utl.GEO_TAG_SET, sample_size=tag_utl.GEO_SAMPLE_SIZE)
+    res = user_mc.storyTagCount('*', [QUERY_LAST_WEEK, QUERY_ENGLISH_LANGUAGE], tag_sets_id=tag_utl.GEO_TAG_SET)
     res = [r for r in res if int(r['tag'].split('_')[1]) in COUNTRY_GEONAMES_ID_TO_APLHA3.keys()]
     for r in res:
         geonamesId = int(r['tag'].split('_')[1])

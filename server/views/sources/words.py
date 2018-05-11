@@ -6,6 +6,7 @@ import server.util.csv as csv
 from server.util.wordembeddings import google_news_2d
 from server.cache import cache, key_generator
 from server.auth import user_admin_mediacloud_client
+from server.views.stories import QUERY_LAST_WEEK
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +24,8 @@ def word_count(user_mc_key, query, num_words=WORD_COUNT_UI_LENGTH, sample_size=W
 @cache.cache_on_arguments(function_key_generator=key_generator)
 def _cached_word_count(user_mc_key, query, num_words, sample_size=WORD_COUNT_SAMPLE_SIZE):
     api_client = mc if user_mc_key is None else user_admin_mediacloud_client()
-    word_data = api_client.wordCount('*', query, num_words=num_words, sample_size=sample_size)
+    #word_data = api_client.wordCount('*', query, num_words=num_words, sample_size=sample_size)
+    word_data = api_client.storyList('*', QUERY_LAST_WEEK, wc=True)
     words = [w['term'] for w in word_data]
     word2vec_data = _cached_word2vec_google_results(words)
     try:
