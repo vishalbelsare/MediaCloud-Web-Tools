@@ -55,8 +55,8 @@ class CollectionSourceRepresentation extends React.Component {
     if (sources.length === 0) {
       content = <p><FormattedMessage {...localMessages.cantShow} /></p>;
     } else {
-      const contributingSources = sources.filter(d => d.story_pct > SENTENCE_PERCENTAGE_MIN_VALUE);
-      const otherSources = sources.filter(d => d.story_pct <= SENTENCE_PERCENTAGE_MIN_VALUE);
+      const contributingSources = Object.values(sources).filter(d => d.story_pct > SENTENCE_PERCENTAGE_MIN_VALUE);
+      const otherSources = Object.values(sources).filter(d => d.story_pct <= SENTENCE_PERCENTAGE_MIN_VALUE);
       const otherTotal = d3.sum(otherSources.map(d => d.story_pct));
       const otherSourcesNode = {
         value: otherTotal,
@@ -124,7 +124,7 @@ class CollectionSourceRepresentation extends React.Component {
 CollectionSourceRepresentation.propTypes = {
   // from state
   fetchStatus: PropTypes.string.isRequired,
-  sources: PropTypes.array.isRequired,
+  sources: PropTypes.object.isRequired,
   // from parent
   collectionId: PropTypes.number.isRequired,
   // from dispatch
