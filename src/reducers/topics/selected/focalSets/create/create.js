@@ -12,6 +12,7 @@ import mediaTypeCoverage from './mediaTypeCoverage';
 import mediaTypeStoryCounts from './mediaTypeStoryCounts';
 import workflow from './workflow';
 import matchingStoriesConfigWorkflow from './matchingStoriesConfigWorkflow';
+import matchingStoriesModelName from './matchingStoriesModelName';
 import matchingStoriesUploadCSV from './matchingStoriesUploadCSV';
 import matchingStoriesGenerateModel from './matchingStoriesGenerateModel';
 import matchingStoriesProbableWords from './matchingStoriesProbableWords';
@@ -31,6 +32,7 @@ const createFocusReducer = combineReducers({
   mediaTypeStoryCounts,
   workflow,
   matchingStoriesConfigWorkflow,
+  matchingStoriesModelName,
   matchingStoriesUploadCSV,
   matchingStoriesGenerateModel,
   matchingStoriesProbableWords,
