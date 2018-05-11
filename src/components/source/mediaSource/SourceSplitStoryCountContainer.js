@@ -74,10 +74,10 @@ SourceSplitStoryCountContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  fetchStatus: state.sources.sources.selected.sentenceCount.fetchStatus,
-  total: state.sources.sources.selected.sentenceCount.total,
-  counts: state.sources.sources.selected.sentenceCount.list,
-  health: state.sources.sources.selected.sentenceCount.health,
+  fetchStatus: state.sources.sources.selected.splitStoryCount.fetchStatus,
+  total: state.sources.sources.selected.splitStoryCount.total,
+  counts: state.sources.sources.selected.splitStoryCount.list,
+  health: state.sources.sources.selected.splitStoryCount.health,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

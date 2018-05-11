@@ -282,8 +282,9 @@ def _collection_source_story_split_historical_counts(collection_id, start_date_s
 @api_error_handler
 def collection_source_split_stories(collection_id):
     q = "tags_id_media:{}".format(collection_id)
+    total_story_count = cached_source_story_count(user_mediacloud_key(), q)
     results = cached_recent_split_stories(user_mediacloud_key(), q)
-    return jsonify({'sources': results})
+    return jsonify({'list': results, 'total': total_story_count})
 
 
 @app.route('/api/collections/<collection_id>/stories/split-count.csv')
