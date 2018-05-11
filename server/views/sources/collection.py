@@ -327,7 +327,7 @@ def _tag_set_info(user_mc_key, tag_sets_id):
 @api_error_handler
 def api_collection_source_representation(collection_id):
     source_representation = apicache.collection_source_representation(user_mediacloud_key(), collection_id)
-    return jsonify({'sources': source_representation.values()})
+    return jsonify({'sources': source_representation})
 
 
 @app.route('/api/collections/<collection_id>/sources/representation.csv', methods=['GET'])
