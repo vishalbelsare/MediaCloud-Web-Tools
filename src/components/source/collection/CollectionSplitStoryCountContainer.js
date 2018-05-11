@@ -13,16 +13,16 @@ import { DownloadButton } from '../../common/IconButton';
 
 const localMessages = {
   title: { id: 'sentenceCount.title', defaultMessage: 'Last Year of Coverage' },
-  helpTitle: { id: 'collection.summary.sentenceCount.help.title', defaultMessage: 'About Sentences Over Time' },
+  helpTitle: { id: 'collection.summary.sentenceCount.help.title', defaultMessage: 'About Stories Over Time' },
   helpText: { id: 'collection.summary.sentenceCount.help.text',
-    defaultMessage: '<p>This chart shows you the number of sentences we have collected from the sources in this collection over the last year. Click on the line to see a summary of the content in this collection for that date.</p>',
+    defaultMessage: '<p>This chart shows you the number of stories we have collected from the sources in this collection over the last year.</p>',
   },
 };
 
 class CollectionSplitStoryCountContainer extends React.Component {
   downloadCsv = () => {
     const { collectionId } = this.props;
-    const url = `/api/collections/${collectionId}/sentences/sentence-count.csv`;
+    const url = `/api/collections/${collectionId}/stories/split-count.csv`;
     window.location = url;
   }
   handleDataPointClick = (startDate, endDate) => {

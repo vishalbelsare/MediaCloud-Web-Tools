@@ -6,7 +6,7 @@ export const FETCH_FEATURED_COLLECTIONS_LIST = 'FETCH_FEATURED_COLLECTIONS_LIST'
 export const FETCH_COLLECTION_TOP_WORDS = 'FETCH_COLLECTION_TOP_WORDS';
 export const FETCH_COLLECTION_SPLIT_STORY_COUNT = 'FETCH_COLLECTION_SPLIT_STORY_COUNT';
 export const FETCH_COLLECTION_GEO = 'FETCH_COLLECTION_GEO';
-export const FETCH_COLLECTION_SOURCE_SPLIT_STORY_COUNT = 'FETCH_COLLECTION_SOURCE_SPLIT_STORY_COUNT';
+export const FETCH_COLLECTION_SOURCE_REPRESENTATION = 'FETCH_COLLECTION_SOURCE_REPRESENTATION';
 export const FETCH_COLLECTION_SOURCE_SPLIT_STORY_HISTORICAL_COUNTS = 'FETCH_COLLECTION_SOURCE_SPLIT_STORY_HISTORICAL_COUNTS';
 export const SET_COLLECTION_SOURCE_HISTORY_TIME_PERIOD = 'SET_COLLECTION_SOURCE_HISTORY_TIME_PERIOD';
 export const FETCH_SIMILAR_COLLECTIONS = 'FETCH_SIMILAR_COLLECTIONS';
@@ -43,7 +43,7 @@ export const fetchCollectionTopWords = createAsyncAction(FETCH_COLLECTION_TOP_WO
 
 export const fetchCollectionGeo = createAsyncAction(FETCH_COLLECTION_GEO, api.collectionGeography, id => id);
 
-export const fetchCollectionSourceSplitStoryCounts = createAsyncAction(FETCH_COLLECTION_SOURCE_SPLIT_STORY_COUNT, api.collectionSourceSplitStoryCounts, id => id);
+export const fetchCollectionSourceRepresentation = createAsyncAction(FETCH_COLLECTION_SOURCE_REPRESENTATION, api.collectionSourceRepresentation, id => id);
 
 export const fetchCollectionSourceSentenceHistoricalCounts = createAsyncAction(FETCH_COLLECTION_SOURCE_SPLIT_STORY_HISTORICAL_COUNTS, api.collectionSourceSplitStoryHistoricalCounts, id => id);
 

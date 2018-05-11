@@ -4,7 +4,7 @@ import collectionDetails from './collectionDetails';
 import collectionTopWords from './collectionTopWords';
 import collectionSplitStoryCount from './collectionSplitStoryCount';
 import collectionGeoTag from './collectionGeoTag';
-import collectionSourceSplitStoryCount from './collectionSourceSplitStoryCount';
+import collectionSourceRepresentation from './collectionSourceRepresentation';
 import collectionSimilar from './collectionSimilar';
 import historicalSplitStoryCounts from './historicalSplitStoryCounts';
 import collectionSourceList from './collectionSourceList';
@@ -26,7 +26,7 @@ const selected = combineReducers({
   collectionTopWords,
   collectionSplitStoryCount,
   collectionGeoTag,
-  collectionSourceSplitStoryCount,
+  collectionSourceRepresentation,
   collectionSimilar,
   collectionSourceList,
   historicalSplitStoryCounts,

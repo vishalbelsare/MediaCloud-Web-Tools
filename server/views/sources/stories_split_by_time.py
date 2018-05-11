@@ -19,8 +19,8 @@ def stream_split_stories_csv(user_mc_key, filename, item_id, which):
     return csv.stream_response(clean_results, props, filename)
 
 
-@cache.cache_on_arguments(function_key_generator=key_generator)
-def cached_recent_split_stories(user_mc_key, q='*', fq=None, start_date_str=None, end_date_str=None):
+#@cache.cache_on_arguments(function_key_generator=key_generator)
+def cached_recent_split_stories(user_mc_key, q, start_date_str=None, end_date_str=None):
     # Helper to fetch sentences counts over the last year for an arbitrary query
     user_mc = user_admin_mediacloud_client()
     if start_date_str is None:
@@ -32,6 +32,7 @@ def cached_recent_split_stories(user_mc_key, q='*', fq=None, start_date_str=None
         end_date = datetime.date.today()-datetime.timedelta(1)  # yesterday
     else:
         end_date = datetime.datetime.strptime(end_date_str, '%Y-%m-%d')
+    fq = user_mc.publish_date_query(start_date, end_date)
     #TODO check dates - what is the default when not passed in?
-    results = user_mc.storyCount(solr_query=q, solr_filter=fq, split=True,split_period='day')['counts']
+    results = user_mc.storyCount(q, fq, split=True, split_period='day')['counts']
     return results
