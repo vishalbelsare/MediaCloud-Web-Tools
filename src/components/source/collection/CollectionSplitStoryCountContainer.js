@@ -33,7 +33,7 @@ class CollectionSplitStoryCountContainer extends React.Component {
     window.open(url, '_blank');
   }
   render() {
-    const { total, counts, health, intl, filename, helpButton } = this.props;
+    const { total, counts, health, interval, intl, filename, helpButton } = this.props;
     const { formatMessage } = intl;
     return (
       <DataCard>
@@ -48,6 +48,7 @@ class CollectionSplitStoryCountContainer extends React.Component {
           total={total}
           data={counts}
           health={health}
+          interval={interval}
           height={250}
           filename={filename}
           onDataPointClick={this.handleDataPointClick}
@@ -63,6 +64,7 @@ CollectionSplitStoryCountContainer.propTypes = {
   health: PropTypes.array,
   total: PropTypes.number,
   counts: PropTypes.array,
+  interval: PropTypes.string,
   // from parent
   collectionId: PropTypes.number.isRequired,
   filename: PropTypes.string,
@@ -78,6 +80,7 @@ const mapStateToProps = state => ({
   total: state.sources.collections.selected.collectionSplitStoryCount.total,
   counts: state.sources.collections.selected.collectionSplitStoryCount.list,
   health: state.sources.collections.selected.collectionSplitStoryCount.health,
+  interval: 'day', // TODO where should we default this?
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

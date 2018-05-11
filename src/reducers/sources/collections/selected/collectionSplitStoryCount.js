@@ -5,6 +5,7 @@ const collectionSplitStoryCount = createAsyncReducer({
   initialState: {
     total: null,
     list: [],
+    interval: 'day',
   },
   action: FETCH_COLLECTION_SPLIT_STORY_COUNT,
 });
