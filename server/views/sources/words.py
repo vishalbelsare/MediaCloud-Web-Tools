@@ -25,8 +25,12 @@ def word_count(user_mc_key, query, num_words=WORD_COUNT_UI_LENGTH, sample_size=W
 def _cached_word_count(user_mc_key, query, num_words, sample_size=WORD_COUNT_SAMPLE_SIZE):
     api_client = mc if user_mc_key is None else user_admin_mediacloud_client()
     #word_data = api_client.wordCount('*', query, num_words=num_words, sample_size=sample_size)
+    words = []
     word_data = api_client.storyList('*', QUERY_LAST_WEEK, wc=True)
-    words = [w['term'] for w in word_data]
+    for datum in word_data:
+        for witem in datum['word_count']:
+            words.append(witem['term'])
+
     word2vec_data = _cached_word2vec_google_results(words)
     try:
         for i in range(len(word2vec_data)):

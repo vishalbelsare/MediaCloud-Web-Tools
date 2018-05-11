@@ -20,7 +20,7 @@ def stream_split_stories_csv(user_mc_key, filename, item_id, which):
 
 
 @cache.cache_on_arguments(function_key_generator=key_generator)
-def cached_recent_split_stories(user_mc_key, fq, start_date_str=None, end_date_str=None):
+def cached_recent_split_stories(user_mc_key, q='*', fq=None, start_date_str=None, end_date_str=None):
     # Helper to fetch sentences counts over the last year for an arbitrary query
     user_mc = user_admin_mediacloud_client()
     if start_date_str is None:
@@ -32,6 +32,6 @@ def cached_recent_split_stories(user_mc_key, fq, start_date_str=None, end_date_s
         end_date = datetime.date.today()-datetime.timedelta(1)  # yesterday
     else:
         end_date = datetime.datetime.strptime(end_date_str, '%Y-%m-%d')
-    fq.append(user_mc.publish_date_query(start_date, end_date))
-    results = user_mc.storyCount('*', solr_filter=fq, split=True,split_period='day')['counts']
+    fq = user_mc.publish_date_query(start_date, end_date)
+    results = user_mc.storyCount(solr_query=q, solr_filter=fq, split=True,split_period='day')['counts']
     return results
