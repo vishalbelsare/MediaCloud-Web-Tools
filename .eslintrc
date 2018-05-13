@@ -13,7 +13,6 @@
     "react"
   ],
   "rules": {
-    "linebreak-style": ["error", "windows"],
     "max-len": 0,
     "no-case-declarations": 0,
     "react/jsx-filename-extension": 0,
