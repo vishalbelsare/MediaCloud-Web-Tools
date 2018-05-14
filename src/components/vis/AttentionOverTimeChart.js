@@ -16,12 +16,12 @@ const DEFAULT_BACKGROUND_COLOR = '#FFFFFF';
 const SERIES_MARKER_THRESHOLD = 30;
 
 const localMessages = {
-  chartTitle: { id: 'chart.sentencesOverTime.title', defaultMessage: 'Attention Over Time' },
-  tooltipSeriesName: { id: 'chart.sentencesOverTime.tooltipSeriesName', defaultMessage: 'Series: {name}' },
-  tooltipText: { id: 'chart.sentencesOverTime.tooltipText', defaultMessage: 'Average {count} {count, plural, =1 {stories} other {stories} }/day' },
-  seriesTitle: { id: 'chart.sentencesOverTime.seriesTitle', defaultMessage: 'avg stories/day' },
-  totalCount: { id: 'chart.sentencesOverTime.totalCount',
-    defaultMessage: 'We have collected {total, plural, =0 {No sentences} one {One story} other {{formattedTotal} stories}}.',
+  chartTitle: { id: 'chart.storiesOverTime.title', defaultMessage: 'Attention Over Time' },
+  tooltipSeriesName: { id: 'chart.storiesOverTime.tooltipSeriesName', defaultMessage: 'Series: {name}' },
+  tooltipText: { id: 'chart.storiesOverTime.tooltipText', defaultMessage: 'Average {count} {count, plural, =1 {stories} other {stories} }/day' },
+  seriesTitle: { id: 'chart.storiesOverTime.seriesTitle', defaultMessage: 'avg stories/day' },
+  totalCount: { id: 'chart.storiesOverTime.totalCount',
+    defaultMessage: 'We have collected {total, plural, =0 {No stories} one {One story} other {{formattedTotal} stories}}.',
   },
 };
 

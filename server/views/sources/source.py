@@ -60,7 +60,7 @@ def source_stats(media_id):
     results = {}
     # story count
     media_query = "(media_id:{})".format(media_id)
-    source_specific_story_count = _cached_source_story_count(username, media_query)
+    source_specific_story_count = cached_source_story_count(username, media_query)
     results['story_count'] = source_specific_story_count
     # health
     media_health = _cached_media_source_health(username, media_id)
@@ -159,12 +159,14 @@ def source_split_stories_csv(media_id):
 @flask_login.login_required
 @api_error_handler
 def api_media_source_split_stories(media_id):
+    q ='media_id:' + str(media_id)
+    total_story_count = cached_source_story_count(user_mediacloud_key(), q)
     health = _cached_media_source_health(user_mediacloud_key(), media_id)
-    counts = cached_recent_split_stories(user_mediacloud_key(),
-                                           ['media_id:'+str(media_id)])
+    counts = cached_recent_split_stories(user_mediacloud_key(), q)
     info = {
+        'total' : total_story_count,
         'health': health,
-        'splits': counts
+        'list': counts
     }
     return jsonify({'results':info})
 
