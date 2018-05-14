@@ -27,3 +27,4 @@ pylibmc==1.5.2
 dogpile.cache==0.6.4
 python-slugify==1.2.4
 scikit-learn==0.18.2
+numpy==1.13.0
