@@ -78,6 +78,10 @@ export function solrFormat(date, short = true) {
   return moment(date).format(short ? SHORT_SOLR_DATE_FORMAT : SOLR_DATE_FORMAT);
 }
 
+export function solrTimestamp(date) {
+  return moment(date).format('x');
+}
+
 export function getMomentDateSubtraction(date, num, timeUnit) {
   return moment(date).subtract(num, timeUnit).format(TOPIC_DATE_FORMAT);
 }
@@ -102,7 +106,7 @@ export function sourceSuggestionDateToMoment(suggestionDate, strict = true) {
   return moment(suggestionDate.substring(0, DB_DATE_FORMAT.length), DB_DATE_FORMAT, strict);
 }
 
-function solrDateToMoment(solrDateString, strict = true) {
+export function solrDateToMoment(solrDateString, strict = true) {
   return moment(solrDateString, SOLR_DATE_FORMAT, strict);
 }
 
@@ -125,7 +129,7 @@ export function calcSentences(countsMap) {
   Object.keys(countsMap).forEach((k) => {
     if (k !== 'end' && k !== 'gap' && k !== 'start') {
       const v = countsMap[k];
-      sentenceCount += v;
+      sentenceCount += v.count;
     }
   });
   return sentenceCount;
@@ -136,8 +140,8 @@ export function cleanDateCounts(countsMap) {
   Object.keys(countsMap).forEach((k) => {
     if (k !== 'end' && k !== 'gap' && k !== 'start') {
       const v = countsMap[k];
-      const timestamp = solrDateToMoment(k).valueOf();
-      countsArray.push({ date: timestamp, count: v });
+      const timestamp = parseInt(solrTimestamp(v.date), 10);
+      countsArray.push({ date: timestamp, count: v.count });
     }
   });
   return countsArray.sort((a, b) => a.date - b.date);
@@ -212,5 +216,5 @@ export function calculateTimePeriods(timePeriod) {
   if (dates === null) { // ie. PAST_ALL
     return '';
   }
-  return `(publish_date:[${dates.start.format('YYYY-MM-DDThh:mm:ss')}Z TO ${dates.end.format('YYYY-MM-DDThh:mm:ss')}Z])`;
+  return `(publish_day:[${dates.start.format('YYYY-MM-DDThh:mm:ss')}Z TO ${dates.end.format('YYYY-MM-DDThh:mm:ss')}Z])`;
 }

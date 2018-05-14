@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { Link } from 'react-router';
 import Title from 'react-title-component';
-import { fetchCollectionSourceSentenceHistoricalCounts, setCollectionSourceHistoryTimePeriod } from '../../../actions/sourceActions';
+import { fetchCollectionSourceSplitStoryHistoricalCounts, setCollectionSourceHistoryTimePeriod } from '../../../actions/sourceActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composePeriodicContent from '../../common/PeriodicContent';
 import { getBrandDarkColor } from '../../../styles/colors';
@@ -92,15 +92,15 @@ CollectionContentHistory.propTypes = {
 const mapStateToProps = state => ({
   collectionId: state.sources.collections.selected.id,
   collection: state.sources.collections.selected.collectionDetails.object,
-  fetchStatus: state.sources.collections.selected.historicalSentenceCounts.fetchStatus,
-  selectedTimePeriod: state.sources.collections.selected.historicalSentenceCounts.timePeriod,
-  historicalCounts: state.sources.collections.selected.historicalSentenceCounts.counts,
+  fetchStatus: state.sources.collections.selected.historicalSplitStoryCounts.fetchStatus,
+  selectedTimePeriod: state.sources.collections.selected.historicalSplitStoryCounts.timePeriod,
+  historicalCounts: state.sources.collections.selected.historicalSplitStoryCounts.counts,
 });
 
 const mapDispatchToProps = dispatch => ({
   fetchData: (collectionId, timePeriod) => {
     const dates = getDateRange(timePeriod);
-    dispatch(fetchCollectionSourceSentenceHistoricalCounts(collectionId,
+    dispatch(fetchCollectionSourceSplitStoryHistoricalCounts(collectionId,
       { start: dates.start.format('YYYY-MM-DD'), end: dates.end.format('YYYY-MM-DD') }));
   },
   changeTimePeriod: (timePeriod) => {

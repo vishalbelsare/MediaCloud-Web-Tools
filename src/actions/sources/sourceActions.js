@@ -8,7 +8,7 @@ export const RESET_SOURCES_BY_IDS = 'RESET_SOURCES_BY_IDS';
 export const FETCH_SOURCE_DETAILS = 'FETCH_SOURCE_DETAILS';
 export const SELECT_SOURCE = 'SELECT_SOURCE';
 export const FETCH_SOURCE_TOP_WORDS = 'FETCH_SOURCE_TOP_WORDS';
-export const FETCH_SOURCE_SENTENCE_COUNT = 'FETCH_SOURCE_SENTENCE_COUNT';
+export const FETCH_SOURCE_SPLIT_STORY_COUNT = 'FETCH_SOURCE_SPLIT_STORY_COUNT';
 export const FETCH_SOURCE_GEO = 'FETCH_SOURCE_GEO';
 export const CREATE_NEW_SOURCE = 'CREATE_NEW_SOURCE';
 export const UPDATE_SOURCE = 'UPDATE_SOURCE';
@@ -29,7 +29,7 @@ export const resetSourcesByIds = createAction(RESET_SOURCES_BY_IDS);
 
 export const fetchSourceDetails = createAsyncAction(FETCH_SOURCE_DETAILS, api.sourceDetails, id => id);
 
-export const fetchSourceSplitStoryCount = createAsyncAction(FETCH_SOURCE_SENTENCE_COUNT, api.sourceSplitStoryCount, id => id);
+export const fetchSourceSplitStoryCount = createAsyncAction(FETCH_SOURCE_SPLIT_STORY_COUNT, api.sourceSplitStoryCount, id => id);
 
 export const fetchSourceTopWords = createAsyncAction(FETCH_SOURCE_TOP_WORDS, api.sourceWordCount, id => id);
 
