@@ -6,7 +6,7 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import { fetchCollectionSplitStoryCount } from '../../../actions/sourceActions';
 import DataCard from '../../common/DataCard';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
-
+import { getBrandDarkColor } from '../../../styles/colors';
 import messages from '../../../resources/messages';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import { DownloadButton } from '../../common/IconButton';
@@ -16,6 +16,9 @@ const localMessages = {
   helpTitle: { id: 'collection.summary.sentenceCount.help.title', defaultMessage: 'About Stories Over Time' },
   helpText: { id: 'collection.summary.sentenceCount.help.text',
     defaultMessage: '<p>This chart shows you the number of stories we have collected from the sources in this collection over the last year.</p>',
+  },
+  introText: { id: 'chart.storiesOverTime.totalCount',
+    defaultMessage: 'We have collected {total, plural, =0 {No stories} one {One story} other {{formattedTotal} stories}} from sources in the "{collectionName}" collection in the last year.',
   },
 };
 
@@ -33,8 +36,8 @@ class CollectionSplitStoryCountContainer extends React.Component {
     window.open(url, '_blank');
   }
   render() {
-    const { total, counts, health, interval, intl, filename, helpButton } = this.props;
-    const { formatMessage } = intl;
+    const { totalStories, counts, health, intl, filename, helpButton, collectionName } = this.props;
+    const { formatMessage, formatNumber } = intl;
     return (
       <DataCard>
         <div className="actions">
@@ -45,10 +48,20 @@ class CollectionSplitStoryCountContainer extends React.Component {
           {helpButton}
         </h2>
         <AttentionOverTimeChart
-          total={total}
-          data={counts}
+          total={totalStories}
+          series={[{
+            id: 0,
+            name: collectionName,
+            color: getBrandDarkColor(),
+            data: counts.map(c => [c.date, c.count]),
+            showInLegend: false,
+          }]}
+          introText={formatMessage(localMessages.introText, {
+            total: totalStories,
+            formattedTotal: formatNumber(totalStories),
+            collectionName,
+          })}
           health={health}
-          interval={interval}
           height={250}
           filename={filename}
           onDataPointClick={this.handleDataPointClick}
@@ -62,11 +75,11 @@ CollectionSplitStoryCountContainer.propTypes = {
   // from state
   fetchStatus: PropTypes.string.isRequired,
   health: PropTypes.array,
-  total: PropTypes.number,
+  totalStories: PropTypes.number,
   counts: PropTypes.array,
-  interval: PropTypes.string,
   // from parent
   collectionId: PropTypes.number.isRequired,
+  collectionName: PropTypes.string.isRequired,
   filename: PropTypes.string,
   // from dispatch
   asyncFetch: PropTypes.func.isRequired,
@@ -77,10 +90,9 @@ CollectionSplitStoryCountContainer.propTypes = {
 
 const mapStateToProps = state => ({
   fetchStatus: state.sources.collections.selected.collectionSplitStoryCount.fetchStatus,
-  total: state.sources.collections.selected.collectionSplitStoryCount.total,
+  totalStories: state.sources.collections.selected.collectionSplitStoryCount.total,
   counts: state.sources.collections.selected.collectionSplitStoryCount.list,
   health: state.sources.collections.selected.collectionSplitStoryCount.health,
-  interval: 'day', // TODO where should we default this?
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
