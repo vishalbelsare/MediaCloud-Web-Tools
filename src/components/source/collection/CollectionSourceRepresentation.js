@@ -124,7 +124,7 @@ class CollectionSourceRepresentation extends React.Component {
 CollectionSourceRepresentation.propTypes = {
   // from state
   fetchStatus: PropTypes.string.isRequired,
-  sources: PropTypes.object.isRequired,
+  sources: PropTypes.array.isRequired,
   // from parent
   collectionId: PropTypes.number.isRequired,
   // from dispatch

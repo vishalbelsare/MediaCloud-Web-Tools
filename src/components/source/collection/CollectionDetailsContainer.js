@@ -81,7 +81,11 @@ class CollectionDetailsContainer extends React.Component {
           <span>
             <Row>
               <Col lg={6}>
-                <CollectionSplitStoryCountContainer collectionId={collection.tags_id} filename={filename} />
+                <CollectionSplitStoryCountContainer
+                  collectionId={collection.tags_id}
+                  filename={filename}
+                  collectionName={collection.label || collection.tag}
+                />
               </Col>
               <Col lg={6}>
                 <CollectionTopWordsContainer collectionId={collection.tags_id} />
@@ -89,7 +93,10 @@ class CollectionDetailsContainer extends React.Component {
             </Row>
             <Row>
               <Col lg={12}>
-                <CollectionGeographyContainer collectionId={collection.tags_id} collectionName={collection.label} />
+                <CollectionGeographyContainer
+                  collectionId={collection.tags_id}
+                  collectionName={collection.label || collection.tag}
+                />
               </Col>
             </Row>
           </span>

@@ -19,7 +19,7 @@ const localMessages = {
   chartTitle: { id: 'chart.storiesOverTime.title', defaultMessage: 'Attention Over Time' },
   tooltipSeriesName: { id: 'chart.storiesOverTime.tooltipSeriesName', defaultMessage: 'Series: {name}' },
   tooltipText: { id: 'chart.storiesOverTime.tooltipText', defaultMessage: 'Average {count} {count, plural, =1 {stories} other {stories} }/day' },
-  seriesTitle: { id: 'chart.storiesOverTime.seriesTitle', defaultMessage: 'avg stories/day' },
+  seriesTitle: { id: 'chart.storiesOverTime.seriesTitle', defaultMessage: 'stories/day' },
   totalCount: { id: 'chart.storiesOverTime.totalCount',
     defaultMessage: 'We have collected {total, plural, =0 {No stories} one {One story} other {{formattedTotal} stories}}.',
   },
@@ -88,7 +88,7 @@ class AttentionOverTimeChart extends React.Component {
   }
 
   render() {
-    const { total, data, series, height, interval, onDataPointClick, lineColor, health, filename, showLegend } = this.props;
+    const { total, data, series, height, interval, onDataPointClick, lineColor, health, filename, showLegend, introText } = this.props;
     const { formatMessage } = this.props.intl;
     // setup up custom chart configuration
     const config = this.getConfig();
@@ -149,7 +149,9 @@ class AttentionOverTimeChart extends React.Component {
     config.series = allSeries;
     // show total if it is included
     let totalInfo = null;
-    if ((total !== null) && (total !== undefined)) {
+    if (introText) {
+      totalInfo = (<p>{introText}</p>);
+    } else if ((total !== null) && (total !== undefined)) {
       totalInfo = (
         <p>
           <FormattedMessage
@@ -181,6 +183,7 @@ AttentionOverTimeChart.propTypes = {
   interval: PropTypes.string,
   onDataPointClick: PropTypes.func, // (date0, date1, evt, chartObj)
   total: PropTypes.number,
+  introText: PropTypes.string,  // overrides automatic total string generation
   filename: PropTypes.string,
   showLegend: PropTypes.bool,
   // from composition chain
