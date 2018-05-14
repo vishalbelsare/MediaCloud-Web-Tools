@@ -224,7 +224,7 @@ def collection_source_story_split_historical_counts(collection_id):
     return jsonify({'counts': results})
 
 
-@app.route('/api/collections/<collection_id>/sources/stories/historical-counts.csv')
+@app.route('/api/collections/<collection_id>/sources/story-split/historical-counts.csv')
 @arguments_required('start', 'end')
 @flask_login.login_required
 @api_error_handler
@@ -277,7 +277,7 @@ def _collection_source_story_split_historical_counts(collection_id, start_date_s
     pool.terminate()  # extra safe garbage collection
     return results
 
-@app.route('/api/collections/<collection_id>/stories/split-count')
+@app.route('/api/collections/<collection_id>/story-split/count')
 @flask_login.login_required
 @api_error_handler
 def collection_source_split_stories(collection_id):
@@ -289,7 +289,7 @@ def collection_source_split_stories(collection_id):
     return jsonify({'results': {'list': results, 'total': total_story_count, 'interval': interval}})
 
 
-@app.route('/api/collections/<collection_id>/stories/split-count.csv')
+@app.route('/api/collections/<collection_id>/story-split/count.csv')
 @flask_login.login_required
 @api_error_handler
 def collection_source_split_stories_csv(collection_id):

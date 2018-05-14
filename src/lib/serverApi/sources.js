@@ -63,11 +63,20 @@ export function collectionDetails(id, params) {
 }
 
 export function sourceSplitStoryCount(id) {
-  return createApiPromise(`api/sources/${id}/splitStories/count`);
+  return createApiPromise(`api/sources/${id}/story-split/count`);
 }
 
 export function collectionSplitStoryCount(id) {
-  return createApiPromise(`api/collections/${id}/stories/split-count`);
+  return createApiPromise(`api/collections/${id}/story-split/count`);
+}
+
+export function collectionSourceSplitStoryCounts(id) {
+  return createApiPromise(`api/collections/${id}/sources/story-split/count`);
+}
+
+export function collectionSourceSplitStoryHistoricalCounts(id, params) {
+  const acceptedParams = acceptParams(params, ['start', 'end']);
+  return createApiPromise(`/api/collections/${id}/sources/story-split/historical-counts`, acceptedParams);
 }
 
 export function collectionSourceList(id, params) {
@@ -97,18 +106,8 @@ export function similarCollections(id) {
   return createApiPromise(`api/collections/${id}/similar-collections`);
 }
 
-
-export function collectionSourceSplitStoryCounts(id) {
-  return createApiPromise(`api/collections/${id}/splitStories/count`);
-}
-
 export function collectionSourceRepresentation(id) {
   return createApiPromise(`api/collections/${id}/sources/representation`);
-}
-
-export function collectionSourceSentenceHistoricalCounts(id, params) {
-  const acceptedParams = acceptParams(params, ['start', 'end']);
-  return createApiPromise(`/api/collections/${id}/sources/splitStories/historical-counts`, acceptedParams);
 }
 
 export function createCollection(params) {

@@ -8,14 +8,14 @@ const historicalSentenceCounts = createAsyncReducer({
     counts: [],
   },
   action: FETCH_COLLECTION_SOURCE_SPLIT_STORY_HISTORICAL_COUNTS,
-  [SET_COLLECTION_SOURCE_HISTORY_TIME_PERIOD]: payload => ({
-    timePeriod: payload,
-  }),
   handleSuccess: payload => ({
     counts: payload.counts.map(c => ({
       ...c,
       storiesOverTime: cleanDateCounts(c.stories_over_time),
     })),
+  }),
+  [SET_COLLECTION_SOURCE_HISTORY_TIME_PERIOD]: payload => ({
+    timePeriod: payload,
   }),
 });
 
