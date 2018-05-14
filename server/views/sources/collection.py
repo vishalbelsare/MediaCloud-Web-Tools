@@ -248,18 +248,18 @@ def collection_source_story_split_historical_counts_csv(collection_id):
 # worker function to help in parallel
 def _source_story_split_count_worker(info):
     source = info['media']
-    media_query = "(media_id:{}) {}".format(source['media_id'], info['q'])
+    media_query = "media_id:{}".format(source['media_id'])
     date_filter = info['dates']
     total_story_count = cached_source_story_count(user_mediacloud_key(), media_query)
-    split_story_count = cached_recent_split_stories(user_mediacloud_key, media_query, date_filter)
+    split_stories = cached_recent_split_stories(user_mediacloud_key, media_query) # date filter doesn't return??
 
     source_data = {
         'media_id': source['media_id'],
         'media_name': source['name'],
         'media_url': source['url'],
         'total_stories': total_story_count,
-        'total_split_stories': split_story_count['count'],
-        'splits_over_time': split_story_count['split'],
+        #'total_split_stories': split_story_count['count'] if 'count' in split_story_count else None, #how is this diff???
+        'splits_over_time': split_stories,
     }
     return source_data
 
@@ -269,6 +269,7 @@ def _collection_source_story_split_historical_counts(collection_id, start_date_s
     start_date = datetime.datetime.strptime(start_date_str, "%Y-%m-%d").date()
     end_date = datetime.datetime.strptime(end_date_str, "%Y-%m-%d").date()
     media_list = media_with_tag(user_mediacloud_key(), collection_id)
+    q = "" # "(tags_id_media:{})".format(collection_id)
     date_filter = "({})".format(user_mc.publish_date_query(start_date, end_date))
     jobs = [{'media': m, 'q': q, 'dates': date_filter} for m in media_list]
     # fetch in parallel to make things faster
