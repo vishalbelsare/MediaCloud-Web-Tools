@@ -216,5 +216,5 @@ export function calculateTimePeriods(timePeriod) {
   if (dates === null) { // ie. PAST_ALL
     return '';
   }
-  return `(publish_date:[${dates.start.format('YYYY-MM-DDThh:mm:ss')}Z TO ${dates.end.format('YYYY-MM-DDThh:mm:ss')}Z])`;
+  return `(publish_day:[${dates.start.format('YYYY-MM-DDThh:mm:ss')}Z TO ${dates.end.format('YYYY-MM-DDThh:mm:ss')}Z])`;
 }
