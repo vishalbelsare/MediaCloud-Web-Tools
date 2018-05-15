@@ -160,13 +160,13 @@ def source_split_stories_csv(media_id):
 @api_error_handler
 def api_media_source_split_stories(media_id):
     q ='media_id:' + str(media_id)
-    total_story_count = cached_source_story_count(user_mediacloud_key(), q)
     health = _cached_media_source_health(user_mediacloud_key(), media_id)
-    counts = cached_recent_split_stories(user_mediacloud_key(), q)
+    results = cached_recent_split_stories(user_mediacloud_key(), q)
+
     info = {
-        'total' : total_story_count,
+        'total_story_count' : results['total_story_count'],
         'health': health,
-        'list': counts
+        'list': results['counts'],
     }
     return jsonify({'results':info})
 

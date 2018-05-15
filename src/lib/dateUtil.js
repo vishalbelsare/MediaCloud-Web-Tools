@@ -124,15 +124,13 @@ function gapDateToMomemt(gapDateString, strict = true) {
 
 
 // Helper to change solr dates (2015-12-14T00:00:00Z) into javascript date ojects
-export function calcSentences(countsMap) {
-  let sentenceCount = 0;
+export function calcStories(countsMap) {
+  let storyCount = 0;
   Object.keys(countsMap).forEach((k) => {
-    if (k !== 'end' && k !== 'gap' && k !== 'start') {
-      const v = countsMap[k];
-      sentenceCount += v.count;
-    }
+    const v = countsMap[k];
+    storyCount += v.count;
   });
-  return sentenceCount;
+  return storyCount;
 }
 // Helper to change solr dates (2015-12-14T00:00:00Z) into javascript date ojects
 export function cleanDateCounts(countsMap) {

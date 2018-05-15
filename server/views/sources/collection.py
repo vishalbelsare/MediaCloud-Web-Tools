@@ -236,11 +236,11 @@ def collection_source_story_split_historical_counts_csv(collection_id):
     #TODO verify this
     for source in results:
         if date_cols is None:
-            date_cols = sorted(source['sentences_over_time'].keys())
-        for date, count in source['sentences_over_time'].iteritems():
+            date_cols = sorted(source['splits_over_time'].keys())
+        for date, count in source['splits_over_time'].iteritems():
             source[date] = count
-        del source['sentences_over_time']
-    props = ['media_id', 'media_name', 'media_url', 'total_stories', 'total_sentences'] + date_cols
+        del source['splits_over_time']
+    props = ['media_id', 'media_name', 'media_url', 'total_stories', 'splits_over_time'] + date_cols
     filename = "{} - source content count ({} to {})".format(collection_id, start_date_str, end_date_str)
     return csv.stream_response(results, props, filename)
 
@@ -250,16 +250,15 @@ def _source_story_split_count_worker(info):
     source = info['media']
     media_query = "media_id:{}".format(source['media_id'])
     date_filter = info['dates']
-    total_story_count = cached_source_story_count(user_mediacloud_key(), media_query)
+
     split_stories = cached_recent_split_stories(user_mediacloud_key, media_query) # date filter doesn't return??
 
     source_data = {
         'media_id': source['media_id'],
         'media_name': source['name'],
         'media_url': source['url'],
-        'total_stories': total_story_count,
-        #'total_split_stories': split_story_count['count'] if 'count' in split_story_count else None, #how is this diff???
-        'splits_over_time': split_stories,
+        'total_story_count': split_stories['total_story_count'],
+        'splits_over_time': split_stories['counts'],
     }
     return source_data
 
@@ -283,11 +282,10 @@ def _collection_source_story_split_historical_counts(collection_id, start_date_s
 @api_error_handler
 def collection_source_split_stories(collection_id):
     q = "tags_id_media:{}".format(collection_id)
-    total_story_count = cached_source_story_count(user_mediacloud_key(), q)
     results = cached_recent_split_stories(user_mediacloud_key(), q)
     #health =
     interval = 'day' # default, and not currently passed to the calls above
-    return jsonify({'results': {'list': results, 'total': total_story_count, 'interval': interval}})
+    return jsonify({'results': {'list': results['counts'], 'total_story_count': results['total_story_count'], 'interval': interval}})
 
 
 @app.route('/api/collections/<collection_id>/story-split/count.csv')
@@ -298,7 +296,7 @@ def collection_source_split_stories_csv(collection_id):
     info = user_mc.tag(collection_id)
     q = "tags_id_media: {}".format(collection_id)
     results = cached_recent_split_stories(user_mediacloud_key(), q)
-    props = ['media_id', 'name', 'url', 'story_count']
+    props = ['media_id', 'name', 'url', 'total_story_count']
     filename = info['label'] + "-source split story.csv"
     return csv.stream_response(results, props, filename)
 
