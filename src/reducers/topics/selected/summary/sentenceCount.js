@@ -9,8 +9,8 @@ const sentenceCount = createAsyncReducer({
   },
   action: FETCH_TOPIC_SENTENCE_COUNT,
   handleSuccess: payload => ({
-    total: payload.count,
-    counts: cleanDateCounts(payload.split),
+    total: payload.total_story_count,
+    counts: cleanDateCounts(payload.counts),
   }),
 });
 

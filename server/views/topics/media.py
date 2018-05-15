@@ -9,9 +9,9 @@ from server.auth import user_mediacloud_key, user_admin_mediacloud_client, is_us
 from server.util import csv
 from server.util.tags import is_metadata_tag_set, format_metadata_fields
 from server.views.topics import validated_sort, TOPICS_TEMPLATE_PROPS
-from server.views.topics.sentences import stream_sentence_count_csv
+from server.views.topics.sentences import stream_topic_split_story_counts_csv, topic_split_story_count
 from server.views.topics.stories import stream_story_list_csv
-from server.views.topics.apicache import topic_media_list, topic_word_counts, topic_sentence_counts, \
+from server.views.topics.apicache import topic_media_list, topic_word_counts, topic_story_count, \
     topic_story_list, add_to_user_query, WORD_COUNT_DOWNLOAD_COLUMNS, topic_ngram_counts
 from server.util.request import filters_from_args, api_error_handler
 from server.views.topics import access_public_topic
@@ -57,17 +57,17 @@ def topic_media_csv(topics_id):
                                   snapshots_id=snapshots_id, timespans_id=timespans_id, foci_id=foci_id, q=q)
 
 
-@app.route('/api/topics/<topics_id>/media/<media_id>/sentences/count', methods=['GET'])
+@app.route('/api/topics/<topics_id>/media/<media_id>/split-story/count', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
-def topic_media_sentence_count(topics_id, media_id):
-    return jsonify(topic_sentence_counts(user_mediacloud_key(), topics_id, fq='media_id:'+media_id))
+def topic_media_split_story_count(topics_id, media_id):
+    return jsonify(topic_split_story_count(user_mediacloud_key(), topics_id))
 
 
-@app.route('/api/topics/<topics_id>/media/<media_id>/sentences/count.csv', methods=['GET'])
+@app.route('/api/topics/<topics_id>/media/<media_id>/story-split/count.csv', methods=['GET'])
 @flask_login.login_required
-def topic_media_sentence_count_csv(topics_id, media_id):
-    return stream_sentence_count_csv(user_mediacloud_key(), 'media-'+str(media_id)+'-sentence-counts',
+def topic_media_story_split_count_csv(topics_id, media_id):
+    return stream_topic_split_story_counts_csv(user_mediacloud_key(), 'media-'+str(media_id)+'-split-story-counts',
                                      topics_id, fq="media_id:"+media_id)
 
 

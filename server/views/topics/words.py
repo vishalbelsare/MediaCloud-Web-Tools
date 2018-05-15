@@ -7,9 +7,9 @@ from server.views import WORD_COUNT_DOWNLOAD_LENGTH
 import server.util.csv as csv
 from server.util.request import api_error_handler
 from server.auth import user_mediacloud_key, is_user_logged_in
-from server.views.topics.sentences import stream_sentence_count_csv
+from server.views.topics.sentences import stream_topic_split_story_counts_csv
 
-from server.views.topics.apicache import topic_word_counts, topic_story_list, topic_sentence_counts, \
+from server.views.topics.apicache import topic_word_counts, topic_story_list, topic_split_story_counts, \
     topic_sentence_sample, add_to_user_query, WORD_COUNT_DOWNLOAD_COLUMNS, topic_ngram_counts
 from server.views.topics import access_public_topic
 
@@ -67,14 +67,14 @@ def topic_words_csv(topics_id):
 @flask_login.login_required
 @api_error_handler
 def topic_word_sentence_counts(topics_id, word):
-    return jsonify(topic_sentence_counts(user_mediacloud_key(), topics_id, q=word))
+    return jsonify(topic_split_story_counts(user_mediacloud_key(), topics_id, q=word))
 
 
 @app.route('/api/topics/<topics_id>/words/<word>/sentences/count.csv', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
 def topic_word_sentence_counts_csv(topics_id, word):
-    return stream_sentence_count_csv(user_mediacloud_key(), 'word-'+word+'-sentence-counts',
+    return stream_topic_split_story_counts_csv(user_mediacloud_key(), 'word-'+word+'-sentence-counts',
         topics_id, q=word)
 
 
