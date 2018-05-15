@@ -17,13 +17,13 @@ logger = logging.getLogger(__name__)
 @api_error_handler
 def topic_split_story_count(topics_id):
     if access_public_topic(topics_id):
-        response = topic_split_story_counts(TOOL_API_KEY, topics_id, snapshots_id=None, timespans_id=None, foci_id=None,q=None)
+        results = topic_split_story_counts(TOOL_API_KEY, topics_id, snapshots_id=None, timespans_id=None, foci_id=None,q=None)
     elif is_user_logged_in():
-        response = topic_split_story_counts(user_mediacloud_key(), topics_id)
+        results = topic_split_story_counts(user_mediacloud_key(), topics_id)
     else:
         return jsonify({'status': 'Error', 'message': 'Invalid attempt'})
 
-    return jsonify(response)
+    return jsonify({'results': results})
 
 
 @app.route('/api/topics/<topics_id>/split-story/count.csv', methods=['GET'])

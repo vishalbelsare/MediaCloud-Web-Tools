@@ -7,7 +7,7 @@ export * from './topics/mediaActions.js';
 export * from './topics/networkMapActions.js';
 export * from './topics/nyttagActions.js';
 export * from './topics/permissionActions.js';
-export * from './topics/sentenceActions.js';
+export * from './topics/splitStoryActions.js';
 export * from './topics/storyActions.js';
 export * from './topics/topicActions.js';
 export * from './topics/createActions.js';
