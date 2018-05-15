@@ -18,17 +18,16 @@ logger = logging.getLogger(__name__)
 @flask_login.login_required
 @form_fields_required('q')
 @api_error_handler
-def api_topics_preview_sentences_count():
+def api_topics_preview_split_story_count():
     user_mc = user_admin_mediacloud_client()
 
     solr_query = concatenate_query_for_solr(solr_seed_query=request.form['q'],
-  
                                             media_ids=ids_from_comma_separated_str(request.form['sources[]']) if 'sources[]' in request.form else None,
                                             tags_ids=ids_from_comma_separated_str(request.form['collections[]'])) if 'collections[]' in request.form else None,
     fq = concatenate_solr_dates(start_date=request.form['start_date'],
                                             end_date=request.form['end_date'])
-    sentence_count_result = user_mc.storyCount(solr_query=solr_query, solr_filter=fq, split=True)
-    return jsonify(sentence_count_result)
+    split_story_count_result = user_mc.storyCount(solr_query=solr_query, solr_filter=fq, split=True)
+    return jsonify(split_story_count_result)
 
 
 @app.route('/api/topics/create/preview/story/count', methods=['POST'])

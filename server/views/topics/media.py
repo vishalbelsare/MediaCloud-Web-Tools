@@ -9,7 +9,7 @@ from server.auth import user_mediacloud_key, user_admin_mediacloud_client, is_us
 from server.util import csv
 from server.util.tags import is_metadata_tag_set, format_metadata_fields
 from server.views.topics import validated_sort, TOPICS_TEMPLATE_PROPS
-from server.views.topics.sentences import stream_topic_split_story_counts_csv, topic_split_story_count
+from server.views.topics.splitstories import stream_topic_split_story_counts_csv, topic_split_story_count
 from server.views.topics.stories import stream_story_list_csv
 from server.views.topics.apicache import topic_media_list, topic_word_counts, topic_story_count, \
     topic_story_list, add_to_user_query, WORD_COUNT_DOWNLOAD_COLUMNS, topic_ngram_counts
@@ -64,7 +64,7 @@ def topic_media_split_story_count(topics_id, media_id):
     return jsonify(topic_split_story_count(user_mediacloud_key(), topics_id))
 
 
-@app.route('/api/topics/<topics_id>/media/<media_id>/story-split/count.csv', methods=['GET'])
+@app.route('/api/topics/<topics_id>/media/<media_id>/split-story/count.csv', methods=['GET'])
 @flask_login.login_required
 def topic_media_story_split_count_csv(topics_id, media_id):
     return stream_topic_split_story_counts_csv(user_mediacloud_key(), 'media-'+str(media_id)+'-split-story-counts',
