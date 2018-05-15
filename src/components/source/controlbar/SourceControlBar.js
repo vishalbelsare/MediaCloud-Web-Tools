@@ -11,7 +11,7 @@ const SourceControlBar = props => (
     <div className="main">
       <Grid>
         <Row>
-          <Col lg={6} xs={12} className="left">
+          <Col lg={(props.showSearch === true) ? 6 : 12} xs={12} className="left">
             {props.children}
           </Col>
           <Col lg={6} xs={12} className="right">
