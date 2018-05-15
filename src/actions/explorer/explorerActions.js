@@ -54,9 +54,9 @@ export const fetchDemoTopEntitiesOrgs = createAsyncAction(FETCH_TOP_ENTITIES_ORG
 export const resetEntitiesPeople = createAction(RESET_ENTITIES_PEOPLE);
 export const resetEntitiesOrgs = createAction(RESET_ENTITIES_ORGS);
 
-export const FETCH_QUERY_SENTENCE_COUNTS = 'FETCH_QUERY_SENTENCE_COUNTS';
-export const fetchQuerySentenceCounts = createAsyncAction(FETCH_QUERY_SENTENCE_COUNTS, api.fetchQuerySentenceCounts, params => params);
-export const fetchDemoQuerySentenceCounts = createAsyncAction(FETCH_QUERY_SENTENCE_COUNTS, api.fetchDemoQuerySentenceCounts, params => params);
+export const FETCH_QUERY_SPLIT_STORY_COUNT = 'FETCH_QUERY_SPLIT_STORY_COUNT';
+export const fetchQuerySplitStoryCount = createAsyncAction(FETCH_QUERY_SPLIT_STORY_COUNT, api.fetchQuerySplitStoryCount, params => params);
+export const fetchDemoQuerySplitStoryCount = createAsyncAction(FETCH_QUERY_SPLIT_STORY_COUNT, api.fetchDemoQuerySplitStoryCount, params => params);
 
 export const FETCH_QUERY_SAMPLE_STORIES = 'FETCH_QUERY_SAMPLE_STORIES';
 export const fetchQuerySampleStories = createAsyncAction(FETCH_QUERY_SAMPLE_STORIES, api.fetchQuerySampleStories, params => params);
@@ -66,10 +66,6 @@ export const FETCH_QUERY_PER_DATE_SAMPLE_STORIES = 'FETCH_QUERY_PER_DATE_SAMPLE_
 export const fetchQueryPerDateSampleStories = createAsyncAction(FETCH_QUERY_PER_DATE_SAMPLE_STORIES, api.fetchQueryPerDateSampleStories, params => params);
 export const fetchDemoQueryPerDateSampleStories = createAsyncAction(FETCH_QUERY_PER_DATE_SAMPLE_STORIES, api.fetchDemoQueryPerDateSampleStories, params => params);
 
-
-export const FETCH_QUERY_STORY_COUNT = 'FETCH_QUERY_STORY_COUNT';
-export const fetchQueryStoryCount = createAsyncAction(FETCH_QUERY_STORY_COUNT, api.fetchQueryStoryCount, params => params);
-export const fetchDemoQueryStoryCount = createAsyncAction(FETCH_QUERY_STORY_COUNT, api.fetchDemoQueryStoryCount, params => params);
 
 export const FETCH_QUERY_TOP_WORDS = 'FETCH_QUERY_TOP_WORDS';
 export const fetchQueryTopWords = createAsyncAction(FETCH_QUERY_TOP_WORDS, api.fetchQueryTopWords, params => params);

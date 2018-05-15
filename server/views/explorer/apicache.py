@@ -6,15 +6,14 @@ from server.util.tags import processed_by_cliff_query_clause
 import server.util.wordembeddings as wordembeddings
 
 
-def sentence_count(q, fq, start_date_str=None, end_date_str=None):
-    return cached_sentence_count(q, fq, start_date_str, end_date_str)
+def story_split_count(q, fq):
+    return cached_story_split_count(q, fq)
 
 
 @cache.cache_on_arguments(function_key_generator=key_generator)
-def cached_sentence_count(q, fq, start_date_str=None, end_date_str=None):
-    sentence_count_result = mc.sentenceCount(q, fq,
-                                             split_start_date=start_date_str, split_end_date=end_date_str, split=True)
-    return sentence_count_result
+def cached_story_split_count(q, fq):
+    results = mc.storyCount(q, fq, split=True)
+    return results
 
 
 def sentence_list(q, fq, rows=10):
@@ -64,8 +63,7 @@ def _cached_most_used_tags(api_key, q, fq, tag_sets_id, sample_size):
     # top tags used in stories matching query
     # api_key used for caching at the user level
     local_mc = _mc_client()
-    return local_mc.sentenceFieldCount(q, fq, field='tags_id_stories', tag_sets_id=tag_sets_id,
-                                       sample_size=sample_size)
+    return local_mc.storyTagCount(q, fq, tag_sets_id=tag_sets_id, limit=sample_size)
 
 
 def story_count(q, fq):
@@ -82,7 +80,7 @@ def _cached_total_story_count(api_key, q, fq):
 
 
 def random_story_list(q, fq, limit):
-    return story_list_page(q, stories_per_page=limit, sort=mc.SORT_RANDOM)
+    return story_list_page(q, fq, stories_per_page=limit, sort=mc.SORT_RANDOM)
 
 
 def story_list_page(q, fq, last_processed_stories_id=None, stories_per_page=1000, sort=mc.SORT_PROCESSED_STORIES_ID):
