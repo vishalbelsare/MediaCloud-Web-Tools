@@ -23,7 +23,7 @@ const localMessages = {
 class SourceSplitStoryCountContainer extends React.Component {
   downloadCsv = () => {
     const { sourceId } = this.props;
-    const url = `/api/sources/${sourceId}/storySplit/split-story-count.csv`;
+    const url = `/api/sources/${sourceId}/story-split/count.csv`;
     window.location = url;
   }
   handleDataPointClick = (startDate, endDate) => {

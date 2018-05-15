@@ -291,32 +291,9 @@ def collection_source_split_stories(collection_id):
 @app.route('/api/collections/<collection_id>/story-split/count.csv')
 @flask_login.login_required
 @api_error_handler
-def collection_source_split_stories_csv(collection_id):
+def collection_split_stories_csv(collection_id):
     user_mc = user_mediacloud_client()
-    info = user_mc.tag(collection_id)
-    q = "tags_id_media: {}".format(collection_id)
-    results = cached_recent_split_stories(user_mediacloud_key(), q)
-    props = ['media_id', 'name', 'url', 'total_story_count']
-    filename = info['label'] + "-source split story.csv"
-    return csv.stream_response(results, props, filename)
-
-
-@cache.cache_on_arguments(function_key_generator=key_generator)
-def _cached_media_with_split_stories(user_mc_key, collection_id):
-    sample_size = 2000  # kind of arbitrary
-    # list all sources first
-    sources_by_id = {int(m['media_id']): m for m in media_with_tag(user_mediacloud_key(), collection_id)}
-    story_split = mc.storyList('*', 'media_id:' + str(sources_by_id), rows=sample_size, sort=mc.SORT_RANDOM)
-    # sum the number of sentences per media source
-    #TODO not yet implemented/tested for story_splits
-    #not sure we need this anyway....
-    story_counts = {int(media_id): 0 for media_id in sources_by_id.keys()}
-
-    # add in sentence count info to media info
-    #for media_id in story_counts.keys():
-        #sources_by_id[media_id]['sentence_count'] = story_counts[media_id]
-        #sources_by_id[media_id]['sentence_pct'] = story_counts[media_id] / sample_size
-    return sources_by_id.values()
+    return stream_split_stories_csv(user_mediacloud_key(), 'splitStoryCounts-Collection-' + collection_id, collection_id, "tags_id_media")
 
 
 def _tag_set_info(user_mc_key, tag_sets_id):

@@ -148,7 +148,7 @@ def api_media_source_scrape_feeds(media_id):
     results = user_mc.feedsScrape(media_id)
     return jsonify(results)
 
-@app.route('/api/sources/<media_id>/story-split/splitStories.csv', methods=['GET'])
+@app.route('/api/sources/<media_id>/story-split/count.csv', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
 def source_split_stories_csv(media_id):

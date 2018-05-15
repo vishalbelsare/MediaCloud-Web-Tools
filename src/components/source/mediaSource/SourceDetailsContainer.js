@@ -114,7 +114,7 @@ class SourceDetailsContainer extends React.Component {
           <span>
             <Row>
               <Col lg={12}>
-                <SourceSplitStoryCountContainer sourceId={source.media_id} filename={filename} />
+                <SourceSplitStoryCountContainer sourceId={source.media_id} sourceName={source.media_name} filename={filename} />
               </Col>
             </Row>
             <Row>

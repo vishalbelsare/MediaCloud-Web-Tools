@@ -55,12 +55,17 @@ class CollectionContentHistory extends React.Component {
               </Col>
               <Col lg={8} xs={12}>
                 <AttentionOverTimeChart
-                  data={source.storiesOverTime}
+                  showLegend={false}
+                  series={[{
+                    id: 0,
+                    name: source.media_name,
+                    color: getBrandDarkColor(),
+                    data: source.storiesOverTime.map(c => [c.date, c.count]),
+                    showInLegend: false,
+                  }]}
                   height={150}
                   filename={`source-${source.media_id}-history`}
-                  lineColor={getBrandDarkColor()}
                   onDataPointClick={this.handleDataPointClick}
-                  showLegend={false}
                 />
               </Col>
             </Row>

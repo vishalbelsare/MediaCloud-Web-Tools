@@ -25,7 +25,7 @@ const localMessages = {
 class CollectionSplitStoryCountContainer extends React.Component {
   downloadCsv = () => {
     const { collectionId } = this.props;
-    const url = `/api/collections/${collectionId}/stories/split-count.csv`;
+    const url = `/api/collections/${collectionId}/story-split/count.csv`;
     window.location = url;
   }
   handleDataPointClick = (startDate, endDate) => {
