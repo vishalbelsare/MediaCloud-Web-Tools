@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeDescribedDataCard from '../../common/DescribedDataCard';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
-import { fetchTopicSentenceCounts } from '../../../actions/topicActions';
+import { fetchTopicSplitStoryCounts } from '../../../actions/topicActions';
 import messages from '../../../resources/messages';
 import Permissioned from '../../common/Permissioned';
 import LinkWithFilters from '../LinkWithFilters';
@@ -83,7 +83,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   fetchData: (props) => {
-    dispatch(fetchTopicSentenceCounts(props.topicId, props.filters));
+    dispatch(fetchTopicSplitStoryCounts(props.topicId, props.filters));
   },
 });
 

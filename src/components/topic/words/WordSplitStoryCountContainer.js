@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
-import { fetchWordSentenceCounts } from '../../../actions/topicActions';
+import { fetchWordSplitStoryCounts } from '../../../actions/topicActions';
 import messages from '../../../resources/messages';
 import { DownloadButton } from '../../common/IconButton';
 import DataCard from '../../common/DataCard';
@@ -77,11 +77,11 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (filters, stem) => {
-    dispatch(fetchWordSentenceCounts(ownProps.topicId, stem, filters));
+    dispatch(fetchWordSplitStoryCounts(ownProps.topicId, stem, filters));
   },
   asyncFetch: () => {
     const { topicId, stem, filters } = ownProps;
-    dispatch(fetchWordSentenceCounts(topicId, stem, filters));
+    dispatch(fetchWordSplitStoryCounts(topicId, stem, filters));
   },
 });
 

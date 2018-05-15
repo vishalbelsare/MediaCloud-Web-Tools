@@ -11,7 +11,7 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import MediaInlinkContainer from './MediaInlinkContainer';
 import MediaOutlinkContainer from './MediaOutlinkContainer';
 import MediaStoriesContainer from './MediaStoriesContainer';
-import MediaSentenceCountContainer from './MediaSentenceCountContainer';
+import MediaSplitStoryCountContainer from './MediaSplitStoryCountContainer';
 import MediaWordsContainer from './MediaWordsContainer';
 import messages from '../../../resources/messages';
 import { RemoveButton, ReadItNowButton } from '../../common/IconButton';
@@ -123,7 +123,7 @@ class MediaContainer extends React.Component {
               />
             </Col>
             <Col lg={6} md={6} sm={12}>
-              <MediaSentenceCountContainer topicId={topicId} mediaId={mediaId} />
+              <MediaSplitStoryCountContainer topicId={topicId} mediaId={mediaId} />
             </Col>
           </Row>
           <Row>
