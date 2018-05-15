@@ -11,8 +11,8 @@ import { getBrandDarkColor } from '../../../../styles/colors';
 
 const localMessages = {
   title: { id: 'topic.create.preview.attention.title', defaultMessage: 'Matching Sentences' },
-  descriptionIntro: { id: 'topic.summary.sentenceCount.help.title', defaultMessage: 'The attention over time to your topic can vary. If you see a predominantly flat line here with no attention, consider going back and changing the start and end dates for your topic. If you have too many total seed stories, try shortening the total number of days your topic covers.' },
-  helpText: { id: 'media.sentenceCount.help.text',
+  descriptionIntro: { id: 'topic.summary.splitStoryCount.help.title', defaultMessage: 'The attention over time to your topic can vary. If you see a predominantly flat line here with no attention, consider going back and changing the start and end dates for your topic. If you have too many total seed stories, try shortening the total number of days your topic covers.' },
+  helpText: { id: 'media.splitStoryCount.help.text',
     defaultMessage: '<p>This chart shows you the number of sentences over time that match your topic query. This a good preview of the attention paid to your topic that we already have in our system.</p>',
   },
 };
