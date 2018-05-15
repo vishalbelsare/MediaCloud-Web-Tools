@@ -12,16 +12,13 @@ import SourceGeographyContainer from './SourceGeographyContainer';
 import { anyCollectionTagSets } from '../../../lib/tagUtil';
 import { SOURCE_SCRAPE_STATE_QUEUED, SOURCE_SCRAPE_STATE_RUNNING, SOURCE_SCRAPE_STATE_COMPLETED, SOURCE_SCRAPE_STATE_ERROR } from '../../../reducers/sources/sources/selected/sourceDetails';
 import { InfoNotice, ErrorNotice, WarningNotice } from '../../common/Notice';
-import { jobStatusDateToMoment, getCurrentDate, oneMonthBefore } from '../../../lib/dateUtil';
-import { urlToExplorerQuery } from '../../../lib/urlUtil';
+import { jobStatusDateToMoment } from '../../../lib/dateUtil';
 import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
 import Permissioned from '../../common/Permissioned';
-import AppButton from '../../common/AppButton';
 import SourceMetadataStatBar from '../../common/SourceMetadataStatBar';
 import TabSelector from '../../common/TabSelector';
 
 const localMessages = {
-  searchNow: { id: 'source.basicInfo.searchNow', defaultMessage: 'Search in Explorer' },
   sourceDetailsCollectionsTitle: { id: 'source.details.collections.title', defaultMessage: 'Collections' },
   sourceDetailsCollectionsIntro: { id: 'source.details.collections.intro',
     defaultMessage: 'Here are the collections {name} media source is part of:\n.',
@@ -52,13 +49,6 @@ class SourceDetailsContainer extends React.Component {
     selectedViewIndex: 0,
   };
 
-  searchInExplorer = () => {
-    const { source } = this.props;
-    const endDate = getCurrentDate();
-    const startDate = oneMonthBefore(endDate);
-    const explorerUrl = urlToExplorerQuery(source.name || source.url, '*', source.id, '', startDate, endDate);
-    window.open(explorerUrl, '_blank');
-  }
 
   render() {
     const { source } = this.props;
@@ -128,13 +118,13 @@ class SourceDetailsContainer extends React.Component {
               </Col>
             </Row>
             <Row>
-              <Col lg={12} md={12} sm={12}>
-                <SourceGeographyContainer source={source} />
+              <Col lg={12}>
+                <SourceTopWordsContainer source={source} />
               </Col>
             </Row>
             <Row>
-              <Col lg={12}>
-                <SourceTopWordsContainer source={source} />
+              <Col lg={12} md={12} sm={12}>
+                <SourceGeographyContainer source={source} />
               </Col>
             </Row>
           </span>
@@ -168,12 +158,6 @@ class SourceDetailsContainer extends React.Component {
                 <FormattedMessage {...localMessages.feedLink} />
               </Link>
               {feedScrapeMsg}
-            </p>
-          </Col>
-          <Col lg={3} xs={12} className="search-section">
-            <AppButton label={formatMessage(localMessages.searchNow)} primary onClick={this.searchInExplorer} />
-            <p>
-              <a href={source.url}> {source.url} </a>
             </p>
           </Col>
         </Row>

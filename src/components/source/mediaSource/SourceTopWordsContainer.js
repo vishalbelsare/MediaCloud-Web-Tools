@@ -44,7 +44,7 @@ class SourceTopWordsContainer extends React.Component {
         onViewModeClick={this.defaultOnWordClick}
         title={formatMessage(localMessages.title)}
         domId={`media-source-top-words-${source.media_id}`}
-        width={520}
+        width={900}
         helpButton={helpButton}
       />
     );

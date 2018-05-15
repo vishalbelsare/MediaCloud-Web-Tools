@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
+import { getBrandDarkColor } from '../../../styles/colors';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import { fetchSourceSplitStoryCount } from '../../../actions/sourceActions';
 import DataCard from '../../common/DataCard';
@@ -33,7 +34,7 @@ class SourceSplitStoryCountContainer extends React.Component {
     window.open(url, '_blank');
   }
   render() {
-    const { total, counts, health, filename, helpButton } = this.props;
+    const { total, counts, health, filename, helpButton, sourceName } = this.props;
     const { formatMessage } = this.props.intl;
     return (
       <DataCard>
@@ -46,7 +47,13 @@ class SourceSplitStoryCountContainer extends React.Component {
         </h2>
         <AttentionOverTimeChart
           total={total}
-          data={counts}
+          series={[{
+            id: 0,
+            name: sourceName,
+            color: getBrandDarkColor(),
+            data: counts.map(c => [c.date, c.count]),
+            showInLegend: false,
+          }]}
           health={health}
           height={250}
           filename={filename}
@@ -65,6 +72,7 @@ SourceSplitStoryCountContainer.propTypes = {
   counts: PropTypes.array,
   // from parent
   sourceId: PropTypes.number.isRequired,
+  sourceName: PropTypes.string.isRequired,
   filename: PropTypes.string,
   // from dispatch
   asyncFetch: PropTypes.func.isRequired,
