@@ -13,8 +13,8 @@ import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
 import { getDateRange } from '../../../lib/dateUtil';
 
 const localMessages = {
-  title: { id: 'collection.contentHistory.title', defaultMessage: 'Total Sentences over Time' },
-  counts: { id: 'collection.contentHistory.counts', defaultMessage: '{stories} Stories, {stories} Split' },
+  title: { id: 'collection.contentHistory.title', defaultMessage: 'Total Stories over Time' },
+  counts: { id: 'collection.contentHistory.counts', defaultMessage: '{total} Stories' },
 };
 
 class CollectionContentHistory extends React.Component {
@@ -46,9 +46,7 @@ class CollectionContentHistory extends React.Component {
                   <FormattedMessage
                     {...localMessages.counts}
                     values={{
-                      stories: formatNumber(source.total_stories),
-                      // total split stories?? stories: formatNumber(source.total_split_stories),
-                      splitStories: formatNumber(source.splits_over_time),
+                      total: formatNumber(source.total_story_count),
                     }}
                   />
                 </p>
