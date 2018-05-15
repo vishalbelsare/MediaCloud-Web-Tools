@@ -14,31 +14,6 @@ import server.views.explorer.apicache as apicache
 logger = logging.getLogger(__name__)
 
 
-@app.route('/api/explorer/story/count', methods=['GET'])
-@flask_login.login_required
-@api_error_handler
-def api_explorer_story_count():
-    solr_q, solr_fq = parse_query_with_keywords(request.args)
-    story_count_result = apicache.story_count(solr_q, solr_fq)
-    return jsonify(story_count_result)  
-
-
-@app.route('/api/explorer/demo/story/count', methods=['GET'])
-@api_error_handler
-def api_explorer_demo_story_count():
-    search_id = int(request.args['search_id']) if 'search_id' in request.args else None
-    if search_id not in [None, -1]:
-        sample_searches = load_sample_searches()
-        current_search = sample_searches[search_id]['queries']
-        solr_q, solr_fq = parse_query_with_args_and_sample_search(request.args, current_search)
-    else:
-        solr_q, solr_fq = parse_query_with_keywords(request.args)
-
-    story_count_result = apicache.story_count(solr_q, solr_fq)
-    # maybe check admin role before we run this?
-    return jsonify(story_count_result)  # give them back new data, so they can update the client
-
-
 @app.route('/api/explorer/stories/count.csv', methods=['POST'])
 def explorer_story_count_csv():
     filename = u'story-count'
@@ -95,7 +70,7 @@ def api_explorer_story_split_count_csv():
         solr_q, solr_fq = parse_query_with_keywords(query_object)
         filename = file_name_for_download(query_object['label'], filename)
     results = apicache.story_split_count(solr_q, solr_fq)
-    results = sorted(results, key=itemgetter('date'))
+    results = sorted(results['counts'], key=itemgetter('date'))
     results = [{'date': item['date'], 'stories': item['count']} for item in results]
     props = ['date', 'stories']
     return csv.stream_response(results, props, filename)

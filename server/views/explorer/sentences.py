@@ -15,7 +15,4 @@ logger = logging.getLogger(__name__)
 def api_explorer_sentences_list():
     solr_q, solr_fq = parse_query_with_keywords(request.args)
     results = apicache.sentence_list(solr_q, solr_fq, rows=10)
-    sentences = []
-    if 'docs' in results['response']:
-        sentences = [s for s in results['response']['docs'] if s['sentence']]
-    return jsonify({'results': sentences})
+    return jsonify({'results': results})

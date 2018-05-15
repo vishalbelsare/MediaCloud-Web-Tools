@@ -9,7 +9,7 @@ import composeSummarizedVisualization from './SummarizedVizualization';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
 import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
-import { oneWeekLater, solrFormat } from '../../../lib/dateUtil';
+import { oneDayLater, solrFormat } from '../../../lib/dateUtil';
 import { queryChangedEnoughToUpdate, postToDownloadUrl } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
 import { FETCH_INVALID } from '../../../lib/fetchConstants';
@@ -17,8 +17,8 @@ import { FETCH_INVALID } from '../../../lib/fetchConstants';
 const localMessages = {
   overallSeries: { id: 'explorer.attention.series.overall', defaultMessage: 'Whole Query' },
   lineChartTitle: { id: 'explorer.attention.lineChart.title', defaultMessage: 'Attention Over Time' },
-  descriptionIntro: { id: 'explorer.attention.lineChart.intro', defaultMessage: '<p>Compare the attention paid to your queries over time to understand how they are covered. This chart shows the number of sentences that match each of your queries. Spikes in attention can reveal key events. Plateaus can reveal stable, "normal", attention levels. Click a point to see words and headlines for those dates.</p>' },
-  descriptionDetail: { id: 'explorer.attention.lineChart.detail', defaultMessage: '<p>This chart includes one line for each query in your search. Each line charts the average number of sentences that matched your query per day in the sources and collections you have specified.</p><p>Roll over the line chart to see the sentences per day in that period of time. Click the download button in the top right to download the raw counts in a CSV spreadsheet. Click the three lines in the top right of the chart to export the chart as an image file.</p>' },
+  descriptionIntro: { id: 'explorer.attention.lineChart.intro', defaultMessage: '<p>Compare the attention paid to your queries over time to understand how they are covered. This chart shows the number of stories that match each of your queries. Spikes in attention can reveal key events. Plateaus can reveal stable, "normal", attention levels. Click a point to see words and headlines for those dates.</p>' },
+  descriptionDetail: { id: 'explorer.attention.lineChart.detail', defaultMessage: '<p>This chart includes one line for each query in your search. Each line charts the number of stories that matched your query per day in the sources and collections you have specified.</p><p>Roll over the line chart to see the stories per day in that period of time. Click the download button in the top right to download the raw counts in a CSV spreadsheet. Click the three lines in the top right of the chart to export the chart as an image file.</p>' },
 };
 
 class QueryAttentionOverTimeResultsContainer extends React.Component {
@@ -38,10 +38,10 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
     return queryChangedEnoughToUpdate(queries, nextProps.queries, results, nextProps.results);
   }
   handleDataPointClick = (date0, date1, evt, origin) => {
-    const { selectDataPoint, queries, results } = this.props;
+    const { selectDataPoint, queries } = this.props;
     const name = origin.series.name;
     const currentQueryOfInterest = queries.filter(qry => qry.label === name)[0];
-    const dayGap = results[currentQueryOfInterest.index].dateRangeSpread;
+    const dayGap = 1; // TODO: harcoded for now because we are always showing daily results
     // date calculations for span/range
     const clickedQuery = {
       q: currentQueryOfInterest.q,
@@ -49,12 +49,12 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
       color: origin.series.color,
       dayGap,
     };
-    clickedQuery.end_date = solrFormat(oneWeekLater(date1), true);
+    clickedQuery.end_date = solrFormat(oneDayLater(date1), true);
     this.setState({ clickedQuery });
     selectDataPoint(clickedQuery);
   }
   downloadCsv = (query) => {
-    postToDownloadUrl('/api/explorer/sentences/count.csv', query);
+    postToDownloadUrl('/api/explorer/stories/split-count.csv', query);
   }
   render() {
     const { results, queries } = this.props;
