@@ -213,8 +213,8 @@ def stream_story_list_csv(user_key, filename, topics_id, **kwargs):
     merged_args = {
         'snapshots_id': request.args['snapshotId'],
         'timespans_id': request.args['timespanId'],
-        'foci_id': request.args['focusId'],
-        'q': request.args['q'],
+        'foci_id': request.args['focusId'] if 'foci_id' in request.args else None,
+        'q': request.args['q'] if 'foci_id' in request.args else None,
         'sort': request.args['sort'],
     }
     params.update(merged_args)
