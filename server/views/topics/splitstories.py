@@ -40,10 +40,10 @@ def stream_topic_split_story_counts_csv(user_mc_key, filename, topics_id, **kwar
     return csv.stream_response(sorted_results, props, filename)
 
 
-@app.route('/api/topics/<topics_id>/sentences/focal-set/<focal_sets_id>/count', methods=['GET'])
+@app.route('/api/topics/<topics_id>/split-stories/focal-set/<focal_sets_id>/count', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
-def topic_focal_set_sentences_compare(topics_id, focal_sets_id):
+def topic_focal_set_split_stories_compare(topics_id, focal_sets_id):
     snapshots_id, timespans_id, foci_id, q = filters_from_args(request.args)
     all_focal_sets = topic_focal_sets(user_mediacloud_key(), topics_id, snapshots_id)
     # need the timespan info, to find the appropriate timespan with each focus

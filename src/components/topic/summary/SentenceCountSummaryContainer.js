@@ -20,7 +20,7 @@ const localMessages = {
   descriptionIntro: { id: 'topic.summary.sentenceCount.help.title', defaultMessage: 'Analyze attention to this topic over time to understand how it is covered. This chart shows the total number of sentences in stories that matched your topic query. Spikes in attention can reveal key events.  Plateaus can reveal stable, "normal", attention levels.' },
 };
 
-class SentenceCountSummaryContainer extends React.Component {
+class SplitStoryCountSummaryContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { filters, fetchData } = this.props;
     if (nextProps.filters !== filters) {
@@ -60,7 +60,7 @@ class SentenceCountSummaryContainer extends React.Component {
   }
 }
 
-SentenceCountSummaryContainer.propTypes = {
+SplitStoryCountSummaryContainer.propTypes = {
   // from composition chain
   intl: PropTypes.object.isRequired,
   // passed in
@@ -100,7 +100,7 @@ export default
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeDescribedDataCard(localMessages.descriptionIntro, [messages.attentionChartHelpText])(
         composeAsyncContainer(
-          SentenceCountSummaryContainer
+          SplitStoryCountSummaryContainer
         )
       )
     )

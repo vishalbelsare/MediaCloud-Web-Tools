@@ -19,7 +19,7 @@ const localMessages = {
   },
 };
 
-class MediaSentenceCountContainer extends React.Component {
+class MediaSplitStoryCountContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { fetchData, filters } = this.props;
     if (nextProps.filters !== filters) {
@@ -49,7 +49,7 @@ class MediaSentenceCountContainer extends React.Component {
   }
 }
 
-MediaSentenceCountContainer.propTypes = {
+MediaSplitStoryCountContainer.propTypes = {
   // from composition chain
   intl: PropTypes.object.isRequired,
   helpButton: PropTypes.node.isRequired,
@@ -92,7 +92,7 @@ export default
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.attentionChartHelpText])(
         composeAsyncContainer(
-          MediaSentenceCountContainer
+          MediaSplitStoryCountContainer
         )
       )
     )
