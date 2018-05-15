@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { Grid, Row, Col } from 'react-flexbox-grid/lib';
+import { Grid } from 'react-flexbox-grid/lib';
 import Link from 'react-router/lib/Link';
 import Title from 'react-title-component';
 import { getCurrentDate, oneMonthBefore } from '../../../lib/dateUtil';
@@ -53,28 +53,24 @@ class SelectSourceContainer extends React.Component {
         <Title render={titleHandler} />
         <SourceMgrHeaderContainer />
         <SourceControlBar>
-          <Row>
-            <Col lg={12}>
-              <a href="search-in-explorer" onClick={this.searchInExplorer} >
-                <ExploreButton />
-                <FormattedMessage {...localMessages.searchNow} />
-              </a>
-              <a href={source.url}>
-                <ExploreButton />
-                <FormattedMessage {...localMessages.visitHomepage} values={{ url: source.url }} />
-              </a>
-              <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
-                <Link to={`/sources/${source.media_id}/edit`} >
-                  <EditButton />
-                  <FormattedMessage {...localMessages.editSource} />
-                </Link>
-                <Link to={`/sources/${source.media_id}/feeds`} >
-                  <EditButton />
-                  <FormattedMessage {...localMessages.editFeeds} />
-                </Link>
-              </Permissioned>
-            </Col>
-          </Row>
+          <a href="search-in-explorer" onClick={this.searchInExplorer} >
+            <ExploreButton />
+            <FormattedMessage {...localMessages.searchNow} />
+          </a>
+          <a href={source.url}>
+            <ExploreButton />
+            <FormattedMessage {...localMessages.visitHomepage} values={{ url: source.url }} />
+          </a>
+          <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
+            <Link to={`/sources/${source.media_id}/edit`} >
+              <EditButton />
+              <FormattedMessage {...localMessages.editSource} />
+            </Link>
+            <Link to={`/sources/${source.media_id}/feeds`} >
+              <EditButton />
+              <FormattedMessage {...localMessages.editFeeds} />
+            </Link>
+          </Permissioned>
         </SourceControlBar>
         <Grid className="details source-details">
           {children}
