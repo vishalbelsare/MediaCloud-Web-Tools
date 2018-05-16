@@ -16,7 +16,7 @@ import { downloadSvg } from '../../util/svg';
 const localMessages = {
   overallSeries: { id: 'topic.attention.series.overall', defaultMessage: 'Whole Topic' },
   bubbleChartTitle: { id: 'topic.attention.bubbleChart.title', defaultMessage: 'Total Stories in Each Subtopic' },
-  lineChartTitle: { id: 'topic.attention.lineChart.title', defaultMessage: 'Total Sentences over Time in Each Subtopic' },
+  lineChartTitle: { id: 'topic.attention.lineChart.title', defaultMessage: 'Total Stories over Time in Each Subtopic' },
 };
 
 const SECS_PER_DAY = 1000 * 60 * 60 * 24;
