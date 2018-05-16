@@ -29,7 +29,7 @@ class WordSplitStoryCountContainer extends React.Component {
   }
   downloadCsv = () => {
     const { topicId, term, filters } = this.props;
-    const url = `/api/topics/${topicId}/words/${term}*/sentences/count.csv?${filtersAsUrlParams(filters)}`;
+    const url = `/api/topics/${topicId}/words/${term}*/split-story/count.csv?${filtersAsUrlParams(filters)}`;
     window.location = url;
   }
   render() {

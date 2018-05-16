@@ -28,7 +28,7 @@ class MediaSplitStoryCountContainer extends React.Component {
   }
   downloadCsv = () => {
     const { topicId, mediaId, filters } = this.props;
-    const url = `/api/topics/${topicId}/media/${mediaId}/sentences/count.csv?snapshotId=${filters.snapshotId}&timespanId=${filters.timespanId}`;
+    const url = `/api/topics/${topicId}/media/${mediaId}/split-story/count.csv?snapshotId=${filters.snapshotId}&timespanId=${filters.timespanId}`;
     window.location = url;
   }
   render() {
