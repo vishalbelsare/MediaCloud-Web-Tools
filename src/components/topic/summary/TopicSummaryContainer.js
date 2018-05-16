@@ -5,19 +5,19 @@ import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import LoadingSpinner from '../../common/LoadingSpinner';
 import TopicInfo from './TopicInfo';
-// import TopPeopleContainer from './TopPeopleContainer';
-// import TopOrgsContainer from './TopOrgsContainer';
+import TopPeopleContainer from './TopPeopleContainer';
+import TopOrgsContainer from './TopOrgsContainer';
 import StoriesSummaryContainer from './StoriesSummaryContainer';
 import MediaSummaryContainer from './MediaSummaryContainer';
 import WordsSummaryContainer from './WordsSummaryContainer';
 import SplitStoryCountSummaryContainer from './SplitStoryCountSummaryContainer';
 import TopicStoryStatsContainer from './TopicStoryStatsContainer';
-// import StoryTotalsSummaryContainer from './StoryTotalsSummaryContainer';
-// import DownloadMapContainer from './DownloadMapContainer';
-// import NytLabelSummaryContainer from './NytLabelSummaryContainer';
-// import GeoTagSummaryContainer from './GeoTagSummaryContainer';
-// import Permissioned from '../../common/Permissioned';
-// import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
+import StoryTotalsSummaryContainer from './StoryTotalsSummaryContainer';
+import DownloadMapContainer from './DownloadMapContainer';
+import NytLabelSummaryContainer from './NytLabelSummaryContainer';
+import GeoTagSummaryContainer from './GeoTagSummaryContainer';
+import Permissioned from '../../common/Permissioned';
+import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import TopicStoryMetadataStatsContainer from './TopicStoryMetadataStatsContainer';
 
 const localMessages = {
@@ -39,7 +39,7 @@ class TopicSummaryContainer extends React.Component {
       intro = (<p><FormattedMessage {...localMessages.previewIntro} values={{ name: topicInfo.name }} /></p>);
     }
     // only show filtered story counts if you have a filter in place
-    /* let filteredStoryCountContent = null;
+    let filteredStoryCountContent = null;
     if ((selectedTimespan && (selectedTimespan.period !== 'overall')) || (filters.focusId) || (filters.q)) {
       filteredStoryCountContent = (
         <Row>
@@ -48,7 +48,7 @@ class TopicSummaryContainer extends React.Component {
           </Col>
         </Row>
       );
-    } */
+    }
     if (!user.isLoggedIn || this.filtersAreSet()) {
       content = (
         <Grid>
@@ -77,6 +77,13 @@ class TopicSummaryContainer extends React.Component {
               <MediaSummaryContainer topicId={topicId} filters={filters} location={location} />
             </Col>
           </Row>
+          <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
+            <Row>
+              <Col lg={12}>
+                <NytLabelSummaryContainer topicId={topicId} filters={filters} location={location} />
+              </Col>
+            </Row>
+          </Permissioned>
           <Row>
             <Col lg={12}>
               <WordsSummaryContainer topicId={topicId} topicName={topicInfo.name} filters={filters} width={720} />
@@ -84,12 +91,33 @@ class TopicSummaryContainer extends React.Component {
           </Row>
           <Row>
             <Col lg={6}>
-              <TopicInfo topic={topicInfo} timespan={selectedTimespan} focus={seletecFocus} />
+              <TopPeopleContainer topicId={topicId} filters={filters} location={location} />
             </Col>
             <Col lg={6}>
-              <TopicStoryMetadataStatsContainer topicId={topicId} filters={filters} timespan={selectedTimespan} />
+              <TopOrgsContainer topicId={topicId} filters={filters} location={location} />
             </Col>
           </Row>
+          <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
+            <Row>
+              <Col lg={12}>
+                <GeoTagSummaryContainer topicId={topicId} filters={filters} />
+              </Col>
+            </Row>
+            {filteredStoryCountContent}
+            <Row>
+              <Col lg={12}>
+                <DownloadMapContainer topicId={topicId} filters={filters} />
+              </Col>
+            </Row>
+            <Row>
+              <Col lg={6}>
+                <TopicInfo topic={topicInfo} timespan={selectedTimespan} focus={seletecFocus} />
+              </Col>
+              <Col lg={6}>
+                <TopicStoryMetadataStatsContainer topicId={topicId} filters={filters} timespan={selectedTimespan} />
+              </Col>
+            </Row>
+          </Permissioned>
         </Grid>
       );
     } else {
