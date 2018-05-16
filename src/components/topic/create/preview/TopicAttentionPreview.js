@@ -25,17 +25,23 @@ class TopicAttentionPreview extends React.Component {
     }
   }
   render() {
-    const { total, counts } = this.props;
+    const { total, counts, query } = this.props;
     return (
       <DataCard>
         <h2>
           <FormattedMessage {...localMessages.title} />
         </h2>
         <AttentionOverTimeChart
-          total={total}
-          data={counts}
-          height={200}
           lineColor={getBrandDarkColor()}
+          total={total}
+          series={[{
+            id: 0,
+            name: query.name,
+            color: getBrandDarkColor(),
+            data: counts.map(c => [c.date, c.count]),
+            showInLegend: false,
+          }]}
+          height={250}
         />
       </DataCard>
     );
