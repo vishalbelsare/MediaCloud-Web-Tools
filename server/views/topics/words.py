@@ -121,7 +121,7 @@ def topic_word_usage_sample(topics_id, word):
     # need to use tool API key here because non-admin users can't pull sentences
     results = topic_sentence_sample(TOOL_API_KEY, topics_id, sample_size=1000, q=q)
     # TODO: only pull the 5 words before and after so we
-    fragments = [_sentence_fragment_around(word, s['sentence']) for s in results['response']['docs'] if s['sentence'] is not None]
+    fragments = [_sentence_fragment_around(word, s['sentence']) for s in results if s['sentence'] is not None]
     fragments = [f for f in fragments if f is not None]
     return jsonify({'fragments': fragments})
 
