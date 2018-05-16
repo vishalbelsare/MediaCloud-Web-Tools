@@ -17,8 +17,8 @@ const attention = createAsyncReducer({
         foci: payload.foci.map(focus => ({
           ...focus,
           focal_sets_id: parseInt(focus.focal_sets_id, 10),
-          counts: cleanDateCounts(focus.split_story_counts.split),
-          total: focus.split_story_counts.count,
+          counts: cleanDateCounts(focus.split_story_counts.counts),
+          total: focus.split_story_counts.total_story_count,
         })),
         selectedFocalSetId: payload.foci.length > 0 ? payload.foci[0].focal_sets_id : NO_FOCAL_SET_SELECTED,
       };
