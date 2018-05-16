@@ -69,7 +69,7 @@ def topic_focal_set_split_stories_compare(topics_id, focal_sets_id):
             focal_set = fs
     if focal_set is None:
         return json_error_response('Invalid Focal Set Id')
-    # collect the sentence counts for each foci
+    # collect the story split counts for each foci
     for focus in focal_set['foci']:
         # find the matching timespan within this focus
         snapshot_timespans = cached_topic_timespan_list(user_mediacloud_key(), topics_id, snapshots_id=snapshots_id, foci_id=focus['foci_id'])

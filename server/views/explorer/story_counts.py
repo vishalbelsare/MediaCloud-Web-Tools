@@ -33,7 +33,6 @@ def explorer_story_count_csv():
         solr_q, solr_fq = parse_query_with_keywords(query_object)
         label = query_object['label']
         filename = file_name_for_download(label, filename)
-    # sentence count needs dates to be sent explicitly -TODO check what has priority
     story_count = apicache.story_count(api_key, solr_q, solr_fq)
     story_count_results.append({'query': label, 'count': story_count['count']})
     props = ['query', 'count']
