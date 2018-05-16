@@ -33,9 +33,13 @@ def explorer_story_count_csv():
         solr_q, solr_fq = parse_query_with_keywords(query_object)
         label = query_object['label']
         filename = file_name_for_download(label, filename)
-    story_count = apicache.normalized_and_story_split_count(api_key, solr_q, solr_fq)
+
+    solr_open_query = concatenate_query_for_solr(solr_seed_query='*',
+                                                 media_ids=request.args['sources'],
+                                                 tags_ids=request.args['collections'])
+    story_count = apicache.normalized_and_story_split_count(api_key, solr_q, solr_fq, solr_open_query)
     story_count_results.append({'query': label, 'count': story_count['count']})
-    props = ['query', 'count']
+    props = ['query', 'count', 'total_counts']
     return csv.stream_response(story_count_results, props, filename)
 
 
@@ -88,15 +92,24 @@ def api_explorer_demo_story_split_count():
 def api_explorer_story_split_count_csv():
     filename = u'stories-over-time'
     data = request.form
+    solr_open_query = data
     if 'searchId' in data:
         solr_q, solr_fq = parse_as_sample(data['searchId'], data['index'])
         filename = filename  # don't have this info + current_query['q']
+        # TODO solr_open_query
     else:
         query_object = json.loads(data['q'])
         solr_q, solr_fq = parse_query_with_keywords(query_object)
         filename = file_name_for_download(query_object['label'], filename)
-    results = apicache.normalized_and_story_split_count(solr_q, solr_fq)
-    results = sorted(results['counts'], key=itemgetter('date'))
-    results = [{'date': item['date'], 'stories': item['count']} for item in results]
-    props = ['date', 'stories']
+        solr_open_query = query_object
+        solr_open_query['q']='*'
+
+    results = apicache.normalized_and_story_split_count(user_mediacloud_key(), solr_q, solr_fq, solr_open_query)
+
+    results_regular = sorted(results['with_keywords']['counts'], key=itemgetter('date'))
+    results_open = sorted(results['without_keywords']['counts'], key=itemgetter('date'))
+    results = [{'date': item['date'], 'story_count_keyword': item['count']} for item in results_regular]
+    results_no_keyword = [{'date': item['date'], 'story_count_without_keyword': item['count']} for item in results_regular]
+    results += results_no_keyword #TODO should merge thiese actually
+    props = ['date', 'story_count_keyword', 'story_count_without_keyword']
     return csv.stream_response(results, props, filename)
