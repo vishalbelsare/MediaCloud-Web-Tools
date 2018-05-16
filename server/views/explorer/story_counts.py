@@ -9,7 +9,7 @@ from server.auth import user_mediacloud_key, is_user_logged_in
 import server.util.csv as csv
 from server.util.request import api_error_handler
 from server.views.explorer import parse_as_sample, parse_query_with_args_and_sample_search,\
-    parse_query_with_keywords, load_sample_searches, file_name_for_download
+    parse_query_with_keywords, load_sample_searches, file_name_for_download, concatenate_query_for_solr
 import server.views.explorer.apicache as apicache
 
 logger = logging.getLogger(__name__)
@@ -33,7 +33,7 @@ def explorer_story_count_csv():
         solr_q, solr_fq = parse_query_with_keywords(query_object)
         label = query_object['label']
         filename = file_name_for_download(label, filename)
-    story_count = apicache.story_count(api_key, solr_q, solr_fq)
+    story_count = apicache.normalized_and_story_split_count(api_key, solr_q, solr_fq)
     story_count_results.append({'query': label, 'count': story_count['count']})
     props = ['query', 'count']
     return csv.stream_response(story_count_results, props, filename)
@@ -53,9 +53,12 @@ def api_explorer_story_split_count():
     else:
         solr_q, solr_fq = parse_query_with_keywords(request.args)
     # why is this call fundamentally different than the cache call???
-    results = apicache.story_split_count(user_mediacloud_key(), solr_q, solr_fq)
+    solr_open_query = concatenate_query_for_solr(solr_seed_query='*',
+                                                 media_ids=request.args['sources'],
+                                                 tags_ids=request.args['collections'])
+    results = apicache.normalized_and_story_split_count(user_mediacloud_key(), solr_q, solr_fq, solr_open_query)
 
-    return jsonify(results)
+    return jsonify({'results': results})
 
 
 @app.route('/api/explorer/demo/stories/split-count', methods=['GET'])
@@ -72,9 +75,12 @@ def api_explorer_demo_story_split_count():
     else:
         solr_q, solr_fq = parse_query_with_keywords(request.args)
     # why is this call fundamentally different than the cache call???
-    results = apicache.story_split_count(TOOL_API_KEY, solr_q, solr_fq)
+    solr_open_query = concatenate_query_for_solr(solr_seed_query='*',
+                                                 media_ids=request.args['sources'],
+                                                 tags_ids=request.args['collections'])
+    results = apicache.normalized_and_story_split_count(user_mediacloud_key(), solr_q, solr_fq, solr_open_query)
 
-    return jsonify(results)
+    return jsonify({'results': results})
 
 
 @app.route('/api/explorer/stories/split-count.csv', methods=['POST'])
@@ -89,7 +95,7 @@ def api_explorer_story_split_count_csv():
         query_object = json.loads(data['q'])
         solr_q, solr_fq = parse_query_with_keywords(query_object)
         filename = file_name_for_download(query_object['label'], filename)
-    results = apicache.story_split_count(solr_q, solr_fq)
+    results = apicache.normalized_and_story_split_count(solr_q, solr_fq)
     results = sorted(results['counts'], key=itemgetter('date'))
     results = [{'date': item['date'], 'stories': item['count']} for item in results]
     props = ['date', 'stories']

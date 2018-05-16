@@ -6,9 +6,11 @@ from server.util.tags import processed_by_cliff_query_clause
 import server.util.wordembeddings as wordembeddings
 
 
-def story_split_count(mc_api_key, q, fq):
-    return cached_story_split_count(mc_api_key, q, fq)
-
+def normalized_and_story_split_count(mc_api_key, q, fq, open_q):
+    results = {}
+    results['with_keywords'] = cached_story_split_count(mc_api_key, q, fq)
+    results['without_keywords'] = cached_story_split_count(mc_api_key, open_q, fq)
+    return results
 
 @cache.cache_on_arguments(function_key_generator=key_generator)
 def cached_story_split_count(mc_api_key, q, fq):
