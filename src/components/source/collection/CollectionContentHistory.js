@@ -5,12 +5,11 @@ import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { Link } from 'react-router';
 import Title from 'react-title-component';
-import { fetchCollectionSourceSplitStoryHistoricalCounts, setCollectionSourceHistoryTimePeriod } from '../../../actions/sourceActions';
+import { fetchCollectionSourceSplitStoryHistoricalCounts } from '../../../actions/sourceActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import composePeriodicContent from '../../common/PeriodicContent';
 import { getBrandDarkColor } from '../../../styles/colors';
+import { DownloadButton } from '../../common/IconButton';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
-import { getDateRange } from '../../../lib/dateUtil';
 
 const localMessages = {
   title: { id: 'collection.contentHistory.title', defaultMessage: 'Total Stories over Time' },
@@ -19,25 +18,33 @@ const localMessages = {
 
 class CollectionContentHistory extends React.Component {
 
-  componentWillReceiveProps(nextProps) {
-    const { collectionId, fetchData, selectedTimePeriod } = this.props;
-    if ((nextProps.collectionId !== collectionId) || (nextProps.selectedTimePeriod !== selectedTimePeriod)) {
-      fetchData(nextProps.collectionId, nextProps.selectedTimePeriod);
+  downloadCsv = (evt) => {
+    const { collection } = this.props;
+    if (evt) {
+      evt.preventDefault();
     }
+    const url = `/api/collections/${collection.tags_id}/sources/story-split/historical-counts.csv`;
+    window.location = url;
   }
 
   render() {
-    const { collection, historicalCounts, timePeriodControls } = this.props;
+    const { collection, historicalCounts } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
     const titleHandler = parentTitle => `${formatMessage(localMessages.title)} | ${parentTitle}`;
     return (
       <div>
         <Title render={titleHandler} />
         <Grid>
-          <h1>
-            {collection.label} - <FormattedMessage {...localMessages.title} />
-            {timePeriodControls}
-          </h1>
+          <Row>
+            <Col lg={10}>
+              <h1>
+                {collection.label} - <FormattedMessage {...localMessages.title} />
+              </h1>
+            </Col>
+            <Col lg={2}>
+              <DownloadButton onClick={this.downloadCsv} />
+            </Col>
+          </Row>
           {historicalCounts.map(source => (
             <Row key={source.media_id}>
               <Col lg={2} xs={12}>
@@ -63,7 +70,6 @@ class CollectionContentHistory extends React.Component {
                   }]}
                   height={150}
                   filename={`source-${source.media_id}-history`}
-                  onDataPointClick={this.handleDataPointClick}
                 />
               </Col>
             </Row>
@@ -87,10 +93,7 @@ CollectionContentHistory.propTypes = {
   fetchStatus: PropTypes.string.isRequired,
   collection: PropTypes.object.isRequired,
   historicalCounts: PropTypes.array.isRequired,
-  timePeriodControls: PropTypes.node.isRequired,
-  selectedTimePeriod: PropTypes.string.isRequired,
   // from dispatch
-  handleTimePeriodClick: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -102,13 +105,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  fetchData: (collectionId, timePeriod) => {
-    const dates = getDateRange(timePeriod);
-    dispatch(fetchCollectionSourceSplitStoryHistoricalCounts(collectionId,
-      { start: dates.start.format('YYYY-MM-DD'), end: dates.end.format('YYYY-MM-DD') }));
-  },
-  changeTimePeriod: (timePeriod) => {
-    dispatch(setCollectionSourceHistoryTimePeriod(timePeriod));
+  fetchData: (collectionId) => {
+    dispatch(fetchCollectionSourceSplitStoryHistoricalCounts(collectionId));
   },
 });
 
@@ -117,21 +115,14 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
     asyncFetch: () => {
       dispatchProps.fetchData(stateProps.collectionId, stateProps.selectedTimePeriod);
     },
-    handleTimePeriodClick: (dateQuery, timePeriod) => {
-      dispatchProps.changeTimePeriod(timePeriod);
-      dispatchProps.fetchData(stateProps.collectionId, timePeriod);
-    },
   });
 }
 
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composePeriodicContent(
-        composeAsyncContainer(
-          CollectionContentHistory
-        ),
-        true, // hide the ALL_TIME option
-      )
+      composeAsyncContainer(
+        CollectionContentHistory
+      ),
     )
   );

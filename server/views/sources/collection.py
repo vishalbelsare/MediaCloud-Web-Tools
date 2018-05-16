@@ -11,14 +11,11 @@ import server.util.csv as csv
 from server import app, mc, db
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_mediacloud_client, user_name,\
     user_has_auth_role, ROLE_MEDIA_EDIT
-from server.cache import cache, key_generator
 import server.views.sources.apicache as apicache
 from server.util.request import arguments_required, form_fields_required, api_error_handler
 from server.util.tags import TAG_SETS_ID_COLLECTIONS, is_metadata_tag_set, format_name_from_label, \
     format_metadata_fields, media_with_tag
-from server.views.sources.stories_split_by_time import cached_recent_split_stories
-from server.views.sources import SOURCES_TEMPLATE_PROPS_EDIT, \
-    COLLECTIONS_TEMPLATE_PROPS_EDIT, cached_source_story_count
+from server.views.sources import SOURCES_TEMPLATE_PROPS_EDIT, COLLECTIONS_TEMPLATE_PROPS_EDIT
 from server.views.sources.favorites import add_user_favorite_flag_to_collections, add_user_favorite_flag_to_sources
 from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
 from server.views.sources.stories_split_by_time import cached_recent_split_stories, stream_split_stories_csv
@@ -214,45 +211,37 @@ def api_collection_sources_csv(collection_id):
 
 
 @app.route('/api/collections/<collection_id>/sources/story-split/historical-counts')
-@arguments_required('start', 'end')
 @flask_login.login_required
 @api_error_handler
 def collection_source_story_split_historical_counts(collection_id):
-    start_date_str = request.args['start']
-    end_date_str = request.args['end']
-    results = _collection_source_story_split_historical_counts(collection_id, start_date_str, end_date_str)
+    results = _collection_source_story_split_historical_counts(collection_id)
     return jsonify({'counts': results})
 
 
 @app.route('/api/collections/<collection_id>/sources/story-split/historical-counts.csv')
-@arguments_required('start', 'end')
 @flask_login.login_required
 @api_error_handler
 def collection_source_story_split_historical_counts_csv(collection_id):
-    start_date_str = request.args['start']
-    end_date_str = request.args['end']
-    results = _collection_source_story_split_historical_counts(collection_id, start_date_str, end_date_str)
+    results = _collection_source_story_split_historical_counts(collection_id)
     date_cols = None
     #TODO verify this
     for source in results:
         if date_cols is None:
-            date_cols = sorted(source['splits_over_time'].keys())
-        for date, count in source['splits_over_time'].iteritems():
-            source[date] = count
+            date_cols = sorted([s['date'] for s in source['splits_over_time']])
+        for day in source['splits_over_time']:
+            source[day['date']] = day['count']
         del source['splits_over_time']
     props = ['media_id', 'media_name', 'media_url', 'total_stories', 'splits_over_time'] + date_cols
-    filename = "{} - source content count ({} to {})".format(collection_id, start_date_str, end_date_str)
+    filename = "{} - source content count".format(collection_id)
     return csv.stream_response(results, props, filename)
 
 
 # worker function to help in parallel
 def _source_story_split_count_worker(info):
     source = info['media']
-    media_query = "media_id:{}".format(source['media_id'])
-    date_filter = info['dates']
-
-    split_stories = cached_recent_split_stories(user_mediacloud_key, media_query) # date filter doesn't return??
-
+    q = "media_id:{}".format(source['media_id'])
+    fq = info['fq']
+    split_stories = cached_recent_split_stories(user_mediacloud_key(), q, fq)
     source_data = {
         'media_id': source['media_id'],
         'media_name': source['name'],
@@ -263,14 +252,10 @@ def _source_story_split_count_worker(info):
     return source_data
 
 
-def _collection_source_story_split_historical_counts(collection_id, start_date_str, end_date_str):
-    user_mc = user_mediacloud_client()
-    start_date = datetime.datetime.strptime(start_date_str, "%Y-%m-%d").date()
-    end_date = datetime.datetime.strptime(end_date_str, "%Y-%m-%d").date()
+def _collection_source_story_split_historical_counts(collection_id):
     media_list = media_with_tag(user_mediacloud_key(), collection_id)
-    q = "" # "(tags_id_media:{})".format(collection_id)
-    date_filter = "({})".format(user_mc.publish_date_query(start_date, end_date))
-    jobs = [{'media': m, 'q': q, 'dates': date_filter} for m in media_list]
+    fq = "(publish_day:[NOW-1YEAR TO NOW])"
+    jobs = [{'media': m, 'fq': fq} for m in media_list]
     # fetch in parallel to make things faster
     pool = Pool(processes=HISTORICAL_COUNT_POOL_SIZE)
     results = pool.map(_source_story_split_count_worker, jobs)  # blocks until they are all done
