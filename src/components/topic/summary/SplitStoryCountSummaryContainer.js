@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeDescribedDataCard from '../../common/DescribedDataCard';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
-import { fetchTopicSentenceCounts } from '../../../actions/topicActions';
+import { fetchTopicSplitStoryCounts } from '../../../actions/topicActions';
 import messages from '../../../resources/messages';
 import Permissioned from '../../common/Permissioned';
 import LinkWithFilters from '../LinkWithFilters';
@@ -20,7 +20,7 @@ const localMessages = {
   descriptionIntro: { id: 'topic.summary.sentenceCount.help.title', defaultMessage: 'Analyze attention to this topic over time to understand how it is covered. This chart shows the total number of sentences in stories that matched your topic query. Spikes in attention can reveal key events.  Plateaus can reveal stable, "normal", attention levels.' },
 };
 
-class SentenceCountSummaryContainer extends React.Component {
+class SplitStoryCountSummaryContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { filters, fetchData } = this.props;
     if (nextProps.filters !== filters) {
@@ -60,7 +60,7 @@ class SentenceCountSummaryContainer extends React.Component {
   }
 }
 
-SentenceCountSummaryContainer.propTypes = {
+SplitStoryCountSummaryContainer.propTypes = {
   // from composition chain
   intl: PropTypes.object.isRequired,
   // passed in
@@ -76,14 +76,14 @@ SentenceCountSummaryContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  fetchStatus: state.topics.selected.summary.sentenceCount.fetchStatus,
-  total: state.topics.selected.summary.sentenceCount.total,
-  counts: state.topics.selected.summary.sentenceCount.counts,
+  fetchStatus: state.topics.selected.summary.splitStoryCount.fetchStatus,
+  total: state.topics.selected.summary.splitStoryCount.total,
+  counts: state.topics.selected.summary.splitStoryCount.counts,
 });
 
 const mapDispatchToProps = dispatch => ({
   fetchData: (props) => {
-    dispatch(fetchTopicSentenceCounts(props.topicId, props.filters));
+    dispatch(fetchTopicSplitStoryCounts(props.topicId, props.filters));
   },
 });
 
@@ -100,7 +100,7 @@ export default
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeDescribedDataCard(localMessages.descriptionIntro, [messages.attentionChartHelpText])(
         composeAsyncContainer(
-          SentenceCountSummaryContainer
+          SplitStoryCountSummaryContainer
         )
       )
     )

@@ -36,7 +36,7 @@ def access_public_topic(topics_id):
 
 
 # helper for topic preview queries
-def concatenate_query_for_solr(solr_seed_query, start_date, end_date, media_ids, tags_ids):
+def concatenate_query_for_solr(solr_seed_query, media_ids, tags_ids):
     query = u'({})'.format(solr_seed_query)
 
     if len(media_ids) > 0 or len(tags_ids) > 0:
@@ -56,13 +56,11 @@ def concatenate_query_for_solr(solr_seed_query, start_date, end_date, media_ids,
             query += u'(' + query_tags_ids + u')'
         query += u')'
 
-    if start_date:
-        query += u" AND (+" + concatenate_query_and_dates(start_date, end_date) + u")"
 
     return query
 
 
-def concatenate_query_and_dates(start_date, end_date):
+def concatenate_solr_dates(start_date, end_date):
     user_mc = user_admin_mediacloud_client()
     publish_date = user_mc.publish_date_query(datetime.datetime.strptime(start_date, '%Y-%m-%d').date(),
                                               datetime.datetime.strptime(end_date, '%Y-%m-%d').date())

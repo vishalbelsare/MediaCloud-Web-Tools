@@ -5,21 +5,21 @@ import { connect } from 'react-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
-import { fetchMediaSentenceCounts } from '../../../actions/topicActions';
+import { fetchMediaSplitStoryCounts } from '../../../actions/topicActions';
 import messages from '../../../resources/messages';
 import { DownloadButton } from '../../common/IconButton';
 import DataCard from '../../common/DataCard';
 import { getBrandDarkColor } from '../../../styles/colors';
 
 const localMessages = {
-  title: { id: 'media.sentenceCount.title', defaultMessage: 'Total Sentences in this Media Source' },
-  helpTitle: { id: 'media.sentenceCount.help.title', defaultMessage: 'About Media Attention' },
-  helpText: { id: 'media.sentenceCount.help.text',
-    defaultMessage: '<p>This chart shows you the coverage of this Topic over time by this Media Source. This is the total number of sentences from this Media Source within this topic, which includes sentences that don\'t specifically match your query (but are in stories where at least one sentences does).</p>',
+  title: { id: 'media.splitStoryCount.title', defaultMessage: 'Total Stories in this Media Source' },
+  helpTitle: { id: 'media.splitStoryCount.help.title', defaultMessage: 'About Media Attention' },
+  helpText: { id: 'media.splitStoryCount.help.text',
+    defaultMessage: '<p>This chart shows you the coverage of this Topic over time by this Media Source. This is the total number of stories from this Media Source within this topic.</p>',
   },
 };
 
-class MediaSentenceCountContainer extends React.Component {
+class MediaSplitStoryCountContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { fetchData, filters } = this.props;
     if (nextProps.filters !== filters) {
@@ -49,7 +49,7 @@ class MediaSentenceCountContainer extends React.Component {
   }
 }
 
-MediaSentenceCountContainer.propTypes = {
+MediaSplitStoryCountContainer.propTypes = {
   // from composition chain
   intl: PropTypes.object.isRequired,
   helpButton: PropTypes.node.isRequired,
@@ -67,15 +67,15 @@ MediaSentenceCountContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  fetchStatus: state.topics.selected.mediaSource.sentenceCount.fetchStatus,
-  total: state.topics.selected.mediaSource.sentenceCount.total,
-  counts: state.topics.selected.mediaSource.sentenceCount.counts,
+  fetchStatus: state.topics.selected.mediaSource.splitStoryCount.fetchStatus,
+  total: state.topics.selected.mediaSource.splitStoryCount.total,
+  counts: state.topics.selected.mediaSource.splitStoryCount.counts,
   filters: state.topics.selected.filters,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (stateProps) => {
-    dispatch(fetchMediaSentenceCounts(ownProps.topicId, ownProps.mediaId, stateProps.filters));
+    dispatch(fetchMediaSplitStoryCounts(ownProps.topicId, ownProps.mediaId, stateProps.filters));
   },
 });
 
@@ -92,7 +92,7 @@ export default
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.attentionChartHelpText])(
         composeAsyncContainer(
-          MediaSentenceCountContainer
+          MediaSplitStoryCountContainer
         )
       )
     )

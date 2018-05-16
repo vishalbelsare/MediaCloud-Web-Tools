@@ -4,7 +4,7 @@ import * as api from '../../lib/serverApi/topics';
 
 export const SELECT_WORD = 'SELECT_WORD';
 export const FETCH_WORD = 'FETCH_WORD';
-export const FETCH_WORD_SENTENCE_COUNT = 'FETCH_WORD_SENTENCE_COUNT';
+export const FETCH_WORD_SPLIT_STORY_COUNT = 'FETCH_WORD_SENTENCE_COUNT';
 export const FETCH_WORD_STORIES = 'FETCH_WORD_STORIES';
 export const SORT_WORD_STORIES = 'SORT_WORD_STORIES';
 export const FETCH_WORD_WORDS = 'FETCH_WORD_WORDS';
@@ -16,7 +16,7 @@ export const selectWord = createAction(SELECT_WORD, payload => payload);
 export const fetchWord = createAsyncAction(FETCH_WORD, api.word);
 
 // pass in topic id, media id, snapshot id, timespan id
-export const fetchWordSentenceCounts = createAsyncAction(FETCH_WORD_SENTENCE_COUNT, api.wordSentenceCounts);
+export const fetchWordSplitStoryCounts = createAsyncAction(FETCH_WORD_SPLIT_STORY_COUNT, api.wordSplitStoryCounts);
 
 // pass in topic id, media id, snapshot id, timespan id, sort, limit
 export const fetchWordStories = createAsyncAction(FETCH_WORD_STORIES, api.wordStories);

@@ -224,7 +224,7 @@ def collection_source_story_split_historical_counts(collection_id):
     return jsonify({'counts': results})
 
 
-@app.route('/api/collections/<collection_id>/sources/stories/historical-counts.csv')
+@app.route('/api/collections/<collection_id>/sources/story-split/historical-counts.csv')
 @arguments_required('start', 'end')
 @flask_login.login_required
 @api_error_handler
@@ -236,11 +236,11 @@ def collection_source_story_split_historical_counts_csv(collection_id):
     #TODO verify this
     for source in results:
         if date_cols is None:
-            date_cols = sorted(source['sentences_over_time'].keys())
-        for date, count in source['sentences_over_time'].iteritems():
+            date_cols = sorted(source['splits_over_time'].keys())
+        for date, count in source['splits_over_time'].iteritems():
             source[date] = count
-        del source['sentences_over_time']
-    props = ['media_id', 'media_name', 'media_url', 'total_stories', 'total_sentences'] + date_cols
+        del source['splits_over_time']
+    props = ['media_id', 'media_name', 'media_url', 'total_stories', 'splits_over_time'] + date_cols
     filename = "{} - source content count ({} to {})".format(collection_id, start_date_str, end_date_str)
     return csv.stream_response(results, props, filename)
 
@@ -248,18 +248,17 @@ def collection_source_story_split_historical_counts_csv(collection_id):
 # worker function to help in parallel
 def _source_story_split_count_worker(info):
     source = info['media']
-    media_query = "(media_id:{}) {}".format(source['media_id'], info['q'])
+    media_query = "media_id:{}".format(source['media_id'])
     date_filter = info['dates']
-    total_story_count = cached_source_story_count(user_mediacloud_key(), media_query)
-    split_story_count = cached_recent_split_stories(user_mediacloud_key, media_query, date_filter)
+
+    split_stories = cached_recent_split_stories(user_mediacloud_key, media_query) # date filter doesn't return??
 
     source_data = {
         'media_id': source['media_id'],
         'media_name': source['name'],
         'media_url': source['url'],
-        'total_stories': total_story_count,
-        'total_split_stories': split_story_count['count'],
-        'splits_over_time': split_story_count['split'],
+        'total_story_count': split_stories['total_story_count'],
+        'splits_over_time': split_stories['counts'],
     }
     return source_data
 
@@ -269,6 +268,7 @@ def _collection_source_story_split_historical_counts(collection_id, start_date_s
     start_date = datetime.datetime.strptime(start_date_str, "%Y-%m-%d").date()
     end_date = datetime.datetime.strptime(end_date_str, "%Y-%m-%d").date()
     media_list = media_with_tag(user_mediacloud_key(), collection_id)
+    q = "" # "(tags_id_media:{})".format(collection_id)
     date_filter = "({})".format(user_mc.publish_date_query(start_date, end_date))
     jobs = [{'media': m, 'q': q, 'dates': date_filter} for m in media_list]
     # fetch in parallel to make things faster
@@ -277,47 +277,23 @@ def _collection_source_story_split_historical_counts(collection_id, start_date_s
     pool.terminate()  # extra safe garbage collection
     return results
 
-@app.route('/api/collections/<collection_id>/stories/split-count')
+@app.route('/api/collections/<collection_id>/story-split/count')
 @flask_login.login_required
 @api_error_handler
 def collection_source_split_stories(collection_id):
     q = "tags_id_media:{}".format(collection_id)
-    total_story_count = cached_source_story_count(user_mediacloud_key(), q)
     results = cached_recent_split_stories(user_mediacloud_key(), q)
     #health =
     interval = 'day' # default, and not currently passed to the calls above
-    return jsonify({'results': {'list': results, 'total': total_story_count, 'interval': interval}})
+    return jsonify({'results': {'list': results['counts'], 'total_story_count': results['total_story_count'], 'interval': interval}})
 
 
-@app.route('/api/collections/<collection_id>/stories/split-count.csv')
+@app.route('/api/collections/<collection_id>/story-split/count.csv')
 @flask_login.login_required
 @api_error_handler
-def collection_source_split_stories_csv(collection_id):
+def collection_split_stories_csv(collection_id):
     user_mc = user_mediacloud_client()
-    info = user_mc.tag(collection_id)
-    q = "tags_id_media: {}".format(collection_id)
-    results = cached_recent_split_stories(user_mediacloud_key(), q)
-    props = ['media_id', 'name', 'url', 'story_count']
-    filename = info['label'] + "-source split story.csv"
-    return csv.stream_response(results, props, filename)
-
-
-@cache.cache_on_arguments(function_key_generator=key_generator)
-def _cached_media_with_split_stories(user_mc_key, collection_id):
-    sample_size = 2000  # kind of arbitrary
-    # list all sources first
-    sources_by_id = {int(m['media_id']): m for m in media_with_tag(user_mediacloud_key(), collection_id)}
-    story_split = mc.storyList('*', 'media_id:' + str(sources_by_id), rows=sample_size, sort=mc.SORT_RANDOM)
-    # sum the number of sentences per media source
-    #TODO not yet implemented/tested for story_splits
-    #not sure we need this anyway....
-    story_counts = {int(media_id): 0 for media_id in sources_by_id.keys()}
-
-    # add in sentence count info to media info
-    #for media_id in story_counts.keys():
-        #sources_by_id[media_id]['sentence_count'] = story_counts[media_id]
-        #sources_by_id[media_id]['sentence_pct'] = story_counts[media_id] / sample_size
-    return sources_by_id.values()
+    return stream_split_stories_csv(user_mediacloud_key(), 'splitStoryCounts-Collection-' + collection_id, collection_id, "tags_id_media")
 
 
 def _tag_set_info(user_mc_key, tag_sets_id):

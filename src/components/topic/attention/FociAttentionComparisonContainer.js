@@ -4,7 +4,7 @@ import * as d3 from 'd3';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid/lib';
-import { fetchTopicSentenceCounts, fetchTopicFocalSetSetenceCounts } from '../../../actions/topicActions';
+import { fetchTopicSplitStoryCounts, fetchTopicFocalSetSplitStoryCounts } from '../../../actions/topicActions';
 import { asyncContainerize } from '../../common/AsyncContainer';
 import DataCard from '../../common/DataCard';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
@@ -142,8 +142,8 @@ FociAttentionComparisonContainer.propTypes = {
 const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.attention.fetchStatus,
   foci: state.topics.selected.attention.foci,
-  overallTotal: state.topics.selected.summary.sentenceCount.total,
-  overallCounts: state.topics.selected.summary.sentenceCount.counts,
+  overallTotal: state.topics.selected.summary.splitStoryCount.total,
+  overallCounts: state.topics.selected.summary.splitStoryCount.counts,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -151,8 +151,8 @@ const mapDispatchToProps = dispatch => ({
     if (topicId !== null) {
       if ((focalSetId !== null) && (focalSetId !== undefined)) {
         // fetch the total counts, then counts for each foci
-        dispatch(fetchTopicSentenceCounts(topicId, filters))
-          .then(() => dispatch(fetchTopicFocalSetSetenceCounts(topicId, focalSetId, filters)));
+        dispatch(fetchTopicSplitStoryCounts(topicId, filters))
+          .then(() => dispatch(fetchTopicFocalSetSplitStoryCounts(topicId, focalSetId, filters)));
       }
     }
   },

@@ -13,8 +13,8 @@ import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
 import { getDateRange } from '../../../lib/dateUtil';
 
 const localMessages = {
-  title: { id: 'collection.contentHistory.title', defaultMessage: 'Total Sentences over Time' },
-  counts: { id: 'collection.contentHistory.counts', defaultMessage: '{stories} Stories, {sentences} Sentences' },
+  title: { id: 'collection.contentHistory.title', defaultMessage: 'Total Stories over Time' },
+  counts: { id: 'collection.contentHistory.counts', defaultMessage: '{total} Stories' },
 };
 
 class CollectionContentHistory extends React.Component {
@@ -46,20 +46,24 @@ class CollectionContentHistory extends React.Component {
                   <FormattedMessage
                     {...localMessages.counts}
                     values={{
-                      stories: formatNumber(source.total_stories),
-                      sentences: formatNumber(source.total_sentences),
+                      total: formatNumber(source.total_story_count),
                     }}
                   />
                 </p>
               </Col>
               <Col lg={8} xs={12}>
                 <AttentionOverTimeChart
-                  data={source.sentencesOverTime}
+                  showLegend={false}
+                  series={[{
+                    id: 0,
+                    name: source.media_name,
+                    color: getBrandDarkColor(),
+                    data: source.storiesOverTime.map(c => [c.date, c.count]),
+                    showInLegend: false,
+                  }]}
                   height={150}
                   filename={`source-${source.media_id}-history`}
-                  lineColor={getBrandDarkColor()}
                   onDataPointClick={this.handleDataPointClick}
-                  showLegend={false}
                 />
               </Col>
             </Row>

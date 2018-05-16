@@ -8,7 +8,7 @@ import { selectWord } from '../../../actions/topicActions';
 import WordDetails from './WordDetails';
 import WordWordsContainer from './WordWordsContainer';
 import WordStoriesContainer from './WordStoriesContainer';
-import WordSentenceCountContainer from './WordSentenceCountContainer';
+import WordSplitStoryCountContainer from './WordSplitStoryCountContainer';
 import WordInContextContainer from './WordInContextContainer';
 import messages from '../../../resources/messages';
 
@@ -49,7 +49,7 @@ class WordContainer extends React.Component {
           </Row>
           <Row>
             <Col lg={6} xs={12}>
-              <WordSentenceCountContainer topicId={topicId} stem={stem} term={term} filters={filters} />
+              <WordSplitStoryCountContainer topicId={topicId} stem={stem} term={term} filters={filters} />
             </Col>
             <Col lg={6} xs={12}>
               <WordWordsContainer topicId={topicId} stem={stem} term={term} filters={filters} topicName={topicName} />

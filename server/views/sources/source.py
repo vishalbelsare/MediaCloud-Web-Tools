@@ -148,25 +148,25 @@ def api_media_source_scrape_feeds(media_id):
     results = user_mc.feedsScrape(media_id)
     return jsonify(results)
 
-@app.route('/api/sources/<media_id>/splitStories.csv', methods=['GET'])
+@app.route('/api/sources/<media_id>/story-split/count.csv', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
 def source_split_stories_csv(media_id):
     return stream_split_stories_csv(user_mediacloud_key(), 'splitStoryCounts-Source-' + media_id, media_id, "media_id")
 
 
-@app.route('/api/sources/<media_id>/splitStories/count')
+@app.route('/api/sources/<media_id>/story-split/count')
 @flask_login.login_required
 @api_error_handler
 def api_media_source_split_stories(media_id):
     q ='media_id:' + str(media_id)
-    total_story_count = cached_source_story_count(user_mediacloud_key(), q)
     health = _cached_media_source_health(user_mediacloud_key(), media_id)
-    counts = cached_recent_split_stories(user_mediacloud_key(), q)
+    results = cached_recent_split_stories(user_mediacloud_key(), q)
+
     info = {
-        'total' : total_story_count,
+        'total_story_count' : results['total_story_count'],
         'health': health,
-        'list': counts
+        'list': results['counts'],
     }
     return jsonify({'results':info})
 

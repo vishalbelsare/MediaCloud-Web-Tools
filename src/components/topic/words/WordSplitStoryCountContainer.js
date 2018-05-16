@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
-import { fetchWordSentenceCounts } from '../../../actions/topicActions';
+import { fetchWordSplitStoryCounts } from '../../../actions/topicActions';
 import messages from '../../../resources/messages';
 import { DownloadButton } from '../../common/IconButton';
 import DataCard from '../../common/DataCard';
@@ -13,14 +13,14 @@ import { getBrandDarkColor } from '../../../styles/colors';
 import { filtersAsUrlParams } from '../../util/location';
 
 const localMessages = {
-  title: { id: 'word.sentenceCount.title', defaultMessage: 'Sentences that Use this Word' },
-  helpTitle: { id: 'word.sentenceCount.help.title', defaultMessage: 'About Word Attention' },
-  helpText: { id: 'word.sentenceCount.help.text',
-    defaultMessage: '<p>This chart shows you the sentences within this Topic that include this word.</p>',
+  title: { id: 'word.splitStoryCount.title', defaultMessage: 'Stories that Use this Word' },
+  helpTitle: { id: 'word.splitStoryCount.help.title', defaultMessage: 'About Word Attention' },
+  helpText: { id: 'word.splitStoryCount.help.text',
+    defaultMessage: '<p>This chart shows you the stories within this Topic that include this word.</p>',
   },
 };
 
-class WordSentenceCountContainer extends React.Component {
+class WordSplitStoryCountContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { fetchData, filters } = this.props;
     if (nextProps.filters !== filters || (nextProps.stem !== this.props.stem)) {
@@ -50,7 +50,7 @@ class WordSentenceCountContainer extends React.Component {
   }
 }
 
-WordSentenceCountContainer.propTypes = {
+WordSplitStoryCountContainer.propTypes = {
   // from composition chain
   intl: PropTypes.object.isRequired,
   helpButton: PropTypes.node.isRequired,
@@ -70,18 +70,18 @@ WordSentenceCountContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  fetchStatus: state.topics.selected.word.sentenceCount.fetchStatus,
-  total: state.topics.selected.word.sentenceCount.total,
-  counts: state.topics.selected.word.sentenceCount.counts,
+  fetchStatus: state.topics.selected.word.splitStoryCount.fetchStatus,
+  total: state.topics.selected.word.splitStoryCount.total,
+  counts: state.topics.selected.word.splitStoryCount.counts,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (filters, stem) => {
-    dispatch(fetchWordSentenceCounts(ownProps.topicId, stem, filters));
+    dispatch(fetchWordSplitStoryCounts(ownProps.topicId, stem, filters));
   },
   asyncFetch: () => {
     const { topicId, stem, filters } = ownProps;
-    dispatch(fetchWordSentenceCounts(topicId, stem, filters));
+    dispatch(fetchWordSplitStoryCounts(topicId, stem, filters));
   },
 });
 
@@ -90,7 +90,7 @@ export default
     connect(mapStateToProps, mapDispatchToProps)(
       composeHelpfulContainer(localMessages.helpTitle, localMessages.helpText)(
         composeAsyncContainer(
-          WordSentenceCountContainer
+          WordSplitStoryCountContainer
         )
       )
     )
