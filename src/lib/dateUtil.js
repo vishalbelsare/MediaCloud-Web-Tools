@@ -54,6 +54,11 @@ export function oneWeekLater(date) {
   return weekLater;
 }
 
+export function oneDayLater(date) {
+  const dayLater = moment(date).add(1, 'day');
+  return dayLater;
+}
+
 export function oneMonthBefore(date) {
   const monthBefore = moment(date).subtract(1, 'month').format(TOPIC_DATE_FORMAT);
   return monthBefore;
