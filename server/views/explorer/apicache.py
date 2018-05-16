@@ -1,29 +1,31 @@
 from server import mc, TOOL_API_KEY
 from server.views import TAG_COUNT_UI_LENGTH, TAG_COUNT_SAMPLE_SIZE
 from server.cache import cache, key_generator
-from server.auth import user_mediacloud_client, user_mediacloud_key, is_user_logged_in
+from server.auth import user_mediacloud_client, user_mediacloud_key, is_user_logged_in, user_admin_mediacloud_client
 from server.util.tags import processed_by_cliff_query_clause
 import server.util.wordembeddings as wordembeddings
 
 
-def story_split_count(q, fq):
-    return cached_story_split_count(q, fq)
+def story_split_count(mc_api_key, q, fq):
+    return cached_story_split_count(mc_api_key, q, fq)
 
 
 @cache.cache_on_arguments(function_key_generator=key_generator)
-def cached_story_split_count(q, fq):
-    results = mc.storyCount(q, fq, split=True)
+def cached_story_split_count(mc_api_key, q, fq):
+    local_mc = _mc_client()
+    results = local_mc.storyCount(q, fq, split=True)
     return results
 
 
-def sentence_list(q, fq, rows=10):
+def sentence_list(mc_api_key, q, fq, rows=10):
     # can't cache by api key here because we need to use tool mc to get sentences
-    return _cached_sentence_list(q, fq, rows)
+    return _cached_sentence_list(mc_api_key, q, fq, rows)
 
 
 @cache.cache_on_arguments(function_key_generator=key_generator)
-def _cached_sentence_list(q, fq, rows):
-    return mc.sentenceList(q, fq, rows=rows)
+def _cached_sentence_list(mc_api_key, q, fq, rows):
+    local_mc = _mc_client(True)     # need to get an admin client to fetch sentence list
+    return local_mc.sentenceList(q, fq, rows=rows)
 
 
 def top_tags_with_coverage(q, fq, tag_sets_id, limit=TAG_COUNT_UI_LENGTH, sample_size=TAG_COUNT_SAMPLE_SIZE):
@@ -79,13 +81,12 @@ def _cached_total_story_count(api_key, q, fq):
     return count
 
 
-def random_story_list(q, fq, limit):
-    return story_list_page(q, fq, stories_per_page=limit, sort=mc.SORT_RANDOM)
+def random_story_list(mc_api_key, q, fq, limit):
+    return story_list_page(mc_api_key, q, fq, stories_per_page=limit, sort=mc.SORT_RANDOM)
 
 
-def story_list_page(q, fq, last_processed_stories_id=None, stories_per_page=1000, sort=mc.SORT_PROCESSED_STORIES_ID):
-    api_key = _api_key()
-    return _cached_story_list_page(api_key, q, fq, last_processed_stories_id, stories_per_page, sort)
+def story_list_page(mc_api_key, q, fq, last_processed_stories_id=None, stories_per_page=1000, sort=mc.SORT_PROCESSED_STORIES_ID):
+    return _cached_story_list_page(mc_api_key, q, fq, last_processed_stories_id, stories_per_page, sort)
 
 
 @cache.cache_on_arguments(function_key_generator=key_generator)
@@ -147,10 +148,10 @@ def _api_key():
     return api_key
 
 
-def _mc_client():
+def _mc_client(admin=False):
     # return the user's client handler, or a tool one if not logged in
     if is_user_logged_in():
-        client_to_use = user_mediacloud_client()
+        client_to_use = user_mediacloud_client() if not admin else user_admin_mediacloud_client()
     else:
         client_to_use = mc
     return client_to_use

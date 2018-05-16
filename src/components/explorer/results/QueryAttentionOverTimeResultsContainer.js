@@ -148,7 +148,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
           sources: q.sources.map(s => s.id),
           collections: q.collections.map(c => c.id),
         };
-        return dispatch(fetchDemoQuerySplitStoryCount(infoToQuery));
+        return dispatch(fetchQuerySplitStoryCount(infoToQuery));
       });
     } else if (queries || ownProps.queries) { // else assume DEMO mode, but assume the queries have been loaded
       const runTheseQueries = queries || ownProps.queries;
@@ -159,7 +159,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
           query_id: q.id, // could be undefined
           q: q.q, // only if no query id, means demo user added a keyword
         };
-        return dispatch(fetchQuerySplitStoryCount(demoInfo));
+        return dispatch(fetchDemoQuerySplitStoryCount(demoInfo));
       });
     }
   },

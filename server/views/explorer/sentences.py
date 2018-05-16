@@ -5,6 +5,7 @@ from server import app
 from server.util.request import api_error_handler
 import server.views.explorer.apicache as apicache
 from server.views.explorer import parse_query_with_keywords
+from server.auth import user_mediacloud_key
 
 logger = logging.getLogger(__name__)
 
@@ -14,5 +15,5 @@ logger = logging.getLogger(__name__)
 @api_error_handler
 def api_explorer_sentences_list():
     solr_q, solr_fq = parse_query_with_keywords(request.args)
-    results = apicache.sentence_list(solr_q, solr_fq, rows=10)
+    results = apicache.sentence_list(user_mediacloud_key(), solr_q, solr_fq, rows=10)
     return jsonify({'results': results})
