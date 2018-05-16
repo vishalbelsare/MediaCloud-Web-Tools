@@ -34,7 +34,7 @@ def topic_story_count_csv(topics_id):
 
 def stream_topic_split_story_counts_csv(user_mc_key, filename, topics_id, **kwargs):
     results = topic_split_story_counts(user_mc_key, topics_id, **kwargs)
-    clean_results = [{'date': date, 'stories': count} for date, count in results['split'].iteritems()]
+    clean_results = [{'date': item['date'], 'stories': item['count']} for item in results['counts']]
     sorted_results = sorted(clean_results, key=itemgetter('date'))
     props = ['date', 'stories']
     return csv.stream_response(sorted_results, props, filename)
