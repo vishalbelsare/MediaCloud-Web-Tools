@@ -40,7 +40,7 @@ def stream_topic_split_story_counts_csv(user_mc_key, filename, topics_id, **kwar
     return csv.stream_response(sorted_results, props, filename)
 
 
-@app.route('/api/topics/<topics_id>/split-stories/focal-set/<focal_sets_id>/count', methods=['GET'])
+@app.route('/api/topics/<topics_id>/split-story/focal-set/<focal_sets_id>/count', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
 def topic_focal_set_split_stories_compare(topics_id, focal_sets_id):
@@ -81,7 +81,7 @@ def topic_focal_set_split_stories_compare(topics_id, focal_sets_id):
         if timespan is None:
             return json_error_response('Couldn\'t find a matching timespan in the '+focus.name+' focus')
         data = topic_split_story_counts(user_mediacloud_key(), topics_id, snapshots_id=snapshots_id, timespans_id=timespan['timespans_id'], foci_id=focus['foci_id'])
-        focus['story_counts'] = data
+        focus['split_story_counts'] = data
     return jsonify(focal_set)
 
 
