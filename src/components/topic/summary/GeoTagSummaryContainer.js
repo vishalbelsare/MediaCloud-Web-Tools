@@ -84,7 +84,7 @@ GeoTagSummaryContainer.propTypes = {
 
 const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.geotags.fetchStatus,
-  data: state.topics.selected.geotags.results,
+  data: state.topics.selected.geotags.entities,
   coverage: state.topics.selected.geotags.coverage,
 });
 

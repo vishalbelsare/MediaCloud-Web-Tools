@@ -285,7 +285,7 @@ def topic_tag_coverage(topics_id, tags_id):
     return {'counts': {'count': tagged['count'], 'total': total['count']}}
 
 
-def topic_tag_counts(user_mc_key, topics_id, tag_sets_id, sample_size):
+def topic_tag_counts(user_mc_key, topics_id, tag_sets_id, sample_size=None):
     '''
     Get a breakdown of the most-used tags within a set within a single timespan.
      This supports just timespan_id and q from the request, because it has to use sentenceFieldCount,
@@ -305,10 +305,8 @@ def topic_tag_counts(user_mc_key, topics_id, tag_sets_id, sample_size):
 def _cached_topic_tag_counts(user_mc_key, topics_id, tag_sets_id, sample_size, query):
     user_mc = user_mediacloud_client()
     # we don't need ot use topics_id here because the timespans_id is in the query argument
-    tag_counts = user_mc.storyTagCount('*', query, tag_sets_id=tag_sets_id)
+    tag_counts = user_mc.storyTagCount(query, tag_sets_id=tag_sets_id)
     # add in the pct so we can show relative values within the sample
-    for t in tag_counts:  # add in pct so user knows it was sampled
-        t['pct'] = float(t['count']) / float(sample_size)
     return tag_counts
 
 

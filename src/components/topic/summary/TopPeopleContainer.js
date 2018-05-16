@@ -13,9 +13,10 @@ import messages from '../../../resources/messages';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 
 const COVERAGE_REQUIRED = 0.7;
+const NUMBER_TO_SHOW = 10;
 
 const localMessages = {
-  title: { id: 'topic.snapshot.topPeople.title', defaultMessage: 'Top People' },
+  title: { id: 'topic.snapshot.topPeople.title', defaultMessage: 'Top {number} People' },
   notEnoughData: { id: 'topic.snapshot.topPeople.notEnoughData',
     defaultMessage: '<i>Sorry, but only {pct} of the stories have been processed to add the people they mention.  We can\'t gaurantee the accuracy of partial results, so we don\'t show a table of results here.  If you are really curious, you can download the CSV using the link in the top-right of this box, but don\'t trust those numbers as fully accurate. Email us if you want us to process this topic to add the people mentioned.</i>',
   },
@@ -48,7 +49,7 @@ class TopPeopleContainer extends React.Component {
     let content = null;
     const coverageRatio = coverage.count / coverage.total;
     if (coverageRatio > COVERAGE_REQUIRED) {
-      content = <EntitiesTable entities={entities} onClick={(...args) => this.handleEntityClick(args)} />;
+      content = <EntitiesTable entities={entities.slice(0, NUMBER_TO_SHOW)} onClick={(...args) => this.handleEntityClick(args)} />;
     } else {
       content = (
         <p>
@@ -67,7 +68,7 @@ class TopPeopleContainer extends React.Component {
           <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
         </div>
         <h2>
-          <FormattedMessage {...localMessages.title} />
+          <FormattedMessage {...localMessages.title} values={{ number: NUMBER_TO_SHOW }} />
           {helpButton}
         </h2>
         {content}
