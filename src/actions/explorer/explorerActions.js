@@ -122,8 +122,8 @@ export const resetQueries = createAction(RESET_QUERIES);
 export const RESET_SELECTED = 'RESET_SELECTED';
 export const resetSelected = createAction(RESET_SELECTED);
 
-export const RESET_SENTENCE_COUNTS = 'RESET_SENTENCE_COUNTS';
-export const resetSentenceCounts = createAction(RESET_SENTENCE_COUNTS);
+export const RESET_STORY_SPLIT_COUNTS = 'RESET_STORY_SPLIT_COUNTS';
+export const resetSentenceCounts = createAction(RESET_STORY_SPLIT_COUNTS);
 
 export const RESET_QUERY_TOP_WORDS = 'RESET_QUERY_TOP_WORDS';
 export const resetTopWords = createAction(RESET_QUERY_TOP_WORDS);
@@ -147,11 +147,11 @@ export const resetThemes = createAction(RESET_THEMES);
 export const fetchTopThemes = createAsyncAction(FETCH_TOP_THEMES, api.fetchQueryTopThemes, params => params);
 export const fetchDemoTopThemes = createAsyncAction(FETCH_TOP_THEMES, api.fetchDemoQueryTopThemes, params => params);
 
-export const SELECT_SENTENCE_DATA_POINT = 'SELECT_SENTENCE_DATA_POINT';
-export const setSentenceDataPoint = createAction(SELECT_SENTENCE_DATA_POINT, params => params);
+export const SELECT_DATA_POINT = 'SELECT_DATA_POINT';
+export const setSentenceDataPoint = createAction(SELECT_DATA_POINT, params => params);
 
-export const RESET_SENTENCE_DATA_POINT = 'RESET_SENTENCE_DATA_POINT';
-export const resetSentenceDataPoint = createAction(RESET_SENTENCE_DATA_POINT);
+export const RESET_SELECTED_DATA_POINT = 'RESET_SELECTED_DATA_POINT';
+export const resetSentenceDataPoint = createAction(RESET_SELECTED_DATA_POINT);
 
 export const COPY_AND_REPLACE_QUERY_FIELD = 'COPY_AND_REPLACE_QUERY_FIELD';
 export const copyAndReplaceQueryField = createAction(COPY_AND_REPLACE_QUERY_FIELD, params => params);

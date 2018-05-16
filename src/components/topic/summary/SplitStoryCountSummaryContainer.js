@@ -16,8 +16,8 @@ import { getBrandDarkColor } from '../../../styles/colors';
 import { filteredLinkTo, filtersAsUrlParams } from '../../util/location';
 
 const localMessages = {
-  title: { id: 'topic.summary.sentenceCount.title', defaultMessage: 'Attention Over Time' },
-  descriptionIntro: { id: 'topic.summary.sentenceCount.help.title', defaultMessage: 'Analyze attention to this topic over time to understand how it is covered. This chart shows the total number of sentences in stories that matched your topic query. Spikes in attention can reveal key events.  Plateaus can reveal stable, "normal", attention levels.' },
+  title: { id: 'topic.summary.splitCount.title', defaultMessage: 'Attention Over Time' },
+  descriptionIntro: { id: 'topic.summary.splitCount.help.title', defaultMessage: 'Analyze attention to this topic over time to understand how it is covered. This chart shows the total number of stories that matched your topic query. Spikes in attention can reveal key events.  Plateaus can reveal stable, "normal", attention levels.' },
 };
 
 class SplitStoryCountSummaryContainer extends React.Component {

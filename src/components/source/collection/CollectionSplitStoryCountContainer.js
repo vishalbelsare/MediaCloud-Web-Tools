@@ -13,8 +13,8 @@ import { DownloadButton } from '../../common/IconButton';
 
 const localMessages = {
   title: { id: 'sentenceCount.title', defaultMessage: 'Last Year of Coverage' },
-  helpTitle: { id: 'collection.summary.sentenceCount.help.title', defaultMessage: 'About Stories Over Time' },
-  helpText: { id: 'collection.summary.sentenceCount.help.text',
+  helpTitle: { id: 'collection.summary.splitCount.help.title', defaultMessage: 'About Stories Over Time' },
+  helpText: { id: 'collection.summary.splitCount.help.text',
     defaultMessage: '<p>This chart shows you the number of stories we have collected from the sources in this collection over the last year.</p>',
   },
   introText: { id: 'chart.storiesOverTime.totalCount',

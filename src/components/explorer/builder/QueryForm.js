@@ -25,7 +25,6 @@ const localMessages = {
   selectSandC: { id: 'explorer.queryBuilder.selectSAndC', defaultMessage: 'Select media' },
   SandC: { id: 'explorer.queryBuilder.sAndC', defaultMessage: 'Media' },
   color: { id: 'explorer.queryBuilder.color', defaultMessage: 'Choose a color' },
-  sentenceHeadline: { id: 'explorer.queryBuilder.sentenceHeadline', defaultMessage: 'Choose a sentence or headline' },
   dates: { id: 'explorer.queryBuilder.dates', defaultMessage: 'For dates' },
   dateTo: { id: 'explorer.queryBuilder.dateTo', defaultMessage: 'to' },
   queryHelpTitle: { id: 'explorer.queryBuilder.queryHelp.title', defaultMessage: 'Building Query Strings' },

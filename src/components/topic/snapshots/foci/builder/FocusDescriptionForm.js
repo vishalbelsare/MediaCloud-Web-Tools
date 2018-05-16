@@ -23,7 +23,7 @@ const localMessages = {
   errorNameYourFocus: { id: 'focus.error.noName', defaultMessage: 'You need to name your Subtopic.' },
   errorPickASet: { id: 'focus.error.noSet', defaultMessage: 'You need to pick or create a Set.' },
   cannotChangeFocalSet: { id: 'focus.cannotChangeSet', defaultMessage: 'You can\'t change which set an existing Subtopic is in.' },
-  defaultDescriptionKeywords: { id: 'focus.create.setup3.defualtNameKeywords', defaultMessage: 'Stories with a sentence matching "{keywords}"' },
+  defaultDescriptionKeywords: { id: 'focus.create.setup3.defualtNameKeywords', defaultMessage: 'Stories with at least one sentence matching "{keywords}"' },
 };
 
 class FocusDescriptionForm extends React.Component {
