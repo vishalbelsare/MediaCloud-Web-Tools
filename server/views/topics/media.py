@@ -53,7 +53,7 @@ def media(topics_id, media_id):
 def topic_media_csv(topics_id):
     sort = validated_sort(request.args.get('sort'))
     snapshots_id, timespans_id, foci_id, q = filters_from_args(request.args)
-    return _stream_media_list_csv(user_mediacloud_key(), 'media', topics_id, sort=sort,
+    return _stream_media_list_csv(user_mediacloud_key(), 'media-for-topic-' + topics_id, topics_id, sort=sort,
                                   snapshots_id=snapshots_id, timespans_id=timespans_id, foci_id=foci_id, q=q)
 
 

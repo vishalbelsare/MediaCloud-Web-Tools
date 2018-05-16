@@ -102,4 +102,4 @@ def _cached_geotags(user_mc_key, q, fq):
         api_client = user_mediacloud_client()
     else:
         api_client = mc
-    return api_client.sentenceFieldCount(q, fq, field='tags_id_stories', tag_sets_id=tag_utl.GEO_TAG_SET, sample_size=tag_utl.GEO_SAMPLE_SIZE)
+    return api_client.storyTagCount(q, fq, field='tags_id_stories', tag_sets_id=tag_utl.GEO_TAG_SET)

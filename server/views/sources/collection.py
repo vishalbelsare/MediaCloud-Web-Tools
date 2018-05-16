@@ -23,7 +23,7 @@ from server.views.sources.words import word_count, stream_wordcount_csv
 
 logger = logging.getLogger(__name__)
 
-HISTORICAL_COUNT_POOL_SIZE = 10  # number of parallel processes to use while fetching historical sentence counts for each media source
+HISTORICAL_COUNT_POOL_SIZE = 10  # number of parallel processes to use while fetching historical story counts for each media source
 FEED_SCRAPE_JOB_POOL_SIZE = 10
 
 

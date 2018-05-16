@@ -26,8 +26,12 @@ def api_topics_preview_split_story_count():
                                             tags_ids=ids_from_comma_separated_str(request.form['collections[]'])) if 'collections[]' in request.form else None,
     fq = concatenate_solr_dates(start_date=request.form['start_date'],
                                             end_date=request.form['end_date'])
-    split_story_count_result = user_mc.storyCount(solr_query=solr_query, solr_filter=fq, split=True)
-    return jsonify(split_story_count_result)
+    results = user_mc.storyCount(solr_query=solr_query, solr_filter=fq, split=True)
+    total_stories = 0
+    for c in results['counts']:
+        total_stories += c['count']
+    results['total_story_count'] = total_stories
+    return jsonify({'results': results})
 
 
 @app.route('/api/topics/create/preview/story/count', methods=['POST'])
@@ -38,13 +42,11 @@ def api_topics_preview_story_count():
     user_mc = user_admin_mediacloud_client()
 
     solr_query = concatenate_query_for_solr(solr_seed_query=request.form['q'],
-                                            start_date=request.form['start_date'],
-                                            end_date=request.form['end_date'],
                                             media_ids=ids_from_comma_separated_str(request.form['sources[]']) if 'sources[]' in request.form else None,
                                             tags_ids=ids_from_comma_separated_str(request.form['collections[]'])) if 'collections[]' in request.form else None,
     fq = concatenate_solr_dates(start_date=request.form['start_date'],
                                             end_date=request.form['end_date'])
-    story_count_result = user_mc.storyCount(solr_query=solr_query, solr_filter=fq, split=True)
+    story_count_result = user_mc.storyCount(solr_query=solr_query, solr_filter=fq)
     # maybe check admin role before we run this?
     return jsonify(story_count_result)  # give them back new data, so they can update the client
 

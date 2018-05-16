@@ -34,13 +34,13 @@ def topic_story_count_csv(topics_id):
 
 def stream_topic_split_story_counts_csv(user_mc_key, filename, topics_id, **kwargs):
     results = topic_split_story_counts(user_mc_key, topics_id, **kwargs)
-    clean_results = [{'date': date, 'stories': count} for date, count in results['split'].iteritems()]
+    clean_results = [{'date': item['date'], 'stories': item['count']} for item in results['counts']]
     sorted_results = sorted(clean_results, key=itemgetter('date'))
     props = ['date', 'stories']
     return csv.stream_response(sorted_results, props, filename)
 
 
-@app.route('/api/topics/<topics_id>/split-stories/focal-set/<focal_sets_id>/count', methods=['GET'])
+@app.route('/api/topics/<topics_id>/split-story/focal-set/<focal_sets_id>/count', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
 def topic_focal_set_split_stories_compare(topics_id, focal_sets_id):
@@ -69,7 +69,7 @@ def topic_focal_set_split_stories_compare(topics_id, focal_sets_id):
             focal_set = fs
     if focal_set is None:
         return json_error_response('Invalid Focal Set Id')
-    # collect the sentence counts for each foci
+    # collect the story split counts for each foci
     for focus in focal_set['foci']:
         # find the matching timespan within this focus
         snapshot_timespans = cached_topic_timespan_list(user_mediacloud_key(), topics_id, snapshots_id=snapshots_id, foci_id=focus['foci_id'])
@@ -81,7 +81,7 @@ def topic_focal_set_split_stories_compare(topics_id, focal_sets_id):
         if timespan is None:
             return json_error_response('Couldn\'t find a matching timespan in the '+focus.name+' focus')
         data = topic_split_story_counts(user_mediacloud_key(), topics_id, snapshots_id=snapshots_id, timespans_id=timespan['timespans_id'], foci_id=focus['foci_id'])
-        focus['story_counts'] = data
+        focus['split_story_counts'] = data
     return jsonify(focal_set)
 
 

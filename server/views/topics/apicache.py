@@ -63,7 +63,7 @@ def topic_story_count(user_mc_key, topics_id, **kwargs):
     return _cached_topic_story_count(user_mc_key, topics_id, **merged_args)
 
 
-@cache.cache_on_arguments(function_key_generator=key_generator)
+#@cache.cache_on_arguments(function_key_generator=key_generator)
 def _cached_topic_story_count(user_mc_key, topics_id, **kwargs):
     '''
     Internal helper - don't call this; call topic_story_count instead. This needs user_mc_key in the
@@ -227,7 +227,7 @@ def topic_split_story_counts(user_mc_key, topics_id, **kwargs):
 @cache.cache_on_arguments(function_key_generator=key_generator)
 def _cached_topic_split_story_counts(user_mc_key, topics_id, **kwargs):
     '''
-    Internal helper - don't call this; call topic_sentence_counts instead. This needs user_mc_key in the
+    Internal helper - don't call this; call topic_split_story_counts instead. This needs user_mc_key in the
     function signature to make sure the caching is keyed correctly.
     '''
     local_mc = None

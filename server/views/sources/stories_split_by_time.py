@@ -10,15 +10,16 @@ logger = logging.getLogger(__name__)
 
 def stream_split_stories_csv(user_mc_key, filename, item_id, which):
     response = {
-        'story_splits': cached_recent_split_stories(user_mc_key, [which + ":" + str(item_id)])['counts']
+        'storysplits': cached_recent_split_stories(user_mc_key, [which + ":" + str(item_id)])
     }
-    clean_results = [{'stories': item['count'], 'date': item['date']} for item in response['story_splits']]
+    clean_results = [{'date': date, 'numFound': count} for date, count in response['story_splits'].iteritems()
+                     if date not in ['gap', 'start', 'end']]
     clean_results = sorted(clean_results, key=itemgetter('date'))
-    props = ['date', 'stories']
+    props = ['date', 'numFound']
     return csv.stream_response(clean_results, props, filename)
 
 
-@cache.cache_on_arguments(function_key_generator=key_generator)
+#@cache.cache_on_arguments(function_key_generator=key_generator)
 def cached_recent_split_stories(user_mc_key, q='*', fq=None):
     # Helper to fetch split story counts over a timeframe for an arbitrary query
     user_mc = user_mediacloud_client()
