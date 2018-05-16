@@ -13,9 +13,9 @@ import composeHelpfulContainer from '../../common/HelpfulContainer';
 import { DownloadButton } from '../../common/IconButton';
 
 const localMessages = {
-  title: { id: 'sentenceCount.title', defaultMessage: 'Stories from this Media Source (over the last year)' },
-  helpTitle: { id: 'source.summary.sentenceCount.help.title', defaultMessage: 'About Stories Over Time' },
-  helpText: { id: 'source.summary.sentenceCount.help.text',
+  title: { id: 'source.summary.splitCount.title', defaultMessage: 'Stories from this Media Source (over the last year)' },
+  helpTitle: { id: 'source.summary.splitCount.help.title', defaultMessage: 'About Stories Over Time' },
+  helpText: { id: 'source.summary.splitCount.help.text',
     defaultMessage: '<p>This chart shows you the number of stories we have collected from this source over time. Click on the line to see a summary of the content in this source for that date. The grey vertical lines indicate weeks where we didn\'t get as many stories as we\'d expect to.</p>',
   },
 };
