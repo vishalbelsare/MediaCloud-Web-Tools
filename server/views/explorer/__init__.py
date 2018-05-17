@@ -164,7 +164,7 @@ def parse_as_sample(search_id_or_query, query_id=None):
 # args_or_query - either search-id/index in parameters or in request.args 
 # this came from demo url calls versus request.args for custom queries
 # this is only called when handling a sample search
-def parse_query_with_args_and_sample_search(args_or_query, current_search) :
+def parse_query_with_args_and_sample_search(args_or_query, current_search):
     # default dates
     one_month_before_now = datetime.datetime.now() - datetime.timedelta(days=30)
     default_start_date = one_month_before_now.strftime("%Y-%m-%d")

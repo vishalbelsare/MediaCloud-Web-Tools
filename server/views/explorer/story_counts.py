@@ -9,7 +9,8 @@ from server.auth import user_mediacloud_key, is_user_logged_in
 import server.util.csv as csv
 from server.util.request import api_error_handler
 from server.views.explorer import parse_as_sample, parse_query_with_args_and_sample_search,\
-    parse_query_with_keywords, load_sample_searches, file_name_for_download, concatenate_query_for_solr
+    parse_query_with_keywords, load_sample_searches, file_name_for_download, concatenate_query_for_solr,\
+    DEFAULT_COLLECTION_IDS
 import server.views.explorer.apicache as apicache
 
 logger = logging.getLogger(__name__)
@@ -80,9 +81,9 @@ def api_explorer_demo_story_split_count():
         solr_q, solr_fq = parse_query_with_keywords(request.args)
     # why is this call fundamentally different than the cache call???
     solr_open_query = concatenate_query_for_solr(solr_seed_query='*',
-                                                 media_ids=request.args['sources'],
-                                                 tags_ids=request.args['collections'])
-    results = apicache.normalized_and_story_split_count(user_mediacloud_key(), solr_q, solr_fq, solr_open_query)
+                                                 media_ids=[],
+                                                 tags_ids=DEFAULT_COLLECTION_IDS)
+    results = apicache.normalized_and_story_split_count(TOOL_API_KEY, solr_q, solr_fq, solr_open_query)
 
     return jsonify({'results': results})
 
