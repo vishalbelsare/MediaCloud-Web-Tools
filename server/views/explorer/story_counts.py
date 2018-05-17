@@ -110,7 +110,11 @@ def api_explorer_story_split_count_csv():
     results_regular = sorted(results['with_keywords']['counts'], key=itemgetter('date'))
     results_open = sorted(results['without_keywords']['counts'], key=itemgetter('date'))
     results = [{'date': item['date'], 'story_count_keyword': item['count']} for item in results_regular]
-    results_no_keyword = [{'date': item['date'], 'story_count_without_keyword': item['count']} for item in results_regular]
-    results += results_no_keyword #TODO should merge thiese actually
+    results_no_keyword = [{'date': item['date'], 'story_count_without_keyword': item['count']} for item in results_open]
+    for k in results:
+        for nk in results_no_keyword:
+            if nk['date'] == k['date']:
+                k['story_count_without_keyword'] = nk['story_count_without_keyword']
+
     props = ['date', 'story_count_keyword', 'story_count_without_keyword']
     return csv.stream_response(results, props, filename)
