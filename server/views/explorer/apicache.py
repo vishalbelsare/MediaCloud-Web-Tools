@@ -8,8 +8,16 @@ import server.util.wordembeddings as wordembeddings
 
 def normalized_and_story_split_count(mc_api_key, q, fq, open_q):
     results = {}
+    total_count = 0
     results['with_keywords'] = cached_story_split_count(mc_api_key, q, fq)
     results['without_keywords'] = cached_story_split_count(mc_api_key, open_q, fq)
+    for c in results['with_keywords']['counts']:
+        total_count += c['count']
+    results['with_keywords']['total_story_count'] = total_count
+    for c in results['without_keywords']['counts']:
+        total_count += c['count']
+    results['without_keywords']['total_story_count'] = total_count
+
     return results
 
 @cache.cache_on_arguments(function_key_generator=key_generator)
