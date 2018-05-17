@@ -10,7 +10,6 @@ import Dialog from 'material-ui/Dialog';
 import { filteredLinkTo } from '../../util/location';
 import AppButton from '../../common/AppButton';
 import composeIntlForm from '../../common/IntlForm';
-import StorySwitchoverNotice from '../../common/StorySwitchoverNotice';
 import messages from '../../../resources/messages';
 import { updateTopic, resetTopic, setTopicNeedsNewSnapshot } from '../../../actions/topicActions';
 import { updateFeedback } from '../../../actions/appActions';
@@ -18,6 +17,7 @@ import BackLinkingControlBar from '../BackLinkingControlBar';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_TOPIC_WRITE } from '../../../lib/auth';
 import TopicForm, { TOPIC_FORM_MODE_EDIT } from './TopicForm';
+import UpdateForStorySearchWarning from '../UpdateForStorySearchWarning';
 
 const localMessages = {
   editTopicTitle: { id: 'topic.edit.title', defaultMessage: 'Edit Topic Settings' },
@@ -130,7 +130,7 @@ class EditTopicContainer extends React.Component {
             <Col lg={12}>
               <h1><FormattedMessage {...localMessages.editTopicTitle} /></h1>
               <p><FormattedMessage {...localMessages.editTopicText} /></p>
-              <StorySwitchoverNotice />
+              {(topicInfo.is_story_index_ready === false) && (<UpdateForStorySearchWarning />)}
             </Col>
           </Row>
           {dialogContent}

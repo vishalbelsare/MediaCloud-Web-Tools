@@ -10,8 +10,8 @@ const localMessages = {
   attention: { id: 'explorer.results.attention.title', defaultMessage: 'Attention' },
   language: { id: 'explorer.results.language.title', defaultMessage: 'Language' },
   people: { id: 'explorer.results.people.title', defaultMessage: 'People & Places' },
-  detailsSingular: { id: 'explorer.attention.drillDown.details', defaultMessage: 'Details about {date1}' },
-  detailsRange: { id: 'explorer.attention.drillDown.details', defaultMessage: 'Details about {date1} to {date2}' },
+  detailsSingular: { id: 'explorer.attention.drillDown.details', defaultMessage: 'Details for {date1}' },
+  detailsRange: { id: 'explorer.attention.drillDown.details', defaultMessage: 'Details for {date1} to {date2}' },
   sampleStories: { id: 'explorer.attention.drillDown.sampleStories', defaultMessage: 'Sample Stories' },
   topWords: { id: 'explorer.attention.drillDown.topWords', defaultMessage: 'Top Words' },
 };

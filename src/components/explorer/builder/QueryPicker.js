@@ -10,7 +10,6 @@ import messages from '../../../resources/messages';
 import QueryForm from './QueryForm';
 import AppButton from '../../common/AppButton';
 import ItemSlider from '../../common/ItemSlider';
-import StorySwitchoverNotice from '../../common/StorySwitchoverNotice';
 import QueryPickerItem from './QueryPickerItem';
 import { updateFeedback } from '../../../actions/appActions';
 import QueryHelpDialog from '../../common/help/QueryHelpDialog';
@@ -314,9 +313,6 @@ class QueryPicker extends React.Component {
         <div>
           {queryPickerContent}
           {queryFormContent}
-          <Grid>
-            <StorySwitchoverNotice />
-          </Grid>
         </div>
       );
     }

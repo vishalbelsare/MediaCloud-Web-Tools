@@ -13,10 +13,10 @@ from server.util.request import arguments_required, form_fields_required, api_er
 from server.util.tags import TAG_SETS_ID_PUBLICATION_COUNTRY, TAG_SETS_ID_PUBLICATION_STATE, VALID_COLLECTION_TAG_SETS_IDS, \
     TAG_SETS_ID_PRIMARY_LANGUAGE, TAG_SETS_ID_COUNTRY_OF_FOCUS, TAG_SETS_ID_MEDIA_TYPE, TAG_SET_GEOCODER_VERSION, \
     TAG_SET_NYT_LABELS_VERSION, GEO_SAMPLE_SIZE, is_metadata_tag_set
-from server.views.sources import _cached_source_story_count
+from server.views.sources import cached_source_story_count
 from server.views.sources.words import word_count, stream_wordcount_csv
 from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
-from server.views.sources.sentences import cached_recent_sentence_counts, stream_sentence_count_csv
+from server.views.sources.stories_split_by_time import cached_recent_split_stories, stream_split_stories_csv
 from server.views.sources.favorites import add_user_favorite_flag_to_sources, add_user_favorite_flag_to_collections
 
 
@@ -60,8 +60,8 @@ def source_stats(media_id):
     results = {}
     # story count
     media_query = "(media_id:{})".format(media_id)
-    total_story_count = _cached_source_story_count(username, media_query)
-    results['story_count'] = total_story_count
+    source_specific_story_count = cached_source_story_count(username, media_query)
+    results['story_count'] = source_specific_story_count
     # health
     media_health = _cached_media_source_health(username, media_id)
     results['num_stories_90'] = media_health['num_stories_90'] if 'num_stories_90' in media_health else None
@@ -73,12 +73,12 @@ def source_stats(media_id):
                                ((c['show_on_media'] == 1) or user_can_see_private_collections))]
     results['collection_count'] = len(visible_collections)
     # geography tags
-    geoRes = user_mc.sentenceFieldCount(media_query, '', field='tags_id_stories', tag_sets_id=TAG_SET_GEOCODER_VERSION, sample_size=GEO_SAMPLE_SIZE)
-    ratio_geo_tagged_count = float(geoRes[0]['count']) / float(total_story_count) if len(geoRes) > 0 else 0
+    tag_specific_story_count = user_mc.storyTagCount(solr_query=media_query, tag_sets_id=TAG_SET_GEOCODER_VERSION)
+    ratio_geo_tagged_count = float(tag_specific_story_count[0]['count']) / float(source_specific_story_count) if len(tag_specific_story_count) > 0 else 0
     results['geoPct'] = ratio_geo_tagged_count
     # nyt theme
-    nytRes = user_mc.sentenceFieldCount(media_query, '', field='tags_id_stories', tag_sets_id=TAG_SET_NYT_LABELS_VERSION, sample_size=GEO_SAMPLE_SIZE)
-    ratio_nyt_tagged_count = float(nytRes[0]['count']) / float(total_story_count) if len(nytRes) > 0 else 0
+    tag_specific_story_count = user_mc.storyTagCount(solr_query=media_query, tag_sets_id=TAG_SET_NYT_LABELS_VERSION)
+    ratio_nyt_tagged_count = float(tag_specific_story_count[0]['count']) / float(source_specific_story_count) if len(tag_specific_story_count) > 0 else 0
     results['nytPct'] = ratio_nyt_tagged_count
     return jsonify(results)
 
@@ -148,23 +148,25 @@ def api_media_source_scrape_feeds(media_id):
     results = user_mc.feedsScrape(media_id)
     return jsonify(results)
 
-@app.route('/api/sources/<media_id>/sentences/sentence-count.csv', methods=['GET'])
+@app.route('/api/sources/<media_id>/story-split/count.csv', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
-def source_sentence_count_csv(media_id):
-    return stream_sentence_count_csv(user_mediacloud_key(), 'sentenceCounts-Source-' + media_id, media_id, "media_id")
+def source_split_stories_csv(media_id):
+    return stream_split_stories_csv(user_mediacloud_key(), 'splitStoryCounts-Source-' + media_id, media_id, "media_id")
 
 
-@app.route('/api/sources/<media_id>/sentences/count')
+@app.route('/api/sources/<media_id>/story-split/count')
 @flask_login.login_required
 @api_error_handler
-def api_media_source_sentence_count(media_id):
+def api_media_source_split_stories(media_id):
+    q ='media_id:' + str(media_id)
     health = _cached_media_source_health(user_mediacloud_key(), media_id)
-    counts = cached_recent_sentence_counts(user_mediacloud_key(),
-                                           ['media_id:'+str(media_id)])
+    results = cached_recent_split_stories(user_mediacloud_key(), q)
+
     info = {
+        'total_story_count' : results['total_story_count'],
         'health': health,
-        'sentenceCounts': counts
+        'list': results['counts'],
     }
     return jsonify({'results':info})
 
@@ -190,21 +192,23 @@ def source_geo_csv(media_id):
 @flask_login.login_required
 @api_error_handler
 def source_wordcount_csv(media_id):
-    query_arg = 'media_id:'+str(media_id)
+    solr_q = 'media_id:'+str(media_id)
+    solr_fq = None
     if ('q' in request.args) and (len(request.args['q']) > 0):
-        query_arg = 'media_id:'+str(media_id) + " AND " + request.args.get('q')
-    return stream_wordcount_csv(user_mediacloud_key(), 'wordcounts-Source-'+media_id, query_arg)
+        solr_fq = request.args['q']
+    return stream_wordcount_csv(user_mediacloud_key(), 'wordcounts-Source-'+media_id, solr_q, solr_fq)
 
 
 @app.route('/api/sources/<media_id>/words')
 @flask_login.login_required
 @api_error_handler
 def media_source_words(media_id):
-    query_arg = 'media_id:'+str(media_id)
+    solr_q = 'media_id:'+str(media_id)
+    solr_fq = None
     if ('q' in request.args) and (len(request.args['q']) > 0):
-        query_arg = 'media_id:'+str(media_id) + " AND " + request.args.get('q')
+        solr_fq = request.args['q']
     info = {
-        'wordcounts': word_count(user_mediacloud_key(), query_arg)
+        'wordcounts': word_count(user_mediacloud_key(), solr_q, solr_fq)
     }
     return jsonify({'results': info})
 

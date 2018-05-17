@@ -92,9 +92,18 @@ def download_media_csv(all_media, file_prefix, properties):
             src['subject_country'] = ''
         if 'media_type' not in src:
             src['media_type'] = ''
+        if 'num_stories_90' not in src:
+            src['num_stories_90'] = ''
+        if 'start_date' not in src:
+            src['start_date'] = ''
+        if 'end_date' not in src:
+            src['end_date'] = ''
         src['stories_per_day'] = src['num_stories_90']
         src['first_story'] = src['start_date']
-        for k, v in src['metadata'].iteritems():
-            src[k] = v['label'] if v is not None else None
+        if 'metadata' not in src:
+            src['metadata'] = ''
+        else:
+            for k, v in src['metadata'].iteritems():
+                src[k] = v['label'] if v is not None else None
 
     return stream_response(all_media, modified_properties, file_prefix, modified_properties)

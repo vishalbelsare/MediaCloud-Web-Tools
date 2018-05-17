@@ -42,7 +42,7 @@ export function getShortDate(dateString) {
 }
 
 export function getDateFromTimestamp(milliseconds) {
-  return moment.utc(parseInt(milliseconds, 10)).format(GAP_DATE_FORMAT);
+  return moment.utc(parseInt(milliseconds, 10)).toDate();
 }
 
 export function isStartDateAfterEndDate(start, end) {
@@ -52,6 +52,11 @@ export function isStartDateAfterEndDate(start, end) {
 export function oneWeekLater(date) {
   const weekLater = moment(date).add(1, 'week');
   return weekLater;
+}
+
+export function oneDayLater(date) {
+  const dayLater = moment(date).add(1, 'day');
+  return dayLater;
 }
 
 export function oneMonthBefore(date) {
@@ -78,6 +83,10 @@ export function solrFormat(date, short = true) {
   return moment(date).format(short ? SHORT_SOLR_DATE_FORMAT : SOLR_DATE_FORMAT);
 }
 
+export function solrTimestamp(date) {
+  return moment(date).format('x');
+}
+
 export function getMomentDateSubtraction(date, num, timeUnit) {
   return moment(date).subtract(num, timeUnit).format(TOPIC_DATE_FORMAT);
 }
@@ -102,7 +111,7 @@ export function sourceSuggestionDateToMoment(suggestionDate, strict = true) {
   return moment(suggestionDate.substring(0, DB_DATE_FORMAT.length), DB_DATE_FORMAT, strict);
 }
 
-function solrDateToMoment(solrDateString, strict = true) {
+export function solrDateToMoment(solrDateString, strict = true) {
   return moment(solrDateString, SOLR_DATE_FORMAT, strict);
 }
 
@@ -120,15 +129,13 @@ function gapDateToMomemt(gapDateString, strict = true) {
 
 
 // Helper to change solr dates (2015-12-14T00:00:00Z) into javascript date ojects
-export function calcSentences(countsMap) {
-  let sentenceCount = 0;
+export function calcStories(countsMap) {
+  let storyCount = 0;
   Object.keys(countsMap).forEach((k) => {
-    if (k !== 'end' && k !== 'gap' && k !== 'start') {
-      const v = countsMap[k];
-      sentenceCount += v;
-    }
+    const v = countsMap[k];
+    storyCount += v.count;
   });
-  return sentenceCount;
+  return storyCount;
 }
 // Helper to change solr dates (2015-12-14T00:00:00Z) into javascript date ojects
 export function cleanDateCounts(countsMap) {
@@ -136,8 +143,8 @@ export function cleanDateCounts(countsMap) {
   Object.keys(countsMap).forEach((k) => {
     if (k !== 'end' && k !== 'gap' && k !== 'start') {
       const v = countsMap[k];
-      const timestamp = solrDateToMoment(k).valueOf();
-      countsArray.push({ date: timestamp, count: v });
+      const timestamp = parseInt(solrTimestamp(v.date), 10);
+      countsArray.push({ date: timestamp, count: v.count });
     }
   });
   return countsArray.sort((a, b) => a.date - b.date);
@@ -212,5 +219,5 @@ export function calculateTimePeriods(timePeriod) {
   if (dates === null) { // ie. PAST_ALL
     return '';
   }
-  return `(publish_date:[${dates.start.format('YYYY-MM-DDThh:mm:ss')}Z TO ${dates.end.format('YYYY-MM-DDThh:mm:ss')}Z])`;
+  return `(publish_day:[${dates.start.format('YYYY-MM-DDThh:mm:ss')}Z TO ${dates.end.format('YYYY-MM-DDThh:mm:ss')}Z])`;
 }

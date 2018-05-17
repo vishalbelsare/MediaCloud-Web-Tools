@@ -26,7 +26,7 @@ const COVERAGE_REQUIRED = 0.8;  // need > this many of the stories tagged to sho
 const BUBBLES_TO_SHOW = 5;
 
 const localMessages = {
-  title: { id: 'topic.summary.nytLabels.title', defaultMessage: 'Top Themes' },
+  title: { id: 'topic.summary.nytLabels.title', defaultMessage: 'Top {number} Themes' },
   descriptionIntro: { id: 'topic.summary.nytLabels.help.title', defaultMessage: 'The top themes that stories within this Topic are about, as determined by our machine learning models trained on news media.' },
   notEnoughData: { id: 'topic.summary.nytLabels.notEnoughData',
     defaultMessage: 'Sorry, but only {pct} of the stories have been processed to add themes.  We can\'t gaurantee the accuracy of partial results, so we can\'t show a report of the top themes right now.  If you are really curious, you can download the CSV using the link in the top-right of this box, but don\'t trust those numbers as fully accurate. Email us if you want us to process this topic to add themes.',
@@ -111,12 +111,12 @@ class NytLabelSummaryContainer extends React.Component {
             </div>
           </Permissioned>
           <h2>
-            <FormattedMessage {...localMessages.title} />
+            <FormattedMessage {...localMessages.title} values={{ number: BUBBLES_TO_SHOW }} />
           </h2>
           {warning}
           <BubbleRowChart
             maxBubbleRadius={60}
-            data={bubbleData.slice(0, BUBBLES_TO_SHOW - 1)}
+            data={bubbleData.slice(0, BUBBLES_TO_SHOW)}
             width={800}
             height={220}
             domId={BUBBLE_CHART_DOM_ID}
@@ -134,7 +134,7 @@ class NytLabelSummaryContainer extends React.Component {
             </div>
           </Permissioned>
           <h2>
-            <FormattedMessage {...localMessages.title} />
+            <FormattedMessage {...localMessages.title} values={{ number: BUBBLES_TO_SHOW }} />
           </h2>
           <p>
             <FormattedMessage
@@ -171,7 +171,7 @@ NytLabelSummaryContainer.propTypes = {
 
 const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.nytlabels.fetchStatus,
-  data: state.topics.selected.nytlabels.results,
+  data: state.topics.selected.nytlabels.entities,
   coverage: state.topics.selected.nytlabels.coverage,
   filters: state.topics.selected.filters,
   topicId: state.topics.selected.id,

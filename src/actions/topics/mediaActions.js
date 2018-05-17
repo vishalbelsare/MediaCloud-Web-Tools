@@ -8,7 +8,7 @@ export const FETCH_TOPIC_INFLUENTIAL_MEDIA = 'FETCH_TOPIC_INFLUENTIAL_MEDIA';
 export const SORT_TOPIC_INFLUENTIAL_MEDIA = 'SORT_TOPIC_INFLUENTIAL_MEDIA';
 export const SELECT_MEDIA = 'SELECT_MEDIA';
 export const FETCH_MEDIA = 'FETCH_MEDIA';
-export const FETCH_MEDIA_SENTENCE_COUNT = 'FETCH_MEDIA_SENTENCE_COUNT';
+export const FETCH_MEDIA_SPLIT_STORY_COUNT = 'FETCH_MEDIA_SPLIT_STORY_COUNT';
 export const FETCH_MEDIA_STORIES = 'FETCH_MEDIA_STORIES';
 export const SORT_MEDIA_STORIES = 'SORT_MEDIA_STORIES';
 export const FETCH_MEDIA_INLINKS = 'FETCH_MEDIA_INLINKS';
@@ -36,7 +36,7 @@ export const selectMedia = createAction(SELECT_MEDIA, id => id);
 export const fetchMedia = createAsyncAction(FETCH_MEDIA, api.media);
 
 // pass in topic id, media id, snapshot id, timespan id
-export const fetchMediaSentenceCounts = createAsyncAction(FETCH_MEDIA_SENTENCE_COUNT, api.mediaSentenceCounts);
+export const fetchMediaSplitStoryCounts = createAsyncAction(FETCH_MEDIA_SPLIT_STORY_COUNT, api.mediaSplitStoryCounts);
 
 // pass in topic id, media id, snapshot id, timespan id, sort, limit
 export const fetchMediaStories = createAsyncAction(FETCH_MEDIA_STORIES, api.mediaStories);

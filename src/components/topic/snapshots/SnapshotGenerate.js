@@ -11,6 +11,7 @@ import { generateSnapshot, fetchTopicSummary } from '../../../actions/topicActio
 import { updateFeedback } from '../../../actions/appActions';
 import SnapshotIcon from '../../common/icons/SnapshotIcon';
 import { SOURCE_SCRAPE_STATE_QUEUED, SOURCE_SCRAPE_STATE_RUNNING } from '../../../reducers/sources/sources/selected/sourceDetails';
+import UpdateForStorySearchWarning from '../UpdateForStorySearchWarning';
 
 const localMessages = {
   title: { id: 'snapshot.builder.title', defaultMessage: 'Generate Snapshot' },
@@ -21,12 +22,17 @@ const localMessages = {
 
 const SnapshotGenerate = props => (
   <div className="snapshot-builder-home">
-    <BackLinkingControlBar message={localMessages.backToTopicLink} linkTo={`/topics/${props.params.topicId}/summary`} />
+    <BackLinkingControlBar message={localMessages.backToTopicLink} linkTo={`/topics/${props.topicId}/summary`} />
     <Grid>
       <Row>
         <Col lg={10}>
           <h1><SnapshotIcon /><FormattedMessage {...localMessages.title} /></h1>
           <FormattedHTMLMessage {...localMessages.aboutText} />
+        </Col>
+      </Row>
+      <Row>
+        <Col lg={10}>
+          {(props.topicInfo.is_story_index_ready === false) && (<UpdateForStorySearchWarning />)}
         </Col>
       </Row>
       <SnapshotGenerateForm onGenerate={props.handleGenerateSnapshotRequest} />
@@ -40,12 +46,14 @@ SnapshotGenerate.propTypes = {
   children: PropTypes.node,
   // from state
   topicId: PropTypes.number.isRequired,
+  topicInfo: PropTypes.object.isRequired,
   // from dispatch
   handleGenerateSnapshotRequest: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({
   topicId: parseInt(ownProps.params.topicId, 10),
+  topicInfo: state.topics.selected.info,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
