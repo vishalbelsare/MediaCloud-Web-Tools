@@ -3,11 +3,13 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { uploadSourceListFromTemplate } from '../../../actions/sourceActions';
-import { updateFeedback } from '../../../actions/appActions';
+import { updateFeedback, addNotice } from '../../../actions/appActions';
 import LoadingSpinner from '../../common/LoadingSpinner';
 import CollectionUploadConfirmer from './form/CollectionUploadConfirmer';
 import { DownloadButton } from '../../common/IconButton';
 import messages from '../../../resources/messages';
+import { LEVEL_INFO } from '../../common/Notice';
+import { HELP_SOURCES_CSV_COLUMNS } from '../../../lib/helpConstants';
 
 const localMessages = {
   downloadEmpty: { id: 'collections.download.emptycsv', defaultMessage: 'Download a template in CSV format' },
@@ -20,7 +22,7 @@ const localMessages = {
 class CollectionUploadSourceContainer extends React.Component {
 
   downloadCsv = (evt) => {
-    const { myCollectionId } = this.props;
+    const { myCollectionId, addAppNotice } = this.props;
     if (evt) {
       evt.preventDefault();
     }
@@ -31,6 +33,7 @@ class CollectionUploadSourceContainer extends React.Component {
       url = '/api/template/sources.csv';
     }
     window.location = url;
+    addAppNotice();
   }
   selectedCSV = () => {
     this.setState({ confirmTemplate: true });
@@ -95,6 +98,7 @@ CollectionUploadSourceContainer.propTypes = {
   // from composition
   intl: PropTypes.object.isRequired,
   uploadCSVFile: PropTypes.func.isRequired,
+  addAppNotice: PropTypes.func,
 };
 
 const mapStateToProps = state => ({
@@ -112,6 +116,11 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
           dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
         }
       });
+  },
+  addAppNotice: () => {
+    let htmlMessage = ownProps.intl.formatMessage(messages.currentlyDownloadingCsv);
+    htmlMessage = `${htmlMessage} <a href="${HELP_SOURCES_CSV_COLUMNS}">${ownProps.intl.formatHTMLMessage(messages.learnMoreAboutColumnsCsv)}</a>`;
+    dispatch(addNotice({ level: LEVEL_INFO, htmlMessage }));
   },
 });
 

@@ -20,7 +20,7 @@ const localMessages = {
 <li><code>queso AND language:es</code> - using the "language:" keyword lets you narrow in on a language; here searching for stories that use the word "queso" and have been detected by our system as being written in Spanish</li>
 <li><code>title:(cheese OR queso)</code> - using the "title:" keyword lets you limit your search to article titles (we search just the article text by default)</li>
 </ul>
-<p><a href="https://mediacloud.org/s/query-guide-rev1.pdf" target=_blank>Read our guide to creating queries to learn more</a>.</p>
+<p><a href="https://mediacloud.org/support/query-guide" target=_blank>Read our guide to creating queries to learn more</a>.</p>
   ` },
 };
 
