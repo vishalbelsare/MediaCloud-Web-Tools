@@ -1,6 +1,22 @@
 {
   "releases": [
     {
+      "date": "2018-05-17",
+      "version": "v3.0.0",
+      "notes": [
+        {
+          "apps": ["explorer", "topics", "sources"],
+          "type": "Feature",
+          "note": "Switched to story-based searching (<a href=\"https://mediacloud.org/news/2018/4/12/switching-to-story-based-searching-on-may-12th\" target=\"_new\">learn more</a>)."
+        },
+        {
+          "apps": ["topics", "explorer", "sources"],
+          "type": "Fix",
+          "note": "Changed the default sample size for word clouds to 1,000 (for performance reasons). More details coming soon as we validate that."
+        }
+      ]
+    },
+    {
       "date": "2018-05-02",
       "version": "v2.9.1",
       "notes": [
