@@ -37,7 +37,7 @@ class CollectionSourceRepresentation extends React.Component {
 
   downloadCsv = () => {
     const { collectionId } = this.props;
-    const url = `/api/collections/${collectionId}/sources/sentences/count.csv`;
+    const url = `/api/collections/${collectionId}/sources/representation/representation.csv`;
     window.location = url;
   }
 

@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 def stream_split_stories_csv(user_mc_key, filename, item_id, which):
     response = {
-        'storysplits': cached_recent_split_stories(user_mc_key, [which + ":" + str(item_id)])
+        'story_splits': cached_recent_split_stories(user_mc_key, [which + ":" + str(item_id)])
     }
     clean_results = [{'date': date, 'numFound': count} for date, count in response['story_splits'].iteritems()
                      if date not in ['gap', 'start', 'end']]
