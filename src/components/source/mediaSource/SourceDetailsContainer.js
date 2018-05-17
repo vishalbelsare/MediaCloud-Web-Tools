@@ -6,22 +6,19 @@ import Link from 'react-router/lib/Link';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import CollectionList from '../../common/CollectionList';
 import SourceStatInfo from './SourceStatInfo';
-import SourceSentenceCountContainer from './SourceSentenceCountContainer';
+import SourceSplitStoryCountContainer from './SourceSplitStoryCountContainer';
 import SourceTopWordsContainer from './SourceTopWordsContainer';
 import SourceGeographyContainer from './SourceGeographyContainer';
 import { anyCollectionTagSets } from '../../../lib/tagUtil';
 import { SOURCE_SCRAPE_STATE_QUEUED, SOURCE_SCRAPE_STATE_RUNNING, SOURCE_SCRAPE_STATE_COMPLETED, SOURCE_SCRAPE_STATE_ERROR } from '../../../reducers/sources/sources/selected/sourceDetails';
 import { InfoNotice, ErrorNotice, WarningNotice } from '../../common/Notice';
-import { jobStatusDateToMoment, getCurrentDate, oneMonthBefore } from '../../../lib/dateUtil';
-import { urlToExplorerQuery } from '../../../lib/urlUtil';
+import { jobStatusDateToMoment } from '../../../lib/dateUtil';
 import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
 import Permissioned from '../../common/Permissioned';
-import AppButton from '../../common/AppButton';
 import SourceMetadataStatBar from '../../common/SourceMetadataStatBar';
 import TabSelector from '../../common/TabSelector';
 
 const localMessages = {
-  searchNow: { id: 'source.basicInfo.searchNow', defaultMessage: 'Search in Explorer' },
   sourceDetailsCollectionsTitle: { id: 'source.details.collections.title', defaultMessage: 'Collections' },
   sourceDetailsCollectionsIntro: { id: 'source.details.collections.intro',
     defaultMessage: 'Here are the collections {name} media source is part of:\n.',
@@ -32,9 +29,7 @@ const localMessages = {
   },
   feedLastScrapeDate: { id: 'source.basicInfo.feed.lastScrape', defaultMessage: ' (Last scraped on {date}) ' },
   feedLink: { id: 'source.basicInfo.feedLink', defaultMessage: 'See all feeds' },
-  dateInfo: { id: 'source.basicInfo.dates', defaultMessage: 'We have collected sentences between {startDate} and {endDate}.' },
-  contentInfo: { id: 'source.basicInfo.content', defaultMessage: 'Averaging {storyCount} stories per day and {sentenceCount} sentences in the last week.' },
-  gapInfo: { id: 'source.basicInfo.gaps', defaultMessage: 'We\'d guess there are {gapCount} "gaps" in our coverage (highlighted in <b><span class="health-gap">in orange</span></b> on the chart).  Gaps are when we were unable to collect as much content as we expected to, which means we might be missing some content for those dates.' },
+  dateInfo: { id: 'source.basicInfo.dates', defaultMessage: 'We have collected stories between {startDate} and {endDate}.' },
   metadataLabel: { id: 'source.basicInfo.metadata', defaultMessage: 'Metadata' },
   metadataDescription: { id: 'source.basicInfo.metadataDescription', defaultMessage: '{label}' },
   metadataEmpty: { id: 'source.basicInfo.metadata.empty', defaultMessage: 'No metadata available at this time' },
@@ -54,18 +49,11 @@ class SourceDetailsContainer extends React.Component {
     selectedViewIndex: 0,
   };
 
-  searchInExplorer = () => {
-    const { source } = this.props;
-    const endDate = getCurrentDate();
-    const startDate = oneMonthBefore(endDate);
-    const explorerUrl = urlToExplorerQuery(source.name || source.url, '*', source.id, '', startDate, endDate);
-    window.open(explorerUrl, '_blank');
-  }
 
   render() {
     const { source } = this.props;
-    const { formatMessage, formatNumber, formatDate } = this.props.intl;
-    const filename = `SentencesOverTime-Source-${source.media_id}`;
+    const { formatMessage, formatDate } = this.props.intl;
+    const filename = `StoriesOverTime-Source-${source.media_id}`;
     // check if source is not suitable for general queries
     let unhealthySourceWarning;
     if ((source.is_healthy === 0) && (source.media_source_tags.length > 0 && !anyCollectionTagSets(source.media_source_tags.map(m => m.tag_sets_id)))) {
@@ -126,17 +114,17 @@ class SourceDetailsContainer extends React.Component {
           <span>
             <Row>
               <Col lg={12}>
-                <SourceSentenceCountContainer sourceId={source.media_id} filename={filename} />
-              </Col>
-            </Row>
-            <Row>
-              <Col lg={12} md={12} sm={12}>
-                <SourceGeographyContainer source={source} />
+                <SourceSplitStoryCountContainer sourceId={source.media_id} sourceName={source.media_name} filename={filename} />
               </Col>
             </Row>
             <Row>
               <Col lg={12}>
                 <SourceTopWordsContainer source={source} />
+              </Col>
+            </Row>
+            <Row>
+              <Col lg={12} md={12} sm={12}>
+                <SourceGeographyContainer source={source} />
               </Col>
             </Row>
           </span>
@@ -166,29 +154,10 @@ class SourceDetailsContainer extends React.Component {
                 }}
               />
               &nbsp;
-              <FormattedMessage
-                {...localMessages.contentInfo}
-                values={{
-                  storyCount: (source.health && source.health.num_stories_w) ? formatNumber(source.health.num_stories_w) : formatMessage(localMessages.unknown),
-                  sentenceCount: (source.health && source.health.num_sentences_w) ? formatNumber(source.health.num_sentences_w) : formatMessage(localMessages.unknown),
-                }}
-              />
-              &nbsp;
-              <FormattedHTMLMessage
-                {...localMessages.gapInfo}
-                values={{ gapCount: (source.health && source.health.coverage_gaps) ? formatNumber(source.health.coverage_gaps) : formatMessage(localMessages.unknown) }}
-              />
-              &nbsp;
               <Link to={`/sources/${source.media_id}/feeds`} >
                 <FormattedMessage {...localMessages.feedLink} />
               </Link>
               {feedScrapeMsg}
-            </p>
-          </Col>
-          <Col lg={3} xs={12} className="search-section">
-            <AppButton label={formatMessage(localMessages.searchNow)} primary onClick={this.searchInExplorer} />
-            <p>
-              <a href={source.url}> {source.url} </a>
             </p>
           </Col>
         </Row>

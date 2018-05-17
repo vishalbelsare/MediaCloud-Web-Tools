@@ -14,13 +14,13 @@ import json
 logger = logging.getLogger(__name__)
 
 
-def get_top_countries_by_sentence_field_counts(topics_id, num_countries):
+def get_top_countries_by_story_tag_counts(topics_id, num_countries):
     tag_country_counts = []
 
     # get the total stories for a topic
     total_stories = topic_story_count(user_mediacloud_key(), topics_id)['count']
 
-    # get the top countries by the sentence field counts iwth overall timespan
+    # get the top countries by the story tag counts iwth overall timespan
     timespans = cached_topic_timespan_list(user_mediacloud_key(), topics_id)
     overall_timespan = [t for t in timespans if t['period'] == "overall"]
     overall_timespan = next(iter(overall_timespan))
@@ -39,7 +39,7 @@ def get_top_countries_by_sentence_field_counts(topics_id, num_countries):
             'geo_tag': tag['tag'],
             'tags_id': tag['tags_id'],
             'count': tag['count'],
-            'pct': float(tag['count']) / float(total_stories),  # sentence_field_count / total story per topic count
+            'pct': float(tag['count']) / float(total_stories),  # story_tag_count / total story per topic count
         })
     return tag_country_counts
 
@@ -49,9 +49,9 @@ def get_top_countries_by_sentence_field_counts(topics_id, num_countries):
 @arguments_required('numCountries')
 @api_error_handler
 def top_countries_story_counts(topics_id):
-    # using sentence field count to approximate story mentions by top country
+    # using story tag count to approximate story mentions by top country
     num_countries = int(request.args['numCountries'])
-    return jsonify({'story_counts': get_top_countries_by_sentence_field_counts(topics_id, num_countries)})
+    return jsonify({'story_counts': get_top_countries_by_story_tag_counts(topics_id, num_countries)})
 
 
 @app.route('/api/topics/<topics_id>/focal-sets/top-countries/preview/coverage', methods=['GET'])
@@ -60,7 +60,7 @@ def top_countries_story_counts(topics_id):
 @api_error_handler
 def top_countries_coverage(topics_id):
     num_countries = int(request.args['numCountries'])
-    tag_top_country_counts = get_top_countries_by_sentence_field_counts(topics_id, num_countries)
+    tag_top_country_counts = get_top_countries_by_story_tag_counts(topics_id, num_countries)
 
     # get the count for all stories tagged with these top country tags
     tag_list = [i['tags_id'] for i in tag_top_country_counts]

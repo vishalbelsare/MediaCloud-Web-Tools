@@ -32,10 +32,10 @@ def get_word_count():
     if search_id not in [None, -1]:
         sample_searches = load_sample_searches()
         current_search = sample_searches[search_id]['queries']
-        solr_query = parse_query_with_args_and_sample_search(request.args, current_search)
+        solr_q, solr_fq = parse_query_with_args_and_sample_search(request.args, current_search)
     else:
-        solr_query = parse_query_with_keywords(request.args)
-    word_data = query_wordcount(solr_query)
+        solr_q, solr_fq = parse_query_with_keywords(request.args)
+    word_data = query_wordcount(solr_q, solr_fq)
     # return combined data
     return jsonify({"list": word_data})
 
@@ -49,12 +49,12 @@ def explorer_wordcount_csv():
     ngram_size = data['ngramSize'] if 'ngramSize' in data else 1    # defaul to words if ngram not specified
     filename = u'sampled-ngrams-{}'.format(ngram_size)
     if 'searchId' in data:
-        solr_query = parse_as_sample(data['searchId'], data['index'])
+        solr_q, solr_fq = parse_as_sample(data['searchId'], data['index'])
     else:
         query_object = json.loads(data['q'])
-        solr_query = parse_query_with_keywords(query_object)
+        solr_q, solr_fq = parse_query_with_keywords(query_object)
         filename = file_name_for_download(query_object['label'], filename)
-    return stream_wordcount_csv(filename, solr_query, ngram_size)
+    return stream_wordcount_csv(filename, solr_q, solr_fq, ngram_size)
 
 
 @app.route('/api/explorer/words/compare/count', methods=['GET'])
@@ -65,8 +65,8 @@ def api_explorer_compare_words():
     results = []
     for cq in compared_queries:
         dictq = {x[0]: x[1] for x in [x.split("=") for x in cq[1:].split("&")]}
-        solr_query = parse_query_with_keywords(dictq)
-        word_count_result = query_wordcount(solr_query)
+        solr_q, solr_fq = parse_query_with_keywords(dictq)
+        word_count_result = query_wordcount(solr_q, solr_fq)
         results.append(word_count_result)
     return jsonify({"list": results})  
 
@@ -81,23 +81,23 @@ def api_explorer_demo_compare_words():
         compared_sample_queries = sample_searches[search_id]['queries']
         results = []
         for cq in compared_sample_queries:
-            solr_query = parse_query_with_keywords(cq)
-            word_count_result = query_wordcount(solr_query)
+            solr_q, solr_fq = parse_query_with_keywords(cq)
+            word_count_result = query_wordcount(solr_q, solr_fq)
             results.append(word_count_result)
     else:
         compared_queries = request.args['compared_queries[]'].split(',')
         results = []
         for cq in compared_queries:
             dictq = {x[0]:x[1] for x in [x.split("=") for x in cq[1:].split("&")]}
-            solr_query = parse_query_with_keywords(dictq)
-            word_count_result = query_wordcount(solr_query)
+            solr_q, solr_fq = parse_query_with_keywords(dictq)
+            word_count_result = query_wordcount(solr_q, solr_fq)
             results.append(word_count_result)
 
     return jsonify({"list": results})
 
 
-def query_wordcount(query, ngram_size=1, num_words=WORD_COUNT_UI_LENGTH, sample_size=WORD_COUNT_SAMPLE_SIZE):
-    word_data = apicache.word_count(query, ngram_size, num_words, sample_size)
+def query_wordcount(q, fq, ngram_size=1, num_words=WORD_COUNT_UI_LENGTH, sample_size=WORD_COUNT_SAMPLE_SIZE):
+    word_data = apicache.word_count(q, fq, ngram_size, num_words, sample_size)
     # add in word2vec results
     words = [w['term'] for w in word_data]
     # and now add in word2vec model position data
@@ -108,11 +108,11 @@ def query_wordcount(query, ngram_size=1, num_words=WORD_COUNT_UI_LENGTH, sample_
     return word_data
 
 
-def stream_wordcount_csv(filename, query, ngram_size=1):
+def stream_wordcount_csv(filename, q, fq, ngram_size=1):
     # use bigger values for CSV download
     num_words = WORD_COUNT_DOWNLOAD_LENGTH
     sample_size = WORD_COUNT_SAMPLE_SIZE
-    word_counts = query_wordcount(query, ngram_size, num_words, sample_size)
+    word_counts = query_wordcount(q, fq, ngram_size, num_words, sample_size)
     for w in word_counts:
         w['sample_size'] = sample_size
         w['ratio'] = float(w['count'])/float(sample_size)

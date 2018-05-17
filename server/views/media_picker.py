@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 MAX_COLLECTIONS = 20
 MEDIA_SEARCH_POOL_SIZE = len(VALID_COLLECTION_TAG_SETS_IDS)
-STORY_COUNT_POOL_SIZE = 20  # number of parallel processes to use while fetching historical sentence counts for sources
+STORY_COUNT_POOL_SIZE = 20  # number of parallel processes to use while fetching historical story counts for sources
 
 
 @app.route('/api/mediapicker/sources/search', methods=['GET'])

@@ -2,11 +2,11 @@ import { combineReducers } from 'redux';
 import { SELECT_COLLECTION } from '../../../../actions/sourceActions';
 import collectionDetails from './collectionDetails';
 import collectionTopWords from './collectionTopWords';
-import collectionSentenceCount from './collectionSentenceCount';
+import collectionSplitStoryCount from './collectionSplitStoryCount';
 import collectionGeoTag from './collectionGeoTag';
-import collectionSourceSentenceCounts from './collectionSourceSentenceCounts';
+import collectionSourceRepresentation from './collectionSourceRepresentation';
 import collectionSimilar from './collectionSimilar';
-import historicalSentenceCounts from './historicalSentenceCounts';
+import historicalSplitStoryCounts from './historicalSplitStoryCounts';
 import collectionSourceList from './collectionSourceList';
 
 const INITIAL_STATE = null;
@@ -24,12 +24,12 @@ const selected = combineReducers({
   id,
   collectionDetails,
   collectionTopWords,
-  collectionSentenceCount,
+  collectionSplitStoryCount,
   collectionGeoTag,
-  collectionSourceSentenceCounts,
+  collectionSourceRepresentation,
   collectionSimilar,
   collectionSourceList,
-  historicalSentenceCounts,
+  historicalSplitStoryCounts,
 });
 
 export default selected;

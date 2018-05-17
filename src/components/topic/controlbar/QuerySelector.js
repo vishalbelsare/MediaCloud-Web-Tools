@@ -4,7 +4,7 @@ import { injectIntl } from 'react-intl';
 import TextField from 'material-ui/TextField';
 
 const localMessages = {
-  pickQuery: { id: 'query.pick', defaultMessage: 'Sentence Search (press enter to apply)' },
+  pickQuery: { id: 'query.pick', defaultMessage: 'Story Search (press enter to apply)' },
 };
 
 class QuerySelector extends React.Component {

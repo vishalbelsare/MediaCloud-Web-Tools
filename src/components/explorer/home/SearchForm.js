@@ -5,7 +5,6 @@ import { Field, reduxForm } from 'redux-form';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import composeIntlForm from '../../common/IntlForm';
 import AppButton from '../../common/AppButton';
-import StorySwitchoverNotice from '../../common/StorySwitchoverNotice';
 import { emptyString } from '../../../lib/formValidators';
 import messages from '../../../resources/messages';
 
@@ -22,11 +21,6 @@ const SearchForm = (props) => {
 
   return (
     <form className="app-form search-form" name="searchForm" onSubmit={handleSubmit(onSearch.bind(this))}>
-      <Row>
-        <Col lg={12}>
-          <StorySwitchoverNotice />
-        </Col>
-      </Row>
       <Row>
         <Col lg={3} />
         <Col lg={6}>
