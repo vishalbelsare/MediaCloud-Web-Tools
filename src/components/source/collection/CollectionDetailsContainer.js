@@ -2,23 +2,19 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl, FormattedHTMLMessage } from 'react-intl';
 import { connect } from 'react-redux';
-import RaisedButton from 'material-ui/RaisedButton';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import CollectionSourceListContainer from './CollectionSourceListContainer';
-import CollectionSentenceCountContainer from './CollectionSentenceCountContainer';
+import CollectionSplitStoryCountContainer from './CollectionSplitStoryCountContainer';
 import CollectionTopWordsContainer from './CollectionTopWordsContainer';
 import CollectionGeographyContainer from './CollectionGeographyContainer';
 import CollectionSourceRepresentation from './CollectionSourceRepresentation';
 import CollectionSimilarContainer from './CollectionSimilarContainer';
 import CollectionMetadataCoverageSummaryContainer from './CollectionMetadataCoverageSummaryContainer';
 import { hasPermissions, getUserRoles, PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
-import { getCurrentDate, oneMonthBefore } from '../../../lib/dateUtil';
-import { urlToExplorerQuery } from '../../../lib/urlUtil';
 import { WarningNotice } from '../../common/Notice';
 import TabSelector from '../../common/TabSelector';
 
 const localMessages = {
-  searchNow: { id: 'collection.details.searchNow', defaultMessage: 'Search in Explorer' },
   collectionDetailsTitle: { id: 'collection.details.title', defaultMessage: 'Collection: {name}' },
   noHealth: { id: 'collection.details.noHealth', defaultMessage: 'Sorry, we can\'t show collection-level health yet.' },
   sourceTableTitle: { id: 'collection.details.sourceTable.title', defaultMessage: 'Sources' },
@@ -40,14 +36,6 @@ class CollectionDetailsContainer extends React.Component {
   state = {
     selectedViewIndex: 0,
   };
-
-  searchOnExplorer = () => {
-    const { collection } = this.props;
-    const endDate = getCurrentDate();
-    const startDate = oneMonthBefore(endDate);
-    const explorerUrl = urlToExplorerQuery(collection.label || collection.tag, '*', '', collection.id, startDate, endDate);
-    window.open(explorerUrl, '_blank');
-  }
 
   render() {
     const { collection, user } = this.props;
@@ -81,7 +69,11 @@ class CollectionDetailsContainer extends React.Component {
           <span>
             <Row>
               <Col lg={6}>
-                <CollectionSentenceCountContainer collectionId={collection.tags_id} filename={filename} />
+                <CollectionSplitStoryCountContainer
+                  collectionId={collection.tags_id}
+                  filename={filename}
+                  collectionName={collection.label || collection.tag}
+                />
               </Col>
               <Col lg={6}>
                 <CollectionTopWordsContainer collectionId={collection.tags_id} />
@@ -89,7 +81,10 @@ class CollectionDetailsContainer extends React.Component {
             </Row>
             <Row>
               <Col lg={12}>
-                <CollectionGeographyContainer collectionId={collection.tags_id} collectionName={collection.label} />
+                <CollectionGeographyContainer
+                  collectionId={collection.tags_id}
+                  collectionName={collection.label || collection.tag}
+                />
               </Col>
             </Row>
           </span>
@@ -109,9 +104,6 @@ class CollectionDetailsContainer extends React.Component {
               <li><FormattedMessage {...localMessages.collectionIsOrIsnt} values={{ shows: collection.is_static }} /></li>
               <li><FormattedMessage {...localMessages.collectionShowOn} values={{ onMedia: collection.show_on_media || 0, onStories: collection.show_on_stories || 0 }} /></li>
             </p>
-          </Col>
-          <Col lg={4}>
-            <RaisedButton label={formatMessage(localMessages.searchNow)} primary onClick={this.searchOnExplorer} />
           </Col>
         </Row>
 

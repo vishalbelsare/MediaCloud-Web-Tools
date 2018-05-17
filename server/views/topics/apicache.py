@@ -63,7 +63,7 @@ def topic_story_count(user_mc_key, topics_id, **kwargs):
     return _cached_topic_story_count(user_mc_key, topics_id, **merged_args)
 
 
-@cache.cache_on_arguments(function_key_generator=key_generator)
+#@cache.cache_on_arguments(function_key_generator=key_generator)
 def _cached_topic_story_count(user_mc_key, topics_id, **kwargs):
     '''
     Internal helper - don't call this; call topic_story_count instead. This needs user_mc_key in the
@@ -203,7 +203,7 @@ def _cached_topic_word_counts(user_mc_key, topics_id, **kwargs):
     return local_mc.topicWordCount(topics_id, **kwargs)
 
 
-def topic_sentence_counts(user_mc_key, topics_id, **kwargs):
+def topic_split_story_counts(user_mc_key, topics_id, **kwargs):
     '''
     Return setence counts over timebased on filters.
     '''
@@ -221,13 +221,13 @@ def topic_sentence_counts(user_mc_key, topics_id, **kwargs):
         merged_args['q'] = "(({}) AND {})".format(merged_args['q'], undateable_query_part)
     else:
         merged_args['q'] = "* AND {}".format(undateable_query_part)
-    return _cached_topic_sentence_counts(user_mc_key, topics_id, **merged_args)
+    return _cached_topic_split_story_counts(user_mc_key, topics_id, **merged_args)
 
 
 @cache.cache_on_arguments(function_key_generator=key_generator)
-def _cached_topic_sentence_counts(user_mc_key, topics_id, **kwargs):
+def _cached_topic_split_story_counts(user_mc_key, topics_id, **kwargs):
     '''
-    Internal helper - don't call this; call topic_sentence_counts instead. This needs user_mc_key in the
+    Internal helper - don't call this; call topic_split_story_counts instead. This needs user_mc_key in the
     function signature to make sure the caching is keyed correctly.
     '''
     local_mc = None
@@ -236,13 +236,14 @@ def _cached_topic_sentence_counts(user_mc_key, topics_id, **kwargs):
     else:
         local_mc = user_admin_mediacloud_client()
 
-    # grab the timespan because we need the start and end dates
-    timespan = local_mc.topicTimespanList(topics_id,
-        snapshots_id=kwargs['snapshots_id'], foci_id=kwargs['foci_id'], timespans_id=kwargs['timespans_id'])[0]
-    return local_mc.topicSentenceCount(topics_id,
-        split=True, split_start_date=timespan['start_date'][:10], split_end_date=timespan['end_date'][:10],
+    results = local_mc.topicStoryCount(topics_id,
+        split=True,
         **kwargs)
-
+    total_stories = 0
+    for c in results['counts']:
+        total_stories += c['count']
+    results['total_story_count'] = total_stories
+    return results
 
 @cache.cache_on_arguments(function_key_generator=key_generator)
 def topic_focal_sets(user_mc_key, topics_id, snapshots_id):
@@ -284,7 +285,7 @@ def topic_tag_coverage(topics_id, tags_id):
     return {'counts': {'count': tagged['count'], 'total': total['count']}}
 
 
-def topic_tag_counts(user_mc_key, topics_id, tag_sets_id, sample_size):
+def topic_tag_counts(user_mc_key, topics_id, tag_sets_id, sample_size=None):
     '''
     Get a breakdown of the most-used tags within a set within a single timespan.
      This supports just timespan_id and q from the request, because it has to use sentenceFieldCount,
@@ -304,11 +305,8 @@ def topic_tag_counts(user_mc_key, topics_id, tag_sets_id, sample_size):
 def _cached_topic_tag_counts(user_mc_key, topics_id, tag_sets_id, sample_size, query):
     user_mc = user_mediacloud_client()
     # we don't need ot use topics_id here because the timespans_id is in the query argument
-    tag_counts = user_mc.sentenceFieldCount('*', query, field='tags_id_stories',
-                                            tag_sets_id=tag_sets_id, sample_size=sample_size)
+    tag_counts = user_mc.storyTagCount(query, tag_sets_id=tag_sets_id)
     # add in the pct so we can show relative values within the sample
-    for t in tag_counts:  # add in pct so user knows it was sampled
-        t['pct'] = float(t['count']) / float(sample_size)
     return tag_counts
 
 

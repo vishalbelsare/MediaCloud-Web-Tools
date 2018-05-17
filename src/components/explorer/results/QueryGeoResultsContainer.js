@@ -48,7 +48,7 @@ class QueryGeoResultsContainer extends React.Component {
           onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
         />
         <GeoChart
-          data={results[this.state.selectedQueryIndex]}
+          data={results[this.state.selectedQueryIndex].results}
           countryMaxColorScale={queries[this.state.selectedQueryIndex].color}
           hideLegend
           onCountryClick={handleCountryClick}

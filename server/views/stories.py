@@ -11,6 +11,13 @@ from server.util.request import api_error_handler
 import server.util.csv as csv
 from server.cache import cache, key_generator
 
+QUERY_LAST_FEW_DAYS = "publish_date:[NOW-3DAY TO NOW]"
+QUERY_LAST_WEEK = "publish_date:[NOW-7DAY TO NOW]"
+QUERY_LAST_MONTH = "publish_date:[NOW-31DAY TO NOW]"
+QUERY_LAST_YEAR = "publish_date:[NOW-1YEAR TO NOW]"
+QUERY_LAST_DECADE = "publish_date:[NOW-10YEAR TO NOW]"
+QUERY_ENGLISH_LANGUAGE = "language:en"
+
 logger = logging.getLogger(__name__)
 
 

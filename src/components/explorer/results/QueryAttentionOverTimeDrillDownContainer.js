@@ -76,11 +76,11 @@ QueryAttentionOverTimeDrillDownContainer.propTypes = {
 
 const mapStateToProps = state => ({
   lastSearchTime: state.explorer.lastSearchTime.time,
-  fetchStatus: state.explorer.sentenceCount.fetchStatus,
-  dataPoint: state.explorer.sentenceCount.dataPoint,
+  fetchStatus: state.explorer.storySplitCount.fetchStatus,
+  dataPoint: state.explorer.storySplitCount.dataPoint,
   words: state.explorer.topWordsPerDateRange.list,
   stories: state.explorer.storiesPerDateRange.results,
-  results: state.explorer.sentenceCount.results,
+  results: state.explorer.storySplitCount.results,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

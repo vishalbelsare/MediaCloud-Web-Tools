@@ -70,12 +70,6 @@ export function fetchDemoQueryTopEntitiesOrgs(params) {
   return createApiPromise('/api/explorer/demo/entities/organizations', acceptedParams);
 }
 
-// the following 12 functions depend on having a corresponding index to properly route the results to the right query
-export function fetchDemoQuerySentenceCounts(params) {
-  const acceptedParams = acceptParams(params, ['index', 'search_id', 'query_id', 'q']);
-  return createApiPromise('/api/explorer/demo/sentences/count', acceptedParams);
-}
-
 export function fetchDemoQuerySampleStories(params) {
   const acceptedParams = acceptParams(params, ['index', 'search_id', 'query_id', 'q']);
   return createApiPromise('/api/explorer/demo/stories/sample', acceptedParams);
@@ -84,11 +78,6 @@ export function fetchDemoQuerySampleStories(params) {
 export function fetchDemoQueryPerDateSampleStories(params) {
   const acceptedParams = acceptParams(params, ['index', 'search_id', 'query_id', 'q']);
   return createApiPromise('/api/explorer/demo/stories/sample', acceptedParams);
-}
-
-export function fetchDemoQueryStoryCount(params) {
-  const acceptedParams = acceptParams(params, ['index', 'search_id', 'query_id', 'q']);
-  return createApiPromise('/api/explorer/demo/story/count', acceptedParams);
 }
 
 export function fetchDemoQueryGeo(params) {
@@ -117,9 +106,14 @@ export function fetchQueryTopEntitiesOrgs(params) {
   return createApiPromise('/api/explorer/entities/organizations', acceptedParams);
 }
 
-export function fetchQuerySentenceCounts(params) {
+export function fetchQuerySplitStoryCount(params) {
   const acceptedParams = acceptParams(params, ['index', 'q', 'start_date', 'end_date', 'sources', 'collections']);
-  return createApiPromise('/api/explorer/sentences/count', acceptedParams);
+  return createApiPromise('/api/explorer/stories/split-count', acceptedParams);
+}
+
+export function fetchDemoQuerySplitStoryCount(params) {
+  const acceptedParams = acceptParams(params, ['index', 'search_id', 'query_id', 'q']);
+  return createApiPromise('/api/explorer/demo/stories/split-count', acceptedParams);
 }
 
 export function fetchQuerySampleStories(params) {

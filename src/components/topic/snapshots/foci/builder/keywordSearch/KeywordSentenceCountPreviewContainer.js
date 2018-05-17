@@ -10,13 +10,13 @@ import DataCard from '../../../../../common/DataCard';
 import { getBrandDarkColor } from '../../../../../../styles/colors';
 
 const localMessages = {
-  title: { id: 'topic.snapshot.keywords.attention.title', defaultMessage: 'Matching Sentences' },
+  title: { id: 'topic.snapshot.keywords.attention.title', defaultMessage: 'Matching Stories' },
   helpTitle: { id: 'topic.snapshot.keywords.attention.help.title', defaultMessage: 'About Attention' },
   helpText: { id: 'topic.snapshot.keywords.attention.help.text',
-    defaultMessage: '<p>This chart shows you the number of sentences over time that match your subtopic query.</p>',
+    defaultMessage: '<p>This chart shows you the number of stories over time that match your subtopic query.</p>',
   },
   chartExplanation: { id: 'topic.snapshot.keywords.attention.explanation',
-    defaultMessage: 'This chart shows you {total} sentences that match your subtopic query.',
+    defaultMessage: 'This chart shows you {total} stories that match your subtopic query.',
   },
 };
 

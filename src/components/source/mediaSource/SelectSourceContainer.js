@@ -2,20 +2,24 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { Grid, Row, Col } from 'react-flexbox-grid/lib';
+import { Grid } from 'react-flexbox-grid/lib';
 import Link from 'react-router/lib/Link';
 import Title from 'react-title-component';
+import { getCurrentDate, oneMonthBefore } from '../../../lib/dateUtil';
+import { urlToExplorerQuery } from '../../../lib/urlUtil';
 import { selectSource, fetchSourceDetails } from '../../../actions/sourceActions';
 import SourceControlBar from '../controlbar/SourceControlBar';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
-import { EditButton } from '../../common/IconButton';
+import { EditButton, ExploreButton } from '../../common/IconButton';
 import SourceMgrHeaderContainer from '../SourceMgrHeaderContainer';
 
 const localMessages = {
   editSource: { id: 'source.edit', defaultMessage: 'Modify this Source' },
+  visitHomepage: { id: 'source.visit', defaultMessage: 'Visit {url}' },
   editFeeds: { id: 'source.feeds.edit', defaultMessage: 'Modify this Source\'s Feeds' },
+  searchNow: { id: 'source.basicInfo.searchNow', defaultMessage: 'Search in Explorer' },
 };
 
 class SelectSourceContainer extends React.Component {
@@ -32,6 +36,15 @@ class SelectSourceContainer extends React.Component {
     removeSourceId();
   }
 
+  searchInExplorer = (evt) => {
+    const { source } = this.props;
+    const endDate = getCurrentDate();
+    const startDate = oneMonthBefore(endDate);
+    const explorerUrl = urlToExplorerQuery(source.name || source.url, '*', source.id, '', startDate, endDate);
+    evt.preventDefault();
+    window.open(explorerUrl, '_blank');
+  }
+
   render() {
     const { children, source } = this.props;
     const titleHandler = parentTitle => `${source.name} | ${parentTitle}`;
@@ -39,26 +52,26 @@ class SelectSourceContainer extends React.Component {
       <div className="source-container">
         <Title render={titleHandler} />
         <SourceMgrHeaderContainer />
-        <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
-          <SourceControlBar>
-            <Row>
-              <Col lg={12}>
-                <span className="source-edit-link">
-                  <Link to={`/sources/${source.media_id}/edit`} >
-                    <EditButton />
-                    <FormattedMessage {...localMessages.editSource} />
-                  </Link>
-                </span>
-                <span className="source-edit-feeds-link">
-                  <Link to={`/sources/${source.media_id}/feeds`} >
-                    <EditButton />
-                    <FormattedMessage {...localMessages.editFeeds} />
-                  </Link>
-                </span>
-              </Col>
-            </Row>
-          </SourceControlBar>
-        </Permissioned>
+        <SourceControlBar>
+          <a href="search-in-explorer" onClick={this.searchInExplorer} >
+            <ExploreButton />
+            <FormattedMessage {...localMessages.searchNow} />
+          </a>
+          <a href={source.url}>
+            <ExploreButton />
+            <FormattedMessage {...localMessages.visitHomepage} values={{ url: source.url }} />
+          </a>
+          <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
+            <Link to={`/sources/${source.media_id}/edit`} >
+              <EditButton />
+              <FormattedMessage {...localMessages.editSource} />
+            </Link>
+            <Link to={`/sources/${source.media_id}/feeds`} >
+              <EditButton />
+              <FormattedMessage {...localMessages.editFeeds} />
+            </Link>
+          </Permissioned>
+        </SourceControlBar>
         <Grid className="details source-details">
           {children}
         </Grid>

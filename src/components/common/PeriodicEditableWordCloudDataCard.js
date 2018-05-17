@@ -13,7 +13,7 @@ const PeriodicEditableWordCloudDataCard = props => (
     targetURL={props.targetURL}
     onViewModeClick={props.onViewModeClick}
     domId={props.domId}
-    width={520}
+    width={props.width || 520}
     title={props.title}
     helpButton={props.helpButton}
   />

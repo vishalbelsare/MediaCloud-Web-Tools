@@ -44,9 +44,14 @@ export function topicTimespansList(topicId, snapshotId, params) {
   return createApiPromise(`/api/topics/${topicId}/snapshots/${snapshotId}/timespans/list`, acceptedParams);
 }
 
-export function topicSentenceCounts(topicId, params) {
+export function topicSplitStoryCounts(topicId, params) {
   const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId', 'q']);
-  return createApiPromise(`/api/topics/${topicId}/sentences/count`, acceptedParams);
+  return createApiPromise(`/api/topics/${topicId}/split-story/count`, acceptedParams);
+}
+
+export function topicStoryCounts(topicId, params) {
+  const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId', 'q']);
+  return createApiPromise(`/api/topics/${topicId}/story/count`, acceptedParams);
 }
 
 export function story(topicId, storiesId) {
@@ -77,9 +82,9 @@ export function media(topicId, mediaId, params) {
   return createApiPromise(`/api/topics/${topicId}/media/${mediaId}`, acceptedParams);
 }
 
-export function mediaSentenceCounts(topicId, mediaId, params) {
+export function mediaSplitStoryCounts(topicId, mediaId, params) {
   const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId', 'q']);
-  return createApiPromise(`/api/topics/${topicId}/media/${mediaId}/sentences/count`, acceptedParams);
+  return createApiPromise(`/api/topics/${topicId}/media/${mediaId}/split-story/count`, acceptedParams);
 }
 
 export function mediaStories(topicId, mediaId, params) {
@@ -148,12 +153,6 @@ export function favoriteTopics() {
   return createApiPromise('/api/topics/favorite');
 }
 
-export function topicStoryCounts(topicId, params) {
-  // important to include snapshot id here, so the server can use it
-  const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'q']);
-  return createApiPromise(`/api/topics/${topicId}/stories/counts`, acceptedParams);
-}
-
 export function topicEnglishStoryCounts(topicId, params) {
   const acceptedParams = acceptParams(params, ['timespanId', 'q']);
   return createApiPromise(`/api/topics/${topicId}/stories/english-counts`, acceptedParams);
@@ -164,18 +163,18 @@ export function topicUndateableStoryCounts(topicId, params) {
   return createApiPromise(`/api/topics/${topicId}/stories/undateable-counts`, acceptedParams);
 }
 
-export function topicFocalSetSentenceCounts(topicId, focalSetId, params) {
+export function topicFocalSetSplitStoryCounts(topicId, focalSetId, params) {
   const acceptedParams = acceptParams(params, ['snapshotId', 'focusId', 'timespanId', 'q']);
-  return createApiPromise(`/api/topics/${topicId}/sentences/focal-set/${focalSetId}/count`, acceptedParams);
+  return createApiPromise(`/api/topics/${topicId}/split-story/focal-set/${focalSetId}/count`, acceptedParams);
 }
 
 export function word(topicId, wordstem) {
   return createApiPromise(`/api/topics/${topicId}/words/${wordstem}`);
 }
 
-export function wordSentenceCounts(topicId, wordstem, params) {
+export function wordSplitStoryCounts(topicId, wordstem, params) {
   const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId', 'q']);
-  return createApiPromise(`/api/topics/${topicId}/words/${wordstem}*/sentences/count`, acceptedParams);
+  return createApiPromise(`/api/topics/${topicId}/words/${wordstem}*/split-story/count`, acceptedParams);
 }
 
 export function wordStories(topicId, wordstem, params) {
@@ -213,7 +212,7 @@ export function fetchStoryCountByQuery(params) {
 
 export function fetchAttentionByQuery(params) {
   const acceptedParams = acceptParams(params, ['q', 'start_date', 'end_date', 'sources[]', 'collections[]']);
-  return createPostingApiPromise('/api/topics/create/preview/sentences/count', acceptedParams);
+  return createPostingApiPromise('/api/topics/create/preview/split-story/count', acceptedParams);
 }
 
 export function fetchStorySampleByQuery(params) {

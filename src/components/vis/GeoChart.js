@@ -69,7 +69,7 @@ class GeoChart extends React.Component {
       tooltip: {
         pointFormatter: function afmtxn() {
           // important to name this, rather than use arrow function, so `this` is preserved to be what highcharts gives us
-          const rounded = formatNumber(this.count, { style: 'percent', maximumFractionDigits: 2 });
+          const rounded = formatNumber(this.pct, { style: 'percent', maximumFractionDigits: 2 });
           const pct = formatMessage(localMessages.tooltipTitle, { count: rounded, name: this.name });
           return pct;
         },

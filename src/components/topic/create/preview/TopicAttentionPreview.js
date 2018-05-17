@@ -10,10 +10,10 @@ import DataCard from '../../../common/DataCard';
 import { getBrandDarkColor } from '../../../../styles/colors';
 
 const localMessages = {
-  title: { id: 'topic.create.preview.attention.title', defaultMessage: 'Matching Sentences' },
-  descriptionIntro: { id: 'topic.summary.sentenceCount.help.title', defaultMessage: 'The attention over time to your topic can vary. If you see a predominantly flat line here with no attention, consider going back and changing the start and end dates for your topic. If you have too many total seed stories, try shortening the total number of days your topic covers.' },
-  helpText: { id: 'media.sentenceCount.help.text',
-    defaultMessage: '<p>This chart shows you the number of sentences over time that match your topic query. This a good preview of the attention paid to your topic that we already have in our system.</p>',
+  title: { id: 'topic.create.preview.attention.title', defaultMessage: 'Matching Stories' },
+  descriptionIntro: { id: 'topic.summary.splitStoryCount.help.title', defaultMessage: 'The attention over time to your topic can vary. If you see a predominantly flat line here with no attention, consider going back and changing the start and end dates for your topic. If you have too many total seed stories, try shortening the total number of days your topic covers.' },
+  helpText: { id: 'media.splitStoryCount.help.text',
+    defaultMessage: '<p>This chart shows you the number of stories over time that match your topic query. This a good preview of the attention paid to your topic that we already have in our system.</p>',
   },
 };
 
@@ -25,17 +25,23 @@ class TopicAttentionPreview extends React.Component {
     }
   }
   render() {
-    const { total, counts } = this.props;
+    const { total, counts, query } = this.props;
     return (
       <DataCard>
         <h2>
           <FormattedMessage {...localMessages.title} />
         </h2>
         <AttentionOverTimeChart
-          total={total}
-          data={counts}
-          height={200}
           lineColor={getBrandDarkColor()}
+          total={total}
+          series={[{
+            id: 0,
+            name: query.name,
+            color: getBrandDarkColor(),
+            data: counts.map(c => [c.date, c.count]),
+            showInLegend: false,
+          }]}
+          height={250}
         />
       </DataCard>
     );

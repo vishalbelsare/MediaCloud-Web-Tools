@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 import { SELECT_SOURCE } from '../../../../actions/sourceActions';
 import sourceDetails from './sourceDetails';
 import topWords from './topWords';
-import sentenceCount from './sentenceCount';
+import splitStoryCount from './splitStoryCount';
 import geoTag from './geoTag';
 import feed from './feed/feed';
 import stats from './stats';
@@ -22,7 +22,7 @@ const selected = combineReducers({
   id,
   sourceDetails,
   topWords,
-  sentenceCount,
+  splitStoryCount,
   geoTag,
   feed,
   stats,
