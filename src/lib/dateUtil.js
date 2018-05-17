@@ -42,7 +42,7 @@ export function getShortDate(dateString) {
 }
 
 export function getDateFromTimestamp(milliseconds) {
-  return moment.utc(parseInt(milliseconds, 10)).format(GAP_DATE_FORMAT);
+  return moment.utc(parseInt(milliseconds, 10)).toDate();
 }
 
 export function isStartDateAfterEndDate(start, end) {
