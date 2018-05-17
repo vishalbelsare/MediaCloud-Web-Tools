@@ -10,7 +10,6 @@ import Dialog from 'material-ui/Dialog';
 import { filteredLinkTo } from '../../util/location';
 import AppButton from '../../common/AppButton';
 import composeIntlForm from '../../common/IntlForm';
-import StorySwitchoverNotice from '../../common/StorySwitchoverNotice';
 import messages from '../../../resources/messages';
 import { updateTopic, resetTopic, setTopicNeedsNewSnapshot } from '../../../actions/topicActions';
 import { updateFeedback } from '../../../actions/appActions';
@@ -130,7 +129,6 @@ class EditTopicContainer extends React.Component {
             <Col lg={12}>
               <h1><FormattedMessage {...localMessages.editTopicTitle} /></h1>
               <p><FormattedMessage {...localMessages.editTopicText} /></p>
-              <StorySwitchoverNotice />
             </Col>
           </Row>
           {dialogContent}
