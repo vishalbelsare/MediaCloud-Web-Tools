@@ -30,19 +30,19 @@ def _cached_sentence_list(mc_api_key, q, fq, rows):
     return local_mc.sentenceList(q, fq, rows=rows)
 
 
-def top_tags_with_coverage(q, fq, tag_sets_id, limit=TAG_COUNT_UI_LENGTH, sample_size=TAG_COUNT_SAMPLE_SIZE):
-    tag_counts = _most_used_tags(q, fq, tag_sets_id, limit, sample_size)
+def top_tags_with_coverage(q, fq, tag_sets_id, limit=TAG_COUNT_UI_LENGTH):
+    tag_counts = _most_used_tags(q, fq, tag_sets_id, limit)
     coverage = cliff_coverage(q, fq)
     for t in tag_counts:  # add in pct of what's been run through CLIFF to total results
-        t['pct'] = float(t['count']) / sample_size
+        t['pct'] = float(t['count']) / coverage['counts']
     coverage['results'] = tag_counts
     return coverage
 
 
-def _most_used_tags(q, fq, tag_sets_id, limit=TAG_COUNT_UI_LENGTH, sample_size=TAG_COUNT_SAMPLE_SIZE):
+def _most_used_tags(q, fq, tag_sets_id, limit=TAG_COUNT_UI_LENGTH):
     # top tags used in stories matching query (pass in None for no limit)
     api_key = _api_key()
-    sentence_count_results = _cached_most_used_tags(api_key, q, fq, tag_sets_id, sample_size)
+    sentence_count_results = _cached_most_used_tags(api_key, q, fq, tag_sets_id)
     top_count_results = sentence_count_results[:limit] if limit is not None else sentence_count_results
     return top_count_results
 
@@ -63,7 +63,7 @@ def tag_set_coverage(total_q, subset_q, fq):
 
 
 @cache.cache_on_arguments(function_key_generator=key_generator)
-def _cached_most_used_tags(api_key, q, fq, tag_sets_id, sample_size):
+def _cached_most_used_tags(api_key, q, fq, tag_sets_id, sample_size=None):
     # top tags used in stories matching query
     # api_key used for caching at the user level
     local_mc = _mc_client()
