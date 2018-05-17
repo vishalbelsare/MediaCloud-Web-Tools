@@ -3,7 +3,6 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import KeywordStoryCountPreviewContainer from './KeywordStoryCountPreviewContainer';
-import KeywordSentenceCountPreviewContainer from './KeywordSentenceCountPreviewContainer';
 import KeywordStoryPreviewContainer from './KeywordStoryPreviewContainer';
 
 const localMessages = {
@@ -18,9 +17,6 @@ const KeywordSearchPreview = (props) => {
       <Row>
         <Col lg={4} xs={12}>
           <KeywordStoryCountPreviewContainer topicId={topicId} keywords={keywords} />
-        </Col>
-        <Col lg={6} xs={12}>
-          <KeywordSentenceCountPreviewContainer topicId={topicId} keywords={keywords} />
         </Col>
         <Col lg={2} md={2} xs={12}>
           <p className="light"><i><FormattedMessage {...localMessages.about} /></i></p>

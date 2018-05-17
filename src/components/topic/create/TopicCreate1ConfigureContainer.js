@@ -6,7 +6,6 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import Title from 'react-title-component';
 import composeIntlForm from '../../common/IntlForm';
-import StorySwitchoverNotice from '../../common/StorySwitchoverNotice';
 import TopicForm, { TOPIC_FORM_MODE_CREATE } from './TopicForm';
 import { goToCreateTopicStep } from '../../../actions/topicActions';
 import messages from '../../../resources/messages';
@@ -37,7 +36,6 @@ const TopicCreate1ConfigureContainer = (props) => {
         <Col lg={10}>
           <h1><FormattedMessage {...localMessages.title} /></h1>
           <p><FormattedMessage {...localMessages.createTopicText} /></p>
-          <StorySwitchoverNotice />
         </Col>
       </Row>
       <TopicForm

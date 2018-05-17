@@ -14,7 +14,7 @@ import { getBrandLightColor } from '../../../styles/colors';
 const localMessages = {
   title: { id: 'collection.summary.geo.title', defaultMessage: 'Geographic Attention' },
   intro: { id: 'collection.summary.geo.info',
-    defaultMessage: '<p>Here is a heatmap of countries mentioned in this collection (based on a sample of sentences). Darker countried are mentioned more. Click a country to load a Dashboard search showing you how the sources in this collection cover it.</p>' },
+    defaultMessage: '<p>Here is a heatmap of countries mentioned in this collection (based on a sample of stories). Darker countried are mentioned more. Click a country to load a Dashboard search showing you how the sources in this collection cover it.</p>' },
   helpTitle: { id: 'collection.summary.geo.help.title', defaultMessage: 'About Geographic Attention' },
 };
 

@@ -4,10 +4,10 @@ import * as api from '../../lib/serverApi/sources';
 
 export const FETCH_FEATURED_COLLECTIONS_LIST = 'FETCH_FEATURED_COLLECTIONS_LIST';
 export const FETCH_COLLECTION_TOP_WORDS = 'FETCH_COLLECTION_TOP_WORDS';
-export const FETCH_COLLECTION_SENTENCE_COUNT = 'FETCH_COLLECTION_SENTENCE_COUNT';
+export const FETCH_COLLECTION_SPLIT_STORY_COUNT = 'FETCH_COLLECTION_SPLIT_STORY_COUNT';
 export const FETCH_COLLECTION_GEO = 'FETCH_COLLECTION_GEO';
-export const FETCH_COLLECTION_SOURCE_SENTENCE_COUNTS = 'FETCH_COLLECTION_SOURCE_SENTENCE_COUNTS';
-export const FETCH_COLLECTION_SOURCE_SENTENCE_HISTORICAL_COUNTS = 'FETCH_COLLECTION_SOURCE_SENTENCE_HISTORICAL_COUNTS';
+export const FETCH_COLLECTION_SOURCE_REPRESENTATION = 'FETCH_COLLECTION_SOURCE_REPRESENTATION';
+export const FETCH_COLLECTION_SOURCE_SPLIT_STORY_HISTORICAL_COUNTS = 'FETCH_COLLECTION_SOURCE_SPLIT_STORY_HISTORICAL_COUNTS';
 export const SET_COLLECTION_SOURCE_HISTORY_TIME_PERIOD = 'SET_COLLECTION_SOURCE_HISTORY_TIME_PERIOD';
 export const FETCH_SIMILAR_COLLECTIONS = 'FETCH_SIMILAR_COLLECTIONS';
 export const FETCH_COLLECTION_LIST = 'FETCH_COLLECTION_LIST';
@@ -37,15 +37,15 @@ export const fetchCollectionDetails = createAsyncAction(FETCH_COLLECTION_DETAILS
 
 export const fetchCollectionToCopy = createAsyncAction(FETCH_COLLECTION_TO_COPY, api.collectionDetails, id => id);
 
-export const fetchCollectionSentenceCount = createAsyncAction(FETCH_COLLECTION_SENTENCE_COUNT, api.collectionSentenceCount, id => id);
+export const fetchCollectionSplitStoryCount = createAsyncAction(FETCH_COLLECTION_SPLIT_STORY_COUNT, api.collectionSplitStoryCount, id => id);
 
 export const fetchCollectionTopWords = createAsyncAction(FETCH_COLLECTION_TOP_WORDS, api.collectionWordCount, id => id);
 
 export const fetchCollectionGeo = createAsyncAction(FETCH_COLLECTION_GEO, api.collectionGeography, id => id);
 
-export const fetchCollectionSourceSentenceCounts = createAsyncAction(FETCH_COLLECTION_SOURCE_SENTENCE_COUNTS, api.collectionSourceSentenceCounts, id => id);
+export const fetchCollectionSourceRepresentation = createAsyncAction(FETCH_COLLECTION_SOURCE_REPRESENTATION, api.collectionSourceRepresentation, id => id);
 
-export const fetchCollectionSourceSentenceHistoricalCounts = createAsyncAction(FETCH_COLLECTION_SOURCE_SENTENCE_HISTORICAL_COUNTS, api.collectionSourceSentenceHistoricalCounts, id => id);
+export const fetchCollectionSourceSplitStoryHistoricalCounts = createAsyncAction(FETCH_COLLECTION_SOURCE_SPLIT_STORY_HISTORICAL_COUNTS, api.collectionSourceSplitStoryHistoricalCounts, id => id);
 
 export const fetchCollectionSourceList = createAsyncAction(FETCH_COLLECTION_SOURCE_LIST, api.collectionSourceList, details => details);
 

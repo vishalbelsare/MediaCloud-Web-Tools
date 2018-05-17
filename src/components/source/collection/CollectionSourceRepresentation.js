@@ -7,7 +7,7 @@ import { push } from 'react-router-redux';
 import MenuItem from 'material-ui/MenuItem';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import DataCard from '../../common/DataCard';
-import { fetchCollectionSourceSentenceCounts } from '../../../actions/sourceActions';
+import { fetchCollectionSourceRepresentation } from '../../../actions/sourceActions';
 import messages from '../../../resources/messages';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import { DownloadButton, ExploreButton } from '../../common/IconButton';
@@ -21,7 +21,7 @@ const localMessages = {
   title: { id: 'collection.summary.sourceRepresentation.title', defaultMessage: 'Source Representation' },
   helpTitle: { id: 'collection.summary.sourceRepresentation.help.title', defaultMessage: 'About Source Representation' },
   helpText: { id: 'collection.summary.sourceRepresentation.help.text',
-    defaultMessage: '<p>This visualization gives you a sense of how much content each source contributes to this collection.  Each source is a rectangle.  The larger the rectangle, the more sentences it has in this collection.  Rollover one to see the actualy number of sentences. Click the source to learn more about it.</p><p>For performance reasons, these percentages are based on a sample of sentences from this collection.  Our tests show that this sampling provides very accurate results.</p>',
+    defaultMessage: '<p>This visualization gives you a sense of how much content each source contributes to this collection.  Each source is a circle.  The larger and darker the circle, the more stories it has in this collection.  Rollover one to see the actual number of stories. Click the source to learn more about it.</p><p>For performance reasons, these percentages are based on a sample of 5000 stories from this collection.  Our tests show that this sampling provides accurate results.</p>',
   },
   cantShow: { id: 'collection.summary.sourceRepresentation.cantShow', defaultMessage: 'Sorry, this collection has too many sources for us to compute a map of how much content each source contributes to it.' },
   overallSeries: { id: 'collection.bubble.series.overall', defaultMessage: 'Overall' },
@@ -55,26 +55,26 @@ class CollectionSourceRepresentation extends React.Component {
     if (sources.length === 0) {
       content = <p><FormattedMessage {...localMessages.cantShow} /></p>;
     } else {
-      const contributingSources = sources.filter(d => d.sentence_pct > SENTENCE_PERCENTAGE_MIN_VALUE);
-      const otherSources = sources.filter(d => d.sentence_pct <= SENTENCE_PERCENTAGE_MIN_VALUE);
-      const otherTotal = d3.sum(otherSources.map(d => d.sentence_pct));
+      const contributingSources = Object.values(sources).filter(d => d.story_pct > SENTENCE_PERCENTAGE_MIN_VALUE);
+      const otherSources = Object.values(sources).filter(d => d.story_pct <= SENTENCE_PERCENTAGE_MIN_VALUE);
+      const otherTotal = d3.sum(otherSources.map(d => d.story_pct));
       const otherSourcesNode = {
         value: otherTotal,
         rolloverText: `${formatMessage(messages.other)}: ${formatNumber(otherTotal, { style: 'percent', maximumFractionDigits: 2 })}`,
         fill: '#eee',
       };
-      const maxPct = Math.ceil(d3.max(contributingSources.map(d => d.sentence_pct)) * 100) / 100;
+      const maxPct = Math.ceil(d3.max(contributingSources.map(d => d.story_pct)) * 100) / 100;
       const scaleRange = d3.scaleLinear()
         .domain([0, maxPct])
         .range([d3.rgb('#ffffff'), d3.rgb(getBrandDarkColor())]);
 
       const bubbleData = [
-        ...contributingSources.sort((a, b) => b.sentence_pct - a.sentence_pct).map((s, idx) => ({
+        ...contributingSources.sort((a, b) => b.story_pct - a.story_pct).map((s, idx) => ({
           id: s.media_id,
-          value: s.sentence_pct,
-          centerText: (idx < TOP_N_LABELS_TO_SHOW) ? s.name : null,
-          rolloverText: `${s.name}: ${formatNumber(s.sentence_pct, { style: 'percent', maximumFractionDigits: 2 })}`,
-          fill: scaleRange(s.sentence_pct),
+          value: s.story_pct,
+          centerText: (idx < TOP_N_LABELS_TO_SHOW) ? s.media_name : null,
+          rolloverText: `${s.media_name}: ${formatNumber(s.story_pct, { style: 'percent', maximumFractionDigits: 2 })}`,
+          fill: scaleRange(s.story_pct),
         })),
       ];
 
@@ -136,13 +136,13 @@ CollectionSourceRepresentation.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  fetchStatus: state.sources.collections.selected.collectionSourceSentenceCounts.fetchStatus,
-  sources: state.sources.collections.selected.collectionSourceSentenceCounts.sources,
+  fetchStatus: state.sources.collections.selected.collectionSourceRepresentation.fetchStatus,
+  sources: state.sources.collections.selected.collectionSourceRepresentation.sources,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   asyncFetch: () => {
-    dispatch(fetchCollectionSourceSentenceCounts(ownProps.collectionId));
+    dispatch(fetchCollectionSourceRepresentation(ownProps.collectionId));
   },
   navToSource: (element) => {
     dispatch(push(`/sources/${element.data.id}`));

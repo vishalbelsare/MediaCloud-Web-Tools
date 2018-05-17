@@ -8,6 +8,8 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import TopicStoryTable from '../TopicStoryTable';
 import { fetchTopicInfluentialStories, sortTopicInfluentialStories } from '../../../actions/topicActions';
 import messages from '../../../resources/messages';
+import { LEVEL_INFO } from '../../common/Notice';
+import { addNotice } from '../../../actions/appActions';
 import { DownloadButton } from '../../common/IconButton';
 import DataCard from '../../common/DataCard';
 import LinkWithFilters from '../LinkWithFilters';
@@ -15,6 +17,7 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import { pagedAndSortedLocation } from '../../util/location';
 import composePagedContainer from '../../common/PagedContainer';
+import { HELP_STORIES_CSV_COLUMNS } from '../../../lib/helpConstants';
 
 const localMessages = {
   title: { id: 'topic.influentialStories.title', defaultMessage: 'Influential Stories' },
@@ -33,9 +36,10 @@ class InfluentialStoriesContainer extends React.Component {
     sortData(newSort);
   }
   downloadCsv = () => {
-    const { filters, sort, topicId } = this.props;
+    const { filters, sort, topicId, addAppNotice } = this.props;
     const url = `/api/topics/${topicId}/stories.csv?snapshotId=${filters.snapshotId}&timespanId=${filters.timespanId}&sort=${sort}`;
     window.location = url;
+    addAppNotice();
   }
   render() {
     const { stories, showTweetCounts, sort, topicId, previousButton, nextButton, helpButton } = this.props;
@@ -93,6 +97,7 @@ InfluentialStoriesContainer.propTypes = {
   // from PagedContainer wrapper
   nextButton: PropTypes.node,
   previousButton: PropTypes.node,
+  addAppNotice: PropTypes.func,
 };
 
 const mapStateToProps = state => ({
@@ -131,6 +136,11 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   sortData: (sort) => {
     dispatch(push(pagedAndSortedLocation(ownProps.location, null, sort)));
     dispatch(sortTopicInfluentialStories(sort));
+  },
+  addAppNotice: () => {
+    let htmlMessage = ownProps.intl.formatMessage(messages.currentlyDownloadingCsv);
+    htmlMessage = `${htmlMessage} <a href="${HELP_STORIES_CSV_COLUMNS}">${ownProps.intl.formatHTMLMessage(messages.learnMoreAboutColumnsCsv)}</a>`;
+    dispatch(addNotice({ level: LEVEL_INFO, htmlMessage }));
   },
 });
 

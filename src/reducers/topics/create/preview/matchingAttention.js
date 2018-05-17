@@ -9,8 +9,8 @@ const matchingAttention = createAsyncReducer({
   },
   action: FETCH_CREATE_TOPIC_QUERY_ATTENTION,
   handleSuccess: payload => ({
-    total: payload.count,
-    counts: cleanDateCounts(payload.split),
+    total: payload.results.total_story_count,
+    counts: cleanDateCounts(payload.results.counts),
   }),
 });
 

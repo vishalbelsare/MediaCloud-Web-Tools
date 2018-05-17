@@ -13,7 +13,7 @@ import { urlToExplorerQuery } from '../../../lib/urlUtil';
 const localMessages = {
   title: { id: 'source.summary.topWords.title', defaultMessage: 'Top Words' },
   intro: { id: 'source.summary.topWords.info',
-    defaultMessage: '<p>This wordcloud shows you the most commonly used words in this source (based on a sample of sentences). Click a word to load a Dashboard search showing you how the this source writes about it.</p>' },
+    defaultMessage: '<p>This wordcloud shows you the most commonly used words in this source (based on a sample of stories). Click a word to load a Dashboard search showing you how the this source writes about it.</p>' },
   helpTitle: { id: 'source.summary.sentenceCount.help.title', defaultMessage: 'About Top Words' },
 };
 
@@ -44,7 +44,7 @@ class SourceTopWordsContainer extends React.Component {
         onViewModeClick={this.defaultOnWordClick}
         title={formatMessage(localMessages.title)}
         domId={`media-source-top-words-${source.media_id}`}
-        width={520}
+        width={900}
         helpButton={helpButton}
       />
     );

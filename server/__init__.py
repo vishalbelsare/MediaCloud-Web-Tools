@@ -193,7 +193,7 @@ if (server_app == SERVER_APP_SOURCES) or is_dev_mode():
     import server.views.sources.geocount
 if (server_app == SERVER_APP_TOPICS) or is_dev_mode():
     import server.views.topics.media
-    import server.views.topics.sentences
+    import server.views.topics.splitstories
     import server.views.topics.stories
     import server.views.topics.topic
     import server.views.topics.words
@@ -213,6 +213,7 @@ if (server_app == SERVER_APP_EXPLORER) or is_dev_mode():
     import server.views.explorer.explorer_query
     import server.views.explorer.sentences
     import server.views.explorer.words
-    import server.views.explorer.stories
+    import server.views.explorer.story_samples
+    import server.views.explorer.story_counts
     import server.views.explorer.geo
     import server.views.explorer.tags

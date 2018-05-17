@@ -29,6 +29,6 @@ FEATURED_COLLECTION_LIST = [
 
 
 @cache.cache_on_arguments(function_key_generator=key_generator)
-def _cached_source_story_count(user_mc_key, query):
+def cached_source_story_count(user_mc_key, query):
     user_mc = user_admin_mediacloud_client()
     return user_mc.storyCount(query)['count']

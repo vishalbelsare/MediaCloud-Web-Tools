@@ -10,8 +10,8 @@ import TopOrgsContainer from './TopOrgsContainer';
 import StoriesSummaryContainer from './StoriesSummaryContainer';
 import MediaSummaryContainer from './MediaSummaryContainer';
 import WordsSummaryContainer from './WordsSummaryContainer';
-import SentenceCountSummaryContainer from './SentenceCountSummaryContainer';
-// import TopicStoryStatsContainer from './TopicStoryStatsContainer';
+import SplitStoryCountSummaryContainer from './SplitStoryCountSummaryContainer';
+import TopicStoryStatsContainer from './TopicStoryStatsContainer';
 import StoryTotalsSummaryContainer from './StoryTotalsSummaryContainer';
 import DownloadMapContainer from './DownloadMapContainer';
 import NytLabelSummaryContainer from './NytLabelSummaryContainer';
@@ -60,14 +60,12 @@ class TopicSummaryContainer extends React.Component {
           </Row>
           <Row>
             <Col lg={12}>
-              {
-              // <TopicStoryStatsContainer topicId={topicId} filters={filters} timespan={selectedTimespan} />
-              }
+              <TopicStoryStatsContainer topicId={topicId} filters={filters} timespan={selectedTimespan} />
             </Col>
           </Row>
           <Row>
             <Col lg={12}>
-              <SentenceCountSummaryContainer topicId={topicId} filters={filters} />
+              <SplitStoryCountSummaryContainer topicId={topicId} filters={filters} />
             </Col>
           </Row>
           <Row>
