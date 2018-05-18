@@ -208,11 +208,13 @@ def topic_split_story_counts(user_mc_key, topics_id, **kwargs):
     Return setence counts over timebased on filters.
     '''
     snapshots_id, timespans_id, foci_id, q = filters_from_args(request.args)
+    timespan = topic_timespan(topics_id, snapshots_id, foci_id, timespans_id)
     merged_args = {
         'snapshots_id': snapshots_id,
         'timespans_id': timespans_id,
         'foci_id': foci_id,
-        'q': q
+        'q': q,
+        'fq': timespan['fq']
     }
     merged_args.update(kwargs)    # passed in args override anything pulled form the request.args
     # and make sure to ignore undateable stories
@@ -351,11 +353,16 @@ def topic_timespan(topics_id, snapshots_id, foci_id, timespans_id):
     :param foci_id: 
     :return: info about one timespan as specified
     '''
-    timespans = cached_topic_timespan_list(user_mediacloud_key(), topics_id, snapshots_id=snapshots_id, foci_id=foci_id)
-    for timespan in timespans:
-        if int(timespan['timespans_id']) == int(timespans_id):
-            return timespan
-    return None
+    timespans_list = cached_topic_timespan_list(user_mediacloud_key(), topics_id, snapshots_id, foci_id)
+    matching_timespans = [t for t in timespans_list if t['timespans_id'] == int(timespans_id)]
+    if len(matching_timespans) is 0:
+        raise ValueError("Unknown timespans_id {}".format(timespans_id))
+    # set up a date query clase we can use in other places
+    timespan = matching_timespans[0]
+    start_date = timespan['start_date'].split(" ")
+    end_date = timespan['end_date'].split(" ")
+    timespan['fq'] = "publish_day:[{}T{}Z TO {}T{}Z]".format(start_date[0], start_date[1], end_date[0], end_date[1])
+    return timespan
 
 
 def add_to_user_query(query_to_add):
