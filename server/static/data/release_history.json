@@ -18,6 +18,11 @@
           "apps": ["explorer"],
           "type": "Fix",
           "note": "Saved searches from Dashboard now show up in Explorer."
+        },
+        {
+          "apps": ["explorer"],
+          "type": "Feature",
+          "note": "See normalized attention charts in Explorer (baed on the same query, without the keywords)."
         }
       ]
     },
