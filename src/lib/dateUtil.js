@@ -141,9 +141,11 @@ export function calcStories(countsMap) {
 export function cleanDateCounts(countsMap) {
   const countsArray = [];
   Object.keys(countsMap).forEach((k) => {
-    if (k !== 'end' && k !== 'gap' && k !== 'start') {
-      const v = countsMap[k];
-      const timestamp = parseInt(solrTimestamp(v.date), 10);
+    const v = countsMap[k];
+    const timestamp = parseInt(solrTimestamp(v.date), 10);
+    if (v.normalized_ratio) {
+      countsArray.push({ date: timestamp, percentage: v.normalized_ratio });
+    } else {
       countsArray.push({ date: timestamp, count: v.count });
     }
   });
