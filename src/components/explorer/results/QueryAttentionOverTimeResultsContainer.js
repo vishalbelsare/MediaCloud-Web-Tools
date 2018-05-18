@@ -85,13 +85,7 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
           if (query.counts || query.normalizedCounts) {
             let data;
             if (this.state.view === VIEW_NORMALIZED) {
-              data = [];
-              for (let i = 0; i < query.normalizedCounts.length; i += 1) {
-                const date = query.normalizedCounts[i].date;
-                const absCount = query.counts.find(d => d.date === date);
-                const info = [date, absCount ? absCount.count / query.normalizedCounts[i].count : 0];
-                data.push(info);
-              }
+              data = query.normalizedCounts.map(d => [d.date, d.normalized_ratio]);
             } else {
               data = query.counts.map(d => [d.date, d.count]);
             }
@@ -128,6 +122,7 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
           height={300}
           backgroundColor="#f5f5f5"
           onDataPointClick={this.handleDataPointClick}
+          normalizeYAxis={VIEW_NORMALIZED}
         />
         <div className="actions">
           <ActionMenu actionTextMsg={messages.downloadOptions}>

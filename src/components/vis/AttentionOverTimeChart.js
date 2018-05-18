@@ -23,6 +23,7 @@ const localMessages = {
   totalCount: { id: 'chart.storiesOverTime.totalCount',
     defaultMessage: 'We have collected {total, plural, =0 {No stories} one {One story} other {{formattedTotal} stories}}.',
   },
+  yAxisNormalizedTitle: { id: 'chart.storiesOverTime.series.yaxis', defaultMessage: 'Percentage of all Stories' },
 };
 
 /**
@@ -31,7 +32,7 @@ const localMessages = {
 class AttentionOverTimeChart extends React.Component {
 
   getConfig() {
-    const { backgroundColor } = this.props;
+    const { backgroundColor, normalizeYAxis } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
     const config = {
       title: formatMessage(localMessages.chartTitle),
@@ -79,7 +80,7 @@ class AttentionOverTimeChart extends React.Component {
       },
       yAxis: {
         min: 0,
-        title: { text: formatMessage(localMessages.seriesTitle) },
+        title: { text: normalizeYAxis ? formatMessage(localMessages.yAxisNormalizedTitle) : formatMessage(localMessages.seriesTitle) },
       },
       exporting: {
       },
@@ -186,6 +187,7 @@ AttentionOverTimeChart.propTypes = {
   introText: PropTypes.string,  // overrides automatic total string generation
   filename: PropTypes.string,
   showLegend: PropTypes.bool,
+  normalizeYAxis: PropTypes.boolean,
   // from composition chain
   intl: PropTypes.object.isRequired,
 };

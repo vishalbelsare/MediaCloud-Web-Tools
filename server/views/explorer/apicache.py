@@ -14,8 +14,11 @@ def normalized_and_story_split_count(mc_api_key, q, fq, open_q):
     for c in results['with_keywords']['counts']:
         total_count += c['count']
     results['with_keywords']['total_story_count'] = total_count
-    for c in results['without_keywords']['counts']:
-        total_count += c['count']
+    for full in results['without_keywords']['counts']:
+        total_count += full['count']
+        kw_match = [d for d in results['with_keywords']['counts'] if d['date'] == full['date']]
+        normalized = float(kw_match[0]['count']) / float(full['count'])
+        full['normalized_ratio'] = normalized
     results['without_keywords']['total_story_count'] = total_count
     return results
 
