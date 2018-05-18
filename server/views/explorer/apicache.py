@@ -17,7 +17,6 @@ def normalized_and_story_split_count(mc_api_key, q, fq, open_q):
     for c in results['without_keywords']['counts']:
         total_count += c['count']
     results['without_keywords']['total_story_count'] = total_count
-
     return results
 
 @cache.cache_on_arguments(function_key_generator=key_generator)
