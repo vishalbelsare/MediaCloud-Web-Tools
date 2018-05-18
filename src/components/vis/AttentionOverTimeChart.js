@@ -19,13 +19,15 @@ const localMessages = {
   chartTitle: { id: 'chart.storiesOverTime.title', defaultMessage: 'Attention Over Time' },
   tooltipSeriesName: { id: 'chart.storiesOverTime.tooltipSeriesName', defaultMessage: 'Series: {name}' },
   tooltipText: { id: 'chart.storiesOverTime.tooltipText', defaultMessage: 'Average {count} {count, plural, =1 {story} other {stories} }/day' },
-  normalizedTooltipText: { id: 'chart.storiesOverTime.normalizedTooltipText', defaultMessage: 'Average {count} % of stories/day' },
+  normalizedTooltipText: { id: 'chart.storiesOverTime.normalizedTooltipText', defaultMessage: '{count}% of stories/day' },
   seriesTitle: { id: 'chart.storiesOverTime.seriesTitle', defaultMessage: 'stories/day' },
   totalCount: { id: 'chart.storiesOverTime.totalCount',
     defaultMessage: 'We have collected {total, plural, =0 {No stories} one {One story} other {{formattedTotal} stories}}.',
   },
   yAxisNormalizedTitle: { id: 'chart.storiesOverTime.series.yaxis', defaultMessage: 'Percentage of all Stories' },
 };
+
+function makePercentage(value) { return value * 100; }
 
 /**
  * Pass in "data" if you are using one series, otherwise configure them yourself and pass in "series".
@@ -81,6 +83,7 @@ class AttentionOverTimeChart extends React.Component {
         },
       },
       yAxis: {
+        labels: { formatter: function afxn() { return normalizeYAxis === true ? `${makePercentage(this.value)}%` : this.value; } },
         min: 0,
         title: { text: normalizeYAxis === true ? formatMessage(localMessages.yAxisNormalizedTitle) : formatMessage(localMessages.seriesTitle) },
       },
