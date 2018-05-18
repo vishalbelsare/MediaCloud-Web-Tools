@@ -39,9 +39,9 @@ def explorer_story_count_csv():
                                                  media_ids=query_object['sources'],
                                                  tags_ids=query_object['collections'])
     story_count = apicache.normalized_and_story_split_count(api_key, solr_q, solr_fq, solr_open_query)
-    story_count_percentage = float(story_count['with_keywords']['total_story_count']) / float(story_count['without_keywords']['total_story_count'])
-    story_count_results.append({'query': label, 'with_keyword_total_story_count': story_count['with_keywords']['total_story_count'],'percentage': story_count_percentage,'without_keyword_total_story_count': story_count['without_keywords']['total_story_count']})
-    props = ['query', 'with_keyword_total_story_count', 'percentage','without_keyword_total_story_count']
+    story_count_ratio = float(story_count['with_keywords']['total_story_count']) / float(story_count['without_keywords']['total_story_count'])
+    story_count_results.append({'query': label, 'with_keyword_total_story_count': story_count['with_keywords']['total_story_count'],'ratio': story_count_ratio,'without_keyword_total_story_count': story_count['without_keywords']['total_story_count']})
+    props = ['query', 'with_keyword_total_story_count', 'ratio','without_keyword_total_story_count']
     return csv.stream_response(story_count_results, props, filename)
 
 
@@ -111,12 +111,12 @@ def api_explorer_story_split_count_csv():
     results_regular = sorted(results['with_keywords']['counts'], key=itemgetter('date'))
     results_open = sorted(results['without_keywords']['counts'], key=itemgetter('date'))
     results = [{'date': item['date'], 'story_count_keyword': item['count']} for item in results_regular]
-    results_no_keyword = [{'date': item['date'], 'story_count_without_keyword': item['count'], 'percentage': item['normalized_ratio']} for item in results_open]
+    results_no_keyword = [{'date': item['date'], 'story_count_without_keyword': item['count'], 'ratio': item['normalized_ratio']} for item in results_open]
     for k in results:
         for nk in results_no_keyword:
             if nk['date'] == k['date']:
                 k['story_count_without_keyword'] = nk['story_count_without_keyword']
-                k['percentage'] = nk['percentage']
-    props = ['date', 'story_count_keyword', 'percentage', 'story_count_without_keyword']
+                k['ratio'] = nk['ratio']
+    props = ['date', 'story_count_keyword', 'ratio', 'story_count_without_keyword']
     
     return csv.stream_response(results, props, filename)
