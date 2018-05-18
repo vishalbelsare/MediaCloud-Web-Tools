@@ -1,6 +1,27 @@
 {
   "releases": [
     {
+      "date": "2018-05-18",
+      "version": "v3.0.1",
+      "notes": [
+        {
+          "apps": ["topics"],
+          "type": "Fix",
+          "note": "Make sure attention chart only show sstories within the topic timespan you are looking at."
+        },
+        {
+          "apps": ["topics"],
+          "type": "Fix",
+          "note": "Correctly show chart of word use within a topic over time."
+        },
+        {
+          "apps": ["explorer"],
+          "type": "Feature",
+          "note": "See normalized attention charts in Explorer (baed on the same query, without the keywords)."
+        }
+      ]
+    },
+    {
       "date": "2018-05-17",
       "version": "v3.0.0",
       "notes": [
@@ -18,11 +39,6 @@
           "apps": ["explorer"],
           "type": "Fix",
           "note": "Saved searches from Dashboard now show up in Explorer."
-        },
-        {
-          "apps": ["explorer"],
-          "type": "Feature",
-          "note": "See normalized attention charts in Explorer (baed on the same query, without the keywords)."
         }
       ]
     },
