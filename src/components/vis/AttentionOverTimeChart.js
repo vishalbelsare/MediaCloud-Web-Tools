@@ -80,7 +80,7 @@ class AttentionOverTimeChart extends React.Component {
       },
       yAxis: {
         min: 0,
-        title: { text: normalizeYAxis ? formatMessage(localMessages.yAxisNormalizedTitle) : formatMessage(localMessages.seriesTitle) },
+        title: { text: normalizeYAxis === true ? formatMessage(localMessages.yAxisNormalizedTitle) : formatMessage(localMessages.seriesTitle) },
       },
       exporting: {
       },
@@ -187,7 +187,7 @@ AttentionOverTimeChart.propTypes = {
   introText: PropTypes.string,  // overrides automatic total string generation
   filename: PropTypes.string,
   showLegend: PropTypes.bool,
-  normalizeYAxis: PropTypes.boolean,
+  normalizeYAxis: PropTypes.bool,
   // from composition chain
   intl: PropTypes.object.isRequired,
 };

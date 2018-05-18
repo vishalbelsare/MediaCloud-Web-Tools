@@ -39,7 +39,8 @@ def explorer_story_count_csv():
                                                  media_ids=query_object['sources'],
                                                  tags_ids=query_object['collections'])
     story_count = apicache.normalized_and_story_split_count(api_key, solr_q, solr_fq, solr_open_query)
-    story_count_results.append({'query': label, 'with_keyword_total_story_count': story_count['with_keywords']['total_story_count'],'percentage': story_count['without_keywords']['normalized_ratio'],'without_keyword_total_story_count': story_count['without_keywords']['total_story_count']})
+    story_count_percentage = float(story_count['with_keywords']['total_story_count']) / float(story_count['without_keywords']['total_story_count'])
+    story_count_results.append({'query': label, 'with_keyword_total_story_count': story_count['with_keywords']['total_story_count'],'percentage': story_count_percentage,'without_keyword_total_story_count': story_count['without_keywords']['total_story_count']})
     props = ['query', 'with_keyword_total_story_count', 'percentage','without_keyword_total_story_count']
     return csv.stream_response(story_count_results, props, filename)
 

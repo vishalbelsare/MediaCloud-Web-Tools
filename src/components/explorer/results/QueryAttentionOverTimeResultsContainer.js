@@ -122,7 +122,7 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
           height={300}
           backgroundColor="#f5f5f5"
           onDataPointClick={this.handleDataPointClick}
-          normalizeYAxis={VIEW_NORMALIZED}
+          normalizeYAxis={this.state.view === VIEW_NORMALIZED}
         />
         <div className="actions">
           <ActionMenu actionTextMsg={messages.downloadOptions}>
