@@ -107,6 +107,7 @@ class QueryPickerLoadUserSearchesDialog extends React.Component {
           actions={actions}
           open={this.state.loadSearchDialogOpen}
           onRequestClose={this.handleDialogClose}
+          autoScrollBodyContent
         >
           {searchList}
         </Dialog>

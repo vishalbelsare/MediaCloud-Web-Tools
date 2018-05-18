@@ -36,11 +36,11 @@ def explorer_story_count_csv():
         filename = file_name_for_download(label, filename)
 
     solr_open_query = concatenate_query_for_solr(solr_seed_query='*',
-                                                 media_ids=request.args['sources'],
-                                                 tags_ids=request.args['collections'])
+                                                 media_ids=query_object['sources'],
+                                                 tags_ids=query_object['collections'])
     story_count = apicache.normalized_and_story_split_count(api_key, solr_q, solr_fq, solr_open_query)
-    story_count_results.append({'query': label, 'count': story_count['count']})
-    props = ['query', 'count', 'total_counts']
+    story_count_results.append({'query': label, 'with_keyword_total_story_count': story_count['with_keywords']['total_story_count'],'without_keyword_total_story_count': story_count['without_keywords']['total_story_count']})
+    props = ['query', 'with_keyword_total_story_count', 'without_keyword_total_story_count']
     return csv.stream_response(story_count_results, props, filename)
 
 

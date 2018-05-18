@@ -12,7 +12,12 @@
         {
           "apps": ["topics", "explorer", "sources"],
           "type": "Fix",
-          "note": "Changed the default sample size for word clouds to 1,000 (for performance reasons). More details coming soon as we validate that."
+          "note": "The default sample size for word clouds is now 1,000 stories (for performance reasons). More details coming soon as we validate that."
+        },
+        {
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Saved searches from Dashboard now show up in Explorer."
         }
       ]
     },
