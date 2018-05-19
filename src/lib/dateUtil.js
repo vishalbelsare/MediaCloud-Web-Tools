@@ -143,11 +143,7 @@ export function cleanDateCounts(countsMap) {
   Object.keys(countsMap).forEach((k) => {
     const v = countsMap[k];
     const timestamp = parseInt(solrTimestamp(v.date), 10);
-    if (v.normalized_ratio) {
-      countsArray.push({ date: timestamp, percentage: v.normalized_ratio });
-    } else {
-      countsArray.push({ date: timestamp, count: v.count });
-    }
+    countsArray.push({ ...v, date: timestamp });
   });
   return countsArray.sort((a, b) => a.date - b.date);
 }

@@ -85,7 +85,7 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
           if (query.counts || query.normalizedCounts) {
             let data;
             if (this.state.view === VIEW_NORMALIZED) {
-              data = query.normalizedCounts.map(d => [d.date, d.percentage]);
+              data = query.counts.map(d => [d.date, d.ratio]);
             } else {
               data = query.counts.map(d => [d.date, d.count]);
             }

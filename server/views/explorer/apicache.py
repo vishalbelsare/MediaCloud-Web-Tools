@@ -1,5 +1,7 @@
+from operator import itemgetter
+
 from server import mc, TOOL_API_KEY
-from server.views import TAG_COUNT_UI_LENGTH, TAG_COUNT_SAMPLE_SIZE
+from server.views import TAG_COUNT_UI_LENGTH
 from server.cache import cache, key_generator
 from server.auth import user_mediacloud_client, user_mediacloud_key, is_user_logged_in, user_admin_mediacloud_client
 from server.util.tags import processed_by_cliff_query_clause
@@ -8,19 +10,29 @@ import server.util.wordembeddings as wordembeddings
 
 def normalized_and_story_split_count(mc_api_key, q, fq, open_q):
     results = {}
-    total_count = 0
-    results['with_keywords'] = cached_story_split_count(mc_api_key, q, fq)
-    results['without_keywords'] = cached_story_split_count(mc_api_key, open_q, fq)
-    for c in results['with_keywords']['counts']:
-        total_count += c['count']
-    results['with_keywords']['total_story_count'] = total_count
-    for full in results['without_keywords']['counts']:
-        total_count += full['count']
-        kw_match = [d for d in results['with_keywords']['counts'] if d['date'] == full['date']]
-        normalized = float(kw_match[0]['count']) / float(full['count'])
-        full['normalized_ratio'] = normalized
-    results['without_keywords']['total_story_count'] = total_count
+    counts = []
+    data = cached_story_split_count(mc_api_key, q, fq)
+    all_stories = cached_story_split_count(mc_api_key, open_q, fq)
+    for day in all_stories['counts']:
+        day_info = {
+            'date': day['date'],
+            'total_count': day['count']
+        }
+        matching = [d for d in data['counts'] if d['date'] == day['date']]
+        if len(matching) == 0:
+            day_info['count'] = 0
+        else:
+            day_info['count'] = matching[0]['count']
+        if day_info['count'] == 0 or day['count'] == 0:
+            day_info['ratio'] = 0
+        else:
+            day_info['ratio'] = float(day_info['count']) / float(day['count'])
+        counts.append(day_info)
+    results['counts'] = sorted(counts, key=itemgetter('date'))
+    results['total'] = sum([day['count'] for day in data['counts']])
+    results['normalized_total'] = sum([day['count'] for day in all_stories['counts']])
     return results
+
 
 @cache.cache_on_arguments(function_key_generator=key_generator)
 def cached_story_split_count(mc_api_key, q, fq):
