@@ -5,11 +5,6 @@
       "version": "v3.0.1",
       "notes": [
         {
-          "apps": ["explorer", "topics", "sources"],
-          "type": "Feature",
-          "note": "Switched to story-based searching (<a href=\"https://mediacloud.org/news/2018/4/12/switching-to-story-based-searching-on-may-12th\" target=\"_new\">learn more</a>)."
-        },
-        {
           "apps": ["topics"],
           "type": "Fix",
           "note": "Make sure attention chart only show stories within the topic timespan you are looking at."
@@ -23,6 +18,11 @@
           "apps": ["explorer"],
           "type": "Feature",
           "note": "See normalized attention charts in Explorer (based on the same query, without the keywords)."
+        },
+        {
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Fix attention chart to render 0s correctly when there are no stories matching your query."
         }
       ]
     },
