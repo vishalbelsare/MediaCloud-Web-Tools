@@ -20,7 +20,7 @@ const localMessages = {
   descriptionIntro: { id: 'explorer.attention.lineChart.intro', defaultMessage: '<p>Compare the attention paid to your queries over time to understand how they are covered. This chart shows the number of stories that match each of your queries. Spikes in attention can reveal key events. Plateaus can reveal stable, "normal", attention levels. Click a point to see words and headlines for those dates. Use the "view options" menu to switch between story counts and a percentage.</p>' },
   descriptionDetail: { id: 'explorer.attention.lineChart.detail', defaultMessage: '<p>This chart includes one line for each query in your search. Each line charts the number of stories that matched your query per day in the sources and collections you have specified.</p><p>Roll over the line chart to see the stories per day in that period of time. Click the download button in the top right to download the raw counts in a CSV spreadsheet. Click the three lines in the top right of the chart to export the chart as an image file.</p><p><b>Counts vs. Percentage</b><br />You can view the attention devoted to your issue in terms of absolute counts or as percentages.  Absolute counts suffer from weekly ebbs and flows, and while searching collections don\'t reflect when we add more sources.  You can switch to view percentages in order to see normalized results that you can compare across sources and collections. To generate the normalization we run each query again without the keywords.</p>' },
   withKeywords: { id: 'explorer.attention.mode.withkeywords', defaultMessage: 'View Story Count (default)' },
-  withoutKeywords: { id: 'explorer.attention.mode.withoutkeywords', defaultMessage: 'View Story Count Percentage' },
+  withoutKeywords: { id: 'explorer.attention.mode.withoutkeywords', defaultMessage: 'View Story Percentage' },
 };
 
 const VIEW_NORMALIZED = 'VIEW_NORMALIZED';
@@ -103,15 +103,15 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
       <span key={'temp'}>
         <MenuItem
           className="action-icon-menu-item"
-          primaryText={formatMessage(localMessages.withoutKeywords)}
-          disabled={this.state.view === VIEW_NORMALIZED}
-          onTouchTap={() => this.setView(VIEW_NORMALIZED)}
+          primaryText={formatMessage(localMessages.withKeywords)}
+          disabled={this.state.view === VIEW_REGULAR}
+          onClick={() => this.setView(VIEW_REGULAR)}
         />
         <MenuItem
           className="action-icon-menu-item"
-          primaryText={formatMessage(localMessages.withKeywords)}
-          disabled={this.state.view === VIEW_REGULAR}
-          onTouchTap={() => this.setView(VIEW_REGULAR)}
+          primaryText={formatMessage(localMessages.withoutKeywords)}
+          disabled={this.state.view === VIEW_NORMALIZED}
+          onClick={() => this.setView(VIEW_NORMALIZED)}
         />
       </span>,
     ];
