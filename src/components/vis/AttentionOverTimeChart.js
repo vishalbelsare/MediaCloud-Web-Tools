@@ -18,7 +18,7 @@ const SERIES_MARKER_THRESHOLD = 30;
 const localMessages = {
   chartTitle: { id: 'chart.storiesOverTime.title', defaultMessage: 'Attention Over Time' },
   tooltipSeriesName: { id: 'chart.storiesOverTime.tooltipSeriesName', defaultMessage: 'Series: {name}' },
-  tooltipText: { id: 'chart.storiesOverTime.tooltipText', defaultMessage: 'Average {count} {count, plural, =1 {story} other {stories} }/day' },
+  tooltipText: { id: 'chart.storiesOverTime.tooltipText', defaultMessage: '{count} {count, plural, =1 {story} other {stories} }/day' },
   normalizedTooltipText: { id: 'chart.storiesOverTime.normalizedTooltipText', defaultMessage: '{count}% of stories/day' },
   seriesTitle: { id: 'chart.storiesOverTime.seriesTitle', defaultMessage: 'stories/day' },
   totalCount: { id: 'chart.storiesOverTime.totalCount',
@@ -90,6 +90,9 @@ class AttentionOverTimeChart extends React.Component {
       exporting: {
       },
     };
+    if (normalizeYAxis) {
+      config.yAxis.max = 1; // don't go over 100%
+    }
     return config;
   }
 
