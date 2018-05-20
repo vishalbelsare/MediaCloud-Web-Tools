@@ -8,6 +8,14 @@ from server.util.tags import processed_by_cliff_query_clause
 import server.util.wordembeddings as wordembeddings
 
 
+def normalized_and_story_count(q, fq, open_q):
+    results = {}
+    mc_api_key = _api_key()
+    results['total'] = _cached_total_story_count(mc_api_key, q, fq)['count']
+    results['normalized_total'] = _cached_total_story_count(mc_api_key, open_q, fq)['count']
+    return results
+
+
 def normalized_and_story_split_count(mc_api_key, q, fq, open_q):
     results = {}
     counts = []

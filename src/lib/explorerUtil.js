@@ -81,7 +81,7 @@ export function queryChangedEnoughToUpdate(queries, nextQueries, results, nextRe
 export const autoMagicQueryLabel = query => decodeURIComponent(trimToMaxLength(query.q, QUERY_LABEL_AUTOMAGIC_DISPLAY_LIMIT));
 
 
-// This handles samples or user-generated queries for you.  To handle quotes and utf and such, we do this
+// This handles downloading a single query (samples or user-generated) for you.  To handle quotes and utf and such, we do this
 // via a form submission (after trying lots of other options).
 export function postToDownloadUrl(url, query, otherData) {
   // figure out if it is sample or user-created query
@@ -90,6 +90,20 @@ export function postToDownloadUrl(url, query, otherData) {
     data.sampleId = query.searchId;
   } else {
     data.q = JSON.stringify(generateQueryParamObject(query, true)); // don't encode the params because we're not putting them on the url
+  }
+  if (otherData) {
+    data = { ...data, ...otherData };
+  }
+  downloadViaFormPost(url, data);
+}
+
+// This handles downloading *multiple* queries (samples or user-generated) for you.  To handle quotes and utf and such, we do this
+// via a form submission (after trying lots of other options).
+export function postToCombinedDownloadUrl(url, queries, otherData) {
+  // figure out if it is sample or user-created query
+  let data = { queries: JSON.stringify(queries.map(q => generateQueryParamObject(q, true))) };
+  if (parseInt(queries[0].searchId, 10) >= 0) {
+    data.sampleId = queries[0].searchId;
   }
   if (otherData) {
     data = { ...data, ...otherData };

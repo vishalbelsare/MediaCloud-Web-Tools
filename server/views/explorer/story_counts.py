@@ -2,7 +2,6 @@ import logging
 from flask import jsonify, request
 import flask_login
 import json
-from operator import itemgetter
 
 from server import app, TOOL_API_KEY
 from server.auth import user_mediacloud_key, is_user_logged_in
@@ -19,29 +18,29 @@ logger = logging.getLogger(__name__)
 @app.route('/api/explorer/stories/count.csv', methods=['POST'])
 def explorer_story_count_csv():
     filename = u'story-count'
-    story_count_results = []
     data = request.form
-    api_key = user_mediacloud_key() if is_user_logged_in() else TOOL_API_KEY
     if 'searchId' in data:
         # TODO: don't load this query twice because that is kind of dumb
-        solr_q, solr_fq = parse_as_sample(data['searchId'], data['index'])
-        filename = filename  # don't have this info + current_query['q']
         sample_searches = load_sample_searches()
-        query_object = sample_searches[data['searchId']]['queries'][data['index']]
-        label = query_object['label']
+        queries = sample_searches[data['searchId']]['queries']
     else:
-        query_object = json.loads(data['q'])
-        solr_q, solr_fq = parse_query_with_keywords(query_object)
-        label = query_object['label']
-        filename = file_name_for_download(label, filename)
-
-    solr_open_query = concatenate_query_for_solr(solr_seed_query='*',
-                                                 media_ids=query_object['sources'],
-                                                 tags_ids=query_object['collections'])
-    story_count = apicache.normalized_and_story_split_count(api_key, solr_q, solr_fq, solr_open_query)
-    story_count_ratio = float(story_count['with_keywords']['total_story_count']) / float(story_count['without_keywords']['total_story_count'])
-    story_count_results.append({'query': label, 'with_keyword_total_story_count': story_count['with_keywords']['total_story_count'],'ratio': story_count_ratio,'without_keyword_total_story_count': story_count['without_keywords']['total_story_count']})
-    props = ['query', 'with_keyword_total_story_count', 'ratio','without_keyword_total_story_count']
+        queries = json.loads(data['queries'])
+    label = " ".join([q['label'] for q in queries])
+    filename = file_name_for_download(label, filename)
+    # now compute total attention for all results
+    story_count_results = []
+    for q in queries:
+        solr_q, solr_fq = parse_query_with_keywords(q)
+        solr_open_query = concatenate_query_for_solr(solr_seed_query='*', media_ids=q['sources'],
+                                                     tags_ids=q['collections'])
+        story_counts = apicache.normalized_and_story_count(solr_q, solr_fq, solr_open_query)
+        story_count_results.append({
+            'query': q['label'],
+            'matching_stories': story_counts['total'],
+            'total_stories': story_counts['normalized_total'],
+            'ratio': float(story_counts['total']) / float(story_counts['normalized_total'])
+        })
+    props = ['query', 'matching_stories', 'total_stories', 'ratio']
     return csv.stream_response(story_count_results, props, filename)
 
 

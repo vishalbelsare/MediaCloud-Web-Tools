@@ -8,7 +8,7 @@ import composeSummarizedVisualization from './SummarizedVizualization';
 import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import BubbleRowChart from '../../vis/BubbleRowChart';
-import { queryChangedEnoughToUpdate, postToDownloadUrl, downloadExplorerSvg } from '../../../lib/explorerUtil';
+import { queryChangedEnoughToUpdate, postToCombinedDownloadUrl, downloadExplorerSvg } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
 import { FETCH_INVALID } from '../../../lib/fetchConstants';
 
@@ -22,7 +22,8 @@ const localMessages = {
   helpDetails: { id: 'explorer.storyCount.help.details',
     defaultMessage: '<p>It is harder to determine how much of the media\'s attention your search got. If you want to dig into that, a good place to start is comparing your query to a search for everything from the sources and collections you are searching.  You can do this by searching for * in the same date range and media; that matches every story.</p>',
   },
-  downloadCSV: { id: 'explorer.attention.downloadcsv', defaultMessage: 'Download {name}' },
+  downloadCSV: { id: 'explorer.attention.downloadCSV', defaultMessage: 'Download total attention CSV' },
+  downloadSVG: { id: 'explorer.attention.downloadSVG', defaultMessage: 'Download total attention SVG' },
 };
 
 class QueryTotalAttentionResultsContainer extends React.Component {
@@ -31,8 +32,8 @@ class QueryTotalAttentionResultsContainer extends React.Component {
     return queryChangedEnoughToUpdate(queries, nextProps.queries, results, nextProps.results);
   }
   // if demo, use only sample search queries to download
-  downloadCsv = (query) => {
-    postToDownloadUrl('/api/explorer/stories/count.csv', query);
+  downloadCsv = (queries) => {
+    postToCombinedDownloadUrl('/api/explorer/stories/count.csv', queries);
   }
   render() {
     const { results, queries } = this.props;
@@ -64,22 +65,18 @@ class QueryTotalAttentionResultsContainer extends React.Component {
         {content}
         <div className="actions">
           <ActionMenu actionTextMsg={messages.downloadOptions}>
-            {safeResults.map((q, idx) =>
-              <span key={`q${idx}-items`}>
-                <MenuItem
-                  className="action-icon-menu-item"
-                  primaryText={formatMessage(messages.downloadDataCsv, { name: q.label })}
-                  rightIcon={<DownloadButton />}
-                  onTouchTap={() => this.downloadCsv(q)}
-                />
-                <MenuItem
-                  className="action-icon-menu-item"
-                  primaryText={formatMessage(messages.downloadDataSvg, { name: q.label })}
-                  rightIcon={<DownloadButton />}
-                  onTouchTap={() => downloadExplorerSvg(q.label, 'story-count', BUBBLE_CHART_DOM_ID)}
-                />
-              </span>
-            )}
+            <MenuItem
+              className="action-icon-menu-item"
+              primaryText={formatMessage(localMessages.downloadCSV)}
+              rightIcon={<DownloadButton />}
+              onTouchTap={() => this.downloadCsv(safeResults)}
+            />
+            <MenuItem
+              className="action-icon-menu-item"
+              primaryText={formatMessage(localMessages.downloadSVG)}
+              rightIcon={<DownloadButton />}
+              onTouchTap={() => downloadExplorerSvg('total', 'story-count', BUBBLE_CHART_DOM_ID)}
+            />
           </ActionMenu>
         </div>
       </div>
