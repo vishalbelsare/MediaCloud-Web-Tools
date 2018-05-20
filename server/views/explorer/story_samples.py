@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 @api_error_handler
 def api_explorer_story_sample():
     solr_q, solr_fq = parse_query_with_keywords(request.args)
-    story_sample_result = apicache.random_story_list(user_mediacloud_key(), solr_q, solr_fq, 50)
+    story_sample_result = apicache.random_story_list(solr_q, solr_fq, 50)
     return jsonify(story_sample_result)  
 
 
@@ -29,7 +29,6 @@ def api_explorer_story_sample():
 @api_error_handler
 def api_explorer_demo_story_sample():
     search_id = int(request.args['search_id']) if 'search_id' in request.args else None
-    api_key = user_mediacloud_key() if is_user_logged_in() else TOOL_API_KEY
     if search_id not in [None, -1]:
         sample_searches = load_sample_searches()
         current_search = sample_searches[search_id]['queries']
@@ -37,7 +36,7 @@ def api_explorer_demo_story_sample():
     else:
         solr_q, solr_fq = parse_query_with_keywords(request.args)
 
-    story_sample_result = apicache.random_story_list(api_key, solr_q, solr_fq, 50)
+    story_sample_result = apicache.random_story_list(solr_q, solr_fq, 50)
     return jsonify(story_sample_result)  
 
 

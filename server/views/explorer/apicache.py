@@ -111,12 +111,12 @@ def _cached_total_story_count(api_key, q, fq):
     return count
 
 
-def random_story_list(mc_api_key, q, fq, limit):
-    return story_list_page(mc_api_key, q, fq, stories_per_page=limit, sort=mc.SORT_RANDOM)
+def random_story_list(q, fq, limit):
+    return story_list_page(q, fq, stories_per_page=limit, sort=mc.SORT_RANDOM)
 
 
-def story_list_page(mc_api_key, q, fq, last_processed_stories_id=None, stories_per_page=1000, sort=mc.SORT_PROCESSED_STORIES_ID):
-    return _cached_story_list_page(mc_api_key, q, fq, last_processed_stories_id, stories_per_page, sort)
+def story_list_page(q, fq, last_processed_stories_id=None, stories_per_page=1000, sort=mc.SORT_PROCESSED_STORIES_ID):
+    return _cached_story_list_page(_api_key(), q, fq, last_processed_stories_id, stories_per_page, sort)
 
 
 @cache.cache_on_arguments(function_key_generator=key_generator)
