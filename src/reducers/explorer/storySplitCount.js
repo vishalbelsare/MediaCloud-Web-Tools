@@ -11,7 +11,8 @@ const storySplitCount = createIndexedAsyncReducer({
   handleSuccess: payload => ({
     counts: cleanDateCounts(payload.results.counts),
     total: payload.results.total,
-    normalizedTotal: payload.results.normalzied_total,
+    normalizedTotal: payload.results.normalized_total,
+    ratio: payload.results.total / payload.results.normalized_total,
   }),
   [SELECT_DATA_POINT]: payload => ({
     dataPoint: payload,
