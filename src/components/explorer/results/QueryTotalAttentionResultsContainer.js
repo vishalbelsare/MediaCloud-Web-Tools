@@ -150,7 +150,7 @@ const mapDispatchToProps = () => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-       composeSummarizedVisualization(localMessages.title, localMessages.helpIntro, [localMessages.helpDetails, messages.countsVsPercentageHelp])(
+      composeSummarizedVisualization(localMessages.title, localMessages.helpIntro, [localMessages.helpDetails, messages.countsVsPercentageHelp])(
         composeAsyncContainer(
           QueryTotalAttentionResultsContainer
         )

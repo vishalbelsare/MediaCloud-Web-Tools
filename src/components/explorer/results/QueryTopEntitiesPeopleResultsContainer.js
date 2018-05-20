@@ -46,13 +46,15 @@ class QueryTopEntitiesPeopleResultsContainer extends React.Component {
           options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
           onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
         />
-        <EntitiesTable
-          className="explorer-entity"
-          entityColNameMsg={localMessages.person}
-          entities={results[this.state.selectedQueryIndex].results}
-          onClick={e => handleEntitySelection(e, queries[0].searchId)}
-          maxTitleLength={50}
-        />
+        {results[this.state.selectedQueryIndex] &&
+          <EntitiesTable
+            className="explorer-entity"
+            entityColNameMsg={localMessages.person}
+            entities={results[this.state.selectedQueryIndex].results}
+            onClick={e => handleEntitySelection(e, queries[0].searchId)}
+            maxTitleLength={50}
+          />
+        }
         <div className="actions">
           <ActionMenu actionTextMsg={messages.downloadOptions}>
             {queries.map((q, idx) =>

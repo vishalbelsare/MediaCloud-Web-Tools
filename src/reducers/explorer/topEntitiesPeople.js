@@ -1,7 +1,6 @@
 import { createIndexedAsyncReducer } from '../../lib/reduxHelpers';
 import { FETCH_TOP_ENTITIES_PEOPLE, RESET_ENTITIES_PEOPLE } from '../../actions/explorerActions';
-// import { cleanDateCounts } from '../../lib/dateUtil';
-// import * as fetchConstants from '../../lib/fetchConstants';
+import * as fetchConstants from '../../lib/fetchConstants';
 
 const topEntitiesPeople = createIndexedAsyncReducer({
   initialState: ({
@@ -9,7 +8,7 @@ const topEntitiesPeople = createIndexedAsyncReducer({
   }),
   action: FETCH_TOP_ENTITIES_PEOPLE,
   [RESET_ENTITIES_PEOPLE]: () => ({
-    fetchStatus: '', fetchStatuses: [], results: [],
+    fetchStatus: fetchConstants.FETCH_INVALID, fetchStatuses: [], results: [],
   }),
 });
 export default topEntitiesPeople;
