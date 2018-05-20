@@ -1,6 +1,17 @@
 {
   "releases": [
     {
+      "date": "2018-05-19",
+      "version": "v3.0.2",
+      "notes": [
+        {
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Clicking on attention chart to drill down with sentence excerpts for the day works again."
+        }
+      ]
+    },
+    {
       "date": "2018-05-18",
       "version": "v3.0.1",
       "notes": [
