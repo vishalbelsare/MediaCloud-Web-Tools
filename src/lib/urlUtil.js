@@ -17,7 +17,7 @@ export function storyDomainName(story) {
     tempATag.href = story.url;
   }
   // get the domain without any subdomain
-  const domain = tempATag.hostname.split('.').slice(-2).join('.');
+  const domain = tempATag.hostname;
   return domain;
 }
 

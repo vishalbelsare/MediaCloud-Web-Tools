@@ -47,9 +47,15 @@ def sentence_list(mc_api_key, q, fq, rows=10):
 
 
 @cache.cache_on_arguments(function_key_generator=key_generator)
-def _cached_sentence_list(mc_api_key, q, fq, rows):
-    local_mc = _mc_client(True)     # need to get an admin client to fetch sentence list
-    return local_mc.sentenceList(q, fq, rows=rows)
+def _cached_sentence_list(mc_api_key, q, fq, rows, include_stories=True):
+    # need to get an admin client with the tool key so they have sentence read permissions
+    tool_mc = user_admin_mediacloud_client(mc_api_key)
+    sentences = tool_mc.sentenceList(q, fq, rows=rows)
+    if include_stories:
+        for s in sentences:
+            local_mc = _mc_client()
+            s['story'] = local_mc.story(s['stories_id'])
+    return sentences
 
 
 def top_tags_with_coverage(q, fq, tag_sets_id, limit=TAG_COUNT_UI_LENGTH):

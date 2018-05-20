@@ -11,32 +11,32 @@ const localMessages = {
 };
 
 const StorySentencePreview = (props) => {
-  const { stories } = props;
+  const { sentences } = props;
   const { formatMessage, formatDate } = props.intl;
   return (
     <div className="story-sentence-preview">
-      {stories.map((story, idx) => {
-        let dateToShow = null;  // need to handle undateable stories
-        if (story.publish_date === 'undateable') {
+      {sentences.map((sentence, idx) => {
+        let dateToShow = null;  // need to handle undateable sentences
+        if (sentence.story.publish_date === 'undateable') {
           dateToShow = formatMessage(localMessages.undateable);
         } else {
-          dateToShow = formatDate(storyPubDateToTimestamp(story.publish_date));
-          if (story.date_is_reliable === 0) {
+          dateToShow = formatDate(storyPubDateToTimestamp(sentence.story.publish_date));
+          if (sentence.story.date_is_reliable === 0) {
             dateToShow += '?';
           }
         }
-        const domainName = storyDomainName(story);
+        const domainName = storyDomainName(sentence.story);
         return (
           <div key={idx} className="story-sentence-preview-item">
-            <p>{`"...${story.sentence}..."`}</p>
+            <p>{`"...${sentence.sentence}..."`}</p>
             <h4>
-              <a href={story.url} rel="noopener noreferrer" target="_blank">
+              <a href={sentence.story.url} rel="noopener noreferrer" target="_blank">
                 <img
                   className="google-icon"
                   src={googleFavIconUrl(domainName)}
                   alt={formatMessage(localMessages.readArticle)}
                 />
-                {story.medium_name}
+                {sentence.story.medium_name || storyDomainName(sentence.story)}
                 <small>{dateToShow}</small>
               </a>
             </h4>
@@ -48,7 +48,7 @@ const StorySentencePreview = (props) => {
 };
 
 StorySentencePreview.propTypes = {
-  stories: PropTypes.array.isRequired,
+  sentences: PropTypes.array.isRequired,
   intl: PropTypes.object.isRequired,
   onChangeFocusSelection: PropTypes.func,
   sortedBy: PropTypes.string,
