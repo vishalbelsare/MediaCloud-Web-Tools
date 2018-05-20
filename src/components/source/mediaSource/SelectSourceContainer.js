@@ -40,7 +40,7 @@ class SelectSourceContainer extends React.Component {
     const { source } = this.props;
     const endDate = getCurrentDate();
     const startDate = oneMonthBefore(endDate);
-    const explorerUrl = urlToExplorerQuery(source.name || source.url, '*', source.id, '', startDate, endDate);
+    const explorerUrl = urlToExplorerQuery(source.name || source.url, '*', [source.id], [], startDate, endDate);
     evt.preventDefault();
     window.open(explorerUrl, '_blank');
   }
