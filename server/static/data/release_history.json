@@ -1,6 +1,22 @@
 {
   "releases": [
     {
+      "date": "2018-05-20",
+      "version": "v3.0.3",
+      "notes": [
+        {
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Downloading story-list and story-count CSVs in explorer works again."
+        },
+        {
+          "apps": ["explorer"],
+          "type": "Feature",
+          "note": "See normalized total attention in Explorer (based on the same query, without the keywords)."
+        }
+      ]
+    },
+    {
       "date": "2018-05-19",
       "version": "v3.0.2",
       "notes": [
