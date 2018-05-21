@@ -16,9 +16,10 @@ def normalized_and_story_count(q, fq, open_q):
     return results
 
 
-def normalized_and_story_split_count(mc_api_key, q, fq, open_q):
+def normalized_and_story_split_count(q, fq, open_q):
     results = {}
     counts = []
+    mc_api_key = _api_key()
     data = cached_story_split_count(mc_api_key, q, fq)
     all_stories = cached_story_split_count(mc_api_key, open_q, fq)
     for day in all_stories['counts']:

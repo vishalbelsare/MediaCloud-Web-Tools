@@ -60,7 +60,7 @@ def api_explorer_story_split_count():
     solr_open_query = concatenate_query_for_solr(solr_seed_query='*',
                                                  media_ids=request.args['sources'],
                                                  tags_ids=request.args['collections'])
-    results = apicache.normalized_and_story_split_count(user_mediacloud_key(), solr_q, solr_fq, solr_open_query)
+    results = apicache.normalized_and_story_split_count(solr_q, solr_fq, solr_open_query)
 
     return jsonify({'results': results})
 
@@ -70,7 +70,6 @@ def api_explorer_story_split_count():
 @api_error_handler
 def api_explorer_demo_story_split_count():
     search_id = int(request.args['search_id']) if 'search_id' in request.args else None
-    index = int(request.args['index']) if 'index' in request.args else None
 
     if isinstance(search_id, int) and search_id not in [None, -1]:
         SAMPLE_SEARCHES = load_sample_searches()
@@ -82,7 +81,7 @@ def api_explorer_demo_story_split_count():
     solr_open_query = concatenate_query_for_solr(solr_seed_query='*',
                                                  media_ids=[],
                                                  tags_ids=DEFAULT_COLLECTION_IDS)
-    results = apicache.normalized_and_story_split_count(TOOL_API_KEY, solr_q, solr_fq, solr_open_query)
+    results = apicache.normalized_and_story_split_count(solr_q, solr_fq, solr_open_query)
 
     return jsonify({'results': results})
 
@@ -92,7 +91,6 @@ def api_explorer_demo_story_split_count():
 def api_explorer_story_split_count_csv():
     filename = u'stories-over-time'
     data = request.form
-    solr_open_query = data
     if 'searchId' in data:
         solr_q, solr_fq = parse_as_sample(data['searchId'], data['index'])
         filename = filename  # don't have this info + current_query['q']
@@ -104,6 +102,6 @@ def api_explorer_story_split_count_csv():
     solr_open_query = concatenate_query_for_solr(solr_seed_query='*',
                                                  media_ids=query_object['sources'],
                                                  tags_ids=query_object['collections'])
-    results = apicache.normalized_and_story_split_count(user_mediacloud_key(), solr_q, solr_fq, solr_open_query)
+    results = apicache.normalized_and_story_split_count(solr_q, solr_fq, solr_open_query)
     props = ['date', 'count', 'total_count', 'ratio']
     return csv.stream_response(results['counts'], props, filename)
