@@ -7,12 +7,17 @@
         {
           "apps": ["explorer"],
           "type": "Fix",
-          "note": "Downloading story-list and story-count CSVs in explorer works again."
+          "note": "Downloading story-list and story-count CSVs in Explorer works again."
         },
         {
           "apps": ["explorer"],
           "type": "Feature",
           "note": "See normalized total attention in Explorer (based on the same query, without the keywords)."
+        },
+        {
+          "apps": ["sources"],
+          "type": "Fix",
+          "note": "Links in the various Source Manager pages to \"seach in Explorer\" work again."
         }
       ]
     },
