@@ -9,8 +9,8 @@ const splitStoryCount = createAsyncReducer({
   },
   action: FETCH_WORD_SPLIT_STORY_COUNT,
   handleSuccess: payload => ({
-    total: payload.results.total_story_count,
-    counts: cleanDateCounts(payload.results.counts),
+    total: payload.total_story_count,
+    counts: cleanDateCounts(payload.counts),
   }),
 });
 

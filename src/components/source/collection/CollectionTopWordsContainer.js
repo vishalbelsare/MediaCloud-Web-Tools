@@ -25,11 +25,11 @@ class CollectionTopWordsContainer extends React.Component {
   }
 
   handleWordClick = (word) => {
-    const { collectionId } = this.props;
+    const { collectionName, collectionId } = this.props;
     const endDate = getCurrentDate();
     const startDate = oneMonthBefore(endDate);
     const searchStr = `${word.stem}*`;
-    const explorerUrl = urlToExplorerQuery(collectionId, searchStr, collectionId, '', startDate, endDate);
+    const explorerUrl = urlToExplorerQuery(collectionName, searchStr, [], [collectionId], startDate, endDate);
     window.open(explorerUrl, '_blank');
   }
 
@@ -57,6 +57,7 @@ class CollectionTopWordsContainer extends React.Component {
 CollectionTopWordsContainer.propTypes = {
   // from parent
   collectionId: PropTypes.number.isRequired,
+  collectionName: PropTypes.string.isRequired,
   // from dispath
   asyncFetch: PropTypes.func.isRequired,
   fetchData: PropTypes.func.isRequired,

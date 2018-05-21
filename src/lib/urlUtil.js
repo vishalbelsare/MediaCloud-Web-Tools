@@ -17,7 +17,7 @@ export function storyDomainName(story) {
     tempATag.href = story.url;
   }
   // get the domain without any subdomain
-  const domain = tempATag.hostname.split('.').slice(-2).join('.');
+  const domain = tempATag.hostname;
   return domain;
 }
 
@@ -56,13 +56,9 @@ export function urlToDashboardQuery(name, keywords, sourceIds, collectionIds, st
 
 export function urlToExplorerQuery(name, keywords, sourceIds, collectionIds, startDate, endDate) {
   const color = encodeURIComponent(`#${getBrandDarkerColor().substr(1)}`);
-  let sources = sourceIds;
-  if (!sources || sources.length === 0) {
-    sources = '[]';
-  }
-  let collections = collectionIds;
-  if (!collections || collections.length === 0) {
-    collections = '[]';
-  }
-  return `https://explorer.mediacloud.org/#/queries/search?q=[{"label":"${encodeURIComponent(name)}","q":"${encodeURIComponent(keywords)}","color":"${color}","startDate":"${startDate}","endDate":"${endDate}","sources":${sources},"collections":${collections}}]`;
+  let sources = sourceIds || [];
+  let collections = collectionIds || [];
+  sources = sources.map(mediaId => parseInt(mediaId, 10));
+  collections = collections.map(tagsId => parseInt(tagsId, 10));
+  return `https://explorer.mediacloud.org/#/queries/search?q=[{"label":"${encodeURIComponent(name)}","q":"${encodeURIComponent(keywords)}","color":"${color}","startDate":"${startDate}","endDate":"${endDate}","sources":${JSON.stringify(sources)},"collections":${JSON.stringify(collections)}}]`;
 }

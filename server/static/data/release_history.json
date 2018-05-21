@@ -1,6 +1,64 @@
 {
   "releases": [
     {
+      "date": "2018-05-20",
+      "version": "v3.0.3",
+      "notes": [
+        {
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Downloading story-list and story-count CSVs in Explorer works again."
+        },
+        {
+          "apps": ["explorer"],
+          "type": "Feature",
+          "note": "See normalized total attention in Explorer (based on the same query, without the keywords)."
+        },
+        {
+          "apps": ["sources"],
+          "type": "Fix",
+          "note": "Links in the various Source Manager pages to \"seach in Explorer\" work again."
+        }
+      ]
+    },
+    {
+      "date": "2018-05-19",
+      "version": "v3.0.2",
+      "notes": [
+        {
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Clicking on attention chart to drill down with sentence excerpts for the day works again."
+        }
+      ]
+    },
+    {
+      "date": "2018-05-18",
+      "version": "v3.0.1",
+      "notes": [
+        {
+          "apps": ["topics"],
+          "type": "Fix",
+          "note": "Make sure attention chart only show stories within the topic timespan you are looking at."
+        },
+        {
+          "apps": ["topics"],
+          "type": "Fix",
+          "note": "Correctly show chart of word use within a topic over time."
+        },
+        {
+          "apps": ["explorer"],
+          "type": "Feature",
+          "note": "See normalized attention charts in Explorer (based on the same query, without the keywords)."
+        },
+        {
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Fix attention chart to render 0s correctly when there are no stories matching your query."
+        }
+      ]
+    },
+    {
       "date": "2018-05-17",
       "version": "v3.0.0",
       "notes": [

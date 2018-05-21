@@ -6,12 +6,12 @@ MarkupSafe==0.23
 Werkzeug==0.11.10
 click==6.6
 itsdangerous==0.24
-mediacloud==3.0.0
+mediacloud==3.0.3
 ndg-httpsclient==0.4.1
 pyOpenSSL==16.2.0
 pyasn1==0.1.9
 pymongo==3.2.2
-requests==2.10.0
+requests==2.18.4
 six==1.10.0
 wsgiref==0.1.2
 raven[flask]

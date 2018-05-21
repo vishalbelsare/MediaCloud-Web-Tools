@@ -160,7 +160,7 @@ class BubbleRowChart extends React.Component {
       // add center labels
       bubbles.append('text')
         .attr('x', d => d.x)
-        .attr('y', d => d.y)
+        .attr('y', d => d.y + 4)
         .attr('text-anchor', 'middle')
         .attr('fill', d => `${d.centerTextColor} !important` || '')
         .attr('font-family', 'Lato, Helvetica, sans')

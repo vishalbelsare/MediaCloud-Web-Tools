@@ -8,7 +8,7 @@ import composeSummarizedVisualization from './SummarizedVizualization';
 import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import BubbleRowChart from '../../vis/BubbleRowChart';
-import { queryChangedEnoughToUpdate, postToDownloadUrl, downloadExplorerSvg } from '../../../lib/explorerUtil';
+import { queryChangedEnoughToUpdate, postToCombinedDownloadUrl, downloadExplorerSvg } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
 import { FETCH_INVALID } from '../../../lib/fetchConstants';
 
@@ -17,23 +17,39 @@ const BUBBLE_CHART_DOM_ID = 'bubble-chart-story-total';
 const localMessages = {
   title: { id: 'explorer.storyCount.title', defaultMessage: 'Total Attention' },
   helpIntro: { id: 'explorer.storyCount.help.into',
-    defaultMessage: '<p>Compare the total number of stories where at least one sentence matched each of your queries.  Rollover the circles to see the exact numbers, or click the menu in the top right to download the data.</p>',
+    defaultMessage: '<p>Compare the total number of stories where at least one sentence matched each of your queries.  Rollover the circles to see the exact numbers, or click the menu in the bottom right to download the data.</p>',
   },
   helpDetails: { id: 'explorer.storyCount.help.details',
     defaultMessage: '<p>It is harder to determine how much of the media\'s attention your search got. If you want to dig into that, a good place to start is comparing your query to a search for everything from the sources and collections you are searching.  You can do this by searching for * in the same date range and media; that matches every story.</p>',
   },
-  downloadCSV: { id: 'explorer.attention.downloadcsv', defaultMessage: 'Download {name}' },
+  downloadCSV: { id: 'explorer.attention.downloadCSV', defaultMessage: 'Download total attention CSV' },
+  downloadSVG: { id: 'explorer.attention.downloadSVG', defaultMessage: 'Download total attention SVG' },
+  viewNormalized: { id: 'explorer.attention.mode.viewNormalized', defaultMessage: 'View by Story Count (default)' },
+  viewRegular: { id: 'explorer.attention.mode.viewRegular', defaultMessage: 'View by Story Percentage' },
 };
 
+const VIEW_NORMALIZED = 'VIEW_NORMALIZED';
+const VIEW_REGULAR = 'VIEW_REGULAR';
+
 class QueryTotalAttentionResultsContainer extends React.Component {
+  state = {
+    view: VIEW_REGULAR, // which view to show (see view constants above)
+  }
+
   shouldComponentUpdate(nextProps) {
     const { results, queries } = this.props;
     return queryChangedEnoughToUpdate(queries, nextProps.queries, results, nextProps.results);
   }
-  // if demo, use only sample search queries to download
-  downloadCsv = (query) => {
-    postToDownloadUrl('/api/explorer/stories/count.csv', query);
+
+  setView = (nextView) => {
+    this.setState({ view: nextView });
   }
+
+  // if demo, use only sample search queries to download
+  downloadCsv = (queries) => {
+    postToCombinedDownloadUrl('/api/explorer/stories/count.csv', queries);
+  }
+
   render() {
     const { results, queries } = this.props;
     const { formatNumber, formatMessage } = this.props.intl;
@@ -43,15 +59,25 @@ class QueryTotalAttentionResultsContainer extends React.Component {
 
     let bubbleData = [];
     if (safeResults !== undefined && safeResults !== null && safeResults.length > 0) {
-      bubbleData = [
-        ...safeResults.sort((a, b) => b.count - a.count).map((query, idx) => ({
-          value: query.total,
+      bubbleData = safeResults.map((query, idx) => {
+        const value = (this.state.view === VIEW_REGULAR) ? query.total : query.ratio;
+        let centerText;
+        if (this.state.view === VIEW_REGULAR) {
+          centerText = formatNumber(value);
+        } else {
+          centerText = formatNumber(value, { style: 'percent', maximumFractionDigits: 2 });
+        }
+        const rolloverText = `${query.label}: ${centerText}`;
+        return {
+          value,
           aboveText: (idx % 2 === 0) ? query.label : null,
           belowText: (idx % 2 !== 0) ? query.label : null,
-          rolloverText: `${query.label}: ${formatNumber(query.total)}`,
+          centerText,
+          rolloverText,
+          centerTextColor: '#FFFFFF',
           fill: query.color,
-        })),
-      ];
+        };
+      });
       content = (<BubbleRowChart
         data={bubbleData}
         padding={0}
@@ -64,22 +90,32 @@ class QueryTotalAttentionResultsContainer extends React.Component {
         {content}
         <div className="actions">
           <ActionMenu actionTextMsg={messages.downloadOptions}>
-            {safeResults.map((q, idx) =>
-              <span key={`q${idx}-items`}>
-                <MenuItem
-                  className="action-icon-menu-item"
-                  primaryText={formatMessage(messages.downloadDataCsv, { name: q.label })}
-                  rightIcon={<DownloadButton />}
-                  onTouchTap={() => this.downloadCsv(q)}
-                />
-                <MenuItem
-                  className="action-icon-menu-item"
-                  primaryText={formatMessage(messages.downloadDataSvg, { name: q.label })}
-                  rightIcon={<DownloadButton />}
-                  onTouchTap={() => downloadExplorerSvg(q.label, 'story-count', BUBBLE_CHART_DOM_ID)}
-                />
-              </span>
-            )}
+            <MenuItem
+              className="action-icon-menu-item"
+              primaryText={formatMessage(localMessages.downloadCSV)}
+              rightIcon={<DownloadButton />}
+              onTouchTap={() => this.downloadCsv(safeResults)}
+            />
+            <MenuItem
+              className="action-icon-menu-item"
+              primaryText={formatMessage(localMessages.downloadSVG)}
+              rightIcon={<DownloadButton />}
+              onTouchTap={() => downloadExplorerSvg('total', 'story-count', BUBBLE_CHART_DOM_ID)}
+            />
+          </ActionMenu>
+          <ActionMenu actionTextMsg={messages.viewOptions}>
+            <MenuItem
+              className="action-icon-menu-item"
+              primaryText={formatMessage(localMessages.viewNormalized)}
+              disabled={this.state.view === VIEW_REGULAR}
+              onClick={() => this.setView(VIEW_REGULAR)}
+            />
+            <MenuItem
+              className="action-icon-menu-item"
+              primaryText={formatMessage(localMessages.viewRegular)}
+              disabled={this.state.view === VIEW_NORMALIZED}
+              onClick={() => this.setView(VIEW_NORMALIZED)}
+            />
           </ActionMenu>
         </div>
       </div>
@@ -114,7 +150,7 @@ const mapDispatchToProps = () => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-       composeSummarizedVisualization(localMessages.title, localMessages.helpIntro, localMessages.helpDetails)(
+      composeSummarizedVisualization(localMessages.title, localMessages.helpIntro, [localMessages.helpDetails, messages.countsVsPercentageHelp])(
         composeAsyncContainer(
           QueryTotalAttentionResultsContainer
         )
