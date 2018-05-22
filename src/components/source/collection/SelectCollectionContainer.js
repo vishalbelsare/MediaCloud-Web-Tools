@@ -40,7 +40,7 @@ class SelectCollectionContainer extends React.Component {
     const { collection } = this.props;
     const endDate = getCurrentDate();
     const startDate = oneMonthBefore(endDate);
-    const explorerUrl = urlToExplorerQuery(collection.label || collection.tag, '*', '', collection.id, startDate, endDate);
+    const explorerUrl = urlToExplorerQuery(collection.label || collection.tag, '*', [], [collection.id], startDate, endDate);
     evt.preventDefault();
     window.open(explorerUrl, '_blank');
   }

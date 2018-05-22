@@ -27,7 +27,7 @@ class SourceTopWordsContainer extends React.Component {
     const endDate = getCurrentDate();
     const startDate = oneMonthBefore(endDate);
     const searchStr = `${word.stem}*`;
-    const explorerUrl = urlToExplorerQuery(source.name, searchStr, source.media_id, '', startDate, endDate);
+    const explorerUrl = urlToExplorerQuery(source.name || source.url, searchStr, [source.media_id], [], startDate, endDate);
     window.open(explorerUrl, '_blank');
   }
   render() {

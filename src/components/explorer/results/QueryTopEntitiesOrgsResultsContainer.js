@@ -19,7 +19,7 @@ import { TAG_SET_CLIFF_ORGS } from '../../../lib/tagUtil';
 const localMessages = {
   title: { id: 'explorer.entities.title', defaultMessage: 'Top Organizations' },
   organization: { id: 'explorer.entities.organization', defaultMessage: 'Organization' },
-  helpIntro: { id: 'explorer.entities.help.title', defaultMessage: '<p>Looking at which organizations and companies are being talked about can give you a sense of how the media is focusing on the issue you are investigating. This is a list of the organizations mentioned most often in a sampling of stories. Click on a name to add it to all your queries. Click the menu on the top right to download a CSV of all the organizations mentioned in a sample of stories.</p>' },
+  helpIntro: { id: 'explorer.entities.help.title', defaultMessage: '<p>Looking at which organizations and companies are being talked about can give you a sense of how the media is focusing on the issue you are investigating. This is a list of the organizations mentioned most often in a sampling of stories. Click on a name to add it to all your queries. Click the menu on the bottom right to download a CSV of all the organizations mentioned in a sample of stories.</p>' },
 };
 
 class QueryTopEntitiesOrgsResultsContainer extends React.Component {
@@ -48,13 +48,15 @@ class QueryTopEntitiesOrgsResultsContainer extends React.Component {
           options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
           onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
         />
-        <EntitiesTable
-          className="explorer-entity"
-          entityColNameMsg={localMessages.organization}
-          entities={results[this.state.selectedQueryIndex].results}
-          onClick={e => handleEntitySelection(e, queries[0].searchId)}
-          maxTitleLength={50}
-        />
+        {results[this.state.selectedQueryIndex] &&
+          <EntitiesTable
+            className="explorer-entity"
+            entityColNameMsg={localMessages.organization}
+            entities={results[this.state.selectedQueryIndex].results}
+            onClick={e => handleEntitySelection(e, queries[0].searchId)}
+            maxTitleLength={50}
+          />
+        }
         <div className="actions">
           <ActionMenu actionTextMsg={messages.downloadOptions}>
             {queries.map((q, idx) =>

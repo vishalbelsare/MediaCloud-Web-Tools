@@ -47,13 +47,15 @@ class QueryGeoResultsContainer extends React.Component {
           options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
           onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
         />
-        <GeoChart
-          data={results[this.state.selectedQueryIndex].results}
-          countryMaxColorScale={queries[this.state.selectedQueryIndex].color}
-          hideLegend
-          onCountryClick={handleCountryClick}
-          backgroundColor="#f5f5f5"
-        />
+        {results[this.state.selectedQueryIndex] &&
+          <GeoChart
+            data={results[this.state.selectedQueryIndex].results}
+            countryMaxColorScale={queries[this.state.selectedQueryIndex].color}
+            hideLegend
+            onCountryClick={handleCountryClick}
+            backgroundColor="#f5f5f5"
+          />
+        }
         <div className="actions">
           <ActionMenu actionTextMsg={messages.downloadOptions}>
             {queries.map((q, idx) =>

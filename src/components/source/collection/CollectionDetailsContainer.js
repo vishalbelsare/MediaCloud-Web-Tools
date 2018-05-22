@@ -76,7 +76,7 @@ class CollectionDetailsContainer extends React.Component {
                 />
               </Col>
               <Col lg={6}>
-                <CollectionTopWordsContainer collectionId={collection.tags_id} />
+                <CollectionTopWordsContainer collectionId={collection.tags_id} collectionName={collection.label || collection.tag} />
               </Col>
             </Row>
             <Row>

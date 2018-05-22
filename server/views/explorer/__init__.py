@@ -44,16 +44,8 @@ def concatenate_query_for_solr(solr_seed_query, media_ids, tags_ids):
         query += " AND ("
         # add in the media sources they specified
         if len(media_ids) > 0:
-            id_chain = []
-            if type(media_ids) is list:  # if an object versus a string - see sample_searches.json
-                for t in media_ids:
-                    if type(t) is dict:
-                        id_chain.append(t['id'] if 'id' in t else 0)
-                    else:
-                        id_chain.append(t)
-            else:
-                id_chain = media_ids
-            query_media_ids = u" ".join(map(str, id_chain))
+            media_ids = media_ids.split(',') if isinstance(media_ids, basestring) else media_ids
+            query_media_ids = u" ".join([str(m) for m in media_ids])
             query_media_ids = u" media_id:({})".format(query_media_ids)
             query += '('+query_media_ids+')'
 
@@ -61,16 +53,8 @@ def concatenate_query_for_solr(solr_seed_query, media_ids, tags_ids):
             query += " OR "
         # add in the collections they specified
         if len(tags_ids) > 0:
-            id_chain = []
-            if type(tags_ids) is list:
-                for t in tags_ids:
-                    if type(t) is dict:
-                        id_chain.append(t['id'] if 'id' in t else 0)
-                    else:
-                        id_chain.append(t)
-            else:
-                id_chain = tags_ids
-            query_tags_ids = u" ".join(map(str, id_chain))
+            tags_ids = tags_ids.split(',') if isinstance(tags_ids, basestring) else tags_ids
+            query_tags_ids = u" ".join([str(t) for t in tags_ids])
             query_tags_ids = u" tags_id_media:({})".format(query_tags_ids)
             query += u'('+query_tags_ids+')'
         query += ')'

@@ -1,16 +1,47 @@
+from operator import itemgetter
+
 from server import mc, TOOL_API_KEY
-from server.views import TAG_COUNT_UI_LENGTH, TAG_COUNT_SAMPLE_SIZE
+from server.views import TAG_COUNT_UI_LENGTH
 from server.cache import cache, key_generator
 from server.auth import user_mediacloud_client, user_mediacloud_key, is_user_logged_in, user_admin_mediacloud_client
 from server.util.tags import processed_by_cliff_query_clause
 import server.util.wordembeddings as wordembeddings
 
 
-def normalized_and_story_split_count(mc_api_key, q, fq, open_q):
+def normalized_and_story_count(q, fq, open_q):
     results = {}
-    results['with_keywords'] = cached_story_split_count(mc_api_key, q, fq)
-    results['without_keywords'] = cached_story_split_count(mc_api_key, open_q, fq)
+    mc_api_key = _api_key()
+    results['total'] = _cached_total_story_count(mc_api_key, q, fq)['count']
+    results['normalized_total'] = _cached_total_story_count(mc_api_key, open_q, fq)['count']
     return results
+
+
+def normalized_and_story_split_count(q, fq, open_q):
+    results = {}
+    counts = []
+    mc_api_key = _api_key()
+    data = cached_story_split_count(mc_api_key, q, fq)
+    all_stories = cached_story_split_count(mc_api_key, open_q, fq)
+    for day in all_stories['counts']:
+        day_info = {
+            'date': day['date'],
+            'total_count': day['count']
+        }
+        matching = [d for d in data['counts'] if d['date'] == day['date']]
+        if len(matching) == 0:
+            day_info['count'] = 0
+        else:
+            day_info['count'] = matching[0]['count']
+        if day_info['count'] == 0 or day['count'] == 0:
+            day_info['ratio'] = 0
+        else:
+            day_info['ratio'] = float(day_info['count']) / float(day['count'])
+        counts.append(day_info)
+    results['counts'] = sorted(counts, key=itemgetter('date'))
+    results['total'] = sum([day['count'] for day in data['counts']])
+    results['normalized_total'] = sum([day['count'] for day in all_stories['counts']])
+    return results
+
 
 @cache.cache_on_arguments(function_key_generator=key_generator)
 def cached_story_split_count(mc_api_key, q, fq):
@@ -25,9 +56,15 @@ def sentence_list(mc_api_key, q, fq, rows=10):
 
 
 @cache.cache_on_arguments(function_key_generator=key_generator)
-def _cached_sentence_list(mc_api_key, q, fq, rows):
-    local_mc = _mc_client(True)     # need to get an admin client to fetch sentence list
-    return local_mc.sentenceList(q, fq, rows=rows)
+def _cached_sentence_list(mc_api_key, q, fq, rows, include_stories=True):
+    # need to get an admin client with the tool key so they have sentence read permissions
+    tool_mc = user_admin_mediacloud_client(mc_api_key)
+    sentences = tool_mc.sentenceList(q, fq, rows=rows)
+    if include_stories:
+        for s in sentences:
+            local_mc = _mc_client()
+            s['story'] = local_mc.story(s['stories_id'])
+    return sentences
 
 
 def top_tags_with_coverage(q, fq, tag_sets_id, limit=TAG_COUNT_UI_LENGTH):
@@ -83,12 +120,12 @@ def _cached_total_story_count(api_key, q, fq):
     return count
 
 
-def random_story_list(mc_api_key, q, fq, limit):
-    return story_list_page(mc_api_key, q, fq, stories_per_page=limit, sort=mc.SORT_RANDOM)
+def random_story_list(q, fq, limit):
+    return story_list_page(q, fq, stories_per_page=limit, sort=mc.SORT_RANDOM)
 
 
-def story_list_page(mc_api_key, q, fq, last_processed_stories_id=None, stories_per_page=1000, sort=mc.SORT_PROCESSED_STORIES_ID):
-    return _cached_story_list_page(mc_api_key, q, fq, last_processed_stories_id, stories_per_page, sort)
+def story_list_page(q, fq, last_processed_stories_id=None, stories_per_page=1000, sort=mc.SORT_PROCESSED_STORIES_ID):
+    return _cached_story_list_page(_api_key(), q, fq, last_processed_stories_id, stories_per_page, sort)
 
 
 @cache.cache_on_arguments(function_key_generator=key_generator)

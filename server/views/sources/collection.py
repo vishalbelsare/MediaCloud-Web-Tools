@@ -294,7 +294,7 @@ def api_collection_source_representation(collection_id):
     return jsonify({'sources': source_representation})
 
 
-@app.route('/api/collections/<collection_id>/sources/representation.csv', methods=['GET'])
+@app.route('/api/collections/<collection_id>/sources/representation/representation.csv', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
 def api_collection_source_representation_csv(collection_id):

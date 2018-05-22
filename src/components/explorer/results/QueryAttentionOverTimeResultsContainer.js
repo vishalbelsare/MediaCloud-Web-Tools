@@ -17,16 +17,23 @@ import { FETCH_INVALID } from '../../../lib/fetchConstants';
 const localMessages = {
   overallSeries: { id: 'explorer.attention.series.overall', defaultMessage: 'Whole Query' },
   lineChartTitle: { id: 'explorer.attention.lineChart.title', defaultMessage: 'Attention Over Time' },
-  descriptionIntro: { id: 'explorer.attention.lineChart.intro', defaultMessage: '<p>Compare the attention paid to your queries over time to understand how they are covered. This chart shows the number of stories that match each of your queries. Spikes in attention can reveal key events. Plateaus can reveal stable, "normal", attention levels. Click a point to see words and headlines for those dates.</p>' },
+  descriptionIntro: { id: 'explorer.attention.lineChart.intro', defaultMessage: '<p>Compare the attention paid to your queries over time to understand how they are covered. This chart shows the number of stories that match each of your queries. Spikes in attention can reveal key events. Plateaus can reveal stable, "normal", attention levels. Click a point to see words and headlines for those dates. Use the "view options" menu to switch between story counts and a percentage.</p>' },
   descriptionDetail: { id: 'explorer.attention.lineChart.detail', defaultMessage: '<p>This chart includes one line for each query in your search. Each line charts the number of stories that matched your query per day in the sources and collections you have specified.</p><p>Roll over the line chart to see the stories per day in that period of time. Click the download button in the top right to download the raw counts in a CSV spreadsheet. Click the three lines in the top right of the chart to export the chart as an image file.</p>' },
+  withKeywords: { id: 'explorer.attention.mode.withkeywords', defaultMessage: 'View Story Count (default)' },
+  withoutKeywords: { id: 'explorer.attention.mode.withoutkeywords', defaultMessage: 'View Story Percentage' },
 };
+
+const VIEW_NORMALIZED = 'VIEW_NORMALIZED';
+const VIEW_REGULAR = 'VIEW_REGULAR';
 
 class QueryAttentionOverTimeResultsContainer extends React.Component {
   state = {
     isDrillDownVisible: false,
     dateRange: null,
     clickedQuery: null,
+    view: VIEW_REGULAR, // which view to show (see view constants above)
   }
+
   componentWillReceiveProps(nextProps) {
     const { lastSearchTime, fetchData } = this.props;
     if (nextProps.lastSearchTime !== lastSearchTime) {
@@ -37,6 +44,11 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
     const { results, queries } = this.props;
     return queryChangedEnoughToUpdate(queries, nextProps.queries, results, nextProps.results);
   }
+
+  setView = (nextView) => {
+    this.setState({ view: nextView });
+  }
+
   handleDataPointClick = (date0, date1, evt, origin) => {
     const { selectDataPoint, queries } = this.props;
     const name = origin.series.name;
@@ -65,17 +77,22 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
     // we may have more results than queries b/c queries can be deleted but not executed
     // so we have to do the following
     const safeResults = results.map((r, idx) => Object.assign({}, r, queries[idx]));
-
     // stich together line chart data
     let series = [];
     if (safeResults && safeResults.length > 0) {
       series = [
         ...safeResults.map((query, idx) => {    // add series for all the results
-          if (query.counts) {
+          if (query.counts || query.normalizedCounts) {
+            let data;
+            if (this.state.view === VIEW_NORMALIZED) {
+              data = query.counts.map(d => [d.date, d.ratio]);
+            } else {
+              data = query.counts.map(d => [d.date, d.count]);
+            }
             return {
               id: idx,
               name: query.label,
-              data: query.counts.map(d => [d.date, d.count]),
+              data,
               color: query.color,
             };
           } return {};
@@ -89,6 +106,7 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
           height={300}
           backgroundColor="#f5f5f5"
           onDataPointClick={this.handleDataPointClick}
+          normalizeYAxis={this.state.view === VIEW_NORMALIZED}
         />
         <div className="actions">
           <ActionMenu actionTextMsg={messages.downloadOptions}>
@@ -101,6 +119,20 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
                 onTouchTap={() => this.downloadCsv(q)}
               />
             )}
+          </ActionMenu>
+          <ActionMenu actionTextMsg={messages.viewOptions}>
+            <MenuItem
+              className="action-icon-menu-item"
+              primaryText={formatMessage(localMessages.withKeywords)}
+              disabled={this.state.view === VIEW_REGULAR}
+              onClick={() => this.setView(VIEW_REGULAR)}
+            />
+            <MenuItem
+              className="action-icon-menu-item"
+              primaryText={formatMessage(localMessages.withoutKeywords)}
+              disabled={this.state.view === VIEW_NORMALIZED}
+              onClick={() => this.setView(VIEW_NORMALIZED)}
+            />
           </ActionMenu>
         </div>
       </div>
@@ -180,7 +212,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeSummarizedVisualization(localMessages.lineChartTitle, localMessages.descriptionIntro, localMessages.descriptionDetail)(
+      composeSummarizedVisualization(localMessages.lineChartTitle, localMessages.descriptionIntro, [localMessages.descriptionDetail, messages.countsVsPercentageHelp])(
         composeAsyncContainer(
           QueryAttentionOverTimeResultsContainer
         )
