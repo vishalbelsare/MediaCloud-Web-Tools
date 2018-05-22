@@ -79,7 +79,7 @@ def top_tags_with_coverage(q, fq, tag_sets_id, limit=TAG_COUNT_UI_LENGTH):
 def _most_used_tags(q, fq, tag_sets_id):
     # top tags used in stories matching query (pass in None for no limit)
     api_key = _api_key()
-    tags = _cached_most_used_tags(api_key, q, fq, tag_sets_id)
+    tags = _cached_most_used_tags(api_key, q, fq, tag_sets_id, 1000)
     return tags
 
 
