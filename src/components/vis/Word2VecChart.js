@@ -167,7 +167,7 @@ function Word2VecChart(props) {
 Word2VecChart.propTypes = {
   // from parent
   words: PropTypes.array.isRequired,
-  scaleWords: React.PropTypes.array,
+  scaleWords: PropTypes.array,
   width: PropTypes.number,
   height: PropTypes.number,
   minFontSize: PropTypes.number,
