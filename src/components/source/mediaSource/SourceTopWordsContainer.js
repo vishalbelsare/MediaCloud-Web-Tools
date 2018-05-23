@@ -46,7 +46,6 @@ class SourceTopWordsContainer extends React.Component {
         domId={`media-source-top-words-${source.media_id}`}
         width={900}
         helpButton={helpButton}
-        includeTopicWord2Vec
       />
     );
   }
