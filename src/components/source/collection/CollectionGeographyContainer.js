@@ -10,11 +10,13 @@ import messages from '../../../resources/messages';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import { DownloadButton } from '../../common/IconButton';
 import { getBrandLightColor } from '../../../styles/colors';
+import { getCurrentDate, oneMonthBefore } from '../../../lib/dateUtil';
+import { urlToExplorerQuery } from '../../../lib/urlUtil';
 
 const localMessages = {
   title: { id: 'collection.summary.geo.title', defaultMessage: 'Geographic Attention' },
   intro: { id: 'collection.summary.geo.info',
-    defaultMessage: '<p>Here is a heatmap of countries mentioned in this collection (based on a sample of stories). Darker countried are mentioned more. Click a country to load a Dashboard search showing you how the sources in this collection cover it.</p>' },
+    defaultMessage: '<p>Here is a heatmap of countries mentioned in this collection (based on a sample of stories). Darker countried are mentioned more. Click a country to load an Explorer search showing you how the sources in this collection cover it.</p>' },
   helpTitle: { id: 'collection.summary.geo.help.title', defaultMessage: 'About Geographic Attention' },
 };
 
@@ -28,7 +30,10 @@ class CollectionGeographyContainer extends React.Component {
     const { collectionId, collectionName } = this.props;
     const countryName = geo.name;
     const countryTagId = geo.tags_id;
-    const url = `https://dashboard.mediacloud.org/#query/["(tags_id_stories:${countryTagId})"]/[{"sets":[${collectionId}]}]/[]/[]/[{"uid":1,"name":"${collectionName} - ${countryName}","color":"55868A"}]`;
+    const endDate = getCurrentDate();
+    const startDate = oneMonthBefore(endDate);
+    const url = urlToExplorerQuery(`${countryName} in ${collectionName}`, `(tags_id_stories:${countryTagId})`,
+      [], [collectionId], startDate, endDate);
     window.open(url, '_blank');
   }
   render() {

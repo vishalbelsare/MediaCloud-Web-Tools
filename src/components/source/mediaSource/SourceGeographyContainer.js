@@ -10,12 +10,14 @@ import messages from '../../../resources/messages';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import { DownloadButton } from '../../common/IconButton';
 import { getBrandLightColor } from '../../../styles/colors';
+import { getCurrentDate, oneMonthBefore } from '../../../lib/dateUtil';
+import { urlToExplorerQuery } from '../../../lib/urlUtil';
 
 const localMessages = {
   title: { id: 'source.summary.map.title', defaultMessage: 'Geographic Attention' },
   helpTitle: { id: 'source.summary.map.help.title', defaultMessage: 'Geographic Attention' },
   intro: { id: 'source.summary.map.intro',
-    defaultMessage: '<p>Here is a heatmap of countries stories from this source are about (based on a sample of stories). Darker countried are mentioned more. Click a country to load a Dashboard search showing you how the this source covers it.</p>' },
+    defaultMessage: '<p>Here is a heatmap of countries stories from this source are about (based on a sample of stories). Darker countried are mentioned more. Click a country to load an Explorer search showing you how the this source covers it.</p>' },
 };
 
 class SourceGeographyContainer extends React.Component {
@@ -28,7 +30,10 @@ class SourceGeographyContainer extends React.Component {
     const { source } = this.props;
     const countryName = geo.name;
     const countryTagId = geo.tags_id;
-    const url = `https://dashboard.mediacloud.org/#query/["(tags_id_stories:${countryTagId})"]/[{"sources":[${source.media_id}]}]/["${source.health.start_date.substring(0, 10)}"]/["${source.health.end_date.substring(0, 10)}"]/[{"uid":1,"name":"${source.name} - ${countryName}","color":"55868A"}]`;
+    const endDate = getCurrentDate();
+    const startDate = oneMonthBefore(endDate);
+    const url = urlToExplorerQuery(`${countryName} in ${source.name || source.url}`, `(tags_id_stories:${countryTagId})`,
+      [source.media_id], [], startDate, endDate);
     window.open(url, '_blank');
   }
   render() {
