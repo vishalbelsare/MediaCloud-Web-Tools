@@ -1,6 +1,22 @@
 {
   "releases": [
     {
+      "date": "2018-05-24",
+      "version": "v3.1.0",
+      "notes": [
+        {
+          "apps": ["explorer","sources", "topics"],
+          "type": "Feature",
+          "note": "Rolls out our new \"word space\" visualization! Read <a href=\"https://mediacloud.org/news/2018/5/23/word-spaces-visualizing-word2vec-to-support-media-analysis\">the blog post for more details</a>."
+        },
+        {
+          "apps": ["topics"],
+          "type": "Fix",
+          "note": "Resolved problem where some topic attention charts didn't draw all the dates."
+        }
+      ]
+    },
+    {
       "date": "2018-05-23",
       "version": "v3.0.5",
       "notes": [
