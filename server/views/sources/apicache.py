@@ -1,13 +1,14 @@
+import codecs
 import datetime
 import json
-import codecs
 import operator
 
+import server.util.tags as tags
 from server import mc
 from server.auth import user_mediacloud_client
 from server.cache import cache, key_generator
+from server.util.api_helper import add_missing_dates_to_split_story_counts
 from server.views.sources import FEATURED_COLLECTION_LIST
-import server.util.tags as tags
 
 
 def tags_in_tag_set(mc_api_key, tag_sets_id, only_public_tags, use_file_cache=False):
@@ -86,29 +87,6 @@ def _cached_last_year_split_story_count(user_mc_key, q='*'):
     end_date = datetime.date.today()-datetime.timedelta(1)  # yesterday
     fq = user_mc.publish_date_query(start_date, end_date)
     results = user_mc.storyCount(solr_query=q, solr_filter=fq, split=True, split_period='day')
-    results['counts'] = _fill_in_missing_dates(results['counts'], start_date, end_date)
+    results['counts'] = add_missing_dates_to_split_story_counts(results['counts'], start_date, end_date)
     results['total_story_count'] = sum([r['count'] for r in results['counts']])
     return results
-
-
-def _fill_in_missing_dates(counts, start, end, period="day"):
-    if start is None and end is None:
-        return counts
-    new_counts = []
-    current = start
-    while current <= end:
-        date_string = current.strftime(mc.SENTENCE_PUBLISH_DATE_FORMAT)
-        existing_count = next((r for r in counts if r['date'] == date_string), None)
-        if existing_count:
-            new_counts.append(existing_count)
-        else:
-            new_counts.append({'date': date_string, 'count': 0})
-        if period == "day":
-            current += datetime.timedelta(days=1)
-        elif period == "month":
-            current += datetime.timedelta(months=1)
-        elif period == "year":
-            current += datetime.timedelta(years=1)
-        else:
-            raise RuntimeError("Unsupport time period for filling in missing dates - {}".format(period))
-    return new_counts

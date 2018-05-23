@@ -1,14 +1,16 @@
 import logging
 from flask import request
+from datetime import datetime
 
 from server import mc, TOOL_API_KEY
-from server.views import WORD_COUNT_SAMPLE_SIZE, WORD_COUNT_DOWNLOAD_LENGTH, WORD_COUNT_UI_LENGTH
+from server.views import WORD_COUNT_SAMPLE_SIZE, WORD_COUNT_UI_LENGTH
 from server.cache import cache, key_generator
 from server.util.tags import STORY_UNDATEABLE_TAG
 import server.util.wordembeddings as wordembeddings
 from server.auth import user_mediacloud_client, user_admin_mediacloud_client, user_mediacloud_key, is_user_logged_in
 from server.util.request import filters_from_args
 from server.views.topics import validated_sort, access_public_topic
+from server.util.api_helper import add_missing_dates_to_split_story_counts
 
 logger = logging.getLogger(__name__)
 
@@ -223,7 +225,11 @@ def topic_split_story_counts(user_mc_key, topics_id, **kwargs):
         merged_args['q'] = "(({}) AND {})".format(merged_args['q'], undateable_query_part)
     else:
         merged_args['q'] = "* AND {}".format(undateable_query_part)
-    return _cached_topic_split_story_counts(user_mc_key, topics_id, **merged_args)
+    results = _cached_topic_split_story_counts(user_mc_key, topics_id, **merged_args)
+    results['counts'] = add_missing_dates_to_split_story_counts(results['counts'],
+                                                      datetime.strptime(timespan['start_date'], mc.SENTENCE_PUBLISH_DATE_FORMAT),
+                                                      datetime.strptime(timespan['end_date'], mc.SENTENCE_PUBLISH_DATE_FORMAT))
+    return results
 
 
 @cache.cache_on_arguments(function_key_generator=key_generator)
