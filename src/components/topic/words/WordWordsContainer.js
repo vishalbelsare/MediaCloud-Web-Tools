@@ -44,6 +44,7 @@ class WordWordsContainer extends React.Component {
         helpButton={helpButton}
         domId={WORD_CLOUD_DOM_ID}
         svgDownloadPrefix={`${topicDownloadFilename(topicName, filters)}-${slugify(term)}-words`}
+        includeTopicWord2Vec
       />
     );
   }

@@ -34,11 +34,9 @@ class WordContainer extends React.Component {
   render() {
     const { topicId, stem, term, filters, topicName } = this.props;
     const { formatMessage } = this.props.intl;
-    const titleHandler = `${formatMessage(messages.word)}`;
-
     return (
       <div>
-        <Helmet><title>{titleHandler()}</title></Helmet>
+        <Helmet><title>{formatMessage(messages.word)}</title></Helmet>
         <Grid>
           <Row>
             <Col lg={12}>
@@ -48,10 +46,12 @@ class WordContainer extends React.Component {
             </Col>
           </Row>
           <Row>
-            <Col lg={6} xs={12}>
+            <Col lg={12}>
               <WordSplitStoryCountContainer topicId={topicId} stem={stem} term={term} filters={filters} />
             </Col>
-            <Col lg={6} xs={12}>
+          </Row>
+          <Row>
+            <Col lg={12}>
               <WordWordsContainer topicId={topicId} stem={stem} term={term} filters={filters} topicName={topicName} />
             </Col>
           </Row>
