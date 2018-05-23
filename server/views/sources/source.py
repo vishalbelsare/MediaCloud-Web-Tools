@@ -12,11 +12,12 @@ from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_
 from server.util.request import arguments_required, form_fields_required, api_error_handler
 from server.util.tags import TAG_SETS_ID_PUBLICATION_COUNTRY, TAG_SETS_ID_PUBLICATION_STATE, VALID_COLLECTION_TAG_SETS_IDS, \
     TAG_SETS_ID_PRIMARY_LANGUAGE, TAG_SETS_ID_COUNTRY_OF_FOCUS, TAG_SETS_ID_MEDIA_TYPE, TAG_SET_GEOCODER_VERSION, \
-    TAG_SET_NYT_LABELS_VERSION, GEO_SAMPLE_SIZE, is_metadata_tag_set
+    TAG_SET_NYT_LABELS_VERSION, is_metadata_tag_set
 from server.views.sources import cached_source_story_count
 from server.views.sources.words import word_count, stream_wordcount_csv
 from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
-from server.views.sources.stories_split_by_time import cached_recent_split_stories, stream_split_stories_csv
+from server.views.sources.stories_split_by_time import stream_split_stories_csv
+import server.views.sources.apicache as apicache
 from server.views.sources.favorites import add_user_favorite_flag_to_sources, add_user_favorite_flag_to_collections
 
 
@@ -81,6 +82,7 @@ def source_stats(media_id):
     ratio_nyt_tagged_count = float(tag_specific_story_count[0]['count']) / float(source_specific_story_count) if len(tag_specific_story_count) > 0 else 0
     results['nytPct'] = ratio_nyt_tagged_count
     return jsonify(results)
+
 
 @cache.cache_on_arguments(function_key_generator=key_generator)
 def _cached_media_source_health(user_mc_key, media_id):
@@ -148,6 +150,7 @@ def api_media_source_scrape_feeds(media_id):
     results = user_mc.feedsScrape(media_id)
     return jsonify(results)
 
+
 @app.route('/api/sources/<media_id>/story-split/count.csv', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
@@ -161,7 +164,7 @@ def source_split_stories_csv(media_id):
 def api_media_source_split_stories(media_id):
     q ='media_id:' + str(media_id)
     health = _cached_media_source_health(user_mediacloud_key(), media_id)
-    results = cached_recent_split_stories(user_mediacloud_key(), q)
+    results = apicache.last_year_split_story_count(user_mediacloud_key(), q)
 
     info = {
         'total_story_count' : results['total_story_count'],

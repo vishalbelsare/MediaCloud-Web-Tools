@@ -1,6 +1,22 @@
 {
   "releases": [
     {
+      "date": "2018-05-23",
+      "version": "v3.0.4",
+      "notes": [
+        {
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Better download of entities and geography in Explorer."
+        },
+        {
+          "apps": ["sources"],
+          "type": "Fix",
+          "note": "Show last year of coverage for sources and collections correctly."
+        }
+      ]
+    },
+    {
       "date": "2018-05-20",
       "version": "v3.0.3",
       "notes": [
