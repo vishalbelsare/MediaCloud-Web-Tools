@@ -3,7 +3,7 @@ import React from 'react';
 import ReactCSSTransitionReplace from 'react-css-transition-replace';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import { injectIntl } from 'react-intl';
-import Word2VecChart from './Word2VecChart';
+import WordSpace from './WordSpace';
 import { PlayButton, PauseButton, NextButton, PreviousButton } from '../common/IconButton';
 import { getBrandDarkColor } from '../../styles/colors';
 import TimespanDateRange from '../topic/TimespanDateRange';
@@ -159,7 +159,7 @@ class Word2VecTimespanPlayer extends React.Component {
           transitionLeaveTimeout={options.leaveTimeout}
         >
           <div className="w2v-chart-container" key={currentTimespan.timespans_id}>
-            <Word2VecChart
+            <WordSpace
               words={currentWords}
               scaleWords={overallWords}
               domId={'w2v-timespan-slide'}

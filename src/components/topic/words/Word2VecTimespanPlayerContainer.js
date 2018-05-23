@@ -1,16 +1,15 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Helmet } from 'react-helmet';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { Grid, Row, Col } from 'react-flexbox-grid/lib';
+import { Row, Col } from 'react-flexbox-grid/lib';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import DataCard from '../../common/DataCard';
 import { fetchTopicWord2VecTimespans } from '../../../actions/topicActions';
 import Word2VecTimespanPlayer from '../../vis/Word2VecTimespanPlayer';
 
 const localMessages = {
-  title: { id: 'topic.timespanPlayer.title', defaultMessage: 'Word2Vec Animation' },
+  title: { id: 'topic.timespanPlayer.title', defaultMessage: 'Topic Word Space Over Time' },
   intro: { id: 'topic.timespanPlayer.intro', defaultMessage: 'TODO: Description' },
 };
 
@@ -27,34 +26,23 @@ class Word2VecTimespanPlayerContainer extends React.Component {
 
   render() {
     const { selectedTimespan, timespanEmbeddings } = this.props;
-    const { formatMessage } = this.props.intl;
     if ((selectedTimespan === undefined) || (selectedTimespan === null)) {
       return (<div />);
     }
-    const titleHandler = parentTitle => `${formatMessage(localMessages.title)} | ${parentTitle}`;
-
     return (
-      <Grid>
-        <Helmet><title>{titleHandler()}</title></Helmet>
-        <Row>
-          <Col lg={12} md={12} sm={12}>
+      <Row>
+        <Col lg={12}>
+          <DataCard>
             <h1><FormattedMessage {...localMessages.title} /></h1>
-            <p><FormattedMessage {...localMessages.intro} /></p>
-          </Col>
-        </Row>
-        <Row>
-          <Col lg={6}>
-            <DataCard>
-              <Word2VecTimespanPlayer
-                xProperty={'w2v_x'}
-                yProperty={'w2v_y'}
-                initialTimespan={selectedTimespan}
-                timespanEmbeddings={timespanEmbeddings}
-              />
-            </DataCard>
-          </Col>
-        </Row>
-      </Grid>
+            <Word2VecTimespanPlayer
+              xProperty={'w2v_x'}
+              yProperty={'w2v_y'}
+              initialTimespan={selectedTimespan}
+              timespanEmbeddings={timespanEmbeddings}
+            />
+          </DataCard>
+        </Col>
+      </Row>
     );
   }
 }
