@@ -11,7 +11,7 @@ from raven.conf import setup_logging
 from raven.contrib.flask import Sentry
 from raven.handlers.logging import SentryHandler
 import mediacloud
-from mediameter.cliff import Cliff
+from cliff.api import Cliff
 import redis
 
 from server.sessions import RedisSessionInterface
@@ -67,8 +67,8 @@ logger.info(u"Connected to mediacloud")
 # Connect to CLIFF if the settings are there
 cliff = None
 try:
-    cliff = Cliff(config.CLIFF_URL)
-except Exception:
+    cliff = Cliff(config.get('CLIFF_URL'))
+except KeyError as e:
     logger.warn(u"no CLIFF connection")
 
 NYT_THEME_LABELLER_URL = config.get('NYT_THEME_LABELLER_URL')

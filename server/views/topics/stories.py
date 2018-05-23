@@ -87,7 +87,7 @@ def topic_story_update(stories_id):
 
 @cache.cache_on_arguments(function_key_generator=key_generator)
 def _cached_geoname(geonames_id):
-    return cliff.geonamesLookup(geonames_id)
+    return cliff.geonames_lookup(geonames_id)
 
 
 @app.route('/api/topics/<topics_id>/stories/counts', methods=['GET'])
