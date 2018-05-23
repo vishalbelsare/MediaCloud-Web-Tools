@@ -41,19 +41,6 @@ export function urlToExplorer(param) {
   return `https://explorer.mediacloud.org/#/${param}`;
 }
 
-export function urlToDashboardQuery(name, keywords, sourceIds, collectionIds, startDate, endDate) {
-  const mediaInfo = {};
-  if (sourceIds && sourceIds.length > 0) {
-    mediaInfo.sources = sourceIds;
-  }
-  if (collectionIds && collectionIds.length > 0) {
-    mediaInfo.sets = collectionIds;
-  }
-  const startDateStr = startDate;
-  const endDateStr = endDate;
-  return `https://dashboard.mediacloud.org/#query/["${keywords}"]/[${JSON.stringify(mediaInfo)}]/["${startDateStr}"]/["${endDateStr}"]/[{"uid":1,"name":"${name}","color":"${getBrandDarkerColor().substr(1)}"}]`;
-}
-
 export function urlToExplorerQuery(name, keywords, sourceIds, collectionIds, startDate, endDate) {
   const color = encodeURIComponent(`#${getBrandDarkerColor().substr(1)}`);
   let sources = sourceIds || [];
