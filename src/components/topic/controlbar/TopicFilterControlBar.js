@@ -17,7 +17,7 @@ import ActiveFiltersContainer from './ActiveFiltersContainer';
 import { asyncContainerize } from '../../common/AsyncContainer';
 import ModifyTopicDialog from './ModifyTopicDialog';
 import { LEVEL_WARNING } from '../../common/Notice';
-import { urlToDashboardQuery, urlToExplorerQuery } from '../../../lib/urlUtil';
+import { urlToExplorerQuery } from '../../../lib/urlUtil';
 
 const REMOVE_FOCUS = 0;
 
@@ -28,7 +28,6 @@ const localMessages = {
   startedSpider: { id: 'topic.startedSpider', defaultMessage: 'Started a new spidering job for this topic' },
   summaryMessage: { id: 'snapshot.required', defaultMessage: 'You have made some changes that you can only see if you generate a new Snapshot. <a href="{url}">Generate one now</a>.' },
   topicHomepage: { id: 'topic.homepage', defaultMessage: 'Topic Homepage' },
-  jumpToDashboard: { id: 'topic.controlBar.jumpToDashboard', defaultMessage: 'Query on Dashboard' },
   jumpToExplorer: { id: 'topic.controlBar.jumpToExplorer', defaultMessage: 'Query on Explorer' },
 };
 
@@ -50,7 +49,6 @@ class TopicFilterControlBar extends React.Component {
       subControls = <TimespanSelectorContainer topicId={topicId} location={location} filters={filters} />;
     }
     // set up links to jump to other tools
-    let jumpsDashboard;
     let jumpsExplorer;
     if (selectedTimespan) {
       const queryName = `${topic.name}`;
@@ -66,16 +64,6 @@ class TopicFilterControlBar extends React.Component {
         selectedTimespan.start_date.substr(0, 10),
         selectedTimespan.end_date.substr(0, 10),
       ];
-      const dashboardUrl = urlToDashboardQuery(...args);
-      // const explorerUrl = urlToExplorerQuery(...args);
-      jumpsDashboard = (
-        <span className="jumps">
-          <a target="top" href={dashboardUrl}>
-            <ExploreButton />
-            <FormattedMessage {...localMessages.jumpToDashboard} />
-          </a>
-        </span>
-      );
       const explorerUrl = urlToExplorerQuery(...args);
       // const explorerUrl = urlToExplorerQuery(...args);
       jumpsExplorer = (
@@ -105,7 +93,6 @@ class TopicFilterControlBar extends React.Component {
                     onSpiderRequest={handleSpiderRequest}
                   />
                 </Permissioned>
-                {jumpsDashboard}
                 {jumpsExplorer}
               </Col>
               <Col lg={6} className="right">
