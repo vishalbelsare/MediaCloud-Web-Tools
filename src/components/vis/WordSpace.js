@@ -28,7 +28,7 @@ const ARC_LINE_OPACITY = '0.05';
 const RADIUS_RATIOS = [1, 0.75, 0.5, 0.25];
 const MAX_ZOOM_SCALE = 3.5;
 
-function drawViz(props) {
+function drawViz(wrapperElement, props) {
   const { words, scaleWords, length, margin, minFontSize, maxFontSize, minColor, maxColor,
           highlightMinColor, highlightMaxColor, highlightFontSizeScale, showTooltips, alreadyNormalized,
           fullExtent, domId, xProperty, yProperty, cosSimThreshold } = props;
@@ -144,8 +144,11 @@ function drawViz(props) {
   const sizeRange = { min: options.minFontSize, max: options.maxFontSize };
 
   // start layout
-  const node = `#${domId}`;
-  d3.select(node)
+  const svgNode = d3.select(wrapperElement)
+    .html('')   // important to empty it out first
+    .append('svg:svg'); // then add in the SVG wrapper we will be rendering to
+
+  svgNode.attr('id', domId)
     .attr('width', options.length)
     .attr('height', options.length);
 
@@ -168,7 +171,7 @@ function drawViz(props) {
         .attr('cy', () => transform.applyY(yScale(0)));
 
       // re-draw text with new scale
-      d3.select(node)
+      svgNode
         .selectAll('text')
         .attr('x', d => transform.applyX(xScale(d[options.xProperty])))
         .attr('y', d => transform.applyY(yScale(d[options.yProperty])));
@@ -204,29 +207,29 @@ function drawViz(props) {
     });
 
   // set custom behavior for zoom on double-click
-  d3.select(node)
+  svgNode
     .call(zoom)
     .on('dblclick.zoom', () => {
       if (zoomedIn) {
-        d3.select(node).style('cursor', 'default'); // for IE since zoom-in isn't supported
-        d3.select(node).style('cursor', 'zoom-in');
-        d3.select(node).transition().duration(750).call(zoom.transform, d3.zoomIdentity);
+        svgNode.style('cursor', 'default'); // for IE since zoom-in isn't supported
+        svgNode.style('cursor', 'zoom-in');
+        svgNode.transition().duration(750).call(zoom.transform, d3.zoomIdentity);
         zoomedIn = false;
       } else {
-        d3.select(node).style('cursor', 'move');
-        d3.select(node).transition().duration(750).call(zoom.scaleBy, 2);
+        svgNode.style('cursor', 'move');
+        svgNode.transition().duration(750).call(zoom.scaleBy, 2);
         zoomedIn = true;
       }
     })
    .append('g');
 
   // remove default zoom scroll behavior
-  d3.select(node).on('wheel.zoom', null);
-  d3.select(node).on('mousewheel.zoom', null);
-  d3.select(node).on('MozMousePixelScroll.zoom', null);
+  svgNode.on('wheel.zoom', null);
+  svgNode.on('mousewheel.zoom', null);
+  svgNode.on('MozMousePixelScroll.zoom', null);
 
   // draw arc 'tooltip'
-  const arcContainer = d3.select(node).append('g').attr('id', 'arc-tip');
+  const arcContainer = svgNode.append('g').attr('id', 'arc-tip');
   const arc = d3.arc()
     .innerRadius(0)
     .outerRadius(scaledRadius)
@@ -241,7 +244,7 @@ function drawViz(props) {
     .style('opacity', 0);
 
   // draw concentric circles
-  const circleContainer = d3.select(node).append('g').attr('id', 'concentric-circles');
+  const circleContainer = svgNode.append('g').attr('id', 'concentric-circles');
   for (let i = 0; i < 4; i += 1) {
     circleContainer.append('circle')
       .attr('id', `circle-${i}`)
@@ -263,7 +266,7 @@ function drawViz(props) {
     } else {
       x2 = maxRadius;
     }
-    d3.select(node)
+    svgNode
       .append('svg:line')
       .attr('id', id)
       .attr('x1', xScale(0))
@@ -281,7 +284,7 @@ function drawViz(props) {
     const y1 = 0;
     const x2 = maxRadius * Math.cos(Math.PI / 4);
     const y2 = maxRadius * Math.sin(Math.PI / 4);
-    d3.select(node)
+    svgNode
       .append('svg:line')
       .attr('id', id)
       .attr('x1', xScale(x1))
@@ -293,7 +296,7 @@ function drawViz(props) {
   });
 
   // Add circle at origin
-  d3.select(node)
+  svgNode
     .append('circle')
     .attr('id', 'origin')
     .attr('cx', xScale(0))
@@ -304,7 +307,7 @@ function drawViz(props) {
   // Add Text Labels
   const sortedWords = words.sort((a, b) => a.tfnorm - b.tfnorm); // important to sort so z order is right
 
-  d3.select(node)
+  svgNode
     .selectAll('text')
     .data(sortedWords)
     .enter()
@@ -353,7 +356,7 @@ function drawViz(props) {
           d3.select(event.target).raise();
 
           // highlight similar words
-          d3.select(node)
+          svgNode
             .selectAll('text')
             .filter(other => d.similar.map(x => x.term).indexOf(other.term) !== -1 && other.term !== d.term)
             .transition()
@@ -367,13 +370,13 @@ function drawViz(props) {
             .attr('pointer-events', 'none');
 
           // bring similar words to front
-          d3.select(node)
+          svgNode
             .selectAll('text')
             .filter(other => d.similar.map(x => x.term).indexOf(other.term) !== -1 && other.term !== d.term)
             .raise();
 
           // gray-out non-similar words
-          d3.select(node)
+          svgNode
             .selectAll('text')
             .filter(other => d.similar.map(x => x.term).indexOf(other.term) === -1 && other.term !== d.term)
             .transition()
@@ -388,7 +391,7 @@ function drawViz(props) {
             .attr('transform', `translate(${xScale(0)}, ${yScale(0)}) rotate(0)`);
 
           // return selected word to normal
-          d3.select(node)
+          svgNode
             .selectAll('text')
             .transition()
             .duration(100)
@@ -404,17 +407,22 @@ function drawViz(props) {
 
 class WordSpace extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.chartWrapperRef = React.createRef();
+  }
+
   componentDidMount() {
-    drawViz(this.props);
+    drawViz(this.chartWrapperRef.current, this.props);
   }
 
   componentDidUpdate() {
-    drawViz(this.props);
+    drawViz(this.chartWrapperRef.current, this.props);
   }
 
   render() {
     // bail if the properties aren't there
-    const { words, noDataMsg, domId, xProperty, yProperty } = this.props;
+    const { words, noDataMsg, xProperty, yProperty } = this.props;
     const wordsWithXYCount = words.filter(w => (w[xProperty] !== undefined) && (w[yProperty] !== undefined)).length;
     const missingDataMsg = noDataMsg || localMessages.noData;
     if (wordsWithXYCount === 0) {
@@ -426,7 +434,7 @@ class WordSpace extends React.Component {
     }
 
     return (
-      <svg className="wordspace-chart" id={domId} />
+      <div className="wordspace-chart-wrapper" ref={this.chartWrapperRef} />
     );
   }
 }
@@ -434,7 +442,7 @@ class WordSpace extends React.Component {
 WordSpace.propTypes = {
   // from parent
   words: PropTypes.array.isRequired,
-  scaleWords: React.PropTypes.array,
+  scaleWords: PropTypes.array,
   length: PropTypes.number,
   margin: PropTypes.number,
   minFontSize: PropTypes.number,

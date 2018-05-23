@@ -14,7 +14,7 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 
 const localMessages = {
   title: { id: 'explorer.topWords.title', defaultMessage: 'Word Space' },
-  descriptionIntro: { id: 'explorer.topWords.help.title', defaultMessage: '<p>Understanding which words are used together can help you find sub-conversations within the reporting about your issue.  We created this chart to show information about how the top 50 words are used. The bigger and darker a word is, the more it is used. Words closer to the center are used in a variety of phrases; words further from the center are only used in a few ways. Rollover a word to highlight words used in similar phrases.</p>' },
+  descriptionIntro: { id: 'explorer.topWords.help.title', defaultMessage: '<p>Understanding which words are used together can help you find sub-conversations within the reporting about your issue.  We created this chart to show information about how the top 50 words are used. The bigger and darker a word is, the more it is used. Words are laid out based on how they are used in general news reporting (not based on the stories matching your query). Rollover a word to highlight words used in similar phrases in general news reporting.</p>' },
   noGoogleW2VData: { id: 'wordcloud.editable.mode.googleW2V.noData', defaultMessage: 'Sorry, but the Google News word2vec data is missing.' },
 };
 
