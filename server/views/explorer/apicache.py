@@ -71,7 +71,10 @@ def top_tags_with_coverage(q, fq, tag_sets_id, limit=TAG_COUNT_UI_LENGTH):
     tag_counts = _most_used_tags(q, fq, tag_sets_id)
     coverage = cliff_coverage(q, fq)
     for t in tag_counts:  # add in pct of what's been run through CLIFF to total results
-        t['pct'] = float(t['count']) / coverage['counts']
+        try:
+            t['pct'] = float(t['count']) / coverage['counts']
+        except ZeroDivisionError:
+            t['pct'] = 0
     coverage['results'] = tag_counts[:limit]
     return coverage
 
