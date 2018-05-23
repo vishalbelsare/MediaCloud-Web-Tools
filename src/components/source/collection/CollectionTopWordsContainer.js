@@ -13,7 +13,7 @@ import { urlToExplorerQuery } from '../../../lib/urlUtil';
 const localMessages = {
   title: { id: 'collection.summary.topWords.title', defaultMessage: 'Top Words' },
   intro: { id: 'collection.summary.topWords.intro',
-    defaultMessage: '<p>This wordcloud shows you the most commonly used words in this collection (based on a sample of sentences). Click a word to load a Dashboard search showing you how sources in this colleciton write about it.</p>' },
+    defaultMessage: '<p>This wordcloud shows you the most commonly used words in this collection (based on a sample of sentences). Click a word to load an Explorer search showing you how sources in this colleciton write about it.</p>' },
   helpTitle: { id: 'collection.summary.topWords.help.title', defaultMessage: 'About Top Words' },
 };
 

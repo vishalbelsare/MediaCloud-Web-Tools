@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import Title from 'react-title-component';
+import { Helmet } from 'react-helmet';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
@@ -50,7 +50,7 @@ class InfluentialStoryExplorerContainer extends React.Component {
         <Grid>
           <Row>
             <Col lg={12} md={12} sm={12}>
-              <Title render={titleHandler} />
+              <Helmet><title>{titleHandler()}</title></Helmet>
               <h1><FormattedMessage {...localMessages.title} /></h1>
               <p><FormattedHTMLMessage {...localMessages.intro} /></p>
               {content}

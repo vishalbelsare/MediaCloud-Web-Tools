@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import Title from 'react-title-component';
+import { Helmet } from 'react-helmet';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
@@ -49,7 +49,7 @@ class InfluentialStoriesContainer extends React.Component {
       <Grid>
         <Row>
           <Col lg={12} md={12} sm={12}>
-            <Title render={titleHandler} />
+            <Helmet><title>{titleHandler()}</title></Helmet>
             <DataCard border={false}>
               <div className="actions">
                 <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import Title from 'react-title-component';
+import { Helmet } from 'react-helmet';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import Dialog from 'material-ui/Dialog';
 import Link from 'react-router/lib/Link';
@@ -78,7 +78,7 @@ class StoryContainer extends React.Component {
     ];
     return (
       <div>
-        <Title render={titleHandler} />
+        <Helmet><title>{titleHandler()}</title></Helmet>
         <Grid>
           <Row>
             <Col lg={12}>

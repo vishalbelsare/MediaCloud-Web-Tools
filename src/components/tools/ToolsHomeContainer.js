@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import Title from 'react-title-component';
+import { Helmet } from 'react-helmet';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import messages from '../../resources/messages';
 import { TOPICS_URL, EXPLORER_URL, SOURCES_URL } from '../common/header/NavToolbar';
@@ -47,7 +47,7 @@ const ToolsHomeContainer = (props) => {
   return (
     <div className="tools-home about-page">
       <Grid>
-        <Title render={titleHandler} />
+        <Helmet><title>{titleHandler()}</title></Helmet>
         <Row>
           <Col lg={12}>
             <h1><FormattedMessage {...localMessages.title} /></h1>

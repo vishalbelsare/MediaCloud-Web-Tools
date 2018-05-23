@@ -4,7 +4,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import Link from 'react-router/lib/Link';
 import { Grid } from 'react-flexbox-grid/lib';
-import Title from 'react-title-component';
+import { Helmet } from 'react-helmet';
 import { selectCollection, fetchCollectionDetails } from '../../../actions/sourceActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import SourceControlBar from '../controlbar/SourceControlBar';
@@ -50,7 +50,7 @@ class SelectCollectionContainer extends React.Component {
     const titleHandler = parentTitle => `${collection.label} | ${parentTitle}`;
     return (
       <div className="collection-container">
-        <Title render={titleHandler} />
+        <Helmet><title>{titleHandler()}</title></Helmet>
         <SourceMgrHeaderContainer />
         <SourceControlBar>
           <a href="search-in-explorer" onClick={this.searchInExplorer} >

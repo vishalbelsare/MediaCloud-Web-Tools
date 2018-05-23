@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
-import Title from 'react-title-component';
+import { Helmet } from 'react-helmet';
 import AppContainer from '../AppContainer';
 import messages from '../../resources/messages';
 
@@ -10,7 +10,7 @@ const ExplorerApp = (props) => {
   const titleHandler = parentTitle => `${formatMessage(messages.explorerToolName)} | ${parentTitle}`;
   return (
     <div>
-      <Title render={titleHandler} />
+      <Helmet><title>{titleHandler()}</title></Helmet>
       <AppContainer
         name="explorer"
         title={formatMessage(messages.explorerToolName)}

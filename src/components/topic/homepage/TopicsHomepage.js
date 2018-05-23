@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import Title from 'react-title-component';
+import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
 import Link from 'react-router/lib/Link';
 import { FormattedMessage, injectIntl, FormattedHTMLMessage } from 'react-intl';
@@ -41,7 +41,7 @@ const TopicsHomepage = (props) => {
     content = (
       <div>
 
-        <Title render={titleHandler} />
+        <Helmet><title>{titleHandler()}</title></Helmet>
 
         <div className="controlbar">
           <div className="main">
@@ -73,7 +73,7 @@ const TopicsHomepage = (props) => {
     content = (
       <div>
 
-        <Title render={titleHandler} />
+        <Helmet><title>{titleHandler()}</title></Helmet>
 
         <Grid>
           <Row>
