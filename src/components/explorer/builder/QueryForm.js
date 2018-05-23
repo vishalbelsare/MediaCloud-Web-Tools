@@ -59,15 +59,9 @@ class QueryForm extends React.Component {
     childDialogOpen: false,
   }
 
-  componentDidMount() {
-    this.queryRef.input.refs.input.focus();
-  }
-
   setQueryFormChildDialogOpen = () => {
     this.setState({ childDialogOpen: !this.state.childDialogOpen });
   }
-  // required to be able to reference the Field/TextField component in order to set focus
-  preserveRef = ref => (this.queryRef = ref);
 
   render() {
     const { initialValues, onWillSearch, isEditable, selected, buttonLabel, onMediaDelete, onDateChange, handleLoadSearches, handleDeleteSearch, handleLoadSelectedSearch, savedSearches, searchNickname, handleSaveSearch,
@@ -85,14 +79,6 @@ class QueryForm extends React.Component {
       ...selected.sources,
       ...selected.collections,
     ];
-    /*
-    if (selected === null) return 'Error';
-    else if (this.queryRef) { // set the focus to query field ref when a query is selected
-      if ((selected.q === undefined || selected.q === '*') && !this.state.childDialogOpen) {
-        focusQueryInputField(this.queryRef);
-      }
-    }
-    */
     const currentColor = selected.color; // for ColorPicker
     const currentQ = selected.q;
     let mediaPicker = null;
