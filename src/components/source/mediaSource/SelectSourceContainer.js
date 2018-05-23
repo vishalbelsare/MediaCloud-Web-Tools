@@ -4,7 +4,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid } from 'react-flexbox-grid/lib';
 import Link from 'react-router/lib/Link';
-import Title from 'react-title-component';
+import { Helmet } from 'react-helmet';
 import { getCurrentDate, oneMonthBefore } from '../../../lib/dateUtil';
 import { urlToExplorerQuery } from '../../../lib/urlUtil';
 import { selectSource, fetchSourceDetails } from '../../../actions/sourceActions';
@@ -50,7 +50,7 @@ class SelectSourceContainer extends React.Component {
     const titleHandler = parentTitle => `${source.name} | ${parentTitle}`;
     return (
       <div className="source-container">
-        <Title render={titleHandler} />
+        <Helmet><title>{titleHandler()}</title></Helmet>
         <SourceMgrHeaderContainer />
         <SourceControlBar>
           <a href="search-in-explorer" onClick={this.searchInExplorer} >

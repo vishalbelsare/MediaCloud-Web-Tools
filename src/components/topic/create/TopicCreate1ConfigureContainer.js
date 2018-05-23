@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { reduxForm, formValueSelector } from 'redux-form';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import Title from 'react-title-component';
+import { Helmet } from 'react-helmet';
 import composeIntlForm from '../../common/IntlForm';
 import TopicForm, { TOPIC_FORM_MODE_CREATE } from './TopicForm';
 import { goToCreateTopicStep } from '../../../actions/topicActions';
@@ -31,7 +31,7 @@ const TopicCreate1ConfigureContainer = (props) => {
   const initialValues = { start_date: startDate, end_date: endDate, max_iterations: 15, buttonLabel: formatMessage(messages.preview) };
   return (
     <Grid>
-      <Title render={formatMessage(localMessages.title)} />
+      <Helmet><title>{formatMessage(localMessages.title)}</title></Helmet>
       <Row>
         <Col lg={10}>
           <h1><FormattedMessage {...localMessages.title} /></h1>

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import Title from 'react-title-component';
+import { Helmet } from 'react-helmet';
 // import { formValueSelector } from 'redux-form';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
@@ -40,7 +40,7 @@ class AdvancedSearchContainer extends React.Component {
     }
     return (
       <div>
-        <Title render={titleHandler} />
+        <Helmet><title>{titleHandler()}</title></Helmet>
         <Grid>
           <Row>
             <Col lg={12}>

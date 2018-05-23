@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import Title from 'react-title-component';
+import { Helmet } from 'react-helmet';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import LoginForm from './LoginForm';
 
@@ -22,7 +22,7 @@ class LoginContainer extends React.Component {
     const className = `logged-in-${isLoggedIn}`;
     return (
       <Grid>
-        <Title render={titleHandler} />
+        <Helmet><title>{titleHandler()}</title></Helmet>
         <Row>
           <Col lg={12} md={12} sm={12} className={className}>
             <h2><FormattedMessage {...localMessages.loginTitle} /></h2>
