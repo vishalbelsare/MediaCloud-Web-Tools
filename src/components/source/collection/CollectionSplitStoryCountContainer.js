@@ -10,6 +10,7 @@ import { getBrandDarkColor } from '../../../styles/colors';
 import messages from '../../../resources/messages';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import { DownloadButton } from '../../common/IconButton';
+import { urlToExplorerQuery } from '../../../lib/urlUtil';
 
 const localMessages = {
   title: { id: 'sentenceCount.title', defaultMessage: 'Last Year of Coverage' },
@@ -29,10 +30,11 @@ class CollectionSplitStoryCountContainer extends React.Component {
     window.location = url;
   }
   handleDataPointClick = (startDate, endDate) => {
-    const { collectionId } = this.props;
+    const { collectionName, collectionId } = this.props;
     const startDateStr = `${startDate.getFullYear()}-${startDate.getMonth() + 1}-${startDate.getDate()}`;
     const endDateStr = `${endDate.getFullYear()}-${endDate.getMonth() + 1}-${endDate.getDate()}`;
-    const url = `https://dashboard.mediacloud.org/#query/["*"]/[{"sets":[${collectionId}]}]/["${startDateStr}"]/["${endDateStr}"]/[{"uid":1,"name":"time","color":"55868A"}]`;
+    const url = urlToExplorerQuery(`${collectionName} on ${startDateStr}`, '*', [], [collectionId],
+      startDateStr, endDateStr);
     window.open(url, '_blank');
   }
   render() {

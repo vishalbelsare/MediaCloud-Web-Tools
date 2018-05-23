@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import Title from 'react-title-component';
+import { Helmet } from 'react-helmet';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import SourceManagerFaq from './faq/SourceManagerFaq';
@@ -15,7 +15,7 @@ const About = (props) => {
   const titleHandler = parentTitle => `${title} | ${parentTitle}`;
   return (
     <Grid>
-      <Title render={titleHandler} />
+      <Helmet><title>{titleHandler()}</title></Helmet>
       <div className="about-page">
         <Row>
           <Col lg={12}>

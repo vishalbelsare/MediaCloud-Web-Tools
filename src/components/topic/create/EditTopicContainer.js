@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { push } from 'react-router-redux';
-import Title from 'react-title-component';
+import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import { reduxForm } from 'redux-form';
@@ -125,7 +125,7 @@ class EditTopicContainer extends React.Component {
       <div className="topic-edit-form">
         <BackLinkingControlBar message={messages.backToTopic} linkTo={`/topics/${topicId}/summary`} />
         <Grid>
-          <Title render={formatMessage(localMessages.editTopicTitle)} />
+          <Helmet><title>{formatMessage(localMessages.editTopicTitle)}</title></Helmet>
           <Row>
             <Col lg={12}>
               <h1><FormattedMessage {...localMessages.editTopicTitle} /></h1>

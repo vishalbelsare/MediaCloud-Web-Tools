@@ -4,7 +4,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { Link } from 'react-router';
-import Title from 'react-title-component';
+import { Helmet } from 'react-helmet';
 import { fetchCollectionSourceSplitStoryHistoricalCounts } from '../../../actions/sourceActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import { getBrandDarkColor } from '../../../styles/colors';
@@ -33,7 +33,7 @@ class CollectionContentHistory extends React.Component {
     const titleHandler = parentTitle => `${formatMessage(localMessages.title)} | ${parentTitle}`;
     return (
       <div>
-        <Title render={titleHandler} />
+        <Helmet><title>{titleHandler()}</title></Helmet>
         <Grid>
           <Row>
             <Col lg={10}>

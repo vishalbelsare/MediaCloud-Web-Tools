@@ -12,7 +12,7 @@ const SystemStatsContainer = (props) => {
   const { formatNumber } = props.intl;
   const { total_stories,
           // total_downloads,
-          total_sentences,
+          // total_sentences,
           active_crawled_media,
           // active_crawled_feeds,
           daily_stories,
@@ -22,11 +22,11 @@ const SystemStatsContainer = (props) => {
   return (
     <div className="system-stats">
       <StatBar
-        columnWidth={3}
+        columnWidth={4}
         stats={[
           { message: messages.totalStoriesStat, data: humanReadableNumber(total_stories, 3, formatNumber) },
           // { message: messages.totalDownloadsStat, data: humanReadableNumber(total_downloads, 3) },
-          { message: messages.totalSentencesStat, data: humanReadableNumber(total_sentences, 3, formatNumber) },
+          // { message: messages.totalSentencesStat, data: humanReadableNumber(total_sentences, 3, formatNumber) },
           { message: messages.crawledMediaStat, data: humanReadableNumber(active_crawled_media, 2, formatNumber) },
           // { message: messages.crawledFeedsStat, data: humanReadableNumber(active_crawled_feeds, 3) },
           { message: messages.dailyStoriesStat, data: humanReadableNumber(daily_stories, 3, formatNumber) },

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import Title from 'react-title-component';
+import { Helmet } from 'react-helmet';
 import Link from 'react-router/lib/Link';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -23,7 +23,7 @@ const PendingSuggestionsContainer = (props) => {
     <Grid>
       <Row>
         <Col lg={12} md={12} sm={12}>
-          <Title render={titleHandler} />
+          <Helmet><title>{titleHandler()}</title></Helmet>
           <h1><FormattedMessage {...localMessages.title} /></h1>
           <p><FormattedMessage {...localMessages.intro} /></p>
           <p>

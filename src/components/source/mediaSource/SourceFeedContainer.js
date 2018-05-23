@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import Link from 'react-router/lib/Link';
 import { push } from 'react-router-redux';
-import Title from 'react-title-component';
+import { Helmet } from 'react-helmet';
 import { fetchSourceFeeds, scrapeSourceFeeds, fetchSourceDetails } from '../../../actions/sourceActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import MediaSourceIcon from '../../common/icons/MediaSourceIcon';
@@ -52,7 +52,7 @@ class SourceFeedContainer extends React.Component {
     }
     return (
       <Grid className="details source-details">
-        <Title render={titleHandler} />
+        <Helmet><title>{titleHandler()}</title></Helmet>
         <Row>
           <Col lg={11} xs={11}>
             <h1>

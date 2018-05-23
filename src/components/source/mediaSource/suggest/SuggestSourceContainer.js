@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import Title from 'react-title-component';
+import { Helmet } from 'react-helmet';
 import { reduxForm, reset } from 'redux-form';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -28,7 +28,7 @@ const SuggestSourceContainer = (props) => {
   const titleHandler = formatMessage(localMessages.mainTitle);
   return (
     <div>
-      <Title render={titleHandler} />
+      <Helmet><title>{titleHandler()}</title></Helmet>
       <Grid>
         <Row>
           <Col lg={12}>

@@ -7,10 +7,10 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import { fetchSourceSplitStoryCount } from '../../../actions/sourceActions';
 import DataCard from '../../common/DataCard';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
-
 import messages from '../../../resources/messages';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import { DownloadButton } from '../../common/IconButton';
+import { urlToExplorerQuery } from '../../../lib/urlUtil';
 
 const localMessages = {
   title: { id: 'source.summary.splitCount.title', defaultMessage: 'Stories from this Media Source (over the last year)' },
@@ -27,10 +27,10 @@ class SourceSplitStoryCountContainer extends React.Component {
     window.location = url;
   }
   handleDataPointClick = (startDate, endDate) => {
-    const { sourceId } = this.props;
+    const { sourceId, sourceName } = this.props;
     const startDateStr = `${startDate.getFullYear()}-${startDate.getMonth() + 1}-${startDate.getDate()}`;
     const endDateStr = `${endDate.getFullYear()}-${endDate.getMonth() + 1}-${endDate.getDate()}`;
-    const url = `https://dashboard.mediacloud.org/#query/["*"]/[{"sources":[${sourceId}]}]/["${startDateStr}"]/["${endDateStr}"]/[{"uid":1,"name":"time","color":"55868A"}]`;
+    const url = urlToExplorerQuery(sourceName, '*', [sourceId], [], startDateStr, endDateStr);
     window.open(url, '_blank');
   }
   render() {
