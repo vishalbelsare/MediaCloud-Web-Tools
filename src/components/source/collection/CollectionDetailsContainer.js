@@ -68,14 +68,16 @@ class CollectionDetailsContainer extends React.Component {
         viewContent = (
           <span>
             <Row>
-              <Col lg={6}>
+              <Col lg={12}>
                 <CollectionSplitStoryCountContainer
                   collectionId={collection.tags_id}
                   filename={filename}
                   collectionName={collection.label || collection.tag}
                 />
               </Col>
-              <Col lg={6}>
+            </Row>
+            <Row>
+              <Col lg={12}>
                 <CollectionTopWordsContainer collectionId={collection.tags_id} collectionName={collection.label || collection.tag} />
               </Col>
             </Row>
