@@ -44,6 +44,7 @@ class MediaWordsContainer extends React.Component {
         helpButton={helpButton}
         domId={WORD_CLOUD_DOM_ID}
         svgDownloadPrefix={`${topicDownloadFilename(topicName, filters)}-media-${mediaId}-words`}
+        includeTopicWord2Vec
       />
     );
   }

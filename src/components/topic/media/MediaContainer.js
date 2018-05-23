@@ -117,12 +117,12 @@ class MediaContainer extends React.Component {
             <ComingSoon />
           </Dialog>
           <Row>
-            <Col lg={6} md={6} sm={12}>
-              <StatBar
-                stats={summaryStats}
-              />
+            <Col lg={12}>
+              <StatBar stats={summaryStats} columnWidth={2} />
             </Col>
-            <Col lg={6} md={6} sm={12}>
+          </Row>
+          <Row>
+            <Col lg={12}>
               <MediaSplitStoryCountContainer topicId={topicId} mediaId={mediaId} />
             </Col>
           </Row>
@@ -142,9 +142,11 @@ class MediaContainer extends React.Component {
             </Col>
           </Row>
           <Row>
-            <Col lg={6} md={6} sm={12}>
+            <Col lg={12}>
               <MediaWordsContainer topicId={topicId} mediaId={mediaId} topicName={topicName} />
             </Col>
+          </Row>
+          <Row>
             <Col lg={6} xs={12}>
               <CollectionList
                 title={formatMessage(localMessages.collectionTitle)}
@@ -153,10 +155,8 @@ class MediaContainer extends React.Component {
                 linkToFullUrl
               />
             </Col>
-          </Row>
-          <Row>
-            <Col lg={12}>
-              <SourceMetadataStatBar source={media} />
+            <Col lg={6} xs={12}>
+              <SourceMetadataStatBar source={media} columnWidth={6} />
             </Col>
           </Row>
         </Grid>
