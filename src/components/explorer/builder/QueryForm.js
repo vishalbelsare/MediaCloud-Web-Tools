@@ -42,18 +42,6 @@ const localMessages = {
   copyQueryMediaMsg: { id: 'explorer.queryform.title.copyQueryMedia', defaultMessage: 'Are you sure you want to copy these media to all your queries? This will replace the media for all your queries.' },
 };
 
-/*
-const focusQueryInputField = (input) => {
-  if (input && input.input !== null && input.input.refs) {
-    setTimeout(() => {
-      if (input.input !== null) {
-        input.input.refs.input.focus();
-      }
-    }, 100);
-  }
-};
-*/
-
 class QueryForm extends React.Component {
   state = { // do not focus on primary textfield if we have a dialog open
     childDialogOpen: false,
@@ -94,8 +82,6 @@ class QueryForm extends React.Component {
       mediaLabel = formatMessage(localMessages.selectSandC);
     }
     if (!selected) { return null; }
-    // if we have a ref field, we have intend to set the focus to a particular field - the query field
-    // essentially an autofocus for the form
     return (
       <form className="app-form query-form" name="queryForm" onSubmit={handleSubmit(onSave)}>
         <div className="query-form-wrapper">
@@ -114,8 +100,6 @@ class QueryForm extends React.Component {
                     rowsMax={4}
                     fullWidth
                     onChange={this.focusSelect}
-                    withRef
-                    saveRef={(input) => { this.preserveRef(input); }}
                     component={renderTextFieldWithFocus}
                   />
                   <QueryHelpDialog />
