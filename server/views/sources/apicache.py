@@ -1,8 +1,10 @@
+import datetime
 import json
 import codecs
 import operator
 
 from server import mc
+from server.auth import user_mediacloud_client
 from server.cache import cache, key_generator
 from server.views.sources import FEATURED_COLLECTION_LIST
 import server.util.tags as tags
@@ -69,3 +71,44 @@ def random_story_list(mc_api_key, q, fq=None, rows=1000):
 @cache.cache_on_arguments(function_key_generator=key_generator)
 def _cached_random_story_list(mc_api_key, q, fq, rows):
     return mc.storyList(q, fq, rows=rows, sort=mc.SORT_RANDOM)
+
+
+def last_year_split_story_count(user_mc_key, q='*'):
+    return _cached_last_year_split_story_count(user_mc_key, q)
+
+
+@cache.cache_on_arguments(function_key_generator=key_generator)
+def _cached_last_year_split_story_count(user_mc_key, q='*'):
+    # Helper to fetch split story counts over a timeframe for an arbitrary query
+    user_mc = user_mediacloud_client()
+    last_n_days = 365
+    start_date = datetime.date.today()-datetime.timedelta(last_n_days)
+    end_date = datetime.date.today()-datetime.timedelta(1)  # yesterday
+    fq = user_mc.publish_date_query(start_date, end_date)
+    results = user_mc.storyCount(solr_query=q, solr_filter=fq, split=True, split_period='day')
+    results['counts'] = _fill_in_missing_dates(results['counts'], start_date, end_date)
+    results['total_story_count'] = sum([r['count'] for r in results['counts']])
+    return results
+
+
+def _fill_in_missing_dates(counts, start, end, period="day"):
+    if start is None and end is None:
+        return counts
+    new_counts = []
+    current = start
+    while current <= end:
+        date_string = current.strftime(mc.SENTENCE_PUBLISH_DATE_FORMAT)
+        existing_count = next((r for r in counts if r['date'] == date_string), None)
+        if existing_count:
+            new_counts.append(existing_count)
+        else:
+            new_counts.append({'date': date_string, 'count': 0})
+        if period == "day":
+            current += datetime.timedelta(days=1)
+        elif period == "month":
+            current += datetime.timedelta(months=1)
+        elif period == "year":
+            current += datetime.timedelta(years=1)
+        else:
+            raise RuntimeError("Unsupport time period for filling in missing dates - {}".format(period))
+    return new_counts
