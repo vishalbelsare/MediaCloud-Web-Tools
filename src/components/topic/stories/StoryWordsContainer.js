@@ -44,6 +44,7 @@ class StoryWordsContainer extends React.Component {
         helpButton={helpButton}
         domId={WORD_CLOUD_DOM_ID}
         svgDownloadPrefix={`${topicDownloadFilename(topicName, filters)}-story-${storiesId}-words`}
+        includeTopicWord2Vec
       />
     );
   }
@@ -96,7 +97,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.wordcloudHelpText, messages.wordCloudWord2VecLayoutHelp])(
+      composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.wordcloudHelpText, messages.wordCloudTopicWord2VecLayoutHelp])(
         composeAsyncContainer(
           StoryWordsContainer
         )

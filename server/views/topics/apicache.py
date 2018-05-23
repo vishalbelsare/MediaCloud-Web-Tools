@@ -173,16 +173,16 @@ def topic_word_counts(user_mc_key, topics_id, **kwargs):
     for i in range(len(google_word2vec_data)):
         word_data[i]['google_w2v_x'] = google_word2vec_data[i]['x']
         word_data[i]['google_w2v_y'] = google_word2vec_data[i]['y']
-    topic_word2vec_data = _word2vec_topic_2d_results(topics_id, words)
+    topic_word2vec_data = _word2vec_topic_2d_results(topics_id, snapshots_id, words)
     for i in range(len(topic_word2vec_data)):
         word_data[i]['w2v_x'] = topic_word2vec_data[i]['x']
         word_data[i]['w2v_y'] = topic_word2vec_data[i]['y']
     return word_data
 
 
-def _word2vec_topic_2d_results(topics_id, words):
+def _word2vec_topic_2d_results(topics_id, snapshots_id, words):
     # can't cache this because the first time it is called we usually don't have results
-    word2vec_results = wordembeddings.topic_2d(topics_id, words)
+    word2vec_results = wordembeddings.topic_2d(topics_id, snapshots_id, words)
     return word2vec_results
 
 
@@ -354,9 +354,9 @@ def _cached_topic_sentence_sample(user_mc_key, topics_id, sample_size=1000, **kw
 def topic_timespan(topics_id, snapshots_id, foci_id, timespans_id):
     '''
     No timespan/single end point, so we need a helper to do it
-    :param snapshots_id: 
-    :param timespans_id: 
-    :param foci_id: 
+    :param snapshots_id:
+    :param timespans_id:
+    :param foci_id:
     :return: info about one timespan as specified
     '''
     timespans_list = cached_topic_timespan_list(user_mediacloud_key(), topics_id, snapshots_id, foci_id)

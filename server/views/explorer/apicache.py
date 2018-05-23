@@ -61,10 +61,10 @@ def _cached_sentence_list(mc_api_key, q, fq, rows, include_stories=True):
     tool_mc = user_admin_mediacloud_client(mc_api_key)
     sentences = tool_mc.sentenceList(q, fq)[:rows]
     stories_id_list = [str(s['stories_id']) for s in sentences]
-    if include_stories:
+    if (len(stories_id_list) > 0) and include_stories:
         # this is the fastest way to get a list of stories by id
         stories = user_mediacloud_client().storyList("stories_id:({})".format(" ".join(stories_id_list)))
-        stories_by_id = {s['stories_id']:s for s in stories}  # build a quick lookup table by stories_id
+        stories_by_id = {s['stories_id']: s for s in stories}  # build a quick lookup table by stories_id
         for s in sentences:
             local_mc = _mc_client()
             s['story'] = stories_by_id[s['stories_id']]

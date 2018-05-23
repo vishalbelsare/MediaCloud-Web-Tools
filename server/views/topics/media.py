@@ -11,8 +11,7 @@ from server.util.tags import is_metadata_tag_set, format_metadata_fields
 from server.views.topics import validated_sort, TOPICS_TEMPLATE_PROPS
 from server.views.topics.splitstories import stream_topic_split_story_counts_csv, topic_split_story_count
 from server.views.topics.stories import stream_story_list_csv
-from server.views.topics.apicache import topic_media_list, topic_word_counts, topic_story_count, \
-    topic_story_list, add_to_user_query, WORD_COUNT_DOWNLOAD_COLUMNS, topic_ngram_counts
+import server.views.topics.apicache as apicache
 from server.util.request import filters_from_args, api_error_handler
 from server.views.topics import access_public_topic
 
@@ -24,10 +23,10 @@ logger = logging.getLogger(__name__)
 @api_error_handler
 def topic_media(topics_id):
     if access_public_topic(topics_id):
-        media_list = topic_media_list(TOOL_API_KEY, topics_id, snapshots_id=None, timespans_id=None, foci_id=None,
-                                      sort=None, limit=None, link_id=None)
+        media_list = apicache.topic_media_list(TOOL_API_KEY, topics_id, snapshots_id=None, timespans_id=None,
+                                               foci_id=None, sort=None, limit=None, link_id=None)
     elif is_user_logged_in():
-        media_list = topic_media_list(user_mediacloud_key(), topics_id)
+        media_list = apicache.topic_media_list(user_mediacloud_key(), topics_id)
     else:
         return jsonify({'status': 'Error', 'message': 'Invalid attempt'})
 
@@ -39,7 +38,7 @@ def topic_media(topics_id):
 @api_error_handler
 def media(topics_id, media_id):
     user_mc = user_admin_mediacloud_client()
-    combined_media_info = topic_media_list(user_mediacloud_key(), topics_id, media_id=media_id)['media'][0]
+    combined_media_info = apicache.topic_media_list(user_mediacloud_key(), topics_id, media_id=media_id)['media'][0]
     media_info = user_mc.media(media_id)
     for key in media_info.keys():
         if key not in combined_media_info.keys():
@@ -61,7 +60,7 @@ def topic_media_csv(topics_id):
 @flask_login.login_required
 @api_error_handler
 def topic_media_split_story_count(topics_id, media_id):
-    return jsonify(topic_split_story_count(user_mediacloud_key(), topics_id))
+    return jsonify(apicache.topic_split_story_counts(user_mediacloud_key(), topics_id))
 
 
 @app.route('/api/topics/<topics_id>/media/<media_id>/split-story/count.csv', methods=['GET'])
@@ -77,7 +76,7 @@ def topic_media_story_split_count_csv(topics_id, media_id):
 def media_stories(topics_id, media_id):
     sort = validated_sort(request.args.get('sort'))
     limit = request.args.get('limit')
-    stories = topic_story_list(user_mediacloud_key(), topics_id,
+    stories = apicache.topic_story_list(user_mediacloud_key(), topics_id,
                                media_id=media_id, sort=sort, limit=limit)
     return jsonify(stories)
 
@@ -96,7 +95,7 @@ def media_stories_csv(topics_id, media_id):
 def media_inlinks(topics_id, media_id):
     sort = validated_sort(request.args.get('sort'))
     limit = request.args.get('limit')
-    inlinks = topic_story_list(user_mediacloud_key(), topics_id,
+    inlinks = apicache.topic_story_list(user_mediacloud_key(), topics_id,
                                link_to_media_id=media_id, sort=sort, limit=limit)
     return jsonify(inlinks)
 
@@ -115,7 +114,7 @@ def media_inlinks_csv(topics_id, media_id):
 def media_outlinks(topics_id, media_id):
     sort = validated_sort(request.args.get('sort'))
     limit = request.args.get('limit')
-    outlinks = topic_story_list(user_mediacloud_key(), topics_id,
+    outlinks = apicache.topic_story_list(user_mediacloud_key(), topics_id,
                                 link_from_media_id=media_id, sort=sort, limit=limit)
     return jsonify(outlinks)
 
@@ -142,7 +141,7 @@ def _stream_media_list_csv(user_mc_key, filename, topics_id, **kwargs):
             cols_to_export = cols_to_export[:-4]    # remove the metadata cols
 
         while more_media:
-            page = topic_media_list(user_mediacloud_key(), topics_id, **params)
+            page = apicache.topic_media_list(user_mediacloud_key(), topics_id, **params)
             media_list = page['media']
             user_mc = user_admin_mediacloud_client()
 
@@ -170,17 +169,17 @@ def _stream_media_list_csv(user_mc_key, filename, topics_id, **kwargs):
 @flask_login.login_required
 @api_error_handler
 def media_words(topics_id, media_id):
-    query = add_to_user_query('media_id:'+media_id)
-    word_list = topic_word_counts(user_mediacloud_key(), topics_id, q=query)[:100]
+    query = apicache.add_to_user_query('media_id:'+media_id)
+    word_list = apicache.topic_word_counts(user_mediacloud_key(), topics_id, q=query)[:100]
     return jsonify(word_list)
 
 
 @app.route('/api/topics/<topics_id>/media/<media_id>/words.csv', methods=['GET'])
 @flask_login.login_required
 def media_words_csv(topics_id, media_id):
-    query = add_to_user_query('media_id:'+media_id)
+    query = apicache.add_to_user_query('media_id:'+media_id)
     ngram_size = request.args['ngram_size'] if 'ngram_size' in request.args else 1  # default to word count
-    word_counts = topic_ngram_counts(user_mediacloud_key(), topics_id, ngram_size=ngram_size, q=query,
+    word_counts = apicache.topic_ngram_counts(user_mediacloud_key(), topics_id, ngram_size=ngram_size, q=query,
                                      num_words=WORD_COUNT_DOWNLOAD_LENGTH)
-    return csv.stream_response(word_counts, WORD_COUNT_DOWNLOAD_COLUMNS,
+    return csv.stream_response(word_counts, apicache.WORD_COUNT_DOWNLOAD_COLUMNS,
                                'topic-{}-media-{}-sampled-ngrams-{}-word'.format(topics_id, media_id, ngram_size))

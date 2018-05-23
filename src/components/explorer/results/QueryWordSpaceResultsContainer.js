@@ -9,12 +9,12 @@ import { DownloadButton } from '../../common/IconButton';
 import { queryChangedEnoughToUpdate, postToDownloadUrl, downloadExplorerSvg } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
 import QueryResultsSelector from './QueryResultsSelector';
-import Word2VecChart from '../../vis/Word2VecChart';
+import WordSpace from '../../vis/WordSpace';
 import composeAsyncContainer from '../../common/AsyncContainer';
 
 const localMessages = {
   title: { id: 'explorer.topWords.title', defaultMessage: 'Word Space' },
-  descriptionIntro: { id: 'explorer.topWords.help.title', defaultMessage: '<p>Understanding which words are used together can help you find sub-conversations with the reporting about your issue.  This chart includes the top words, laying them out based on which words tend to be used together the most in news coverage online.  Words used more often are bigger and darker.</p>' },
+  descriptionIntro: { id: 'explorer.topWords.help.title', defaultMessage: '<p>Understanding which words are used together can help you find sub-conversations within the reporting about your issue.  We created this chart to show information about how the top 50 words are used. The bigger and darker a word is, the more it is used. Words are laid out based on how they are used in general news reporting (not based on the stories matching your query). Rollover a word to highlight words used in similar phrases in general news reporting.</p>' },
   noGoogleW2VData: { id: 'wordcloud.editable.mode.googleW2V.noData', defaultMessage: 'Sorry, but the Google News word2vec data is missing.' },
 };
 
@@ -40,13 +40,13 @@ class QueryWordSpaceResultsContainer extends React.Component {
           options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
           onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
         />
-        <Word2VecChart
-          words={results[this.state.selectedQueryIndex].list.slice(0, 100)} // can't draw too many as it gets unreadable
-          domId={WORD_SPACE_DOM_ID}
-          width={585}
+        <WordSpace
+          words={results[this.state.selectedQueryIndex].list.slice(0, 50)}
+          domId={`${WORD_SPACE_DOM_ID}-${this.state.selectedQueryIndex}`}
           xProperty="google_w2v_x"
           yProperty="google_w2v_y"
           noDataMsg={localMessages.noGoogleW2VData}
+          length={660}
         />
         <div className="actions">
           <ActionMenu actionTextMsg={messages.downloadOptions}>
@@ -109,7 +109,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeSummarizedVisualization(localMessages.title, localMessages.descriptionIntro, messages.wordCloudWord2VecLayoutHelp)(
+      composeSummarizedVisualization(localMessages.title, localMessages.descriptionIntro, messages.wordSpaceLayoutHelp)(
         composeAsyncContainer(
           QueryWordSpaceResultsContainer
         )

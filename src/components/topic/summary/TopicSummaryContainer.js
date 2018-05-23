@@ -19,6 +19,7 @@ import GeoTagSummaryContainer from './GeoTagSummaryContainer';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import TopicStoryMetadataStatsContainer from './TopicStoryMetadataStatsContainer';
+import TopicWordSpaceContainer from './TopicWordSpaceContainer';
 
 const localMessages = {
   title: { id: 'topic.summary.public.title', defaultMessage: 'Topic: {name}' },
@@ -87,6 +88,11 @@ class TopicSummaryContainer extends React.Component {
           <Row>
             <Col lg={12}>
               <WordsSummaryContainer topicId={topicId} topicName={topicInfo.name} filters={filters} width={720} />
+            </Col>
+          </Row>
+          <Row>
+            <Col lg={12}>
+              <TopicWordSpaceContainer topicId={topicId} />
             </Col>
           </Row>
           <Row>

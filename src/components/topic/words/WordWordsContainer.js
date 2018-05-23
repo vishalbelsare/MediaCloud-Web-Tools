@@ -44,6 +44,7 @@ class WordWordsContainer extends React.Component {
         helpButton={helpButton}
         domId={WORD_CLOUD_DOM_ID}
         svgDownloadPrefix={`${topicDownloadFilename(topicName, filters)}-${slugify(term)}-words`}
+        includeTopicWord2Vec
       />
     );
   }
@@ -90,7 +91,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.wordcloudHelpText, messages.wordCloudWord2VecLayoutHelp])(
+      composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.wordcloudHelpText, messages.wordCloudTopicWord2VecLayoutHelp])(
         composeAsyncContainer(
           WordWordsContainer
         )

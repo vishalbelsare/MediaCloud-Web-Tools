@@ -6,7 +6,7 @@ import { fetchSourceTopWords } from '../../../actions/sourceActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import messages from '../../../resources/messages';
-import PeriodicEditableWordCloudDataCard from '../../common/PeriodicEditableWordCloudDataCard';
+import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
 import { calculateTimePeriods, getCurrentDate, oneMonthBefore } from '../../../lib/dateUtil';
 import { urlToExplorerQuery } from '../../../lib/urlUtil';
 
@@ -35,7 +35,7 @@ class SourceTopWordsContainer extends React.Component {
     const { formatMessage } = this.props.intl;
     const downloadUrl = `/api/sources/${source.media_id}/words/wordcount.csv`;
     return (
-      <PeriodicEditableWordCloudDataCard
+      <EditableWordCloudDataCard
         words={words}
         handleTimePeriodClick={this.fetchWordsByTimePeriod}
         selectedTimePeriod={timePeriod}
@@ -46,6 +46,7 @@ class SourceTopWordsContainer extends React.Component {
         domId={`media-source-top-words-${source.media_id}`}
         width={900}
         helpButton={helpButton}
+        includeTopicWord2Vec
       />
     );
   }
@@ -90,7 +91,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeHelpfulContainer(localMessages.helpTitle, [localMessages.intro, messages.wordcloudHelpText, messages.wordCloudWord2VecLayoutHelp])(
+      composeHelpfulContainer(localMessages.helpTitle, [localMessages.intro, messages.wordSpaceLayoutHelp])(
         composeAsyncContainer(
           SourceTopWordsContainer
         )

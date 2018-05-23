@@ -10,7 +10,7 @@ import DataCard from './DataCard';
 import messages from '../../resources/messages';
 import OrderedWordCloud from '../vis/OrderedWordCloud';
 import WordCloud from '../vis/WordCloud';
-import Word2VecChart from '../vis/Word2VecChart';
+import WordSpace from '../vis/WordSpace';
 import { DownloadButton, ExploreButton, EditButton } from './IconButton';
 import { getBrandDarkColor } from '../../styles/colors';
 import { downloadSvg } from '../util/svg';
@@ -21,6 +21,8 @@ const VIEW_CLOUD = 'VIEW_CLOUD';
 const VIEW_ORDERED = 'VIEW_ORDERED';
 const VIEW_GOOGLE_W2V = 'VIEW_GOOGLE_W2V';
 const VIEW_TOPIC_W2V = 'VIEW_TOPIC_W2V';
+
+const WORD_SPACE_WORD_LIMIT = 50;
 
 const localMessages = {
   editing: { id: 'wordcloud.editable.editingNotice', defaultMessage: 'You are temporarily editing this word cloud. Click words you want to hide, then use the menu to flip back into view mode and export it to SVG.' },
@@ -299,8 +301,8 @@ class EditableWordCloudDataCard extends React.Component {
         break;
       case VIEW_GOOGLE_W2V:
         cloudContent = (
-          <Word2VecChart
-            words={wordsArray.slice(0, 100)}  // can't draw too many as it gets unreadable
+          <WordSpace
+            words={wordsArray.slice(0, WORD_SPACE_WORD_LIMIT)}  // can't draw too many as it gets unreadable
             domId={uniqueDomId}
             width={width}
             height={height}
@@ -312,8 +314,8 @@ class EditableWordCloudDataCard extends React.Component {
         break;
       case VIEW_TOPIC_W2V:
         cloudContent = (
-          <Word2VecChart
-            words={wordsArray.slice(0, 100)}  // can't draw too many as it gets unreadable
+          <WordSpace
+            words={wordsArray.slice(0, WORD_SPACE_WORD_LIMIT)}  // can't draw too many as it gets unreadable
             domId={uniqueDomId}
             width={width}
             height={height}

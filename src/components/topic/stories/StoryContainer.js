@@ -111,7 +111,7 @@ class StoryContainer extends React.Component {
             </Col>
           </Row>
           <Row>
-            <Col lg={6} xs={12} >
+            <Col lg={12}>
               <StatBar
                 stats={[
                   { message: messages.mediaInlinks, data: formatNumber(story.media_inlink_count) },
@@ -120,17 +120,26 @@ class StoryContainer extends React.Component {
                   { message: messages.facebookShares, data: formatNumber(story.facebook_share_count) },
                   { message: messages.language, data: story.language || formatMessage(localMessages.unknownLanguage) },
                 ]}
+                columnWidth={2}
               />
             </Col>
-            <Col lg={6} xs={12} >
-              <StoryWordsContainer topicId={topicId} storiesId={storiesId} topicName={topicName} />
-            </Col>
+          </Row>
+          <Row>
             <Col lg={12}>
               <StoryInlinksContainer topicId={topicId} storiesId={storiesId} />
             </Col>
+          </Row>
+          <Row>
             <Col lg={12}>
               <StoryOutlinksContainer topicId={topicId} storiesId={storiesId} />
             </Col>
+          </Row>
+          <Row>
+            <Col lg={12}>
+              <StoryWordsContainer topicId={topicId} storiesId={storiesId} topicName={topicName} />
+            </Col>
+          </Row>
+          <Row>
             <Col lg={6}>
               <StoryPlaces
                 tags={story.story_tags.filter(t => t.tag_sets_id === TAG_SET_GEOGRAPHIC_PLACES)}
@@ -143,6 +152,8 @@ class StoryContainer extends React.Component {
                 tags={story.story_tags.filter(t => t.tag_sets_id === TAG_SET_NYT_THEMES)}
               />
             </Col>
+          </Row>
+          <Row>
             <Col lg={6}>
               <StoryDetails topicId={topicId} story={story} />
             </Col>
