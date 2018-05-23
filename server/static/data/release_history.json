@@ -2,6 +2,22 @@
   "releases": [
     {
       "date": "2018-05-23",
+      "version": "v3.0.5",
+      "notes": [
+        {
+          "apps": ["sources", "topics"],
+          "type": "Fix",
+          "note": "Links to explorer in Source Manager and Topic Mapper work again."
+        },
+        {
+          "apps": ["sources", "explorer", "topics"],
+          "type": "Fix",
+          "note": "Updated some of our plumbing."
+        }
+      ]
+    },
+    {
+      "date": "2018-05-23",
       "version": "v3.0.4",
       "notes": [
         {
