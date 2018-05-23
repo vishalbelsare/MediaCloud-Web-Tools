@@ -24,11 +24,15 @@ def retweet_partisanship_story_counts(topics_id):
     # make a count for each tag
     for tag in partisanship_tags:
         tagged_story_count = topic_story_count(user_mediacloud_key(), topics_id, q=tag['query'])['count']
+        try:
+            pct = float(tagged_story_count)/float(total_stories)
+        except ZeroDivisionError:
+            pct = 0
         tag_story_counts.append({
             'label': tag['label'],
             'tags_id': tag['tags_id'],
             'count': tagged_story_count,
-            'pct': float(tagged_story_count)/float(total_stories)
+            'pct': pct
         })
     # order them in the way a person would expect ( left to center to right)
     ordered_tag_story_counts = list()
