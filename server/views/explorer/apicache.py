@@ -68,20 +68,19 @@ def _cached_sentence_list(mc_api_key, q, fq, rows, include_stories=True):
 
 
 def top_tags_with_coverage(q, fq, tag_sets_id, limit=TAG_COUNT_UI_LENGTH):
-    tag_counts = _most_used_tags(q, fq, tag_sets_id, limit)
+    tag_counts = _most_used_tags(q, fq, tag_sets_id)
     coverage = cliff_coverage(q, fq)
     for t in tag_counts:  # add in pct of what's been run through CLIFF to total results
         t['pct'] = float(t['count']) / coverage['counts']
-    coverage['results'] = tag_counts
+    coverage['results'] = tag_counts[:limit]
     return coverage
 
 
-def _most_used_tags(q, fq, tag_sets_id, limit=TAG_COUNT_UI_LENGTH):
+def _most_used_tags(q, fq, tag_sets_id):
     # top tags used in stories matching query (pass in None for no limit)
     api_key = _api_key()
-    sentence_count_results = _cached_most_used_tags(api_key, q, fq, tag_sets_id)
-    top_count_results = sentence_count_results[:limit] if limit is not None else sentence_count_results
-    return top_count_results
+    tags = _cached_most_used_tags(api_key, q, fq, tag_sets_id, 1000)
+    return tags
 
 
 def cliff_coverage(q, fq):

@@ -1,4 +1,3 @@
-import datetime
 import logging
 from multiprocessing import Pool
 
@@ -11,14 +10,14 @@ import server.util.csv as csv
 from server import app, mc, db
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_mediacloud_client, user_name,\
     user_has_auth_role, ROLE_MEDIA_EDIT
-import server.views.sources.apicache as apicache
 from server.util.request import arguments_required, form_fields_required, api_error_handler
 from server.util.tags import TAG_SETS_ID_COLLECTIONS, is_metadata_tag_set, format_name_from_label, \
     format_metadata_fields, media_with_tag
 from server.views.sources import SOURCES_TEMPLATE_PROPS_EDIT, COLLECTIONS_TEMPLATE_PROPS_EDIT
 from server.views.sources.favorites import add_user_favorite_flag_to_collections, add_user_favorite_flag_to_sources
 from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
-from server.views.sources.stories_split_by_time import cached_recent_split_stories, stream_split_stories_csv
+from server.views.sources.stories_split_by_time import stream_split_stories_csv
+import server.views.sources.apicache as apicache
 from server.views.sources.words import word_count, stream_wordcount_csv
 
 logger = logging.getLogger(__name__)
@@ -240,8 +239,7 @@ def collection_source_story_split_historical_counts_csv(collection_id):
 def _source_story_split_count_worker(info):
     source = info['media']
     q = "media_id:{}".format(source['media_id'])
-    fq = info['fq']
-    split_stories = cached_recent_split_stories(user_mediacloud_key(), q, fq)
+    split_stories = apicache.last_year_split_story_count(user_mediacloud_key(), q)
     source_data = {
         'media_id': source['media_id'],
         'media_name': source['name'],
@@ -254,21 +252,20 @@ def _source_story_split_count_worker(info):
 
 def _collection_source_story_split_historical_counts(collection_id):
     media_list = media_with_tag(user_mediacloud_key(), collection_id)
-    fq = "(publish_day:[NOW-1YEAR TO NOW])"
-    jobs = [{'media': m, 'fq': fq} for m in media_list]
+    jobs = [{'media': m} for m in media_list]
     # fetch in parallel to make things faster
     pool = Pool(processes=HISTORICAL_COUNT_POOL_SIZE)
     results = pool.map(_source_story_split_count_worker, jobs)  # blocks until they are all done
     pool.terminate()  # extra safe garbage collection
     return results
 
+
 @app.route('/api/collections/<collection_id>/story-split/count')
 @flask_login.login_required
 @api_error_handler
 def collection_source_split_stories(collection_id):
     q = "tags_id_media:{}".format(collection_id)
-    results = cached_recent_split_stories(user_mediacloud_key(), q)
-    #health =
+    results = apicache.last_year_split_story_count(user_mediacloud_key(), q)
     interval = 'day' # default, and not currently passed to the calls above
     return jsonify({'results': {'list': results['counts'], 'total_story_count': results['total_story_count'], 'interval': interval}})
 

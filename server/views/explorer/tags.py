@@ -76,8 +76,6 @@ def explorer_entities_csv(tag_sets_id):
         solr_q, solr_fq = parse_query_with_keywords(query_object)
         filename = file_name_for_download(query_object['label'], filename)
     top_tag_counts = apicache.top_tags_with_coverage(solr_q, solr_fq, tag_sets_id, TAG_COUNT_DOWNLOAD_LENGTH)['results']
-    for tag in top_tag_counts:
-        tag['sample_size'] = TAG_COUNT_SAMPLE_SIZE
     return csv.stream_response(top_tag_counts, ENTITY_DOWNLOAD_COLUMNS, filename)
 
 
