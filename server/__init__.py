@@ -188,7 +188,6 @@ if (server_app == SERVER_APP_SOURCES) or is_dev_mode():
     import server.views.sources.source
     import server.views.sources.feeds
     import server.views.sources.suggestions
-    import server.views.sources.sentences
     import server.views.sources.words
     import server.views.sources.geocount
 if (server_app == SERVER_APP_TOPICS) or is_dev_mode():
