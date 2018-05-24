@@ -8,6 +8,9 @@ import DataCard from '../../common/DataCard';
 import WordSpace from '../../vis/WordSpace';
 import composeDescribedDataCard from '../../common/DescribedDataCard';
 import messages from '../../../resources/messages';
+import { DownloadButton } from '../../common/IconButton';
+import { topicDownloadFilename } from '../../util/topicUtil';
+import { downloadSvg } from '../../util/svg';
 
 const localMessages = {
   title: { id: 'topic.summary.words.space.title', defaultMessage: 'Topic Word Space' },
@@ -26,9 +29,16 @@ class TopicWordSpaceContainer extends React.Component {
     }
   }
   render() {
-    const { words } = this.props;
+    const { words, topicName, filters } = this.props;
+    const { formatMessage } = this.props.intl;
     return (
       <DataCard>
+        <div className="actions">
+          <DownloadButton
+            tooltip={formatMessage(messages.download)}
+            onClick={() => downloadSvg(`${topicDownloadFilename(topicName, filters)}-sampled-word-space`, WORD_SPACE_DOM_ID)}
+          />
+        </div>
         <h2><FormattedMessage {...localMessages.title} /></h2>
         <WordSpace
           words={words.slice(0, 50)}
@@ -47,19 +57,21 @@ TopicWordSpaceContainer.propTypes = {
   intl: PropTypes.object.isRequired,
   // from parent
   topicId: PropTypes.number.isRequired,
-  filters: PropTypes.object.isRequired,
   // from dispatch
   asyncFetch: PropTypes.func.isRequired,
   fetchData: PropTypes.func.isRequired,
   // from state
   words: PropTypes.array,
   fetchStatus: PropTypes.string.isRequired,
+  filters: PropTypes.object.isRequired,
+  topicName: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.summary.topWords.fetchStatus,
   words: state.topics.selected.summary.topWords.list,
   filters: state.topics.selected.filters,
+  topicName: state.topics.selected.info.name,
 });
 
 const mapDispatchToProps = dispatch => ({
