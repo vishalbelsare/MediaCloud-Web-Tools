@@ -34,6 +34,7 @@ class QueryWordSpaceResultsContainer extends React.Component {
   render() {
     const { results, queries } = this.props;
     const { formatMessage } = this.props.intl;
+    const domId = `${WORD_SPACE_DOM_ID}-${this.state.selectedQueryIndex}`;
     return (
       <div>
         <QueryResultsSelector
@@ -42,7 +43,7 @@ class QueryWordSpaceResultsContainer extends React.Component {
         />
         <WordSpace
           words={results[this.state.selectedQueryIndex].list.slice(0, 50)}
-          domId={`${WORD_SPACE_DOM_ID}-${this.state.selectedQueryIndex}`}
+          domId={domId}
           xProperty="google_w2v_x"
           yProperty="google_w2v_y"
           noDataMsg={localMessages.noGoogleW2VData}
@@ -63,7 +64,7 @@ class QueryWordSpaceResultsContainer extends React.Component {
                   primaryText={formatMessage(messages.downloadDataSvg, { name: q.label })}
                   rightIcon={<DownloadButton />}
                   onTouchTap={() => {
-                    const svgChild = document.getElementById(WORD_SPACE_DOM_ID);
+                    const svgChild = document.getElementById(domId);
                     downloadExplorerSvg(q.label, 'sampled-word-space', svgChild);
                   }}
                 />
