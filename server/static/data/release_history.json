@@ -2,6 +2,17 @@
   "releases": [
     {
       "date": "2018-05-24",
+      "version": "v3.1.1",
+      "notes": [
+        {
+          "apps": ["explorer", "topics"],
+          "type": "Fix",
+          "note": "Add CSV download for word space charts (<a href=\"https://mediacloud.org/news/2018/5/23/word-spaces-visualizing-word2vec-to-support-media-analysis\">the blog post for more details</a>)"
+        }
+      ]
+    },
+    {
+      "date": "2018-05-24",
       "version": "v3.1.0",
       "notes": [
         {
