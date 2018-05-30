@@ -68,6 +68,7 @@ class QueryThemesResultsContainer extends React.Component {
           padding={0}
           onClick={handleThemeClicked}
           asPercentage
+          minCutoffValue={0.15}
         />
         <div className="actions">
           <ActionMenu actionTextMsg={messages.downloadOptions}>
