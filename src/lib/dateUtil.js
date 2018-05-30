@@ -79,6 +79,10 @@ export function parseSolrShortDate(dateStr) {
   return moment(dateStr, SHORT_SOLR_DATE_FORMAT).toDate();
 }
 
+export function isValidSolrDate(value) {
+  return moment(value, SHORT_SOLR_DATE_FORMAT).isValid();
+}
+
 export function solrFormat(date, short = true) {
   return moment(date).format(short ? SHORT_SOLR_DATE_FORMAT : SOLR_DATE_FORMAT);
 }

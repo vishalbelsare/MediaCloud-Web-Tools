@@ -14,7 +14,7 @@ import MediaPickerDialog from '../../common/mediaPicker/MediaPickerDialog';
 import QueryHelpDialog from '../../common/help/QueryHelpDialog';
 import SavedSearchControls from './SavedSearchControls';
 import { emptyString, validDate } from '../../../lib/formValidators';
-import { isStartDateAfterEndDate } from '../../../lib/dateUtil';
+import { isStartDateAfterEndDate, isValidSolrDate } from '../../../lib/dateUtil';
 import { KEYWORD, MEDIA, DATES } from '../../../lib/explorerUtil';
 
 const localMessages = {
@@ -232,15 +232,16 @@ function validate(values, props) {
     const errString = formatMessage(localMessages.queryStringError, { name: values.label });
     errors.q = { _error: errString };
   }
-  if (!validDate(values.startDate)) {
+  if (!validDate(values.startDate) || !isValidSolrDate(values.startDate)) {
     errors.startDate = { _error: formatMessage(localMessages.invalidDateWarning) };
   }
-  if (!validDate(values.endDate)) {
+  if (!validDate(values.endDate) || !isValidSolrDate(values.endDate)) {
     errors.endDate = { _error: formatMessage(localMessages.invalidDateWarning) };
   }
   if (validDate(values.startDate) && validDate(values.endDate) && isStartDateAfterEndDate(values.startDate, values.endDate)) {
     errors.startDate = { _error: formatMessage(localMessages.startDateWarning) };
   }
+
   return errors;
 }
 

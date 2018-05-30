@@ -15,6 +15,7 @@ export const PICK_SOURCE = 1;
 export const PICK_COUNTRY = 2;
 export const PICK_ADVANCED = 3;
 
+export const COVERAGE_REQUIRED = 0.8;
 
 export const QUERY_LABEL_CHARACTER_LIMIT = 30;
 export const QUERY_LABEL_AUTOMAGIC_DISPLAY_LIMIT = 27;
@@ -71,7 +72,7 @@ export function queryChangedEnoughToUpdate(queries, nextQueries, results, nextRe
     const colorsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextQueries.slice(0, results.length), 'color');
     return (
       ((labelsHaveChanged || colorsHaveChanged))
-       || (results !== nextResults.results)
+       || (results !== nextResults)
     );
   }
   return false; // if both results and queries are empty, don't update
