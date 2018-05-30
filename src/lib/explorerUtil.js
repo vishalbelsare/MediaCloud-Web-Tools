@@ -71,7 +71,7 @@ export function queryChangedEnoughToUpdate(queries, nextQueries, results, nextRe
     const colorsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextQueries.slice(0, results.length), 'color');
     return (
       ((labelsHaveChanged || colorsHaveChanged))
-       || (results !== nextResults.results)
+       || (results !== nextResults)
     );
   }
   return false; // if both results and queries are empty, don't update
