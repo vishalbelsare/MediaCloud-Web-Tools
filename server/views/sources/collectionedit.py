@@ -116,7 +116,9 @@ def upload_file():
 
 
 def _parse_sources_from_csv_upload(filepath):
-    acceptable_column_names = SOURCE_LIST_CSV_EDIT_PROPS
+    acceptable_column_names = list(SOURCE_LIST_CSV_EDIT_PROPS)
+    acceptable_column_names.remove('stories_per_day')
+    acceptable_column_names.remove('first_story')
     with open(filepath, 'rU') as f:
         reader = pycsv.DictReader(f)
         reader.fieldnames = acceptable_column_names
