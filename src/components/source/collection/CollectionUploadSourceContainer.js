@@ -3,12 +3,12 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { uploadSourceListFromTemplate } from '../../../actions/sourceActions';
-import { updateFeedback, addNotice } from '../../../actions/appActions';
+import { updateFeedback } from '../../../actions/appActions';
 import LoadingSpinner from '../../common/LoadingSpinner';
 import CollectionUploadConfirmer from './form/CollectionUploadConfirmer';
+import composeCsvDownloadNotifyContainer from '../../common/composers/CsvDownloadNotifyContainer';
 import { DownloadButton } from '../../common/IconButton';
 import messages from '../../../resources/messages';
-import { LEVEL_INFO } from '../../common/Notice';
 import { HELP_SOURCES_CSV_COLUMNS } from '../../../lib/helpConstants';
 
 const localMessages = {
@@ -22,7 +22,7 @@ const localMessages = {
 class CollectionUploadSourceContainer extends React.Component {
 
   downloadCsv = (evt) => {
-    const { myCollectionId, addAppNotice } = this.props;
+    const { myCollectionId, notifyOfCsvDownload } = this.props;
     if (evt) {
       evt.preventDefault();
     }
@@ -33,7 +33,7 @@ class CollectionUploadSourceContainer extends React.Component {
       url = '/api/template/sources.csv';
     }
     window.location = url;
-    addAppNotice();
+    notifyOfCsvDownload(HELP_SOURCES_CSV_COLUMNS);
   }
   selectedCSV = () => {
     this.setState({ confirmTemplate: true });
@@ -95,10 +95,10 @@ CollectionUploadSourceContainer.propTypes = {
   mysources: PropTypes.array,
   myCollectionId: PropTypes.string,
   // from parent
-  // from composition
+  // from compositional chain
+  notifyOfCsvDownload: PropTypes.func.isRequired,
   intl: PropTypes.object.isRequired,
   uploadCSVFile: PropTypes.func.isRequired,
-  addAppNotice: PropTypes.func,
 };
 
 const mapStateToProps = state => ({
@@ -117,16 +117,13 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         }
       });
   },
-  addAppNotice: () => {
-    let htmlMessage = ownProps.intl.formatMessage(messages.currentlyDownloadingCsv);
-    htmlMessage = `${htmlMessage} <a href="${HELP_SOURCES_CSV_COLUMNS}">${ownProps.intl.formatHTMLMessage(messages.learnMoreAboutColumnsCsv)}</a>`;
-    dispatch(addNotice({ level: LEVEL_INFO, htmlMessage }));
-  },
 });
 
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      CollectionUploadSourceContainer
+      composeCsvDownloadNotifyContainer(
+        CollectionUploadSourceContainer
+      )
     )
   );

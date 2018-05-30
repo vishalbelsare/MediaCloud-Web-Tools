@@ -3,10 +3,8 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import messages from '../../../resources/messages';
+import composeCsvDownloadNotifyContainer from '../../common/composers/CsvDownloadNotifyContainer';
 import { fetchCollectionSourceList } from '../../../actions/sourceActions';
-import { addNotice } from '../../../actions/appActions';
-import { LEVEL_INFO } from '../../common/Notice';
 import SourceList from '../../common/SourceList';
 import { getUserRoles, hasPermissions, PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
 import { HELP_SOURCES_CSV_COLUMNS } from '../../../lib/helpConstants';
@@ -16,7 +14,7 @@ const CollectionSourceListContainer = props => (
     collectionId={props.collectionId}
     sources={props.sources}
     downloadUrl={`/api/collections/${props.collectionId}/sources.csv`}
-    addAppNotice={props.addAppNotice}
+    onDownload={() => props.notifyOfCsvDownload(HELP_SOURCES_CSV_COLUMNS)}
   />
 );
 
@@ -24,10 +22,11 @@ CollectionSourceListContainer.propTypes = {
   // parent
   collectionId: PropTypes.number,
   downloadUrl: PropTypes.string,
-  // from store
+  // from state
   sources: PropTypes.array.isRequired,
   user: PropTypes.object.isRequired,
-  addAppNotice: PropTypes.func,
+  // from compositional chain
+  notifyOfCsvDownload: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -39,9 +38,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (collectionId, props) => {
     dispatch(fetchCollectionSourceList(ownProps.collectionId, props));
-  },
-  showNotice: (info) => {
-    dispatch(addNotice(info));
   },
 });
 
@@ -55,11 +51,6 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
       }
       dispatchProps.fetchData(ownProps.collectionId, props);
     },
-    addAppNotice: () => {
-      let htmlMessage = ownProps.intl.formatMessage(messages.currentlyDownloadingCsv);
-      htmlMessage = `${htmlMessage} <a href="${HELP_SOURCES_CSV_COLUMNS}">${ownProps.intl.formatHTMLMessage(messages.learnMoreAboutColumnsCsv)}</a>`;
-      dispatchProps.showNotice({ level: LEVEL_INFO, htmlMessage });
-    },
   });
 }
 
@@ -67,7 +58,9 @@ export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeAsyncContainer(
-        CollectionSourceListContainer
+        composeCsvDownloadNotifyContainer(
+          CollectionSourceListContainer
+        )
       )
     )
   );
