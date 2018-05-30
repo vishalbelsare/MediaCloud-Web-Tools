@@ -1,13 +1,11 @@
 from server.auth import user_admin_mediacloud_client
 from server.cache import cache, key_generator
 
-SOURCES_TEMPLATE_PROPS_EDIT = ['media_id', 'url', 'name', 'pub_country', 'pub_state', 'primary_language',
-                               'subject_country', 'media_type', 'public_notes', 'is_monitored', 'editor_notes']
+COLLECTIONS_TEMPLATE_METADATA_PROPS = ['pub_country', 'pub_state', 'language', 'about_country', 'media_type']
 
-COLLECTIONS_TEMPLATE_PROPS_EDIT = ['media_id', 'url', 'name', 'pub_country', 'pub_state', 'primary_language',
-                                   'subject_country', 'media_type', 'public_notes', 'is_monitored', 'editor_notes']
-
-COLLECTIONS_TEMPLATE_METADATA_PROPS = ['pub_country', 'pub_state', 'subject_country', 'primary_language', 'media_type']
+COLLECTIONS_TEMPLATE_PROPS_EDIT = ['media_id', 'url', 'name'] + \
+                                  COLLECTIONS_TEMPLATE_METADATA_PROPS +\
+                                  ['public_notes', 'is_monitored', 'editor_notes', 'stories_per_day', 'first_story']
 
 # hand-made whitelist of collections to show up as "featured" on source mgr homepage and in the media picker
 FEATURED_COLLECTION_LIST = [
