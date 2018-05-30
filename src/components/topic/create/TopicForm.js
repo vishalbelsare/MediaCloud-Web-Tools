@@ -9,7 +9,7 @@ import TopicDetailForm from './TopicDetailForm';
 import MediaPickerDialog from '../../common/mediaPicker/MediaPickerDialog';
 import SourceCollectionsMediaForm from '../../common/form/SourceCollectionsMediaForm';
 import { emptyString, invalidDate, validDate } from '../../../lib/formValidators';
-import { isStartDateAfterEndDate } from '../../../lib/dateUtil';
+import { isStartDateAfterEndDate, isValidSolrDate } from '../../../lib/dateUtil';
 import { fetchTopicWithNameExists } from '../../../actions/topicActions';
 import { assetUrl } from '../../../lib/assetUtil';
 
@@ -140,10 +140,10 @@ function validate(values, props) {
   if (emptyString(values.solr_seed_query)) {
     errors.solr_seed_query = localMessages.seedQueryError;
   }
-  if (invalidDate(values.start_date)) {
+  if (invalidDate(values.start_date) || !isValidSolrDate(values.start_date)) {
     errors.start_date = localMessages.dateError;
   }
-  if (invalidDate(values.end_date)) {
+  if (invalidDate(values.end_date) || !isValidSolrDate(values.end_date)) {
     errors.end_date = localMessages.dateError;
   }
   if (validDate(values.start_date) && validDate(values.end_date) && isStartDateAfterEndDate(values.start_date, values.end_date)) {
