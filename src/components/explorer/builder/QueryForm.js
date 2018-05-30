@@ -21,7 +21,7 @@ const localMessages = {
   mainTitle: { id: 'explorer.queryBuilder.maintitle', defaultMessage: 'Create Query' },
   addButton: { id: 'explorer.queryBuilder.saveAll', defaultMessage: 'Search' },
   feedback: { id: 'explorer.queryBuilder.feedback', defaultMessage: 'We saved your new source' },
-  query: { id: 'explorer.queryBuilder.query', defaultMessage: 'Enter a query' },
+  query: { id: 'explorer.queryBuilder.query', defaultMessage: 'Enter search terms' },
   selectSandC: { id: 'explorer.queryBuilder.selectSAndC', defaultMessage: 'Select media' },
   SandC: { id: 'explorer.queryBuilder.sAndC', defaultMessage: 'Media' },
   color: { id: 'explorer.queryBuilder.color', defaultMessage: 'Choose a color' },

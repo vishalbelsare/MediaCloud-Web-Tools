@@ -6,7 +6,7 @@ import Dialog from 'material-ui/Dialog';
 import messages from '../../../resources/messages';
 
 const localMessages = {
-  invitation: { id: 'help.query.invitation', defaultMessage: 'Learn about writing queries.' },
+  invitation: { id: 'help.query.invitation', defaultMessage: 'Learn about writing search terms.' },
   title: { id: 'help.query.title', defaultMessage: 'Writing Media Cloud Queries' },
   content: { id: 'help.query.content', defaultMessage: `
 <p>You can query Media Cloud with boolean searches that match stories, a lot like you might use Google.  Here are some examples:</p>
