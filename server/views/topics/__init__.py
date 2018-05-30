@@ -1,7 +1,9 @@
 import logging
+import datetime
+
 from server import mc
 from server.auth import is_user_logged_in, user_admin_mediacloud_client
-import datetime
+from server.util.csv import SOURCE_LIST_CSV_METADATA_PROPS
 
 logger = logging.getLogger(__name__)
 
@@ -9,10 +11,12 @@ SORT_FACEBOOK = 'facebook'
 SORT_TWITTER = 'twitter'
 SORT_INLINK = 'inlink'
 
-TOPICS_TEMPLATE_PROPS = ['media_id', 'name', 'url', 'story_count',
-                         'media_inlink_count', 'sum_media_inlink_count', 'inlink_count',
-                         'outlink_count', 'facebook_share_count',
-                         'pub_country', 'pub_state', 'primary_language', 'subject_country']
+TOPIC_MEDIA_INFO_PROPS = ['media_id', 'name', 'url']
+
+TOPIC_MEDIA_PROPS = ['story_count', 'media_inlink_count', 'sum_media_inlink_count', 'inlink_count',
+                     'outlink_count', 'facebook_share_count']
+
+TOPIC_MEDIA_CSV_PROPS = TOPIC_MEDIA_INFO_PROPS + TOPIC_MEDIA_PROPS + SOURCE_LIST_CSV_METADATA_PROPS
 
 
 def validated_sort(desired_sort, default_sort=SORT_FACEBOOK):

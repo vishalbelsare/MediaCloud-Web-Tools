@@ -4,6 +4,8 @@ import flask
 
 from server.util.tags import label_for_metadata_tag
 
+SOURCE_LIST_CSV_METADATA_PROPS = ['pub_country', 'pub_state', 'language', 'about_country', 'media_type']
+
 logger = logging.getLogger(__name__)
 
 
