@@ -63,7 +63,7 @@ class NytLabelSummaryContainer extends React.Component {
   render() {
     const { data, coverage } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
-    const coverageRatio = coverage.count / coverage.total;
+    const coverageRatio = coverage.total !== undefined && coverage.total > 0 ? coverage.count / coverage.total : 0;
     let content;
     if (coverageRatio > COVERAGE_REQUIRED) {
       const dataOverMinTheshold = data.filter(d => d.pct > PERCENTAGE_MIN_VALUE);
@@ -122,6 +122,7 @@ class NytLabelSummaryContainer extends React.Component {
             domId={BUBBLE_CHART_DOM_ID}
             asPercentage
             onBubbleClick={this.handleBubbleClick}
+            minCutoffValue={0.05}
           />
         </div>
       );
