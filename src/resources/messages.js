@@ -87,6 +87,10 @@ const messages = {
   language: { id: 'common.language', defaultMessage: 'Language' },
   unknown: { id: 'common.Unknown', defaultMessage: 'Unknown' },
 
+  notEnoughCoverage: { id: 'common.themes.notEnoughCoverage',
+    defaultMessage: '<i>Sorry, but only {pct} of the stories have been processed are English stories.  We can\'t gaurantee the accuracy of partial results, so we can\'t show the visualization right now.  If you are really curious, you can download the CSV using the link in the bottom-right of this box, but don\'t trust those numbers as fully accurate.</i>',
+  },
+
   startDate: { id: 'common.startDate', defaultMessage: 'Start Date' },
   endDate: { id: 'common.endDate', defaultMessage: 'End Date' },
 

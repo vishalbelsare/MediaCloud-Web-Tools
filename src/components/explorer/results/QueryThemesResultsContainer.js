@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { injectIntl, FormattedHTMLMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import MenuItem from 'material-ui/MenuItem';
 import composeSummarizedVisualization from './SummarizedVizualization';
@@ -8,7 +8,7 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import { resetThemes, fetchTopThemes, fetchDemoTopThemes } from '../../../actions/explorerActions';
-import { queryChangedEnoughToUpdate, postToDownloadUrl, downloadExplorerSvg } from '../../../lib/explorerUtil';
+import { queryChangedEnoughToUpdate, postToDownloadUrl, downloadExplorerSvg, COVERAGE_REQUIRED } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
 import QueryResultsSelector from './QueryResultsSelector';
 import { TAG_SET_NYT_THEMES } from '../../../lib/tagUtil';
@@ -44,55 +44,69 @@ class QueryThemesResultsContainer extends React.Component {
     const { results, queries, handleThemeClicked } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
     let rawData = [];
+    let content = null;
     if (results) {
       rawData = results[this.state.selectedQueryIndex] ? results[this.state.selectedQueryIndex].results : [];
+      const coverageRatio = results[this.state.selectedQueryIndex] ? results[this.state.selectedQueryIndex].coverage_percentage : 0;
+      if (coverageRatio > COVERAGE_REQUIRED) {
+        const data = rawData.slice(0, 4).map((info, idx) => ({
+          value: info.pct, // info.count,
+          fill: mapD3Top10Colors(idx),
+          aboveText: (idx % 2 === 0) ? info.label : null,
+          belowText: (idx % 2 !== 0) ? info.label : null,
+          rolloverText: `${info.label}: ${formatNumber(info.pct, { style: 'percent', maximumFractionDigits: 2 })}`,
+        }));
+        content = (
+          <div>
+            <QueryResultsSelector
+              options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
+              onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
+            />
+            <BubbleRowChart
+              data={data}
+              maxBubbleRadius={60}
+              domId={BUBBLE_CHART_DOM_ID}
+              width={650}
+              padding={0}
+              onClick={handleThemeClicked}
+              asPercentage
+              minCutoffValue={0.05}
+            />
+            <div className="actions">
+              <ActionMenu actionTextMsg={messages.downloadOptions}>
+                {queries.map((q, idx) =>
+                  <span key={`q${idx}-items`}>
+                    <MenuItem
+                      key={idx}
+                      className="action-icon-menu-item"
+                      primaryText={formatMessage(messages.downloadDataCsv, { name: q.label })}
+                      rightIcon={<DownloadButton />}
+                      onTouchTap={() => this.downloadCsv(q)}
+                    />
+                    <MenuItem
+                      className="action-icon-menu-item"
+                      primaryText={formatMessage(messages.downloadDataSvg, { name: q.label })}
+                      rightIcon={<DownloadButton />}
+                      onTouchTap={() => downloadExplorerSvg(q.label, 'sampled-nyt_labels', BUBBLE_CHART_DOM_ID)}
+                    />
+                  </span>
+                )}
+              </ActionMenu>
+            </div>
+          </div>
+        );
+      } else {
+        content = (
+          <p>
+            <FormattedHTMLMessage
+              {...messages.notEnoughCoverage}
+              values={{ pct: formatNumber(coverageRatio, { style: 'percent', maximumFractionDigits: 2 }) }}
+            />
+          </p>
+        );
+      }
     }
-    const data = rawData.slice(0, 4).map((info, idx) => ({
-      value: info.pct, // info.count,
-      fill: mapD3Top10Colors(idx),
-      aboveText: (idx % 2 === 0) ? info.label : null,
-      belowText: (idx % 2 !== 0) ? info.label : null,
-      rolloverText: `${info.label}: ${formatNumber(info.pct, { style: 'percent', maximumFractionDigits: 2 })}`,
-    }));
-    return (
-      <div>
-        <QueryResultsSelector
-          options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
-          onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
-        />
-        <BubbleRowChart
-          data={data}
-          maxBubbleRadius={60}
-          domId={BUBBLE_CHART_DOM_ID}
-          width={650}
-          padding={0}
-          onClick={handleThemeClicked}
-          asPercentage
-          minCutoffValue={0.05}
-        />
-        <div className="actions">
-          <ActionMenu actionTextMsg={messages.downloadOptions}>
-            {queries.map((q, idx) =>
-              <span key={`q${idx}-items`}>
-                <MenuItem
-                  key={idx}
-                  className="action-icon-menu-item"
-                  primaryText={formatMessage(messages.downloadDataCsv, { name: q.label })}
-                  rightIcon={<DownloadButton />}
-                  onTouchTap={() => this.downloadCsv(q)}
-                />
-                <MenuItem
-                  className="action-icon-menu-item"
-                  primaryText={formatMessage(messages.downloadDataSvg, { name: q.label })}
-                  rightIcon={<DownloadButton />}
-                  onTouchTap={() => downloadExplorerSvg(q.label, 'sampled-nyt_labels', BUBBLE_CHART_DOM_ID)}
-                />
-              </span>
-            )}
-          </ActionMenu>
-        </div>
-      </div>
-    );
+    return (content);
   }
 }
 
