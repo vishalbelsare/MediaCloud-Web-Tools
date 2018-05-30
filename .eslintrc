@@ -22,15 +22,16 @@
     "no-bitwise": ["error", { "allow": ["~"] }],
     "react/no-danger": 0,
     "react/no-unused-prop-types": 0,
+    "import/no-named-as-default": 0,
     "comma-dangle": ["error", {
       "arrays": "always-multiline",
       "objects": "always-multiline",
       "imports": "always-multiline",
       "exports": "always-multiline",
-      "functions": "ignore",
+      "functions": "ignore"
     }],
     "react/require-default-props": 0,
     "react/no-array-index-key": 0,
-    "click-events-have-key-events": 0,
+    "click-events-have-key-events": 0
  }
 }

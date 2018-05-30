@@ -5,14 +5,13 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import MenuItem from 'material-ui/MenuItem';
 import composeAsyncContainer from '../../common/AsyncContainer';
+import composeCsvDownloadNotifyContainer from '../../common/composers/CsvDownloadNotifyContainer';
 import composeDescribedDataCard from '../../common/DescribedDataCard';
 import { fetchTopicTopStories, sortTopicTopStories, filterByFocus } from '../../../actions/topicActions';
-import { addNotice } from '../../../actions/appActions';
 import DataCard from '../../common/DataCard';
 import Permissioned from '../../common/Permissioned';
 import LinkWithFilters from '../LinkWithFilters';
 import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
-import { LEVEL_INFO } from '../../common/Notice';
 import { ExploreButton, DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import TopicStoryTable from '../TopicStoryTable';
@@ -41,16 +40,16 @@ class StoriesSummaryContainer extends React.Component {
     sortData(newSort);
   };
   downloadCsvNoFBData = () => {
-    const { filters, sort, topicId, addAppNotice } = this.props;
+    const { filters, sort, topicId, notifyOfCsvDownload } = this.props;
     const url = `/api/topics/${topicId}/stories.csv?${filtersAsUrlParams(filters)}&sort=${sort}`;
     window.location = url;
-    addAppNotice();
+    notifyOfCsvDownload(HELP_STORIES_CSV_COLUMNS);
   }
   downloadCsvWithFBData = () => {
-    const { filters, sort, topicId, addAppNotice } = this.props;
+    const { filters, sort, topicId, notifyOfCsvDownload } = this.props;
     const url = `/api/topics/${topicId}/stories.csv?${filtersAsUrlParams(filters)}&sort=${sort}&fbData=1`;
     window.location = url;
-    addAppNotice();
+    notifyOfCsvDownload(HELP_STORIES_CSV_COLUMNS);
   }
   render() {
     const { stories, sort, topicId, filters, handleFocusSelected, user, showTweetCounts } = this.props;
@@ -102,6 +101,7 @@ class StoriesSummaryContainer extends React.Component {
 StoriesSummaryContainer.propTypes = {
   // from the composition chain
   intl: PropTypes.object.isRequired,
+  notifyOfCsvDownload: PropTypes.func.isRequired,
   // from parent
   topicId: PropTypes.number.isRequired,
   filters: PropTypes.object.isRequired,
@@ -116,7 +116,6 @@ StoriesSummaryContainer.propTypes = {
   stories: PropTypes.array,
   user: PropTypes.object,
   showTweetCounts: PropTypes.bool,
-  addAppNotice: PropTypes.func,
 };
 
 const mapStateToProps = state => ({
@@ -149,11 +148,6 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   sortData: (sort) => {
     dispatch(sortTopicTopStories(sort));
   },
-  addAppNotice: () => {
-    let htmlMessage = ownProps.intl.formatMessage(messages.currentlyDownloadingCsv);
-    htmlMessage = `${htmlMessage} <a href="${HELP_STORIES_CSV_COLUMNS}">${ownProps.intl.formatHTMLMessage(messages.learnMoreAboutColumnsCsv)}</a>`;
-    dispatch(addNotice({ level: LEVEL_INFO, htmlMessage }));
-  },
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
@@ -173,7 +167,9 @@ export default
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeDescribedDataCard(localMessages.descriptionIntro, messages.storiesTableHelpText)(
         composeAsyncContainer(
-          StoriesSummaryContainer
+          composeCsvDownloadNotifyContainer(
+            StoriesSummaryContainer
+          )
         )
       )
     )

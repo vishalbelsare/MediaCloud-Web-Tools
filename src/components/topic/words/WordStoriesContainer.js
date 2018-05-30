@@ -4,12 +4,11 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { fetchWordStories, sortWordStories } from '../../../actions/topicActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
+import composeCsvDownloadNotifyContainer from '../../common/composers/CsvDownloadNotifyContainer';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import messages from '../../../resources/messages';
-import { LEVEL_INFO } from '../../common/Notice';
 import TopicStoryTable from '../TopicStoryTable';
 import DataCard from '../../common/DataCard';
-import { addNotice } from '../../../actions/appActions';
 import { DownloadButton } from '../../common/IconButton';
 import { filtersAsUrlParams } from '../../util/location';
 import { HELP_STORIES_CSV_COLUMNS } from '../../../lib/helpConstants';
@@ -36,10 +35,10 @@ class WordStoriesContainer extends React.Component {
     sortData(newSort);
   }
   downloadCsv = () => {
-    const { term, topicId, filters, addAppNotice } = this.props;
+    const { term, topicId, filters, notifyOfCsvDownload } = this.props;
     const url = `/api/topics/${topicId}/words/${term}*/stories.csv?${filtersAsUrlParams(filters)}`;
     window.location = url;
-    addAppNotice();
+    notifyOfCsvDownload(HELP_STORIES_CSV_COLUMNS);
   }
   render() {
     const { inlinkedStories, topicId, helpButton, showTweetCounts } = this.props;
@@ -63,6 +62,7 @@ WordStoriesContainer.propTypes = {
   // from composition chain
   intl: PropTypes.object.isRequired,
   helpButton: PropTypes.node.isRequired,
+  notifyOfCsvDownload: PropTypes.func.isRequired,
   // from parent
   stem: PropTypes.string.isRequired,
   term: PropTypes.string.isRequired,
@@ -78,7 +78,6 @@ WordStoriesContainer.propTypes = {
   fetchStatus: PropTypes.string.isRequired,
   inlinkedStories: PropTypes.array.isRequired,
   showTweetCounts: PropTypes.bool,
-  addAppNotice: PropTypes.func,
 };
 
 const mapStateToProps = state => ({
@@ -101,11 +100,6 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   sortData: (sort) => {
     dispatch(sortWordStories(sort));
   },
-  addAppNotice: () => {
-    let htmlMessage = ownProps.intl.formatMessage(messages.currentlyDownloadingCsv);
-    htmlMessage = `${htmlMessage} <a href="${HELP_STORIES_CSV_COLUMNS}">${ownProps.intl.formatHTMLMessage(messages.learnMoreAboutColumnsCsv)}</a>`;
-    dispatch(addNotice({ level: LEVEL_INFO, htmlMessage }));
-  },
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
@@ -121,10 +115,10 @@ export default
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpIntro, messages.storiesTableHelpText])(
         composeAsyncContainer(
-          WordStoriesContainer
+          composeCsvDownloadNotifyContainer(
+            WordStoriesContainer
+          )
         )
       )
     )
   );
-
-// lightweight wrapper around a TopicStoryTable

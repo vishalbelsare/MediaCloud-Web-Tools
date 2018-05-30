@@ -5,14 +5,13 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { fetchMediaStories, sortMediaStories, filterByFocus } from '../../../actions/topicActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
+import composeCsvDownloadNotifyContainer from '../../common/composers/CsvDownloadNotifyContainer';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import messages from '../../../resources/messages';
 import TopicStoryTable from '../TopicStoryTable';
 import { filteredLocation, filtersAsUrlParams } from '../../util/location';
 import DataCard from '../../common/DataCard';
 import { DownloadButton } from '../../common/IconButton';
-import { LEVEL_INFO } from '../../common/Notice';
-import { addNotice } from '../../../actions/appActions';
 import { HELP_STORIES_CSV_COLUMNS } from '../../../lib/helpConstants';
 
 const STORIES_TO_SHOW = 10;
@@ -35,10 +34,11 @@ class MediaStoriesContainer extends React.Component {
     sortData(newSort);
   }
   downloadCsv = () => {
-    const { mediaId, topicId, filters } = this.props;
+    const { mediaId, topicId, filters, notifyOfCsvDownload } = this.props;
     const filtersAsParams = filtersAsUrlParams(filters);
     const url = `/api/topics/${topicId}/media/${mediaId}/stories.csv?${filtersAsParams}`;
     window.location = url;
+    notifyOfCsvDownload(HELP_STORIES_CSV_COLUMNS);
   }
   render() {
     const { inlinkedStories, showTweetCounts, topicId, helpButton, handleFocusSelected } = this.props;
@@ -68,6 +68,7 @@ MediaStoriesContainer.propTypes = {
   // from composition chain
   intl: PropTypes.object.isRequired,
   helpButton: PropTypes.node.isRequired,
+  notifyOfCsvDownload: PropTypes.func.isRequired,
   // from parent
   mediaId: PropTypes.number.isRequired,
   topicId: PropTypes.number.isRequired,
@@ -110,11 +111,6 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   sortData: (sort) => {
     dispatch(sortMediaStories(sort));
   },
-  addAppNotice: () => {
-    let htmlMessage = ownProps.intl.formatMessage(messages.currentlyDownloadingCsv);
-    htmlMessage = `${htmlMessage} <a href="${HELP_STORIES_CSV_COLUMNS}">${ownProps.intl.formatHTMLMessage(messages.learnMoreAboutColumnsCsv)}</a>`;
-    dispatch(addNotice({ level: LEVEL_INFO, htmlMessage }));
-  },
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
@@ -130,7 +126,9 @@ export default
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpIntro, messages.storiesTableHelpText])(
         composeAsyncContainer(
-          MediaStoriesContainer
+          composeCsvDownloadNotifyContainer(
+            MediaStoriesContainer
+          )
         )
       )
     )
