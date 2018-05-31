@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { injectIntl, FormattedHTMLMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import MenuItem from 'material-ui/MenuItem';
 import composeSummarizedVisualization from './SummarizedVizualization';
@@ -9,7 +9,7 @@ import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import EntitiesTable from '../../common/EntitiesTable';
 import { resetEntitiesOrgs, fetchTopEntitiesOrgs, fetchDemoTopEntitiesOrgs } from '../../../actions/explorerActions';
-import { queryChangedEnoughToUpdate, postToDownloadUrl } from '../../../lib/explorerUtil';
+import { queryChangedEnoughToUpdate, postToDownloadUrl, COVERAGE_REQUIRED } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
 import QueryResultsSelector from './QueryResultsSelector';
 import { TAG_SET_CLIFF_ORGS } from '../../../lib/tagUtil';
@@ -20,6 +20,7 @@ const localMessages = {
   title: { id: 'explorer.entities.title', defaultMessage: 'Top Organizations' },
   organization: { id: 'explorer.entities.organization', defaultMessage: 'Organization' },
   helpIntro: { id: 'explorer.entities.help.title', defaultMessage: '<p>Looking at which organizations and companies are being talked about can give you a sense of how the media is focusing on the issue you are investigating. This is a list of the organizations mentioned most often in a sampling of stories. Click on a name to add it to all your queries. Click the menu on the bottom right to download a CSV of all the organizations mentioned in a sample of stories.</p>' },
+  downloadCsv: { id: 'explorer.entities.downloadCsv', defaultMessage: 'Download { name } CLIFF-sampled organizations CSV' },
 };
 
 class QueryTopEntitiesOrgsResultsContainer extends React.Component {
@@ -41,35 +42,59 @@ class QueryTopEntitiesOrgsResultsContainer extends React.Component {
   }
   render() {
     const { results, queries, handleEntitySelection } = this.props;
-    const { formatMessage } = this.props.intl;
+    const { formatMessage, formatNumber } = this.props.intl;
+    let content = null;
+    const querySelector = (
+      <QueryResultsSelector
+        options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
+        onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
+      />
+    );
+    if (results) {
+      const rawData = results[this.state.selectedQueryIndex] ? results[this.state.selectedQueryIndex].results : [];
+      const coverageRatio = results[this.state.selectedQueryIndex] ? results[this.state.selectedQueryIndex].coverage_percentage : 0;
+      if (coverageRatio > COVERAGE_REQUIRED) {
+        content = (
+          <div>
+            {rawData &&
+              <EntitiesTable
+                className="explorer-entity"
+                entityColNameMsg={localMessages.organization}
+                entities={rawData}
+                onClick={e => handleEntitySelection(e, queries[0].searchId)}
+                maxTitleLength={50}
+              />
+            }
+            <div className="actions">
+              <ActionMenu actionTextMsg={messages.downloadOptions}>
+                {queries.map((q, idx) =>
+                  <MenuItem
+                    key={idx}
+                    className="action-icon-menu-item"
+                    primaryText={formatMessage(localMessages.downloadCsv, { name: q.label })}
+                    rightIcon={<DownloadButton />}
+                    onTouchTap={() => this.downloadCsv(q)}
+                  />
+                )}
+              </ActionMenu>
+            </div>
+          </div>
+        );
+      } else {
+        content = (
+          <p>
+            <FormattedHTMLMessage
+              {...messages.notEnoughCoverage}
+              values={{ pct: formatNumber(coverageRatio, { style: 'percent', maximumFractionDigits: 2 }) }}
+            />
+          </p>
+        );
+      }
+    }
     return (
       <div>
-        <QueryResultsSelector
-          options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
-          onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
-        />
-        {results[this.state.selectedQueryIndex] &&
-          <EntitiesTable
-            className="explorer-entity"
-            entityColNameMsg={localMessages.organization}
-            entities={results[this.state.selectedQueryIndex].results}
-            onClick={e => handleEntitySelection(e, queries[0].searchId)}
-            maxTitleLength={50}
-          />
-        }
-        <div className="actions">
-          <ActionMenu actionTextMsg={messages.downloadOptions}>
-            {queries.map((q, idx) =>
-              <MenuItem
-                key={idx}
-                className="action-icon-menu-item"
-                primaryText={formatMessage(messages.downloadDataCsv, { name: q.label })}
-                rightIcon={<DownloadButton />}
-                onTouchTap={() => this.downloadCsv(q)}
-              />
-            )}
-          </ActionMenu>
-        </div>
+        { querySelector }
+        { content }
       </div>
     );
   }
