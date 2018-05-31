@@ -20,6 +20,7 @@ const localMessages = {
   title: { id: 'explorer.entities.title', defaultMessage: 'Top Organizations' },
   organization: { id: 'explorer.entities.organization', defaultMessage: 'Organization' },
   helpIntro: { id: 'explorer.entities.help.title', defaultMessage: '<p>Looking at which organizations and companies are being talked about can give you a sense of how the media is focusing on the issue you are investigating. This is a list of the organizations mentioned most often in a sampling of stories. Click on a name to add it to all your queries. Click the menu on the bottom right to download a CSV of all the organizations mentioned in a sample of stories.</p>' },
+  downloadCsv: { id: 'explorer.entities.downloadCsv', defaultMessage: 'Download {{ name }} organizations list' },
 };
 
 class QueryTopEntitiesOrgsResultsContainer extends React.Component {
@@ -63,7 +64,7 @@ class QueryTopEntitiesOrgsResultsContainer extends React.Component {
               <MenuItem
                 key={idx}
                 className="action-icon-menu-item"
-                primaryText={formatMessage(messages.downloadDataCsv, { name: q.label })}
+                primaryText={formatMessage(localMessages.downloadCsv, { name: q.label })}
                 rightIcon={<DownloadButton />}
                 onTouchTap={() => this.downloadCsv(q)}
               />

@@ -21,6 +21,7 @@ const localMessages = {
   descriptionDetail: { id: 'explorer.attention.lineChart.detail', defaultMessage: '<p>This chart includes one line for each query in your search. Each line charts the number of stories that matched your query per day in the sources and collections you have specified.</p><p>Roll over the line chart to see the stories per day in that period of time. Click the download button in the top right to download the raw counts in a CSV spreadsheet. Click the three lines in the top right of the chart to export the chart as an image file.</p>' },
   withKeywords: { id: 'explorer.attention.mode.withkeywords', defaultMessage: 'View Story Count (default)' },
   withoutKeywords: { id: 'explorer.attention.mode.withoutkeywords', defaultMessage: 'View Story Percentage' },
+  downloadCsv: { id: 'explorer.attention.downloadCsv', defaultMessage: 'Download {{ name }} stories over time' },
 };
 
 const VIEW_NORMALIZED = 'VIEW_NORMALIZED';
@@ -114,7 +115,7 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
               <MenuItem
                 key={idx}
                 className="action-icon-menu-item"
-                primaryText={formatMessage(messages.downloadDataCsv, { name: q.label })}
+                primaryText={formatMessage(localMessages.downloadCsv, { name: q.label })}
                 rightIcon={<DownloadButton />}
                 onTouchTap={() => this.downloadCsv(q)}
               />

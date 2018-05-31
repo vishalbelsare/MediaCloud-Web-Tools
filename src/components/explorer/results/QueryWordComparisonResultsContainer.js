@@ -16,6 +16,7 @@ const localMessages = {
   intro: { id: 'explorer.comparativeWords.intro', defaultMessage: ' These words are the most used in each query. They are sized according to total count across all words in ...' },
   centerTitle: { id: 'explorer.comparativeWords.center', defaultMessage: 'Word used in both' },
   sideTitle: { id: 'explorer.comparativeWords.right', defaultMessage: 'Words unique to {name}' },
+  downloadCsv: { id: 'explorer.entities.downloadCsv', defaultMessage: 'Download {{ name }} word count comparison' },
 
 };
 const LEFT = 0;
@@ -68,6 +69,7 @@ class QueryWordComparisonResultsContainer extends React.Component {
     }
   }
 
+  /* not currently utilized */
   downloadCsv = (query) => {
     let url = null;
     if (parseInt(query.searchId, 10) >= 0) {

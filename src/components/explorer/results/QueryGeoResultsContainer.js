@@ -18,6 +18,7 @@ const localMessages = {
   help: { id: 'explorer.geo.help',
     defaultMessage: '<p>Sometimes media coverage can differ based on the place being talked about. Digging into the <i>geography</i> of the coverage can provide clues to help you understand the narratives. This heatmap shows you the countries that were most often the focus of stories. Click a country to load an Explorer search showing you how the sources in this collection cover it.</p>' },
   descriptionIntro: { id: 'explorer.geo.help.title', defaultMessage: 'About Geographic Attention' },
+  downloadCsv: { id: 'explorer.geo.downloadCsv', defaultMessage: 'Download {{ name }} geographic attention list' },
 };
 
 class QueryGeoResultsContainer extends React.Component {
@@ -62,7 +63,7 @@ class QueryGeoResultsContainer extends React.Component {
               <MenuItem
                 key={idx}
                 className="action-icon-menu-item"
-                primaryText={formatMessage(messages.downloadDataCsv, { name: q.label })}
+                primaryText={formatMessage(localMessages.downloadCsv, { name: q.label })}
                 rightIcon={<DownloadButton />}
                 onTouchTap={() => this.downloadCsv(q)}
               />
