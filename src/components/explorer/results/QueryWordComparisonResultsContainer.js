@@ -15,7 +15,7 @@ const localMessages = {
   title: { id: 'explorer.comparativeWords.title', defaultMessage: 'Compare Top Words' },
   intro: { id: 'explorer.comparativeWords.intro', defaultMessage: ' These words are the most used in each query. They are sized according to total count across all words in ...' },
   centerTitle: { id: 'explorer.comparativeWords.center', defaultMessage: 'Word used in both' },
-  sideTitle: { id: 'explorer.comparativeWords.right', defaultMessage: 'Words unique to {name}' },
+  sideTitle: { id: 'explorer.comparativeWords.right', defaultMessage: 'Words unique to {name} in the top 100 words in the sampled stories' },
   downloadCsv: { id: 'explorer.entities.downloadCsv', defaultMessage: 'Download { name } word count comparison CSV' },
 
 };
