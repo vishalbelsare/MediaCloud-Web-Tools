@@ -6,7 +6,7 @@ from server.cache import cache, key_generator
 from server.auth import user_mediacloud_client, user_mediacloud_key, is_user_logged_in, user_admin_mediacloud_client
 from server.util.tags import processed_by_cliff_query_clause
 import server.util.wordembeddings as wordembeddings
-from datetime import datetime
+from server.util.stringutil import trimSolrDate
 
 def normalized_and_story_count(q, fq, open_q):
     results = {}
@@ -23,9 +23,8 @@ def normalized_and_story_split_count(q, fq, open_q):
     data = cached_story_split_count(mc_api_key, q, fq)
     all_stories = cached_story_split_count(mc_api_key, open_q, fq)
     for day in all_stories['counts']:
-        trimmed_date = datetime.strptime(day['date'], mc.SENTENCE_PUBLISH_DATE_FORMAT).strftime("%Y-%m-%d")
         day_info = {
-            'date': trimmed_date,
+            'date': trimSolrDate(day['date']),
             'total_count': day['count']
         }
         matching = [d for d in data['counts'] if d['date'] == day['date']]
