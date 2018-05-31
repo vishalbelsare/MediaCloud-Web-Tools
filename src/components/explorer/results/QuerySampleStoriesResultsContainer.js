@@ -19,7 +19,7 @@ const localMessages = {
   helpDetails: { id: 'explorer.stories.help.text',
     defaultMessage: '<p>We can provide basic information about stories like the media source, date of publication, and URL.  However, due to copyright restrictions we cannot provide you with the original full text of the stories. Download the CSV results to see all the metadata we have about the stories.</p>',
   },
-  downloadCsv: { id: 'explorer.stories.downloadCsv', defaultMessage: 'Download {{ name }} random sample story list' },
+  downloadCsv: { id: 'explorer.stories.downloadCsv', defaultMessage: 'Download { name } random sample story list' },
 };
 
 class QuerySampleStoriesResultsContainer extends React.Component {
