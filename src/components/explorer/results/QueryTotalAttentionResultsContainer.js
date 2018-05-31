@@ -22,7 +22,7 @@ const localMessages = {
   helpDetails: { id: 'explorer.storyCount.help.details',
     defaultMessage: '<p>It is harder to determine how much of the media\'s attention your search got. If you want to dig into that, a good place to start is comparing your query to a search for everything from the sources and collections you are searching.  You can do this by searching for * in the same date range and media; that matches every story.</p>',
   },
-  downloadCSV: { id: 'explorer.attention.downloadCSV', defaultMessage: 'Download {{ name }} total attention CSV' },
+  downloadCSV: { id: 'explorer.attention.downloadCSV', defaultMessage: 'Download {{ name }} total attention list' },
   downloadSVG: { id: 'explorer.attention.downloadSVG', defaultMessage: 'Download total attention SVG' },
   viewNormalized: { id: 'explorer.attention.mode.viewNormalized', defaultMessage: 'View by Story Count (default)' },
   viewRegular: { id: 'explorer.attention.mode.viewRegular', defaultMessage: 'View by Story Percentage' },
