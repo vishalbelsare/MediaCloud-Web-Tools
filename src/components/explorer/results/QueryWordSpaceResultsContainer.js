@@ -16,6 +16,8 @@ const localMessages = {
   title: { id: 'explorer.topWords.title', defaultMessage: 'Word Space' },
   descriptionIntro: { id: 'explorer.topWords.help.title', defaultMessage: '<p>Understanding which words are used together can help you find sub-conversations within the reporting about your issue.  We created this chart to show information about how the top 50 words are used. The bigger and darker a word is, the more it is used. Words are laid out based on how they are used in general news reporting (not based on the stories matching your query). Rollover a word to highlight words used in similar phrases in general news reporting.</p>' },
   noGoogleW2VData: { id: 'wordcloud.editable.mode.googleW2V.noData', defaultMessage: 'Sorry, but the Google News word2vec data is missing.' },
+  downloadCsv: { id: 'explorer.googleW2V.downloadCsv', defaultMessage: 'Download { name } word space csv' },
+  downloadSvg: { id: 'explorer.googleW2V.downloadSvg', defaultMessage: 'Download { name } word space svg' },
 };
 
 const WORD_SPACE_DOM_ID = 'query-word-space-wrapper';
@@ -55,13 +57,13 @@ class QueryWordSpaceResultsContainer extends React.Component {
               <span key={`wordspace-actions-${idx}`}>
                 <MenuItem
                   className="action-icon-menu-item"
-                  primaryText={formatMessage(messages.downloadDataCsv, { name: q.label })}
+                  primaryText={formatMessage(localMessages.downloadCsv, { name: q.label })}
                   rightIcon={<DownloadButton />}
                   onTouchTap={() => this.handleDownloadCsv(q)}
                 />
                 <MenuItem
                   className="action-icon-menu-item"
-                  primaryText={formatMessage(messages.downloadDataSvg, { name: q.label })}
+                  primaryText={formatMessage(localMessages.downloadSvg, { name: q.label })}
                   rightIcon={<DownloadButton />}
                   onTouchTap={() => {
                     const svgChild = document.getElementById(domId);
