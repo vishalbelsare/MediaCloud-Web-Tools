@@ -20,7 +20,7 @@ const localMessages = {
   title: { id: 'explorer.entities.title', defaultMessage: 'Top Organizations' },
   organization: { id: 'explorer.entities.organization', defaultMessage: 'Organization' },
   helpIntro: { id: 'explorer.entities.help.title', defaultMessage: '<p>Looking at which organizations and companies are being talked about can give you a sense of how the media is focusing on the issue you are investigating. This is a list of the organizations mentioned most often in a sampling of stories. Click on a name to add it to all your queries. Click the menu on the bottom right to download a CSV of all the organizations mentioned in a sample of stories.</p>' },
-  downloadCsv: { id: 'explorer.entities.downloadCsv', defaultMessage: 'Download { name } organizations list' },
+  downloadCsv: { id: 'explorer.entities.downloadCsv', defaultMessage: 'Download { name } CLIFF-sampled organizations csv' },
 };
 
 class QueryTopEntitiesOrgsResultsContainer extends React.Component {

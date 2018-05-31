@@ -21,7 +21,7 @@ const localMessages = {
   title: { id: 'explorer.themes.title', defaultMessage: 'Top Themes' },
   helpIntro: { id: 'explorer.themes.help.intro', defaultMessage: '<p>News coverage can be grouped into themes to identify the differing narratives.  This chart shows you how many stories match a fixed list of themes we detect in stories.</p>' },
   helpDetail: { id: 'explorer.themes.help.detail', defaultMessage: '<p>The larger the color circled, the more prominent it is in the stories that matched your query. The grey circle represents all the stories matching your query. The colored circle in the center represents the number of stories found that match each particular theme.</p>' },
-  downloadCsv: { id: 'explorer.themes.downloadCsv', defaultMessage: 'Download { name } theme list' },
+  downloadCsv: { id: 'explorer.themes.downloadCsv', defaultMessage: 'Download sampled { name } nyt themes csv' },
 };
 
 class QueryThemesResultsContainer extends React.Component {
