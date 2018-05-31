@@ -145,13 +145,13 @@ class EditableWordCloudDataCard extends React.Component {
         <MenuItem
           className="action-icon-menu-item"
           primaryText={formatMessage(localMessages.sampleSize1k)}
-          disabled={this.state.size === VIEW_1K}
+          disabled={this.state.sampleSize === VIEW_1K}
           onTouchTap={() => this.setSampleSize(VIEW_1K)}
         />
         <MenuItem
           className="action-icon-menu-item"
           primaryText={formatMessage(localMessages.sampleSize10k)}
-          disabled={this.state.size === VIEW_10K}
+          disabled={this.state.sampleSize === VIEW_10K}
           onTouchTap={() => this.setSampleSize(VIEW_10K)}
         />
         <Divider />
