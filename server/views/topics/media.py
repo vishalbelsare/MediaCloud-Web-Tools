@@ -7,9 +7,8 @@ from server import app, TOOL_API_KEY
 from server.views import WORD_COUNT_DOWNLOAD_LENGTH
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, is_user_logged_in
 from server.util import csv
-from server.util.tags import is_metadata_tag_set, label_for_metadata_tag
 from server.views.topics import validated_sort, TOPIC_MEDIA_CSV_PROPS
-from server.views.topics.splitstories import stream_topic_split_story_counts_csv, topic_split_story_count
+from server.views.topics.splitstories import stream_topic_split_story_counts_csv
 from server.views.topics.stories import stream_story_list_csv
 import server.views.topics.apicache as apicache
 from server.util.request import filters_from_args, api_error_handler
