@@ -36,27 +36,25 @@ def allowed_file(filename):
 def api_metadata_download(collection_id):
     all_media = media_with_tag(user_mediacloud_key(), collection_id)
 
-    metadata_items = []
+    metadata_counts = {}  # from tag_sets_id to info
     for media_source in all_media:
-        for tag in media_source['media_source_tags']:
-            if is_metadata_tag_set(tag['tag_sets_id']):
-                found = False
-                for dictItem in metadata_items:
-                    if dictItem['metadataId'] == tag['tag_sets_id']:
-                        temp = dictItem['tagged']
-                        dictItem.update({'tagged': temp + 1})
-                        found = True
-                if not found:
-                    metadata_items.append(
-                        {'metadataCoverage': tag['tag_set'], 'metadataId': tag['tag_sets_id'], 'tagged': 1})
+        for metadata_label, info in media_source['metadata'].iteritems():
+            if metadata_label not in metadata_counts:  # lazily populate counts
+                metadata_counts[metadata_label] = {
+                    'metadataCoverage': metadata_label,
+                    'tagged': 0
+                }
+            if info is not None:
+                metadata_counts[metadata_label]['tagged'] += 1
 
-    for i in metadata_items:
-        temp = len(all_media) - i['tagged']
-        i.update({'notTagged': temp})
+    for item_info in metadata_counts.values():
+        temp = len(all_media) - item_info['tagged']
+        item_info.update({'notTagged': temp})
 
     props = ['metadataCoverage', 'tagged', 'notTagged']
     filename = "metadataCoverageForCollection" + collection_id + ".csv"
-    return csv.stream_response(metadata_items, props, filename)
+    return csv.stream_response(metadata_counts.values(), props, filename,
+                               ['metadata category', 'sources with info', 'sources missing info'])
 
 
 @app.route('/api/collections/set/<tag_sets_id>', methods=['GET'])
