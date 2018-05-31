@@ -166,6 +166,7 @@ const messages = {
   downloadCSV: { id: 'downloadCSV', defaultMessage: 'Download a CSV' },
   downloadOptions: { id: 'downloadOptions', defaultMessage: 'Download Options...' },
   viewOptions: { id: 'viewOptions', defaultMessage: 'View Options...' },
+  viewSampleOptions: { id: 'viewSampleOptions', defaultMessage: 'View Sample Sizes...' },
   favorite: { id: 'favorite', defaultMessage: 'Star' },
   unfavorite: { id: 'unfavorite', defaultMessage: 'Un-star' },
   explore: { id: 'explore', defaultMessage: 'Explore' },

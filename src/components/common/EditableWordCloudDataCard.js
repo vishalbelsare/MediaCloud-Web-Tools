@@ -22,6 +22,9 @@ const VIEW_ORDERED = 'VIEW_ORDERED';
 const VIEW_GOOGLE_W2V = 'VIEW_GOOGLE_W2V';
 const VIEW_TOPIC_W2V = 'VIEW_TOPIC_W2V';
 
+const VIEW_1K = '1000';
+const VIEW_10K = '10000';
+
 const WORD_SPACE_WORD_LIMIT = 50;
 
 const localMessages = {
@@ -37,6 +40,9 @@ const localMessages = {
   downloadWordCSV: { id: 'wordcount.editable.download.wordCsv', defaultMessage: 'Download Word Frequency CSV' },
   downloadBigramCSV: { id: 'wordcount.editable.download.brigramCsv', defaultMessage: 'Download Bigram Frequency CSV' },
   downloadTrigramCSV: { id: 'wordcount.editable.download.trigramCsv', defaultMessage: 'Download Trigram Frequency CSV' },
+  sampleSize1k: { id: 'wordcloud.editable.samplesize.onek', defaultMessage: 'Use a sample of 1,000 stories (quick, default)' },
+  sampleSize10k: { id: 'wordcloud.editable.samplesize.tenk', defaultMessage: 'Use a sample of 10,000 stories (slower, more accurate)' },
+  learnMore: { id: 'wordcloud.editable.samplesize.learnMore', defaultMessage: 'Learn More' },
 };
 
 class EditableWordCloudDataCard extends React.Component {
@@ -46,6 +52,7 @@ class EditableWordCloudDataCard extends React.Component {
     modifiableWords: null, // all the words, including a boolean display property on each
     displayOnlyWords: null, // only the words that are being displayed
     view: VIEW_ORDERED, // which view to show (see view constants above)
+    sampleSize: VIEW_1K,
   };
 
   onEditModeClick = (d, node) => {
@@ -59,6 +66,16 @@ class EditableWordCloudDataCard extends React.Component {
 
   setView = (nextView) => {
     this.setState({ view: nextView });
+  }
+
+  setSampleSize = (nextSize) => {
+    const { onViewSampleSizeClick } = this.props;
+    this.setState({ sampleSize: nextSize });
+    onViewSampleSizeClick(nextSize);
+  }
+
+  goToBlog = () => {
+    window.location = '';
   }
 
   isShowingAllWords = () => (this.state.modifiableWords.length === this.state.displayOnlyWords.length);
@@ -123,6 +140,28 @@ class EditableWordCloudDataCard extends React.Component {
       );
     }
     const actionMenuSubHeaderContent = actionMenuHeaderText ? <Subheader>{actionMenuHeaderText}</Subheader> : null;
+    const sampleSizeOptions = (
+      <span>
+        <MenuItem
+          className="action-icon-menu-item"
+          primaryText={formatMessage(localMessages.sampleSize1k)}
+          disabled={this.state.size === VIEW_1K}
+          onTouchTap={() => this.setSampleSize(VIEW_1K)}
+        />
+        <MenuItem
+          className="action-icon-menu-item"
+          primaryText={formatMessage(localMessages.sampleSize10k)}
+          disabled={this.state.size === VIEW_10K}
+          onTouchTap={() => this.setSampleSize(VIEW_10K)}
+        />
+        <Divider />
+        <MenuItem
+          className="action-icon-menu-item"
+          primaryText={formatMessage(localMessages.learnMore)}
+          onTouchTap={this.goToBlog}
+        />
+      </span>
+    );
     const viewOptions = (
       <span>
         <MenuItem
@@ -196,6 +235,10 @@ class EditableWordCloudDataCard extends React.Component {
     if (actionsAsLinksUnderneath) {
       actionMenuContent = (
         <div className="action-menu-set">
+          <ActionMenu actionTextMsg={messages.viewSampleOptions}>
+            {actionMenuSubHeaderContent}
+            {sampleSizeOptions}
+          </ActionMenu>
           <ActionMenu actionTextMsg={messages.viewOptions}>
             {actionMenuSubHeaderContent}
             {viewOptions}
@@ -213,6 +256,8 @@ class EditableWordCloudDataCard extends React.Component {
           {viewOptions}
           <Divider />
           {downloadOptions}
+          <Divider />
+          {sampleSizeOptions}
         </ActionMenu>
       );
     }
@@ -372,6 +417,7 @@ EditableWordCloudDataCard.propTypes = {
   includeTopicWord2Vec: PropTypes.bool,   // show an option to draw a word2vec map basde on w2v_x / w2v_y from topic-specific model
   hideGoogleWord2Vec: PropTypes.bool,        // show an option to draw a word2vec map basde on w2v_x / w2v_y from GoogleNews model
   onViewModeClick: PropTypes.func.isRequired,
+  onViewSampleSizeClick: PropTypes.func.isRequired,
   actionsAsLinksUnderneath: PropTypes.bool, // show the actions as links under the viz (ie. in a SummarizedVisualization card)
   domId: PropTypes.string.isRequired,     // unique dom id needed to support CSV downloading
   // from compositional chain

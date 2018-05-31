@@ -36,7 +36,7 @@ class QueryWordsResultsContainer extends React.Component {
     postToDownloadUrl('/api/explorer/words/wordcount.csv', query, { ngramSize });
   }
   render() {
-    const { results, queries, handleWordCloudClick } = this.props;
+    const { results, queries, handleWordCloudClick, fetchData } = this.props;
     const { formatMessage } = this.props.intl;
     const subHeaderContent = (
       <QueryResultsSelector
@@ -51,6 +51,7 @@ class QueryWordsResultsContainer extends React.Component {
         subHeaderContent={subHeaderContent}
         words={results[this.state.selectedQueryIndex].list}
         onViewModeClick={handleWordCloudClick}
+        onViewSampleSizeClick={sampleSize => fetchData(queries, sampleSize)}
         border={false}
         domId={WORD_CLOUD_DOM_ID}
         width={585}
@@ -88,7 +89,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  fetchData: (queries) => {
+  fetchData: (queries, sampleSize) => {
     // this should trigger when the user clicks the Search button or changes the URL
     // for n queries, run the dispatch with each parsed query
     dispatch(resetTopWords());
@@ -102,6 +103,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
           index: q.index,
           sources: q.sources.map(s => s.id),
           collections: q.collections.map(c => c.id),
+          sample_size: sampleSize,
         };
         return dispatch(fetchQueryTopWords(infoToQuery));
       });
@@ -113,6 +115,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
           search_id: q.searchId, // may or may not have these
           query_id: q.id, // TODO if undefined, what to do?
           q: q.q, // only if no query id, means demo user added a keyword
+          sample_size: sampleSize,
         };
         return dispatch(fetchDemoQueryTopWords(demoInfo)); // id
       });

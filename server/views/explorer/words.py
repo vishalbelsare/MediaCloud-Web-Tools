@@ -29,13 +29,14 @@ def api_explorer_demo_words():
 
 def get_word_count():
     search_id = int(request.args['search_id']) if 'search_id' in request.args else None
+    sample_size = int(request.args['sample_size']) if 'sample_size' in request.args else None
     if search_id not in [None, -1]:
         sample_searches = load_sample_searches()
         current_search = sample_searches[search_id]['queries']
         solr_q, solr_fq = parse_query_with_args_and_sample_search(request.args, current_search)
     else:
         solr_q, solr_fq = parse_query_with_keywords(request.args)
-    word_data = query_wordcount(solr_q, solr_fq)
+    word_data = query_wordcount(solr_q, solr_fq, sample_size=sample_size)
     # return combined data
     return jsonify({"list": word_data})
 
