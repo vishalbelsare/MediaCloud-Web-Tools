@@ -20,15 +20,15 @@ function composeQueryResultsSelector() {
       }
       shouldComponentUpdate(nextProps) {
         const { results, queries } = this.props;
-        if (this.state.selectedQueryIndex !== nextProps.selectedQueryIndex) return true;
         return queryChangedEnoughToUpdate(queries, nextProps.queries, results, nextProps.results);
       }
       setView(nextView) {
         this.setState({ selectedTabIndex: nextView });
+        this.forceUpdate();
       }
       render() {
         const { queries } = this.props;
-        const tabSelector = <TabSelector onViewSelected={() => this.setView()} tabLabels={queries} />;
+        const tabSelector = <TabSelector onViewSelected={idx => this.setView(idx)} tabLabels={queries} />;
         return (
           <div className="query-results-selector">
             <ChildComponent {...this.props} selectedTabIndex={this.state.selectedTabIndex} tabSelector={tabSelector} />;
