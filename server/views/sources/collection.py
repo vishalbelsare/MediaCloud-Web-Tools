@@ -11,9 +11,8 @@ from server import app, mc, db
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_mediacloud_client, user_name,\
     user_has_auth_role, ROLE_MEDIA_EDIT
 from server.util.request import arguments_required, form_fields_required, api_error_handler
-from server.util.tags import TAG_SETS_ID_COLLECTIONS, is_metadata_tag_set, format_name_from_label, \
-    format_metadata_fields, media_with_tag
-from server.views.sources import SOURCES_TEMPLATE_PROPS_EDIT, COLLECTIONS_TEMPLATE_PROPS_EDIT
+from server.util.tags import TAG_SETS_ID_COLLECTIONS, is_metadata_tag_set, format_name_from_label, media_with_tag
+from server.views.sources import SOURCE_LIST_CSV_EDIT_PROPS
 from server.views.sources.favorites import add_user_favorite_flag_to_collections, add_user_favorite_flag_to_sources
 from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
 from server.views.sources.stories_split_by_time import stream_split_stories_csv
@@ -37,27 +36,25 @@ def allowed_file(filename):
 def api_metadata_download(collection_id):
     all_media = media_with_tag(user_mediacloud_key(), collection_id)
 
-    metadata_items = []
+    metadata_counts = {}  # from tag_sets_id to info
     for media_source in all_media:
-        for tag in media_source['media_source_tags']:
-            if is_metadata_tag_set(tag['tag_sets_id']):
-                found = False
-                for dictItem in metadata_items:
-                    if dictItem['metadataId'] == tag['tag_sets_id']:
-                        temp = dictItem['tagged']
-                        dictItem.update({'tagged': temp + 1})
-                        found = True
-                if not found:
-                    metadata_items.append(
-                        {'metadataCoverage': tag['tag_set'], 'metadataId': tag['tag_sets_id'], 'tagged': 1})
+        for metadata_label, info in media_source['metadata'].iteritems():
+            if metadata_label not in metadata_counts:  # lazily populate counts
+                metadata_counts[metadata_label] = {
+                    'metadataCoverage': metadata_label,
+                    'tagged': 0
+                }
+            if info is not None:
+                metadata_counts[metadata_label]['tagged'] += 1
 
-    for i in metadata_items:
-        temp = len(all_media) - i['tagged']
-        i.update({'notTagged': temp})
+    for item_info in metadata_counts.values():
+        temp = len(all_media) - item_info['tagged']
+        item_info.update({'notTagged': temp})
 
     props = ['metadataCoverage', 'tagged', 'notTagged']
     filename = "metadataCoverageForCollection" + collection_id + ".csv"
-    return csv.stream_response(metadata_items, props, filename)
+    return csv.stream_response(metadata_counts.values(), props, filename,
+                               ['metadata category', 'sources with info', 'sources missing info'])
 
 
 @app.route('/api/collections/set/<tag_sets_id>', methods=['GET'])
@@ -186,9 +183,9 @@ def api_collection_sources(collection_id):
 @flask_login.login_required
 @api_error_handler
 def api_download_sources_template():
-    filename = "Collection_Template_for_sources.csv"
+    filename = "media cloud collection upload template.csv"
 
-    what_type_download = SOURCES_TEMPLATE_PROPS_EDIT
+    what_type_download = SOURCE_LIST_CSV_EDIT_PROPS
 
     return csv.stream_response(what_type_download, what_type_download, filename)
 
@@ -200,12 +197,8 @@ def api_collection_sources_csv(collection_id):
     user_mc = user_mediacloud_client()
     collection = user_mc.tag(collection_id)    # not cached because props can change often
     all_media = media_with_tag(user_mediacloud_key(), collection_id)
-    for src in all_media:
-        for tag in src['media_source_tags']:
-            if is_metadata_tag_set(tag['tag_sets_id']):
-                format_metadata_fields(src, tag)
     file_prefix = "Collection {} ({}) - sources ".format(collection_id, collection['tag'])
-    properties_to_include = COLLECTIONS_TEMPLATE_PROPS_EDIT
+    properties_to_include = SOURCE_LIST_CSV_EDIT_PROPS
     return csv.download_media_csv(all_media, file_prefix, properties_to_include)
 
 

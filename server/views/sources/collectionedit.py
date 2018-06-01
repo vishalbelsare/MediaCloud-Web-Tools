@@ -14,7 +14,8 @@ from server.util.config import ConfigException
 from server.auth import user_admin_mediacloud_client, user_mediacloud_key, user_name
 from server.util.request import json_error_response, form_fields_required, api_error_handler
 from server.views.sources.collection import allowed_file
-from server.views.sources import COLLECTIONS_TEMPLATE_PROPS_EDIT, COLLECTIONS_TEMPLATE_METADATA_PROPS
+from server.views.sources import SOURCE_LIST_CSV_EDIT_PROPS
+from server.util.csv import SOURCE_LIST_CSV_METADATA_PROPS
 from server.util.tags import VALID_METADATA_IDS, METADATA_PUB_COUNTRY_NAME, \
     format_name_from_label, tags_in_tag_set, media_with_tag
 
@@ -115,7 +116,9 @@ def upload_file():
 
 
 def _parse_sources_from_csv_upload(filepath):
-    acceptable_column_names = COLLECTIONS_TEMPLATE_PROPS_EDIT
+    acceptable_column_names = list(SOURCE_LIST_CSV_EDIT_PROPS)
+    acceptable_column_names.remove('stories_per_day')
+    acceptable_column_names.remove('first_story')
     with open(filepath, 'rU') as f:
         reader = pycsv.DictReader(f)
         reader.fieldnames = acceptable_column_names
@@ -156,7 +159,7 @@ def _update_source_worker(source_info):
     media_id = source_info['media_id']
     # logger.debug("Updating media {}".format(media_id))
     source_no_metadata_no_id = {k: v for k, v in source_info.items() if k != 'media_id'
-                         and k not in COLLECTIONS_TEMPLATE_METADATA_PROPS}
+                                and k not in SOURCE_LIST_CSV_METADATA_PROPS}
     response = user_mc.mediaUpdate(media_id, source_no_metadata_no_id)
     return response
 
@@ -189,7 +192,7 @@ def _create_or_update_sources(source_list_from_csv, create_new):
         sources_to_create_no_metadata = []
         for src in sources_to_create:
             sources_to_create_no_metadata.append(
-                {k: v for k, v in src.items() if k not in COLLECTIONS_TEMPLATE_METADATA_PROPS})
+                {k: v for k, v in src.items() if k not in SOURCE_LIST_CSV_METADATA_PROPS})
         # parallelize media creation to make it faster
         chunk_size = 5  # @ 10, each call takes over a minute; @ 5 each takes around ~40 secs
         media_to_create_batches = [sources_to_create_no_metadata[x:x + chunk_size]
