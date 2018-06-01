@@ -42,7 +42,7 @@ def api_explorer_demo_story_sample():
 
 @app.route('/api/explorer/stories/samples.csv', methods=['POST'])
 def explorer_stories_csv():
-    filename = u'stories'
+    filename = u'sampled-stories'
     data = request.form
     if 'searchId' in data:
         solr_q, solr_fq = parse_as_sample(data['searchId'], data['index'])

@@ -8,7 +8,7 @@ import composeSummarizedVisualization from './SummarizedVizualization';
 import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import BubbleRowChart from '../../vis/BubbleRowChart';
-import { queryChangedEnoughToUpdate, postToCombinedDownloadUrl, downloadExplorerSvg } from '../../../lib/explorerUtil';
+import { queryChangedEnoughToUpdate, postToCombinedDownloadUrl } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
 import { FETCH_INVALID } from '../../../lib/fetchConstants';
 
@@ -22,8 +22,7 @@ const localMessages = {
   helpDetails: { id: 'explorer.storyCount.help.details',
     defaultMessage: '<p>It is harder to determine how much of the media\'s attention your search got. If you want to dig into that, a good place to start is comparing your query to a search for everything from the sources and collections you are searching.  You can do this by searching for * in the same date range and media; that matches every story.</p>',
   },
-  downloadCSV: { id: 'explorer.attention.downloadCSV', defaultMessage: 'Download total attention CSV' },
-  downloadSVG: { id: 'explorer.attention.downloadSVG', defaultMessage: 'Download total attention SVG' },
+  downloadCsv: { id: 'explorer.attention.total.downloadCsv', defaultMessage: 'Download { name } total story count CSV' },
   viewNormalized: { id: 'explorer.attention.mode.viewNormalized', defaultMessage: 'View by Story Count (default)' },
   viewRegular: { id: 'explorer.attention.mode.viewRegular', defaultMessage: 'View by Story Percentage' },
 };
@@ -46,8 +45,8 @@ class QueryTotalAttentionResultsContainer extends React.Component {
   }
 
   // if demo, use only sample search queries to download
-  downloadCsv = (queries) => {
-    postToCombinedDownloadUrl('/api/explorer/stories/count.csv', queries);
+  downloadCsv = (query) => {
+    postToCombinedDownloadUrl('/api/explorer/stories/count.csv', [query]);
   }
 
   render() {
@@ -78,48 +77,45 @@ class QueryTotalAttentionResultsContainer extends React.Component {
           fill: query.color,
         };
       });
-      content = (<BubbleRowChart
-        data={bubbleData}
-        padding={0}
-        domId={BUBBLE_CHART_DOM_ID}
-        width={650}
-      />);
-    }
-    return (
-      <div>
-        {content}
-        <div className="actions">
-          <ActionMenu actionTextMsg={messages.downloadOptions}>
-            <MenuItem
-              className="action-icon-menu-item"
-              primaryText={formatMessage(localMessages.downloadCSV)}
-              rightIcon={<DownloadButton />}
-              onTouchTap={() => this.downloadCsv(safeResults)}
-            />
-            <MenuItem
-              className="action-icon-menu-item"
-              primaryText={formatMessage(localMessages.downloadSVG)}
-              rightIcon={<DownloadButton />}
-              onTouchTap={() => downloadExplorerSvg('total', 'story-count', BUBBLE_CHART_DOM_ID)}
-            />
-          </ActionMenu>
-          <ActionMenu actionTextMsg={messages.viewOptions}>
-            <MenuItem
-              className="action-icon-menu-item"
-              primaryText={formatMessage(localMessages.viewNormalized)}
-              disabled={this.state.view === VIEW_REGULAR}
-              onClick={() => this.setView(VIEW_REGULAR)}
-            />
-            <MenuItem
-              className="action-icon-menu-item"
-              primaryText={formatMessage(localMessages.viewRegular)}
-              disabled={this.state.view === VIEW_NORMALIZED}
-              onClick={() => this.setView(VIEW_NORMALIZED)}
-            />
-          </ActionMenu>
+      content = (
+        <div>
+          <BubbleRowChart
+            data={bubbleData}
+            padding={0}
+            domId={BUBBLE_CHART_DOM_ID}
+            width={650}
+          />
+          <div className="actions">
+            <ActionMenu actionTextMsg={messages.downloadOptions}>
+              {safeResults.map((q, idx) =>
+                <MenuItem
+                  key={idx}
+                  className="action-icon-menu-item"
+                  primaryText={formatMessage(localMessages.downloadCsv, { name: q.label })}
+                  rightIcon={<DownloadButton />}
+                  onTouchTap={() => this.downloadCsv(q)}
+                />
+              )}
+            </ActionMenu>
+            <ActionMenu actionTextMsg={messages.viewOptions}>
+              <MenuItem
+                className="action-icon-menu-item"
+                primaryText={formatMessage(localMessages.viewNormalized)}
+                disabled={this.state.view === VIEW_REGULAR}
+                onClick={() => this.setView(VIEW_REGULAR)}
+              />
+              <MenuItem
+                className="action-icon-menu-item"
+                primaryText={formatMessage(localMessages.viewRegular)}
+                disabled={this.state.view === VIEW_NORMALIZED}
+                onClick={() => this.setView(VIEW_NORMALIZED)}
+              />
+            </ActionMenu>
+          </div>
         </div>
-      </div>
-    );
+      );
+    }
+    return (content);
   }
 }
 

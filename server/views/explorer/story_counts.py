@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 @app.route('/api/explorer/stories/count.csv', methods=['POST'])
 def explorer_story_count_csv():
-    filename = u'story-count'
+    filename = u'total-story-count'
     data = request.form
     if 'searchId' in data:
         # TODO: don't load this query twice because that is kind of dumb

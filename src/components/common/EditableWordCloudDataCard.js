@@ -34,9 +34,9 @@ const localMessages = {
   modeGoogleW2V: { id: 'wordcloud.editable.mode.googleW2V', defaultMessage: 'View GoogleNews Word2Vec 2D Layout' },
   noGoogleW2VData: { id: 'wordcloud.editable.mode.googleW2V.noData', defaultMessage: 'Sorry, but the Google News word2vec data is missing.' },
   invalidView: { id: 'wordcloud.editable.mode.invalid', defaultMessage: 'Sorry, but an invalid view is selected' },
-  downloadWordCSV: { id: 'wordcount.editable.download.wordCsv', defaultMessage: 'Download Word Frequency CSV' },
-  downloadBigramCSV: { id: 'wordcount.editable.download.brigramCsv', defaultMessage: 'Download Bigram Frequency CSV' },
-  downloadTrigramCSV: { id: 'wordcount.editable.download.trigramCsv', defaultMessage: 'Download Trigram Frequency CSV' },
+  downloadWordCSV: { id: 'wordcount.editable.download.wordCsv', defaultMessage: 'Download Sampled Word Frequency CSV' },
+  downloadBigramCSV: { id: 'wordcount.editable.download.brigramCsv', defaultMessage: 'Download Sampled Bigram Frequency CSV' },
+  downloadTrigramCSV: { id: 'wordcount.editable.download.trigramCsv', defaultMessage: 'Download Sampled Trigram Frequency CSV' },
 };
 
 class EditableWordCloudDataCard extends React.Component {
