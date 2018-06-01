@@ -21,8 +21,8 @@ const localMessages = {
   title: { id: 'explorer.themes.title', defaultMessage: 'Top Themes' },
   helpIntro: { id: 'explorer.themes.help.intro', defaultMessage: '<p>News coverage can be grouped into themes to identify the differing narratives.  This chart shows you how many stories match a fixed list of themes we detect in stories.</p>' },
   helpDetail: { id: 'explorer.themes.help.detail', defaultMessage: '<p>The larger the color circled, the more prominent it is in the stories that matched your query. The grey circle represents all the stories matching your query. The colored circle in the center represents the number of stories found that match each particular theme.</p>' },
-  downloadCsv: { id: 'explorer.themes.downloadCsv', defaultMessage: 'Download sampled { name } nyt themes CSV' },
-  downloadSvg: { id: 'explorer.themes.downloadSvg', defaultMessage: 'Download sampled { name } nyt themes SVG' },
+  downloadCsv: { id: 'explorer.themes.downloadCsv', defaultMessage: 'Download { name } NYT themes CSV' },
+  downloadSvg: { id: 'explorer.themes.downloadSvg', defaultMessage: 'Download { name } NYT themes SVG' },
 };
 
 class QueryThemesResultsContainer extends React.Component {
@@ -47,12 +47,6 @@ class QueryThemesResultsContainer extends React.Component {
     const { formatMessage, formatNumber } = this.props.intl;
     let rawData = [];
     let content = null;
-    const querySelector = (
-      <QueryResultsSelector
-        options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
-        onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
-      />
-    );
     if (results) {
       rawData = results[this.state.selectedQueryIndex] ? results[this.state.selectedQueryIndex].results : [];
       const coverageRatio = results[this.state.selectedQueryIndex] ? results[this.state.selectedQueryIndex].coverage_percentage : 0;
@@ -76,27 +70,6 @@ class QueryThemesResultsContainer extends React.Component {
               asPercentage
               minCutoffValue={0.05}
             />
-            <div className="actions">
-              <ActionMenu actionTextMsg={messages.downloadOptions}>
-                {queries.map((q, idx) =>
-                  <span key={`q${idx}-items`}>
-                    <MenuItem
-                      key={idx}
-                      className="action-icon-menu-item"
-                      primaryText={formatMessage(localMessages.downloadCsv, { name: q.label })}
-                      rightIcon={<DownloadButton />}
-                      onTouchTap={() => this.downloadCsv(q)}
-                    />
-                    <MenuItem
-                      className="action-icon-menu-item"
-                      primaryText={formatMessage(localMessages.downloadSvg, { name: q.label })}
-                      rightIcon={<DownloadButton />}
-                      onTouchTap={() => downloadExplorerSvg(q.label, 'sampled-nyt_themes', BUBBLE_CHART_DOM_ID)}
-                    />
-                  </span>
-                )}
-              </ActionMenu>
-            </div>
           </div>
         );
       } else {
@@ -112,8 +85,32 @@ class QueryThemesResultsContainer extends React.Component {
     }
     return (
       <div>
-        { querySelector }
+        <QueryResultsSelector
+          options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
+          onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
+        />
         { content }
+        <div className="actions">
+          <ActionMenu actionTextMsg={messages.downloadOptions}>
+            {queries.map((q, idx) =>
+              <span key={`q${idx}-items`}>
+                <MenuItem
+                  key={idx}
+                  className="action-icon-menu-item"
+                  primaryText={formatMessage(localMessages.downloadCsv, { name: q.label })}
+                  rightIcon={<DownloadButton />}
+                  onTouchTap={() => this.downloadCsv(q)}
+                />
+                <MenuItem
+                  className="action-icon-menu-item"
+                  primaryText={formatMessage(localMessages.downloadSvg, { name: q.label })}
+                  rightIcon={<DownloadButton />}
+                  onTouchTap={() => downloadExplorerSvg(q.label, 'sampled-nyt_themes', BUBBLE_CHART_DOM_ID)}
+                />
+              </span>
+            )}
+          </ActionMenu>
+        </div>
       </div>
     );
   }

@@ -20,7 +20,7 @@ const localMessages = {
   title: { id: 'explorer.entities.title', defaultMessage: 'Top Organizations' },
   organization: { id: 'explorer.entities.organization', defaultMessage: 'Organization' },
   helpIntro: { id: 'explorer.entities.help.title', defaultMessage: '<p>Looking at which organizations and companies are being talked about can give you a sense of how the media is focusing on the issue you are investigating. This is a list of the organizations mentioned most often in a sampling of stories. Click on a name to add it to all your queries. Click the menu on the bottom right to download a CSV of all the organizations mentioned in a sample of stories.</p>' },
-  downloadCsv: { id: 'explorer.entities.downloadCsv', defaultMessage: 'Download { name } CLIFF-sampled organizations CSV' },
+  downloadCsv: { id: 'explorer.entities.downloadCsv', defaultMessage: 'Download { name } top organizations CSV' },
 };
 
 class QueryTopEntitiesOrgsResultsContainer extends React.Component {
@@ -44,12 +44,6 @@ class QueryTopEntitiesOrgsResultsContainer extends React.Component {
     const { results, queries, handleEntitySelection } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
     let content = null;
-    const querySelector = (
-      <QueryResultsSelector
-        options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
-        onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
-      />
-    );
     if (results) {
       const rawData = results[this.state.selectedQueryIndex] ? results[this.state.selectedQueryIndex].results : [];
       const coverageRatio = results[this.state.selectedQueryIndex] ? results[this.state.selectedQueryIndex].coverage_percentage : 0;
@@ -65,19 +59,6 @@ class QueryTopEntitiesOrgsResultsContainer extends React.Component {
                 maxTitleLength={50}
               />
             }
-            <div className="actions">
-              <ActionMenu actionTextMsg={messages.downloadOptions}>
-                {queries.map((q, idx) =>
-                  <MenuItem
-                    key={idx}
-                    className="action-icon-menu-item"
-                    primaryText={formatMessage(localMessages.downloadCsv, { name: q.label })}
-                    rightIcon={<DownloadButton />}
-                    onTouchTap={() => this.downloadCsv(q)}
-                  />
-                )}
-              </ActionMenu>
-            </div>
           </div>
         );
       } else {
@@ -93,8 +74,24 @@ class QueryTopEntitiesOrgsResultsContainer extends React.Component {
     }
     return (
       <div>
-        { querySelector }
+        <QueryResultsSelector
+          options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
+          onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
+        />
         { content }
+        <div className="actions">
+          <ActionMenu actionTextMsg={messages.downloadOptions}>
+            {queries.map((q, idx) =>
+              <MenuItem
+                key={idx}
+                className="action-icon-menu-item"
+                primaryText={formatMessage(localMessages.downloadCsv, { name: q.label })}
+                rightIcon={<DownloadButton />}
+                onTouchTap={() => this.downloadCsv(q)}
+              />
+            )}
+          </ActionMenu>
+        </div>
       </div>
     );
   }

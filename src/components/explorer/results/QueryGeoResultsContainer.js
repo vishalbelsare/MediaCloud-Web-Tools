@@ -18,7 +18,7 @@ const localMessages = {
   help: { id: 'explorer.geo.help',
     defaultMessage: '<p>Sometimes media coverage can differ based on the place being talked about. Digging into the <i>geography</i> of the coverage can provide clues to help you understand the narratives. This heatmap shows you the countries that were most often the focus of stories. Click a country to load an Explorer search showing you how the sources in this collection cover it.</p>' },
   descriptionIntro: { id: 'explorer.geo.help.title', defaultMessage: 'About Geographic Attention' },
-  downloadCsv: { id: 'explorer.geo.downloadCsv', defaultMessage: 'Download { name } sampled geographic coverage CSV' },
+  downloadCsv: { id: 'explorer.geo.downloadCsv', defaultMessage: 'Download { name } geographic attention CSV' },
 };
 
 class QueryGeoResultsContainer extends React.Component {
@@ -47,10 +47,6 @@ class QueryGeoResultsContainer extends React.Component {
     if (coverageRatio > COVERAGE_REQUIRED) {
       content = (
         <div>
-          <QueryResultsSelector
-            options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
-            onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
-          />
           {results[this.state.selectedQueryIndex] &&
             <GeoChart
               data={results[this.state.selectedQueryIndex].results}
@@ -60,19 +56,6 @@ class QueryGeoResultsContainer extends React.Component {
               backgroundColor="#f5f5f5"
             />
           }
-          <div className="actions">
-            <ActionMenu actionTextMsg={messages.downloadOptions}>
-              {queries.map((q, idx) =>
-                <MenuItem
-                  key={idx}
-                  className="action-icon-menu-item"
-                  primaryText={formatMessage(localMessages.downloadDataCsv, { name: q.label })}
-                  rightIcon={<DownloadButton />}
-                  onTouchTap={() => this.downloadCsv(q)}
-                />
-              )}
-            </ActionMenu>
-          </div>
         </div>
       );
     } else {
@@ -85,7 +68,28 @@ class QueryGeoResultsContainer extends React.Component {
         </p>
       );
     }
-    return content;
+    return (
+      <div>
+        <QueryResultsSelector
+          options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
+          onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
+        />
+        { content }
+        <div className="actions">
+          <ActionMenu actionTextMsg={messages.downloadOptions}>
+            {queries.map((q, idx) =>
+              <MenuItem
+                key={idx}
+                className="action-icon-menu-item"
+                primaryText={formatMessage(localMessages.downloadDataCsv, { name: q.label })}
+                rightIcon={<DownloadButton />}
+                onTouchTap={() => this.downloadCsv(q)}
+              />
+            )}
+          </ActionMenu>
+        </div>
+      </div>
+    );
   }
 
 }
