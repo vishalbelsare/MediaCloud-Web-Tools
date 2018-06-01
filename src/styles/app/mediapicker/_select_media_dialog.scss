@@ -49,6 +49,8 @@ div [data-reactroot] {
 
         .select-media-selected-list {
           padding: 30px;
+          max-height: 405px;
+          overflow: scroll;
         }
 
         .select-media-ok-button {

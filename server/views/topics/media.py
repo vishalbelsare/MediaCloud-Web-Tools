@@ -7,9 +7,8 @@ from server import app, TOOL_API_KEY
 from server.views import WORD_COUNT_DOWNLOAD_LENGTH
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, is_user_logged_in
 from server.util import csv
-from server.util.tags import is_metadata_tag_set, format_metadata_fields
-from server.views.topics import validated_sort, TOPICS_TEMPLATE_PROPS
-from server.views.topics.splitstories import stream_topic_split_story_counts_csv, topic_split_story_count
+from server.views.topics import validated_sort, TOPIC_MEDIA_CSV_PROPS
+from server.views.topics.splitstories import stream_topic_split_story_counts_csv
 from server.views.topics.stories import stream_story_list_csv
 import server.views.topics.apicache as apicache
 from server.util.request import filters_from_args, api_error_handler
@@ -127,6 +126,12 @@ def media_outlinks_csv(topics_id, media_id):
                                  link_from_media_id=media_id, timespans_id=timespans_id, q=q)
 
 
+def _media_info_worker(media_topic_data):
+    media_info = apicache.get_media(media_topic_data['media_id'])
+    media_topic_data.update(media_info)
+    return media_topic_data
+
+
 def _stream_media_list_csv(user_mc_key, filename, topics_id, **kwargs):
     # Helper method to stream a list of media back to the client as a csv.  Any args you pass in will be
     # simply be passed on to a call to topicMediaList.
@@ -136,21 +141,16 @@ def _stream_media_list_csv(user_mc_key, filename, topics_id, **kwargs):
     params = kwargs
     params['limit'] = 1000  # an arbitrary value to let us page through with big pages
     try:
-        cols_to_export = TOPICS_TEMPLATE_PROPS
+        cols_to_export = TOPIC_MEDIA_CSV_PROPS
         if not add_metadata:
             cols_to_export = cols_to_export[:-4]    # remove the metadata cols
 
         while more_media:
             page = apicache.topic_media_list(user_mediacloud_key(), topics_id, **params)
             media_list = page['media']
-            user_mc = user_admin_mediacloud_client()
 
             if add_metadata:
-                for media_item in media_list:
-                    media_info = user_mc.media(media_item['media_id'])
-                    for eachItem in media_info['media_source_tags']:
-                        if is_metadata_tag_set(eachItem['tag_sets_id']):
-                            format_metadata_fields(media_item, eachItem)
+                media_list = [_media_info_worker(m) for m in media_list]
 
             all_media = all_media + media_list
 

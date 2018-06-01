@@ -47,6 +47,12 @@ class QueryThemesResultsContainer extends React.Component {
     const { formatMessage, formatNumber } = this.props.intl;
     let rawData = [];
     let content = null;
+    const querySelector = (
+      <QueryResultsSelector
+        options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
+        onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
+      />
+    );
     if (results) {
       rawData = results[this.state.selectedQueryIndex] ? results[this.state.selectedQueryIndex].results : [];
       const coverageRatio = results[this.state.selectedQueryIndex] ? results[this.state.selectedQueryIndex].coverage_percentage : 0;
@@ -60,10 +66,6 @@ class QueryThemesResultsContainer extends React.Component {
         }));
         content = (
           <div>
-            <QueryResultsSelector
-              options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
-              onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
-            />
             <BubbleRowChart
               data={data}
               maxBubbleRadius={60}
@@ -108,7 +110,12 @@ class QueryThemesResultsContainer extends React.Component {
         );
       }
     }
-    return (content);
+    return (
+      <div>
+        { querySelector }
+        { content }
+      </div>
+    );
   }
 }
 
