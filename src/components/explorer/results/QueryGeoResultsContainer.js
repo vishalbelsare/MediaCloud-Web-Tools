@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { injectIntl, FormattedHTMLMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import MenuItem from 'material-ui/MenuItem';
 import composeAsyncContainer from '../../common/AsyncContainer';
@@ -10,7 +10,7 @@ import { fetchDemoQueryGeo, fetchQueryGeo, resetGeo } from '../../../actions/exp
 import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import messages from '../../../resources/messages';
-import { queryChangedEnoughToUpdate, postToDownloadUrl } from '../../../lib/explorerUtil';
+import { queryChangedEnoughToUpdate, postToDownloadUrl, COVERAGE_REQUIRED } from '../../../lib/explorerUtil';
 import QueryResultsSelector from './QueryResultsSelector';
 
 const localMessages = {
@@ -40,37 +40,51 @@ class QueryGeoResultsContainer extends React.Component {
   }
   render() {
     const { results, intl, queries, handleCountryClick } = this.props;
-    const { formatMessage } = intl;
-    return (
-      <div>
-        <QueryResultsSelector
-          options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
-          onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
-        />
-        {results[this.state.selectedQueryIndex] &&
-          <GeoChart
-            data={results[this.state.selectedQueryIndex].results}
-            countryMaxColorScale={queries[this.state.selectedQueryIndex].color}
-            hideLegend
-            onCountryClick={handleCountryClick}
-            backgroundColor="#f5f5f5"
+    const { formatMessage, formatNumber } = intl;
+    let content;
+    const coverageRatio = results[this.state.selectedQueryIndex] ? results[this.state.selectedQueryIndex].coverage_percentage : 0;
+    if (coverageRatio > COVERAGE_REQUIRED) {
+      content = (
+        <div>
+          <QueryResultsSelector
+            options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
+            onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
           />
-        }
-        <div className="actions">
-          <ActionMenu actionTextMsg={messages.downloadOptions}>
-            {queries.map((q, idx) =>
-              <MenuItem
-                key={idx}
-                className="action-icon-menu-item"
-                primaryText={formatMessage(messages.downloadDataCsv, { name: q.label })}
-                rightIcon={<DownloadButton />}
-                onTouchTap={() => this.downloadCsv(q)}
-              />
-            )}
-          </ActionMenu>
+          {results[this.state.selectedQueryIndex] &&
+            <GeoChart
+              data={results[this.state.selectedQueryIndex].results}
+              countryMaxColorScale={queries[this.state.selectedQueryIndex].color}
+              hideLegend
+              onCountryClick={handleCountryClick}
+              backgroundColor="#f5f5f5"
+            />
+          }
+          <div className="actions">
+            <ActionMenu actionTextMsg={messages.downloadOptions}>
+              {queries.map((q, idx) =>
+                <MenuItem
+                  key={idx}
+                  className="action-icon-menu-item"
+                  primaryText={formatMessage(messages.downloadDataCsv, { name: q.label })}
+                  rightIcon={<DownloadButton />}
+                  onTouchTap={() => this.downloadCsv(q)}
+                />
+              )}
+            </ActionMenu>
+          </div>
         </div>
-      </div>
-    );
+      );
+    } else {
+      content = (
+        <p>
+          <FormattedHTMLMessage
+            {...messages.notEnoughCoverage}
+            values={{ pct: formatNumber(coverageRatio, { style: 'percent', maximumFractionDigits: 2 }) }}
+          />
+        </p>
+      );
+    }
+    return content;
   }
 
 }
