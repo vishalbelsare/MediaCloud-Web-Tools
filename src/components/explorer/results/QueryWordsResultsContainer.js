@@ -5,9 +5,9 @@ import { connect } from 'react-redux';
 import composeSummarizedVisualization from './SummarizedVizualization';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import { fetchQueryTopWords, fetchDemoQueryTopWords, resetTopWords } from '../../../actions/explorerActions';
-import { queryChangedEnoughToUpdate, postToDownloadUrl, slugifiedQueryLabel } from '../../../lib/explorerUtil';
+import { postToDownloadUrl, slugifiedQueryLabel } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
-import QueryResultsSelector from './QueryResultsSelector';
+import composeQueryResultsSelector from './QueryResultsSelector';
 import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
 
 const localMessages = {
@@ -19,37 +19,18 @@ const localMessages = {
 const WORD_CLOUD_DOM_ID = 'query-word-cloud-wrapper';
 
 class QueryWordsResultsContainer extends React.Component {
-  state = {
-    selectedQueryIndex: 0,
-  }
-  componentWillReceiveProps(nextProps) {
-    const { lastSearchTime, fetchData } = this.props;
-    if (nextProps.lastSearchTime !== lastSearchTime) {
-      fetchData(nextProps.queries);
-    }
-  }
-  shouldComponentUpdate(nextProps) {
-    const { results, queries } = this.props;
-    return queryChangedEnoughToUpdate(queries, nextProps.queries, results, nextProps.results);
-  }
   handleDownload = (query, ngramSize) => {
     postToDownloadUrl('/api/explorer/words/wordcount.csv', query, { ngramSize });
   }
   render() {
-    const { results, queries, handleWordCloudClick } = this.props;
+    const { results, queries, handleWordCloudClick, tabSelector, selectedTabIndex } = this.props;
     const { formatMessage } = this.props.intl;
-    const subHeaderContent = (
-      <QueryResultsSelector
-        options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
-        onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
-      />
-    );
-    const selectedQuery = queries[this.state.selectedQueryIndex];
+    const selectedQuery = queries[selectedTabIndex];
     return (
       <EditableWordCloudDataCard
         actionMenuHeaderText={formatMessage(localMessages.menuHeader, { queryName: selectedQuery.label })}
-        subHeaderContent={subHeaderContent}
-        words={results[this.state.selectedQueryIndex].list}
+        subHeaderContent={tabSelector}
+        words={results[selectedTabIndex].list}
         onViewModeClick={handleWordCloudClick}
         border={false}
         domId={WORD_CLOUD_DOM_ID}
@@ -72,6 +53,8 @@ QueryWordsResultsContainer.propTypes = {
   onQueryModificationRequested: PropTypes.func.isRequired,
   // from composition
   intl: PropTypes.object.isRequired,
+  selectedTabIndex: PropTypes.number.isRequired,
+  tabSelector: PropTypes.object.isRequired,
   // from dispatch
   fetchData: PropTypes.func.isRequired,
   results: PropTypes.array.isRequired,
@@ -136,7 +119,9 @@ export default
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeSummarizedVisualization(localMessages.title, localMessages.descriptionIntro, messages.wordcloudHelpText)(
         composeAsyncContainer(
-          QueryWordsResultsContainer
+          composeQueryResultsSelector()(
+            QueryWordsResultsContainer
+          )
         )
       )
     )

@@ -8,9 +8,9 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import { resetThemes, fetchTopThemes, fetchDemoTopThemes } from '../../../actions/explorerActions';
-import { queryChangedEnoughToUpdate, postToDownloadUrl, downloadExplorerSvg, COVERAGE_REQUIRED } from '../../../lib/explorerUtil';
+import { postToDownloadUrl, downloadExplorerSvg, COVERAGE_REQUIRED } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
-import QueryResultsSelector from './QueryResultsSelector';
+import composeQueryResultsSelector from './QueryResultsSelector';
 import { TAG_SET_NYT_THEMES } from '../../../lib/tagUtil';
 import mapD3Top10Colors from '../../../lib/colorUtil';
 import BubbleRowChart from '../../vis/BubbleRowChart';
@@ -26,30 +26,17 @@ const localMessages = {
 };
 
 class QueryThemesResultsContainer extends React.Component {
-  state = {
-    selectedQueryIndex: 0,
-  }
-  componentWillReceiveProps(nextProps) {
-    const { lastSearchTime, fetchData } = this.props;
-    if (nextProps.lastSearchTime !== lastSearchTime) {
-      fetchData(nextProps.queries);
-    }
-  }
-  shouldComponentUpdate(nextProps) {
-    const { results, queries } = this.props;
-    return queryChangedEnoughToUpdate(queries, nextProps.queries, results, nextProps.results);
-  }
   downloadCsv = (query) => {
     postToDownloadUrl(`/api/explorer/tags/${TAG_SET_NYT_THEMES}/top-tags.csv`, query);
   }
   render() {
-    const { results, queries, handleThemeClicked } = this.props;
+    const { results, queries, handleThemeClicked, selectedTabIndex, tabSelector } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
     let rawData = [];
     let content = null;
     if (results) {
-      rawData = results[this.state.selectedQueryIndex] ? results[this.state.selectedQueryIndex].results : [];
-      const coverageRatio = results[this.state.selectedQueryIndex] ? results[this.state.selectedQueryIndex].coverage_percentage : 0;
+      rawData = results[selectedTabIndex] ? results[selectedTabIndex].results : [];
+      const coverageRatio = results[selectedTabIndex] ? results[selectedTabIndex].coverage_percentage : 0;
       if (coverageRatio > COVERAGE_REQUIRED) {
         const data = rawData.slice(0, 4).map((info, idx) => ({
           value: info.pct, // info.count,
@@ -85,10 +72,7 @@ class QueryThemesResultsContainer extends React.Component {
     }
     return (
       <div>
-        <QueryResultsSelector
-          options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
-          onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
-        />
+        { tabSelector }
         { content }
         <div className="actions">
           <ActionMenu actionTextMsg={messages.downloadOptions}>
@@ -131,6 +115,8 @@ QueryThemesResultsContainer.propTypes = {
   // from state
   fetchStatus: PropTypes.string.isRequired,
   handleThemeClicked: PropTypes.func.isRequired,
+  selectedTabIndex: PropTypes.number.isRequired,
+  tabSelector: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -191,7 +177,9 @@ export default
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeSummarizedVisualization(localMessages.title, localMessages.helpIntro, [localMessages.helpDetail, messages.nytThemeHelpDetails])(
         composeAsyncContainer(
-          QueryThemesResultsContainer
+          composeQueryResultsSelector()(
+            QueryThemesResultsContainer
+          )
         )
       )
     )
