@@ -4,7 +4,7 @@ from server.util.csv import SOURCE_LIST_CSV_METADATA_PROPS
 
 SOURCE_LIST_CSV_EDIT_PROPS = ['media_id', 'url', 'name'] + \
                              SOURCE_LIST_CSV_METADATA_PROPS + \
-                             ['public_notes', 'is_monitored', 'editor_notes', 'stories_per_day', 'first_story']
+                             ['public_notes', 'editor_notes', 'stories_per_day', 'first_story']
 
 # hand-made whitelist of collections to show up as "featured" on source mgr homepage and in the media picker
 FEATURED_COLLECTION_LIST = [
