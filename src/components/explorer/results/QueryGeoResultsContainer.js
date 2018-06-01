@@ -5,13 +5,13 @@ import { connect } from 'react-redux';
 import MenuItem from 'material-ui/MenuItem';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeSummarizedVisualization from './SummarizedVizualization';
+import composeQueryResultsSelector from './QueryResultsSelector';
 import GeoChart from '../../vis/GeoChart';
 import { fetchDemoQueryGeo, fetchQueryGeo, resetGeo } from '../../../actions/explorerActions';
 import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import messages from '../../../resources/messages';
-import { queryChangedEnoughToUpdate, postToDownloadUrl, COVERAGE_REQUIRED } from '../../../lib/explorerUtil';
-import QueryResultsSelector from './QueryResultsSelector';
+import { postToDownloadUrl, COVERAGE_REQUIRED } from '../../../lib/explorerUtil';
 
 const localMessages = {
   title: { id: 'explorer.geo.title', defaultMessage: 'Geographic Coverage' },
@@ -22,35 +22,21 @@ const localMessages = {
 };
 
 class QueryGeoResultsContainer extends React.Component {
-  state = {
-    selectedQueryIndex: 0,
-  }
-  componentWillReceiveProps(nextProps) {
-    const { lastSearchTime, fetchData } = this.props;
-
-    if (nextProps.lastSearchTime !== lastSearchTime) {
-      fetchData(nextProps.queries);
-    }
-  }
-  shouldComponentUpdate(nextProps) {
-    const { results, queries } = this.props;
-    return queryChangedEnoughToUpdate(queries, nextProps.queries, results, nextProps.results);
-  }
   downloadCsv = (query) => {
     postToDownloadUrl('/api/explorer/geography/geography.csv', query);
   }
   render() {
-    const { results, intl, queries, handleCountryClick } = this.props;
+    const { results, intl, queries, handleCountryClick, selectedTabIndex, tabSelector } = this.props;
     const { formatMessage, formatNumber } = intl;
     let content;
-    const coverageRatio = results[this.state.selectedQueryIndex] ? results[this.state.selectedQueryIndex].coverage_percentage : 0;
+    const coverageRatio = results[selectedTabIndex] ? results[selectedTabIndex].coverage_percentage : 0;
     if (coverageRatio > COVERAGE_REQUIRED) {
       content = (
         <div>
-          {results[this.state.selectedQueryIndex] &&
+          {results[selectedTabIndex] &&
             <GeoChart
-              data={results[this.state.selectedQueryIndex].results}
-              countryMaxColorScale={queries[this.state.selectedQueryIndex].color}
+              data={results[selectedTabIndex].results}
+              countryMaxColorScale={queries[selectedTabIndex].color}
               hideLegend
               onCountryClick={handleCountryClick}
               backgroundColor="#f5f5f5"
@@ -70,10 +56,7 @@ class QueryGeoResultsContainer extends React.Component {
     }
     return (
       <div>
-        <QueryResultsSelector
-          options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
-          onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
-        />
+        { tabSelector }
         { content }
         <div className="actions">
           <ActionMenu actionTextMsg={messages.downloadOptions}>
@@ -81,7 +64,7 @@ class QueryGeoResultsContainer extends React.Component {
               <MenuItem
                 key={idx}
                 className="action-icon-menu-item"
-                primaryText={formatMessage(localMessages.downloadDataCsv, { name: q.label })}
+                primaryText={formatMessage(localMessages.downloadCsv, { name: q.label })}
                 rightIcon={<DownloadButton />}
                 onTouchTap={() => this.downloadCsv(q)}
               />
@@ -110,6 +93,8 @@ QueryGeoResultsContainer.propTypes = {
   asyncFetch: PropTypes.func.isRequired,
   // from state
   fetchStatus: PropTypes.string.isRequired,
+  tabSelector: PropTypes.object.isRequired,
+  selectedTabIndex: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -169,7 +154,9 @@ export default
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeSummarizedVisualization(localMessages.title, localMessages.help, [messages.heatMapHelpText])(
         composeAsyncContainer(
-          QueryGeoResultsContainer
+          composeQueryResultsSelector()(
+            QueryGeoResultsContainer
+          )
         )
       )
     )
