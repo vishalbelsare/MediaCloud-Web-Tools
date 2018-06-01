@@ -88,7 +88,7 @@ const messages = {
   unknown: { id: 'common.Unknown', defaultMessage: 'Unknown' },
 
   notEnoughCoverage: { id: 'common.themes.notEnoughCoverage',
-    defaultMessage: '<i>Sorry, but only {pct} of the stories have been processed are English stories.  We can\'t gaurantee the accuracy of partial results, so we can\'t show the visualization right now.  If you are really curious, you can download the CSV using the link in the bottom-right of this box, but don\'t trust those numbers as fully accurate.</i>',
+    defaultMessage: '<b>Not enough data to show.</b><br /><i>Only {pct} of your stories have been processed for themes, people, organizations and geographic places.  We don\'t want to show you data that isn\'t representative, so we won\'t show partial results here. This percentage might be low because we only process English stories for this data, and your query might be in other languages. It also could be that your query is using older stories that were collected before we added this processing.</i>',
   },
 
   startDate: { id: 'common.startDate', defaultMessage: 'Start Date' },
