@@ -207,7 +207,7 @@ export default
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeSummarizedVisualization(localMessages.lineChartTitle, localMessages.descriptionIntro, [localMessages.descriptionDetail, messages.countsVsPercentageHelp])(
         composeAsyncContainer(
-          composeQueryResultsSelector()(
+          composeQueryResultsSelector(
             QueryAttentionOverTimeResultsContainer
           )
         )

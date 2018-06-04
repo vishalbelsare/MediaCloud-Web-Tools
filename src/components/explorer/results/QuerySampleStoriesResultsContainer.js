@@ -127,7 +127,7 @@ export default
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeSummarizedVisualization(localMessages.title, localMessages.helpIntro, localMessages.helpDetails)(
         composeAsyncContainer(
-          composeQueryResultsSelector()(
+          composeQueryResultsSelector(
             QuerySampleStoriesResultsContainer
           )
         )

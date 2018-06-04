@@ -154,7 +154,7 @@ export default
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeSummarizedVisualization(localMessages.title, localMessages.help, [messages.heatMapHelpText])(
         composeAsyncContainer(
-          composeQueryResultsSelector()(
+          composeQueryResultsSelector(
             QueryGeoResultsContainer
           )
         )

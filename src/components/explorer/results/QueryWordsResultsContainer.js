@@ -119,7 +119,7 @@ export default
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeSummarizedVisualization(localMessages.title, localMessages.descriptionIntro, messages.wordcloudHelpText)(
         composeAsyncContainer(
-          composeQueryResultsSelector()(
+          composeQueryResultsSelector(
             QueryWordsResultsContainer
           )
         )
