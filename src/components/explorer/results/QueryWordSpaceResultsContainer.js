@@ -6,11 +6,11 @@ import MenuItem from 'material-ui/MenuItem';
 import ActionMenu from '../../common/ActionMenu';
 import composeSummarizedVisualization from './SummarizedVizualization';
 import { DownloadButton } from '../../common/IconButton';
-import { queryChangedEnoughToUpdate, postToDownloadUrl, downloadExplorerSvg } from '../../../lib/explorerUtil';
+import { postToDownloadUrl, downloadExplorerSvg } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
-import QueryResultsSelector from './QueryResultsSelector';
 import WordSpace from '../../vis/WordSpace';
 import composeAsyncContainer from '../../common/AsyncContainer';
+import composeQueryResultsSelector from './QueryResultsSelector';
 
 const localMessages = {
   title: { id: 'explorer.topWords.title', defaultMessage: 'Word Space' },
@@ -23,28 +23,18 @@ const localMessages = {
 const WORD_SPACE_DOM_ID = 'query-word-space-wrapper';
 
 class QueryWordSpaceResultsContainer extends React.Component {
-  state = {
-    selectedQueryIndex: 0,
-  }
-  shouldComponentUpdate(nextProps) {
-    const { results, queries } = this.props;
-    return queryChangedEnoughToUpdate(queries, nextProps.queries, results, nextProps.results);
-  }
   handleDownloadCsv = (query) => {
     postToDownloadUrl('/api/explorer/words/wordcount.csv', query);
   }
   render() {
-    const { results, queries } = this.props;
+    const { results, queries, selectedTabIndex, tabSelector } = this.props;
     const { formatMessage } = this.props.intl;
-    const domId = `${WORD_SPACE_DOM_ID}-${this.state.selectedQueryIndex}`;
+    const domId = `${WORD_SPACE_DOM_ID}-${selectedTabIndex}`;
     return (
       <div>
-        <QueryResultsSelector
-          options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
-          onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
-        />
+        {tabSelector}
         <WordSpace
-          words={results[this.state.selectedQueryIndex].list.slice(0, 50)}
+          words={results[selectedTabIndex].list.slice(0, 50)}
           domId={domId}
           xProperty="google_w2v_x"
           yProperty="google_w2v_y"
@@ -87,6 +77,8 @@ QueryWordSpaceResultsContainer.propTypes = {
   onQueryModificationRequested: PropTypes.func.isRequired,
   // from composition
   intl: PropTypes.object.isRequired,
+  selectedTabIndex: PropTypes.number.isRequired,
+  tabSelector: PropTypes.object.isRequired,
   // from dispatch
   handleWordCloudClick: PropTypes.func.isRequired,
   asyncFetch: PropTypes.func.isRequired,
@@ -107,6 +99,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   asyncFetch: () => {
     // pass through because the WordsResults container fetches all the data for us!
   },
+  fetchData: () => {
+    // pass through because the WordsResults container fetches all the data for us!
+  },
 });
 
 export default
@@ -114,7 +109,9 @@ export default
     connect(mapStateToProps, mapDispatchToProps)(
       composeSummarizedVisualization(localMessages.title, localMessages.descriptionIntro, messages.wordSpaceLayoutHelp)(
         composeAsyncContainer(
-          QueryWordSpaceResultsContainer
+          composeQueryResultsSelector(
+            QueryWordSpaceResultsContainer
+          )
         )
       )
     )
