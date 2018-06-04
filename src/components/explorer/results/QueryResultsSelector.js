@@ -31,7 +31,7 @@ function composeQueryResultsSelector() {
         const tabSelector = <TabSelector onViewSelected={idx => this.setView(idx)} tabLabels={queries} />;
         return (
           <div className="query-results-selector">
-            <ChildComponent {...this.props} selectedTabIndex={this.state.selectedTabIndex} tabSelector={tabSelector} />;
+            <ChildComponent {...this.props} selectedTabIndex={this.state.selectedTabIndex} tabSelector={tabSelector} />
           </div>
         );
       }
