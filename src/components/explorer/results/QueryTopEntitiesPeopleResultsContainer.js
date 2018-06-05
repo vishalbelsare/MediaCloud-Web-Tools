@@ -9,9 +9,9 @@ import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import EntitiesTable from '../../common/EntitiesTable';
 import { resetEntitiesPeople, fetchTopEntitiesPeople, fetchDemoTopEntitiesPeople } from '../../../actions/explorerActions';
-import { queryChangedEnoughToUpdate, postToDownloadUrl, COVERAGE_REQUIRED } from '../../../lib/explorerUtil';
+import { postToDownloadUrl, COVERAGE_REQUIRED } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
-import QueryResultsSelector from './QueryResultsSelector';
+import composeQueryResultsSelector from './QueryResultsSelector';
 import { TAG_SET_CLIFF_PEOPLE } from '../../../lib/tagUtil';
 
 const localMessages = {
@@ -22,29 +22,16 @@ const localMessages = {
 };
 
 class QueryTopEntitiesPeopleResultsContainer extends React.Component {
-  state = {
-    selectedQueryIndex: 0,
-  }
-  componentWillReceiveProps(nextProps) {
-    const { lastSearchTime, fetchData } = this.props;
-    if (nextProps.lastSearchTime !== lastSearchTime) {
-      fetchData(nextProps.queries);
-    }
-  }
-  shouldComponentUpdate(nextProps) {
-    const { results, queries } = this.props;
-    return queryChangedEnoughToUpdate(queries, nextProps.queries, results, nextProps.results);
-  }
   downloadCsv = (query) => {
     postToDownloadUrl(`/api/explorer/tags/${TAG_SET_CLIFF_PEOPLE}/top-tags.csv`, query);
   }
   render() {
-    const { results, queries, handleEntitySelection } = this.props;
+    const { results, queries, handleEntitySelection, tabSelector, selectedTabIndex } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
     let content = null;
     if (results) {
-      const rawData = results[this.state.selectedQueryIndex] ? results[this.state.selectedQueryIndex].results : [];
-      const coverageRatio = results[this.state.selectedQueryIndex] ? results[this.state.selectedQueryIndex].coverage_percentage : 0;
+      const rawData = results[selectedTabIndex] ? results[selectedTabIndex].results : [];
+      const coverageRatio = results[selectedTabIndex] ? results[selectedTabIndex].coverage_percentage : 0;
       if (coverageRatio > COVERAGE_REQUIRED) {
         content = (
           <div>
@@ -72,10 +59,7 @@ class QueryTopEntitiesPeopleResultsContainer extends React.Component {
     }
     return (
       <div>
-        <QueryResultsSelector
-          options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
-          onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
-        />
+        { tabSelector }
         { content }
         <div className="actions">
           <ActionMenu actionTextMsg={messages.downloadOptions}>
@@ -109,6 +93,8 @@ QueryTopEntitiesPeopleResultsContainer.propTypes = {
   // from state
   fetchStatus: PropTypes.string.isRequired,
   handleEntitySelection: PropTypes.func.isRequired,
+  selectedTabIndex: PropTypes.number.isRequired,
+  tabSelector: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -169,7 +155,9 @@ export default
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeSummarizedVisualization(localMessages.title, localMessages.helpIntro, [messages.entityHelpDetails])(
         composeAsyncContainer(
-          QueryTopEntitiesPeopleResultsContainer
+          composeQueryResultsSelector(
+            QueryTopEntitiesPeopleResultsContainer
+          )
         )
       )
     )

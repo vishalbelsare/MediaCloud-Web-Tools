@@ -9,9 +9,9 @@ import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import StoryTable from '../../common/StoryTable';
 import { fetchQuerySampleStories, fetchDemoQuerySampleStories, resetSampleStories } from '../../../actions/explorerActions';
-import { queryChangedEnoughToUpdate, postToDownloadUrl } from '../../../lib/explorerUtil';
+import { postToDownloadUrl } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
-import QueryResultsSelector from './QueryResultsSelector';
+import composeQueryResultsSelector from './QueryResultsSelector';
 
 const localMessages = {
   title: { id: 'explorer.stories.title', defaultMessage: 'Sample Stories' },
@@ -23,35 +23,18 @@ const localMessages = {
 };
 
 class QuerySampleStoriesResultsContainer extends React.Component {
-  state = {
-    selectedQueryIndex: 0,
-  }
-  componentWillReceiveProps(nextProps) {
-    const { lastSearchTime, fetchData } = this.props;
-    if (nextProps.lastSearchTime !== lastSearchTime) {
-      fetchData(nextProps.queries);
-    }
-  }
-  shouldComponentUpdate(nextProps) { // , nextState) {
-    const { results, queries } = this.props;
-    return queryChangedEnoughToUpdate(queries, nextProps.queries, results, nextProps.results);
-//      const selectedQueryChanged = this.state.selectedQueryIndex !== nextState.selectedQueryIndex;
-  }
   downloadCsv = (query) => {
     postToDownloadUrl('/api/explorer/stories/samples.csv', query);
   }
   render() {
-    const { results, queries, handleStorySelection } = this.props;
+    const { results, queries, handleStorySelection, selectedTabIndex, tabSelector } = this.props;
     const { formatMessage } = this.props.intl;
     return (
       <div>
-        <QueryResultsSelector
-          options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
-          onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
-        />
+        {tabSelector}
         <StoryTable
           className="story-table"
-          stories={results[this.state.selectedQueryIndex] ? results[this.state.selectedQueryIndex].slice(0, 10) : []}
+          stories={results[selectedTabIndex] ? results[selectedTabIndex].slice(0, 10) : []}
           onChangeFocusSelection={handleStorySelection}
           maxTitleLength={50}
         />
@@ -87,6 +70,8 @@ QuerySampleStoriesResultsContainer.propTypes = {
   // from state
   fetchStatus: PropTypes.string.isRequired,
   handleStorySelection: PropTypes.func.isRequired,
+  selectedTabIndex: PropTypes.number.isRequired,
+  tabSelector: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -142,7 +127,9 @@ export default
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeSummarizedVisualization(localMessages.title, localMessages.helpIntro, localMessages.helpDetails)(
         composeAsyncContainer(
-          QuerySampleStoriesResultsContainer
+          composeQueryResultsSelector(
+            QuerySampleStoriesResultsContainer
+          )
         )
       )
     )

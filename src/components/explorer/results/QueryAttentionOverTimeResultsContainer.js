@@ -6,11 +6,12 @@ import MenuItem from 'material-ui/MenuItem';
 import { fetchQuerySplitStoryCount, fetchDemoQuerySplitStoryCount, resetSentenceCounts, setSentenceDataPoint, resetSentenceDataPoint } from '../../../actions/explorerActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeSummarizedVisualization from './SummarizedVizualization';
+import composeQueryResultsSelector from './QueryResultsSelector';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
 import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import { oneDayLater, solrFormat } from '../../../lib/dateUtil';
-import { queryChangedEnoughToUpdate, postToDownloadUrl } from '../../../lib/explorerUtil';
+import { postToDownloadUrl } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
 import { FETCH_INVALID } from '../../../lib/fetchConstants';
 
@@ -33,17 +34,6 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
     dateRange: null,
     clickedQuery: null,
     view: VIEW_REGULAR, // which view to show (see view constants above)
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const { lastSearchTime, fetchData } = this.props;
-    if (nextProps.lastSearchTime !== lastSearchTime) {
-      fetchData(nextProps.queries);
-    }
-  }
-  shouldComponentUpdate(nextProps) {
-    const { results, queries } = this.props;
-    return queryChangedEnoughToUpdate(queries, nextProps.queries, results, nextProps.results);
   }
 
   setView = (nextView) => {
@@ -157,6 +147,8 @@ QueryAttentionOverTimeResultsContainer.propTypes = {
   // from state
   fetchStatus: PropTypes.string.isRequired,
   selectDataPoint: PropTypes.func.isRequired,
+  tabSelector: PropTypes.object,
+  selectedTabIndex: PropTypes.number,
 };
 
 const mapStateToProps = state => ({
@@ -215,7 +207,9 @@ export default
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeSummarizedVisualization(localMessages.lineChartTitle, localMessages.descriptionIntro, [localMessages.descriptionDetail, messages.countsVsPercentageHelp])(
         composeAsyncContainer(
-          QueryAttentionOverTimeResultsContainer
+          composeQueryResultsSelector(
+            QueryAttentionOverTimeResultsContainer
+          )
         )
       )
     )
