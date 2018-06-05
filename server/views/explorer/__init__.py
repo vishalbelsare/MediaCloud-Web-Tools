@@ -72,7 +72,8 @@ def concatenate_query_and_dates(start_date, end_date):
 
 
 def parse_query_with_keywords(args):
-    solr_query = ''
+    solr_q = ''
+    solr_fq = None
     # default dates
     one_month_before_now = datetime.datetime.now() - datetime.timedelta(days=30)
     default_start_date = one_month_before_now.strftime("%Y-%m-%d")
