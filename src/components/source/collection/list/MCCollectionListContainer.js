@@ -5,28 +5,55 @@ import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import composeAsyncContainer from '../../../common/AsyncContainer';
 import { fetchCollectionList } from '../../../../actions/sourceActions';
-import CollectionList from '../../../common/CollectionList';
-import { TAG_SET_MC_ID } from '../../../../lib/tagUtil';
+import CollectionTable from '../../../common/CollectionTable';
+import TabSelector from '../../../common/TabSelector';
+import { TAG_SET_MC_ID, isCollectionTagSet, canSeePrivateCollections } from '../../../../lib/tagUtil';
 
-const MCCollectionListContainer = (props) => {
-  const { name, description, collections, user } = props;
-  return (
-    <div className="mc-collections-table">
-      <Grid>
-        <Row>
-          <Col lg={12}>
-            <CollectionList
-              collections={collections}
-              title={name}
-              description={description}
-              user={user}
-            />
-          </Col>
-        </Row>
-      </Grid>
-    </div>
-  );
+const localMessages = {
+  private: { id: 'sources.collections.mc.private', defaultMessage: 'Private' },
+  public: { id: 'sources.collections.mc.public', defaultMessage: 'Public' },
 };
+
+class MCCollectionListContainer extends React.Component {
+  state = {
+    selectedViewIndex: 0,
+  };
+  render() {
+    const { name, collections, linkToFullUrl } = this.props;
+    const { formatMessage } = this.props.intl;
+    const privateColl = collections.filter(t => (isCollectionTagSet(t.tag_sets_id) && (!t.show_on_media || canSeePrivateCollections)));
+    const allOtherCollections = collections.filter(t => (isCollectionTagSet(t.tag_sets_id) && (t.show_on_media)));
+
+    let selectedTabCollections = allOtherCollections;
+    if (this.state.selectedViewIndex === 0) {
+      selectedTabCollections = allOtherCollections;
+    } else {
+      selectedTabCollections = privateColl;
+    }
+    return (
+      <div className="mc-collections-table">
+        <Grid>
+          <h1>{name}</h1>
+          <TabSelector
+            tabLabels={[
+              formatMessage(localMessages.public),
+              formatMessage(localMessages.private),
+            ]}
+            onViewSelected={index => this.setState({ selectedViewIndex: index })}
+          />
+          <br />
+          <Row>
+            <Col lg={12}>
+              <div className="collection-list-item-wrapper">
+                <CollectionTable collections={selectedTabCollections} absoluteLink={linkToFullUrl} />
+              </div>
+            </Col>
+          </Row>
+        </Grid>
+      </div>
+    );
+  }
+}
 
 MCCollectionListContainer.propTypes = {
   // from state
@@ -37,6 +64,7 @@ MCCollectionListContainer.propTypes = {
   fetchStatus: PropTypes.string.isRequired,
   // from context
   intl: PropTypes.object.isRequired,
+  linkToFullUrl: PropTypes.bool,
   // from dispatch
   asyncFetch: PropTypes.func.isRequired,
 };
