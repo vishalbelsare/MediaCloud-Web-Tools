@@ -14,9 +14,9 @@ import { getCurrentDate, oneMonthBefore } from '../../../lib/dateUtil';
 import { urlToExplorerQuery } from '../../../lib/urlUtil';
 
 const localMessages = {
-  title: { id: 'collection.summary.geo.title', defaultMessage: 'Geographic Attention' },
+  title: { id: 'collection.summary.geo.title', defaultMessage: 'Geographic Attention over the last month' },
   intro: { id: 'collection.summary.geo.info',
-    defaultMessage: '<p>Here is a heatmap of countries mentioned in this collection (based on a sample of stories). Darker countried are mentioned more. Click a country to load an Explorer search showing you how the sources in this collection cover it.</p>' },
+    defaultMessage: '<p>Here is a heatmap of countries mentioned in this collection. Darker countried are mentioned more. Click a country to load an Explorer search showing you how the sources in this collection cover it.</p>' },
   helpTitle: { id: 'collection.summary.geo.help.title', defaultMessage: 'About Geographic Attention' },
 };
 

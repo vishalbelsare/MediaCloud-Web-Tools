@@ -9,7 +9,7 @@ from server.auth import user_mediacloud_client
 from server.cache import cache, key_generator
 from server.util.api_helper import add_missing_dates_to_split_story_counts
 from server.views.sources import FEATURED_COLLECTION_LIST
-
+from server.views.stories import QUERY_LAST_MONTH
 
 def tags_in_tag_set(mc_api_key, tag_sets_id, only_public_tags, use_file_cache=False):
     return tags.tag_set_with_tags(mc_api_key, tag_sets_id, only_public_tags, use_file_cache)
@@ -77,6 +77,12 @@ def _cached_random_story_list(mc_api_key, q, fq, rows):
 def last_year_split_story_count(user_mc_key, q='*'):
     return _cached_last_year_split_story_count(user_mc_key, q)
 
+@cache.cache_on_arguments(function_key_generator=key_generator)
+def cached_timeperiod_story_count(user_mc_key, q='*', time_period=QUERY_LAST_MONTH):
+    # Helper to fetch split story counts over a timeframe for an arbitrary query
+    user_mc = user_mediacloud_client()
+    results = user_mc.storyCount(solr_query=q, solr_filter=time_period)
+    return results
 
 @cache.cache_on_arguments(function_key_generator=key_generator)
 def _cached_last_year_split_story_count(user_mc_key, q='*'):
