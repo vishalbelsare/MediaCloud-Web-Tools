@@ -60,9 +60,9 @@ class GeoChart extends React.Component {
         },
       },
       colorAxis: {
-        min: 0.000001,
+        min: 0.01,
+        max: 100.0,
         minColor: options.countryMinColorScale,
-        max: 1.0,
         maxColor: options.countryMaxColorScale,
         type: 'logarithmic',
       },

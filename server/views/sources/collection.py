@@ -1,6 +1,6 @@
 import logging
 from multiprocessing import Pool
-
+from operator import itemgetter
 import flask_login
 import os
 from flask import jsonify, request
@@ -73,7 +73,7 @@ def api_collection_set(tag_sets_id):
 
     add_user_favorite_flag_to_collections(info['tags'])
     # rename to make more sense here
-    info['collections'] = info['tags']
+    info['collections'] = sorted(info['tags'], key=itemgetter('label', 'tag'))
     del info['tags']
     return jsonify(info)
 

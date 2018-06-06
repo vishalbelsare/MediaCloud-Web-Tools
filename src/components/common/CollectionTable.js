@@ -27,7 +27,7 @@ const CollectionTable = props => (
               {c.description}
             </td>
             <td>
-              { c.show_on_media === false ? <LockIcon /> : '' }
+              { c.show_on_media === false || c.show_on_media === undefined ? <LockIcon /> : '' }
               { c.isFavorite ? <FilledStarIcon /> : '' }
             </td>
           </tr>
