@@ -8,6 +8,8 @@ import { fetchCollectionList } from '../../../../actions/sourceActions';
 import CollectionTable from '../../../common/CollectionTable';
 import TabSelector from '../../../common/TabSelector';
 import { TAG_SET_MC_ID, isCollectionTagSet, canSeePrivateCollections } from '../../../../lib/tagUtil';
+import { PERMISSION_MEDIA_EDIT } from '../../../../lib/auth';
+import Permissioned from '../../../common/Permissioned';
 
 const localMessages = {
   private: { id: 'sources.collections.mc.private', defaultMessage: 'Private' },
@@ -34,14 +36,16 @@ class MCCollectionListContainer extends React.Component {
       <div className="mc-collections-table">
         <Grid>
           <h1>{name}</h1>
-          <TabSelector
-            tabLabels={[
-              formatMessage(localMessages.public),
-              formatMessage(localMessages.private),
-            ]}
-            onViewSelected={index => this.setState({ selectedViewIndex: index })}
-          />
-          <br />
+          <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
+            <TabSelector
+              tabLabels={[
+                formatMessage(localMessages.public),
+                formatMessage(localMessages.private),
+              ]}
+              onViewSelected={index => this.setState({ selectedViewIndex: index })}
+            />
+            <br />
+          </Permissioned>
           <Row>
             <Col lg={12}>
               <div className="collection-list-item-wrapper">
