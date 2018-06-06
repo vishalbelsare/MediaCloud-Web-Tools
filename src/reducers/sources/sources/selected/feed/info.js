@@ -10,7 +10,7 @@ const feeds = createAsyncReducer({
   action: FETCH_SOURCE_FEED,
   handleSuccess: payload => ({
     sourceId: payload.feed.media_id,
-    feed: payload.feed,
+    feed: Object.assign({}, payload.feed, { binaryFeedStatus: payload.feed.feed_status === 'active' ? 'active' : 'disabled' }),
     feedId: payload.feeds_id,
   }),
   [SELECT_SOURCE_FEED]: payload => ({

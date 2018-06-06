@@ -13,8 +13,7 @@ const localMessages = {
   typeSyndicated: { id: 'source.feed.add.type.syndicated', defaultMessage: 'Syndicated' },
   typeWebPage: { id: 'source.feed.add.type.webpage', defaultMessage: 'Web Page' },
   statusActive: { id: 'source.feed.add.status.active', defaultMessage: 'Active' },
-  statusInactive: { id: 'source.feed.add.status.inactive', defaultMessage: 'Inactive' },
-  statusSkipped: { id: 'source.feed.add.status.skipped', defaultMessage: 'Skipped' },
+  statusDisabled: { id: 'source.feed.add.status.inactive', defaultMessage: 'Disabled' },
   urlInvalid: { id: 'source.feed.url.invalid', defaultMessage: 'That isn\'t a valid feed URL. Please enter just the full url of one RSS or Atom feed.' },
 };
 
@@ -71,10 +70,9 @@ const SourceFeedForm = (props) => {
           </span>
         </Col>
         <Col md={8}>
-          <Field name="feed_status" value="active" component={renderSelectField} >
+          <Field name="binaryFeedStatus" value="active" component={renderSelectField} >
             <MenuItem value="active" primaryText={formatMessage(localMessages.statusActive)} />
-            <MenuItem value="inactive" primaryText={formatMessage(localMessages.statusInactive)} />
-            <MenuItem value="skipped" primaryText={formatMessage(localMessages.statusSkipped)} />
+            <MenuItem value="disabled" primaryText={formatMessage(localMessages.statusDisabled)} />
           </Field>
         </Col>
       </Row>
@@ -104,7 +102,7 @@ SourceFeedForm.propTypes = {
 
 function validate(values) {
   const errors = {};
-  if (emptyString(values.feed_status)) {
+  if (emptyString(values.binaryFeedStatus)) {
     errors.feed_status = messages.required;
   }
   if (emptyString(values.feed_type)) {

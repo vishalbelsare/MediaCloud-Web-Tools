@@ -35,7 +35,7 @@ const SourceFeedTable = (props) => {
                 {feed.feed_type}
               </td>
               <td>
-                {feed.feed_status}
+                {feed.feed_status === 'active' ? 'active' : 'disabled'}
               </td>
               <td>
                 <a href={feed.url}>{feed.url}</a>
