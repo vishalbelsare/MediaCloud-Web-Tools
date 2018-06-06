@@ -10,6 +10,7 @@ import composeCsvDownloadNotifyContainer from '../../common/composers/CsvDownloa
 import { DownloadButton } from '../../common/IconButton';
 import messages from '../../../resources/messages';
 import { HELP_SOURCES_CSV_COLUMNS } from '../../../lib/helpConstants';
+import { FETCH_SUCCEEDED } from '../../../lib/fetchConstants';
 
 const localMessages = {
   downloadEmpty: { id: 'collections.download.emptycsv', defaultMessage: 'Download a template in CSV format' },
@@ -50,15 +51,17 @@ class CollectionUploadSourceContainer extends React.Component {
     this.selectedCSV();
   }
   render() {
-    const { onConfirm, mysources, myCollectionId } = this.props;
+    const { onConfirm, mysources, myCollectionId, fetchStatus, error } = this.props;
     const { formatMessage } = this.props.intl;
     let confirmContent = null;
     if (mysources && mysources.length > 0 && this.state && this.state.confirmTemplate) {
       confirmContent = (
         <CollectionUploadConfirmer onConfirm={onConfirm} onCancel={this.confirmLoadCSV} onClickButton={this.confirmLoadCSV} />
       );
-    } else if (this.state && this.state.confirmTemplate) {
+    } else if (this.state && this.state.confirmTemplate && fetchStatus !== FETCH_SUCCEEDED) {
       confirmContent = <LoadingSpinner />;
+    } else if (fetchStatus === FETCH_SUCCEEDED && error) {
+      confirmContent = <h3>Error. Try Again</h3>;
     }
     let downloadLabel;
     if (mysources && mysources.length > 0 && myCollectionId != null) {
@@ -90,6 +93,7 @@ CollectionUploadSourceContainer.propTypes = {
   // from state
   fetchStatus: PropTypes.string.isRequired,
   total: PropTypes.number,
+  error: PropTypes.string,
   // from parent
   onConfirm: PropTypes.func.isRequired,
   mysources: PropTypes.array,
@@ -103,6 +107,7 @@ CollectionUploadSourceContainer.propTypes = {
 
 const mapStateToProps = state => ({
   fetchStatus: state.sources.collections.form.toUpload.fetchStatus,
+  uploadErrors: state.sources.collections.form.toUpload.error,
   mysources: state.sources.collections.form.toUpload.list, // this will activate confirmation message and button
 });
 
@@ -112,7 +117,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       .then((results) => {
         if (results.status === 'Error') {
           updateFeedback({ open: true, message: ownProps.intl.formatMessage({ id: 'collection.upload.error', defaultMessage: results.message }) });
-        } else {
+        } else if (results.status === 'Success') {
           dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
         }
       });

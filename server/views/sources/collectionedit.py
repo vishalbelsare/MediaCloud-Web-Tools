@@ -81,7 +81,12 @@ def upload_file():
     uploaded_file.save(filepath)
     time_file_saved = time.time()
     # parse all the source data out of the file
-    sources_to_update, sources_to_create = _parse_sources_from_csv_upload(filepath)
+    try: 
+        sources_to_update, sources_to_create = _parse_sources_from_csv_upload(filepath)
+    except Exception as e:
+        logger.error("Couldn't process a CSV row: " + str(e))
+        return jsonify({'status': 'Error', 'message': str(e)})
+    
     all_results = []
     all_errors = []
     if len(sources_to_create) > 300:
@@ -112,7 +117,7 @@ def upload_file():
         logger.debug("upload_file: {}".format(time_end - time_start))
         logger.debug("  save file: {}".format(time_file_saved - time_start))
         logger.debug("  processing: {}".format(time_end - time_file_saved))
-        return jsonify({'results': all_results})
+        return jsonify({'results': all_results, 'status': "Success"})
 
 
 def _parse_sources_from_csv_upload(filepath):
@@ -141,6 +146,9 @@ def _parse_sources_from_csv_upload(filepath):
                                 newline_decoded['url'][:8] not in [u'https://', 'https://']:
                     newline_decoded['url'] = u'http://{}'.format(newline_decoded['url'])
 
+                # sources must have a name
+                if 'name' not in newline_decoded:
+                    raise Exception("Missing name for a source id " + str(newline_decoded['media_id']) + " " + str(newline_decoded['url']))
                 if updatedSrc:
                     newline_decoded.update(empties)
                     sources_to_update.append(newline_decoded)
@@ -148,7 +156,7 @@ def _parse_sources_from_csv_upload(filepath):
                     sources_to_create.append(newline_decoded)
             except Exception as e:
                     logger.error("Couldn't process a CSV row: " + str(e))
-                    raise Exception("couldn't process a CSV row: " + str(e))
+                    raise Exception("Couldn't process a CSV row: " + str(e))
 
         return sources_to_update, sources_to_create
 
@@ -221,7 +229,7 @@ def _create_or_update_sources(source_list_from_csv, create_new):
             results.append(src)
     # process all the entries we think are updates in parallel so it happens quickly
     if len(sources_to_update) > 0:
-        use_pool = True
+        use_pool = False
         if use_pool:
             pool = Pool(processes=MEDIA_UPDATE_POOL_SIZE)    # process updates in parallel with worker function
             update_responses = pool.map(_update_source_worker, sources_to_update)  # blocks until they are all done
@@ -316,7 +324,7 @@ def update_metadata_for_sources(source_list):
     # now do all the tags in parallel batches so it happens quickly
     if len(tags) > 0:
         chunks = [tags[x:x + 50] for x in xrange(0, len(tags), 50)]  # do 50 tags in each request
-        use_pool = True
+        use_pool = False
         if use_pool:
             pool = Pool(processes=MEDIA_METADATA_UPDATE_POOL_SIZE )  # process updates in parallel with worker function
             pool.map(_tag_media_worker, chunks)  # blocks until they are all done
