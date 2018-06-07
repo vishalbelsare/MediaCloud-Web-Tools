@@ -97,7 +97,8 @@ class EditableWordCloudDataCard extends React.Component {
   };
 
   downloadCsv = (ngramSize) => {
-    const { downloadUrl, onDownload } = this.props;
+    const { downloadUrl, onDownload, initSampleSize } = this.props;
+    const sampleSize = initSampleSize !== undefined ? initSampleSize : this.state.sampleSize;
     if (onDownload) {
       onDownload(ngramSize);
     } else {
@@ -110,12 +111,17 @@ class EditableWordCloudDataCard extends React.Component {
           url = `${url}?ngram_size=${ngramSize}`;
         }
       }
+      if (url.indexOf('?') !== -1) {
+        url = `${url}&sample_size=${sampleSize}`;
+      } else {
+        url = `${url}?sample_size=${sampleSize}`;
+      }
       window.location = url;
     }
   };
 
   buildActionMenu = (uniqueDomId) => {
-    const { includeTopicWord2Vec, hideGoogleWord2Vec, actionMenuHeaderText, actionsAsLinksUnderneath, svgDownloadPrefix } = this.props;
+    const { includeTopicWord2Vec, hideGoogleWord2Vec, actionMenuHeaderText, actionsAsLinksUnderneath, svgDownloadPrefix, initSampleSize } = this.props;
     const { formatMessage } = this.props.intl;
     let topicWord2VecMenuItem;
     if (includeTopicWord2Vec === true) {
@@ -145,13 +151,13 @@ class EditableWordCloudDataCard extends React.Component {
         <MenuItem
           className="action-icon-menu-item"
           primaryText={formatMessage(localMessages.sampleSize1k)}
-          disabled={this.state.sampleSize === VIEW_1K}
+          disabled={initSampleSize === VIEW_1K}
           onClick={() => this.setSampleSize(VIEW_1K)}
         />
         <MenuItem
           className="action-icon-menu-item"
           primaryText={formatMessage(localMessages.sampleSize10k)}
-          disabled={this.state.sampleSize === VIEW_10K}
+          disabled={initSampleSize === VIEW_10K}
           onClick={() => this.setSampleSize(VIEW_10K)}
         />
         <Divider />
@@ -418,6 +424,7 @@ EditableWordCloudDataCard.propTypes = {
   hideGoogleWord2Vec: PropTypes.bool,        // show an option to draw a word2vec map basde on w2v_x / w2v_y from GoogleNews model
   onViewModeClick: PropTypes.func.isRequired,
   onViewSampleSizeClick: PropTypes.func.isRequired,
+  initSampleSize: PropTypes.string,
   actionsAsLinksUnderneath: PropTypes.bool, // show the actions as links under the viz (ie. in a SummarizedVisualization card)
   domId: PropTypes.string.isRequired,     // unique dom id needed to support CSV downloading
   // from compositional chain

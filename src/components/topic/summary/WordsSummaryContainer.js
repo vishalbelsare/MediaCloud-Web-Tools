@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeDescribedDataCard from '../../common/DescribedDataCard';
+import composeCsvDownloadNotifyContainer from '../../common/composers/CsvDownloadNotifyContainer';
 import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
 import { fetchTopicTopWords } from '../../../actions/topicActions';
 import messages from '../../../resources/messages';
@@ -27,7 +28,7 @@ class WordsSummaryContainer extends React.Component {
     }
   }
   render() {
-    const { topicId, filters, words, handleWordCloudClick, topicName, fetchData } = this.props;
+    const { topicId, filters, words, handleWordCloudClick, topicName, fetchData, initSampleSize } = this.props;
     const { formatMessage } = this.props.intl;
     const urlDownload = `/api/topics/${topicId}/words.csv?${filtersAsUrlParams(filters)}`;
     return (
@@ -37,6 +38,7 @@ class WordsSummaryContainer extends React.Component {
         downloadUrl={urlDownload}
         onViewModeClick={handleWordCloudClick}
         onViewSampleSizeClick={sampleSize => fetchData({ topicId, filters, sample_size: sampleSize })}
+        initSampleSize={initSampleSize}
         title={formatMessage(messages.topWords)}
         domId={WORD_CLOUD_DOM_ID}
         width={720}
@@ -60,6 +62,7 @@ WordsSummaryContainer.propTypes = {
   // from dispatch
   asyncFetch: PropTypes.func.isRequired,
   fetchData: PropTypes.func.isRequired,
+  initSampleSize: PropTypes.string,
   // from state
   words: PropTypes.array,
   fetchStatus: PropTypes.string.isRequired,
@@ -69,6 +72,7 @@ WordsSummaryContainer.propTypes = {
 const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.summary.topWords.fetchStatus,
   words: state.topics.selected.summary.topWords.list,
+  initSampleSize: state.topics.selected.summary.topWords.sample_size,
   filters: state.topics.selected.filters,
 });
 
@@ -98,7 +102,9 @@ export default
       composeDescribedDataCard(localMessages.descriptionIntro,
         [messages.wordcloudHelpText, messages.wordCloudTopicWord2VecLayoutHelp])(
         composeAsyncContainer(
-          WordsSummaryContainer
+          composeCsvDownloadNotifyContainer(
+            WordsSummaryContainer
+          )
         )
       )
     )
