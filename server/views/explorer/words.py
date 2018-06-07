@@ -29,7 +29,7 @@ def api_explorer_demo_words():
 
 def get_word_count():
     search_id = int(request.args['search_id']) if 'search_id' in request.args else None
-    sample_size = int(request.args['sample_size']) if 'sample_size' in request.args else None
+    sample_size = int(request.args['sample_size']) if 'sample_size' in request.args else WORD_COUNT_SAMPLE_SIZE
     if search_id not in [None, -1]:
         sample_searches = load_sample_searches()
         current_search = sample_searches[search_id]['queries']
@@ -38,7 +38,7 @@ def get_word_count():
         solr_q, solr_fq = parse_query_with_keywords(request.args)
     word_data = query_wordcount(solr_q, solr_fq, sample_size=sample_size)
     # return combined data
-    return jsonify({"list": word_data})
+    return jsonify({"list": word_data, "sample_size": str(sample_size)})
 
 
 # if this is a sample search, we will have a search id and a query index
@@ -48,6 +48,7 @@ def get_word_count():
 def explorer_wordcount_csv():
     data = request.form
     ngram_size = data['ngramSize'] if 'ngramSize' in data else 1    # defaul to words if ngram not specified
+    sample_size = data['sample_size'] if 'sample_size' in data else WORD_COUNT_SAMPLE_SIZE
     filename = u'sampled-ngrams-{}'.format(ngram_size)
     if 'searchId' in data:
         solr_q, solr_fq = parse_as_sample(data['searchId'], data['index'])
@@ -55,7 +56,7 @@ def explorer_wordcount_csv():
         query_object = json.loads(data['q'])
         solr_q, solr_fq = parse_query_with_keywords(query_object)
         filename = file_name_for_download(query_object['label'], filename)
-    return stream_wordcount_csv(filename, solr_q, solr_fq, ngram_size)
+    return stream_wordcount_csv(filename, solr_q, solr_fq, ngram_size, sample_size)
 
 
 @app.route('/api/explorer/words/compare/count', methods=['GET'])
@@ -109,10 +110,9 @@ def query_wordcount(q, fq, ngram_size=1, num_words=WORD_COUNT_UI_NUM_WORDS, samp
     return word_data
 
 
-def stream_wordcount_csv(filename, q, fq, ngram_size=1):
+def stream_wordcount_csv(filename, q, fq, ngram_size=1, sample_size=WORD_COUNT_SAMPLE_SIZE):
     # use bigger values for CSV download
     num_words = WORD_COUNT_DOWNLOAD_NUM_WORDS
-    sample_size = WORD_COUNT_SAMPLE_SIZE
     word_counts = query_wordcount(q, fq, ngram_size, num_words, sample_size)
     for w in word_counts:
         w['sample_size'] = sample_size

@@ -32,8 +32,8 @@ class QueryWordsResultsContainer extends React.Component {
     const { results, queries } = this.props;
     return queryChangedEnoughToUpdate(queries, nextProps.queries, results, nextProps.results);
   }
-  handleDownload = (query, ngramSize) => {
-    postToDownloadUrl('/api/explorer/words/wordcount.csv', query, { ngramSize });
+  handleDownload = (query, ngramSize, sampleSize) => {
+    postToDownloadUrl('/api/explorer/words/wordcount.csv', query, { ngramSize, sample_size: sampleSize });
   }
   render() {
     const { results, queries, handleWordCloudClick, fetchData } = this.props;
@@ -52,10 +52,11 @@ class QueryWordsResultsContainer extends React.Component {
         words={results[this.state.selectedQueryIndex].list}
         onViewModeClick={handleWordCloudClick}
         onViewSampleSizeClick={sampleSize => fetchData(queries, sampleSize)}
+        initSampleSize={results[this.state.selectedQueryIndex].sample_size}
         border={false}
         domId={WORD_CLOUD_DOM_ID}
         width={585}
-        onDownload={ngramSize => this.handleDownload(selectedQuery, ngramSize)}
+        onDownload={ngramSize => this.handleDownload(selectedQuery, ngramSize, results[this.state.selectedQueryIndex].sample_size)}
         svgDownloadPrefix={`${slugifiedQueryLabel(selectedQuery.label)}-ngram-1`}
         textAndLinkColor={selectedQuery.color}
         actionsAsLinksUnderneath
