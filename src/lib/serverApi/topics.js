@@ -54,8 +54,9 @@ export function topicStoryCounts(topicId, params) {
   return createApiPromise(`/api/topics/${topicId}/story/count`, acceptedParams);
 }
 
-export function story(topicId, storiesId) {
-  return createApiPromise(`/api/topics/${topicId}/stories/${storiesId}`);
+export function story(topicId, storiesId, params) {
+  const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId', 'q']);
+  return createApiPromise(`/api/topics/${topicId}/stories/${storiesId}`, acceptedParams);
 }
 
 export function storyUpdate(storiesId, params) {

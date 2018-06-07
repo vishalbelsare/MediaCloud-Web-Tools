@@ -2,6 +2,7 @@ import logging
 from flask import jsonify, request, Response
 import flask_login
 from multiprocessing import Pool
+from mediacloud.error import MCException
 
 from server import app, cliff, TOOL_API_KEY
 from server.auth import is_user_logged_in
@@ -28,7 +29,8 @@ MEDIA_INFO_POOL_SIZE = 15
 def story(topics_id, stories_id):
     if is_user_logged_in():
         local_mc = user_mediacloud_client()
-        story_topic_info = topic_story_list(user_mediacloud_key(), topics_id, stories_id=stories_id)['stories'][0]
+        story_topic_info = topic_story_list(user_mediacloud_key(), topics_id, stories_id=stories_id)
+        story_topic_info = story_topic_info['stories'][0]
         '''
         all_fb_count = []
         more_fb_count = True
@@ -50,18 +52,23 @@ def story(topics_id, stories_id):
     else:
         return jsonify({'status': 'Error', 'message': 'Invalid attempt'})
 
-    story_info = local_mc.story(stories_id)  # add in other fields from regular call
-    for k in story_info.keys():
-        story_topic_info[k] = story_info[k]
-    for tag in story_info['story_tags']:
-        if tag['tag_sets_id'] == tag_util.GEO_TAG_SET:
-            geonames_id = int(tag['tag'][9:])
-            try:
-                tag['geoname'] = _cached_geoname(geonames_id)
-            except Exception as e:
-                # query to CLIFF failed :-( handle it gracefully
-                logger.exception(e)
-                tag['geoname'] = {}
+    try:
+        story_info = local_mc.story(stories_id)  # add in other fields from regular call
+        for k in story_info.keys():
+            story_topic_info[k] = story_info[k]
+        for tag in story_info['story_tags']:
+            if tag['tag_sets_id'] == tag_util.GEO_TAG_SET:
+                geonames_id = int(tag['tag'][9:])
+                try:
+                    tag['geoname'] = _cached_geoname(geonames_id)
+                except Exception as e:
+                    # query to CLIFF failed :-( handle it gracefully
+                    logger.exception(e)
+                    tag['geoname'] = {}
+    except MCException:
+        logger.warning("Story {} wasn't found in a regular story API call, but is it topic {}".format(
+            stories_id, topics_id
+        ))
     return jsonify(story_topic_info)
 
 

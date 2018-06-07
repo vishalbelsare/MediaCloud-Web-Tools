@@ -33,8 +33,12 @@ export const asyncContainerize = (ChildComponent, loadingSpinnerSize) => {
     }
     render() {
       const { fetchStatus, asyncFetch } = this.props;
+      if (fetchStatus === undefined) {
+        const error = { message: `asyncContainerize: No fetchStatus defined for your ${ChildComponent.displayName || ChildComponent.name} container`, child: ChildComponent };
+        throw error;
+      }
       if (asyncFetch === undefined) {
-        const error = { message: 'No asyncFetch defined for your container!', child: ChildComponent };
+        const error = { message: `asyncContainerize: No asyncFetch defined for your ${ChildComponent.displayName || ChildComponent.name} container!`, child: ChildComponent };
         throw error;
       }
       const fetchStatusToUse = (typeof fetchStatus === 'string') ? fetchStatus : fetchConstants.combineFetchStatuses(fetchStatus);
@@ -85,8 +89,8 @@ export const asyncContainerize = (ChildComponent, loadingSpinnerSize) => {
     fetchStatus: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.arrayOf(PropTypes.string),
-    ]).isRequired,
-    asyncFetch: PropTypes.func.isRequired,
+    ]),
+    asyncFetch: PropTypes.func,
   };
   return ComposedAsyncContainer;
 };
