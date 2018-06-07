@@ -27,7 +27,7 @@ class WordsSummaryContainer extends React.Component {
     }
   }
   render() {
-    const { topicId, filters, words, handleWordCloudClick, topicName } = this.props;
+    const { topicId, filters, words, handleWordCloudClick, topicName, fetchData } = this.props;
     const { formatMessage } = this.props.intl;
     const urlDownload = `/api/topics/${topicId}/words.csv?${filtersAsUrlParams(filters)}`;
     return (
@@ -36,6 +36,7 @@ class WordsSummaryContainer extends React.Component {
         explore={filteredLinkTo(`/topics/${topicId}/words`, filters)}
         downloadUrl={urlDownload}
         onViewModeClick={handleWordCloudClick}
+        onViewSampleSizeClick={sampleSize => fetchData({ topicId, filters, sample_size: sampleSize })}
         title={formatMessage(messages.topWords)}
         domId={WORD_CLOUD_DOM_ID}
         width={720}
@@ -73,7 +74,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (props) => {
-    dispatch(fetchTopicTopWords(props.topicId, props.filters));
+    dispatch(fetchTopicTopWords(props.topicId, { ...props.filters, sample_size: props.sample_size }));
   },
   asyncFetch: () => {
     dispatch(fetchTopicTopWords(ownProps.topicId, ownProps.filters));
