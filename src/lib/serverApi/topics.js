@@ -51,7 +51,7 @@ export function topicSplitStoryCounts(topicId, params) {
 
 export function topicStoryCounts(topicId, params) {
   const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId', 'q']);
-  return createApiPromise(`/api/topics/${topicId}/story/count`, acceptedParams);
+  return createApiPromise(`/api/topics/${topicId}/stories/counts`, acceptedParams);
 }
 
 export function story(topicId, storiesId, params) {
