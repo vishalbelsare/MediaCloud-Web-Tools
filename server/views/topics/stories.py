@@ -6,7 +6,7 @@ from multiprocessing import Pool
 from server import app, cliff, TOOL_API_KEY
 from server.auth import is_user_logged_in
 from server.cache import cache, key_generator
-from server.views import WORD_COUNT_DOWNLOAD_LENGTH
+from server.views import WORD_COUNT_DOWNLOAD_NUM_WORDS
 import server.util.csv as csv
 import server.util.tags as tag_util
 from server.util.request import api_error_handler
@@ -147,7 +147,7 @@ def story_words_csv(topics_id, stories_id):
     query = add_to_user_query('stories_id:'+stories_id)
     ngram_size = request.args['ngram_size'] if 'ngram_size' in request.args else 1  # default to word count
     word_counts = topic_ngram_counts(user_mediacloud_key(), topics_id, ngram_size, q=query,
-                                     num_words=WORD_COUNT_DOWNLOAD_LENGTH)
+                                     num_words=WORD_COUNT_DOWNLOAD_NUM_WORDS)
     return csv.stream_response(word_counts, WORD_COUNT_DOWNLOAD_COLUMNS,
                                'topic-{}-story-{}-sampled-ngrams-{}-word'.format(topics_id, stories_id, ngram_size))
 

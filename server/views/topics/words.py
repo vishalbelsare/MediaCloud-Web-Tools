@@ -3,7 +3,7 @@ from flask import request, jsonify
 import flask_login
 
 from server import app, TOOL_API_KEY
-from server.views import WORD_COUNT_DOWNLOAD_LENGTH
+from server.views import WORD_COUNT_DOWNLOAD_NUM_WORDS, WORD_COUNT_SAMPLE_SIZE
 import server.util.csv as csv
 from server.util.request import api_error_handler
 from server.auth import user_mediacloud_key, is_user_logged_in
@@ -39,13 +39,16 @@ def topic_words(topics_id):
 
     totals = []  # important so that these get reset on the client when they aren't requested
     logger.debug(request.args)
+    sample_size = request.args['sample_size'] if 'sample_size' in request.args else WORD_COUNT_SAMPLE_SIZE
     if (is_user_logged_in()) and ('withTotals' in request.args) and (request.args['withTotals'] == "true"):
         # handle requests to return these results
         # and also data to compare it to for the whole topic focus
-        totals = apicache.topic_word_counts(user_mediacloud_key(), topics_id, timespans_id=None, q=None)
+        totals = apicache.topic_word_counts(user_mediacloud_key(), topics_id, timespans_id=None, q=None, sample_size=sample_size)
+
     response = {
         'list': results,
-        'totals': totals
+        'totals': totals,
+        'sample_size': str(sample_size)
     }
     return jsonify(response)
 
@@ -55,9 +58,10 @@ def topic_words(topics_id):
 @api_error_handler
 def topic_words_csv(topics_id):
     query = apicache.add_to_user_query(None)
+    sample_size = request.args['sample_size'] if 'sample_size' in request.args else WORD_COUNT_SAMPLE_SIZE
     ngram_size = request.args['ngram_size'] if 'ngram_size' in request.args else 1  # default to word count
     word_counts = apicache.topic_ngram_counts(user_mediacloud_key(), topics_id, ngram_size=ngram_size, q=query,
-                                     num_words=WORD_COUNT_DOWNLOAD_LENGTH)
+                                              num_words=WORD_COUNT_DOWNLOAD_NUM_WORDS, sample_size=sample_size)
     return csv.stream_response(word_counts, apicache.WORD_COUNT_DOWNLOAD_COLUMNS,
                                'topic-{}-sampled-ngrams-{}-word'.format(topics_id, ngram_size))
 
