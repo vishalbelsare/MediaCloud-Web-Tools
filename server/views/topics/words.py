@@ -29,17 +29,17 @@ def topic_word(topics_id, word):
 @app.route('/api/topics/<topics_id>/words', methods=['GET'])
 @api_error_handler
 def topic_words(topics_id):
+    sample_size = request.args['sample_size'] if 'sample_size' in request.args else WORD_COUNT_SAMPLE_SIZE
 
     if access_public_topic(topics_id):
         results = apicache.topic_word_counts(TOOL_API_KEY, topics_id, snapshots_id=None, timespans_id=None, foci_id=None, q=None)
     elif is_user_logged_in():
-        results = apicache.topic_word_counts(user_mediacloud_key(), topics_id)[:200]
+        results = apicache.topic_word_counts(user_mediacloud_key(), topics_id, sample_size=sample_size)[:200]
     else:
         return jsonify({'status': 'Error', 'message': 'Invalid attempt'})
 
     totals = []  # important so that these get reset on the client when they aren't requested
     logger.debug(request.args)
-    sample_size = request.args['sample_size'] if 'sample_size' in request.args else WORD_COUNT_SAMPLE_SIZE
     if (is_user_logged_in()) and ('withTotals' in request.args) and (request.args['withTotals'] == "true"):
         # handle requests to return these results
         # and also data to compare it to for the whole topic focus
