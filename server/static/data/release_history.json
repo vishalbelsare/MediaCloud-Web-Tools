@@ -1,6 +1,52 @@
 {
   "releases": [
     {
+      "date": "2018-06-08",
+      "version": "v3.1.2",
+      "notes": [
+        {
+          "apps": ["topics"],
+          "type": "Fix",
+          "note": "Filtering a Topic by a search string works better, and doesn't allow network mapping."
+        },
+        {
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Don't show themes on Explorer if not enough stories have them set."
+        },
+        {
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Better display when you use lots of sources/collections in Explorer."
+        },
+        {
+          "apps": ["sources"],
+          "type": "Fix",
+          "note": "Better consistent columns in the various places you can download a list of sources."
+        },
+        {
+          "apps": ["sources"],
+          "type": "Fix",
+          "note": "Better feedback for errors when uploading a list of sources to a collection in Source Manager."
+        },
+        {
+          "apps": ["sources"],
+          "type": "Fix",
+          "note": "Media source feeds are now either active or disabled (no skipped or other confusing states)."
+        },
+        {
+          "apps": ["sources"],
+          "type": "Fix",
+          "note": "Better handling and display of internal private collections."
+        },
+        {
+          "apps": ["sources"],
+          "type": "Fix",
+          "note": "Source and Collections pages now show better geographic attention maps."
+        }
+      ]
+    },
+    {
       "date": "2018-05-24",
       "version": "v3.1.1",
       "notes": [
