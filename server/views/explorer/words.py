@@ -18,16 +18,16 @@ logger = logging.getLogger(__name__)
 @flask_login.login_required
 @api_error_handler
 def api_explorer_words():
-    return get_word_count()
+    return _get_word_count()
 
 
 @app.route('/api/explorer/demo/words/count', methods=['GET'])
 @api_error_handler
 def api_explorer_demo_words():
-    return get_word_count()
+    return _get_word_count()
 
 
-def get_word_count():
+def _get_word_count():
     search_id = int(request.args['search_id']) if 'search_id' in request.args else None
     sample_size = int(request.args['sample_size']) if 'sample_size' in request.args else WORD_COUNT_SAMPLE_SIZE
     if search_id not in [None, -1]:
