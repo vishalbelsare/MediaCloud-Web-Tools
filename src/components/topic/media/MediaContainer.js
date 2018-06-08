@@ -40,7 +40,7 @@ class MediaContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.mediaId !== this.props.mediaId) {
       const { fetchData } = this.props;
-      fetchData(nextProps.mediaId);
+      fetchData(nextProps.topicId, nextProps.mediaId, nextProps.filters);
     }
   }
 
@@ -192,20 +192,25 @@ const mapStateToProps = (state, ownProps) => ({
   media: state.topics.selected.mediaSource.info,
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
-  asyncFetch: () => {
-    dispatch(selectMedia(ownProps.params.mediaId));    // save it to the state
-    dispatch(fetchMedia(ownProps.params.topicId, ownProps.params.mediaId)); // fetch the info we need
-  },
-  fetchData: (mediaId) => {
+const mapDispatchToProps = dispatch => ({
+  fetchData: (topicId, mediaId, filters) => {
     dispatch(selectMedia(mediaId));    // save it to the state
-    dispatch(fetchMedia(mediaId)); // fetch the info we need
+    dispatch(fetchMedia(topicId, mediaId, filters)); // fetch the info we need
   },
 });
 
+function mergeProps(stateProps, dispatchProps, ownProps) {
+  return Object.assign({}, stateProps, dispatchProps, ownProps, {
+    asyncFetch: () => {
+      dispatchProps.fetchData(stateProps.topicId, ownProps.params.mediaId, stateProps.filters);
+    },
+
+  });
+}
+
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
+    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeAsyncContainer(
         MediaContainer
       )
