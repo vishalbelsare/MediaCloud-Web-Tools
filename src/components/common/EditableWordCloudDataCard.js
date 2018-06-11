@@ -16,14 +16,13 @@ import { getBrandDarkColor } from '../../styles/colors';
 import { downloadSvg } from '../util/svg';
 import ActionMenu from './ActionMenu';
 import { WarningNotice } from '../common/Notice';
+import { VIEW_1K, VIEW_10K } from '../../lib/topicFilterUtil';
 
 const VIEW_CLOUD = 'VIEW_CLOUD';
 const VIEW_ORDERED = 'VIEW_ORDERED';
 const VIEW_GOOGLE_W2V = 'VIEW_GOOGLE_W2V';
 const VIEW_TOPIC_W2V = 'VIEW_TOPIC_W2V';
 
-const VIEW_1K = '1000';
-const VIEW_10K = '10000';
 
 const WORD_SPACE_WORD_LIMIT = 50;
 
@@ -52,7 +51,6 @@ class EditableWordCloudDataCard extends React.Component {
     modifiableWords: null, // all the words, including a boolean display property on each
     displayOnlyWords: null, // only the words that are being displayed
     view: VIEW_ORDERED, // which view to show (see view constants above)
-    sampleSize: VIEW_1K,
   };
 
   onEditModeClick = (d, node) => {
@@ -66,12 +64,6 @@ class EditableWordCloudDataCard extends React.Component {
 
   setView = (nextView) => {
     this.setState({ view: nextView });
-  }
-
-  setSampleSize = (nextSize) => {
-    const { onViewSampleSizeClick } = this.props;
-    this.setState({ sampleSize: nextSize });
-    onViewSampleSizeClick(nextSize);
   }
 
   goToBlog = () => {
@@ -97,8 +89,8 @@ class EditableWordCloudDataCard extends React.Component {
   };
 
   downloadCsv = (ngramSize) => {
-    const { downloadUrl, onDownload, initSampleSize } = this.props;
-    const sampleSize = initSampleSize !== undefined ? initSampleSize : this.state.sampleSize;
+    const { downloadUrl, onDownload } = this.props;
+    const sampleSize = this.state.sampleSize;
     if (onDownload) {
       onDownload(ngramSize);
     } else {
@@ -121,7 +113,7 @@ class EditableWordCloudDataCard extends React.Component {
   };
 
   buildActionMenu = (uniqueDomId) => {
-    const { includeTopicWord2Vec, hideGoogleWord2Vec, actionMenuHeaderText, actionsAsLinksUnderneath, svgDownloadPrefix, initSampleSize } = this.props;
+    const { includeTopicWord2Vec, hideGoogleWord2Vec, actionMenuHeaderText, actionsAsLinksUnderneath, svgDownloadPrefix, onViewSampleSizeClick, initSampleSize } = this.props;
     const { formatMessage } = this.props.intl;
     let topicWord2VecMenuItem;
     if (includeTopicWord2Vec === true) {
@@ -152,13 +144,13 @@ class EditableWordCloudDataCard extends React.Component {
           className="action-icon-menu-item"
           primaryText={formatMessage(localMessages.sampleSize1k)}
           disabled={initSampleSize === VIEW_1K}
-          onClick={() => this.setSampleSize(VIEW_1K)}
+          onClick={() => onViewSampleSizeClick(VIEW_1K)}
         />
         <MenuItem
           className="action-icon-menu-item"
           primaryText={formatMessage(localMessages.sampleSize10k)}
           disabled={initSampleSize === VIEW_10K}
-          onClick={() => this.setSampleSize(VIEW_10K)}
+          onClick={() => onViewSampleSizeClick(VIEW_10K)}
         />
         <Divider />
         <MenuItem
@@ -423,7 +415,7 @@ EditableWordCloudDataCard.propTypes = {
   includeTopicWord2Vec: PropTypes.bool,   // show an option to draw a word2vec map basde on w2v_x / w2v_y from topic-specific model
   hideGoogleWord2Vec: PropTypes.bool,        // show an option to draw a word2vec map basde on w2v_x / w2v_y from GoogleNews model
   onViewModeClick: PropTypes.func.isRequired,
-  onViewSampleSizeClick: PropTypes.func.isRequired,
+  onViewSampleSizeClick: PropTypes.func,
   initSampleSize: PropTypes.string,
   actionsAsLinksUnderneath: PropTypes.bool, // show the actions as links under the viz (ie. in a SummarizedVisualization card)
   domId: PropTypes.string.isRequired,     // unique dom id needed to support CSV downloading

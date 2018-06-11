@@ -30,4 +30,4 @@ export const fetchWordWords = createAsyncAction(FETCH_WORD_WORDS, api.wordWords)
 export const fetchWordSampleSentences = createAsyncAction(FETCH_WORD_SAMPLE_SENTENCES, api.wordSampleSentences);
 
 // pass in topicId, snapshotId, timespanId, sort, withTotals
-export const fetchTopicTopWords = createAsyncAction(FETCH_TOPIC_TOP_WORDS, api.topicTopWords);
+export const fetchTopicTopWords = createAsyncAction(FETCH_TOPIC_TOP_WORDS, api.fetchTopicTopWords);

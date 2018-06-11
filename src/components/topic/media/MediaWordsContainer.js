@@ -5,12 +5,10 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
-import { fetchMediaWords } from '../../../actions/topicActions';
-import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
-import { filteredLinkTo, filtersAsUrlParams } from '../../util/location';
+import composeTopicEditableWordCloudContainer from '../TopicEditableWordCloudContainer';
+import { fetchTopicTopWords } from '../../../actions/topicActions';
 import messages from '../../../resources/messages';
 import { generateParamStr } from '../../../lib/apiUtil';
-import { topicDownloadFilename } from '../../util/topicUtil';
 
 const localMessages = {
   helpTitle: { id: 'media.words.help.title', defaultMessage: 'About Media Top Words' },
@@ -18,8 +16,6 @@ const localMessages = {
     defaultMessage: '<p>This is a visualization showing the top words used by this Media Source within the Topic.</p>',
   },
 };
-
-const WORD_CLOUD_DOM_ID = 'topic-summary-media-word-cloud';
 
 class MediaWordsContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
@@ -30,23 +26,7 @@ class MediaWordsContainer extends React.Component {
   }
 
   render() {
-    const { topicId, mediaId, words, helpButton, filters, handleWordCloudClick, topicName } = this.props;
-    const { formatMessage } = this.props.intl;
-    const urlDownload = `/api/topics/${topicId}/media/${mediaId}/words.csv?${filtersAsUrlParams(filters)}`;
-
-    return (
-      <EditableWordCloudDataCard
-        words={words}
-        explore={filteredLinkTo(`/topics/${topicId}/words`, filters)}
-        downloadUrl={urlDownload}
-        onViewModeClick={handleWordCloudClick}
-        title={formatMessage(messages.topWords)}
-        helpButton={helpButton}
-        domId={WORD_CLOUD_DOM_ID}
-        svgDownloadPrefix={`${topicDownloadFilename(topicName, filters)}-media-${mediaId}-words`}
-        includeTopicWord2Vec
-      />
-    );
+    return <div />;
   }
 }
 
@@ -57,7 +37,6 @@ MediaWordsContainer.propTypes = {
   // from parent
   mediaId: PropTypes.number.isRequired,
   topicId: PropTypes.number.isRequired,
-  topicName: PropTypes.string.isRequired,
   filters: PropTypes.object.isRequired,
   // from dispatch
   asyncFetch: PropTypes.func.isRequired,
@@ -75,8 +54,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  fetchData: (props) => {
-    dispatch(fetchMediaWords(ownProps.topicId, ownProps.mediaId, props.filters));
+  fetchData: (sampleSize) => {
+    dispatch(fetchTopicTopWords(ownProps.topicId, { ...ownProps.filters, sample_size: sampleSize, q: `media_id:${ownProps.mediaId}` }));
   },
   pushToUrl: url => dispatch(push(url)),
 });
@@ -84,7 +63,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     asyncFetch: () => {
-      dispatchProps.fetchData(stateProps);
+      dispatchProps.fetchData();
     },
     handleWordCloudClick: (word) => {
       const params = generateParamStr({ ...stateProps.filters, stem: word.stem, term: word.term });
@@ -99,7 +78,9 @@ export default
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.wordCloudTopicWord2VecLayoutHelp])(
         composeAsyncContainer(
-          MediaWordsContainer
+          composeTopicEditableWordCloudContainer(
+            MediaWordsContainer
+          )
         )
       )
     )

@@ -103,11 +103,6 @@ export function mediaOutlinks(topicId, mediaId, params) {
   return createApiPromise(`/api/topics/${topicId}/media/${mediaId}/outlinks`, acceptedParams);
 }
 
-export function mediaWords(topicId, mediaId, params) {
-  const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId', 'q']);
-  return createApiPromise(`/api/topics/${topicId}/media/${mediaId}/words`, acceptedParams);
-}
-
 export function topicFocalSetsList(topicId, snapshotId) {
   return createApiPromise(`/api/topics/${topicId}/focal-sets/list`, { snapshotId });
 }
@@ -224,6 +219,11 @@ export function fetchStorySampleByQuery(params) {
 export function fetchWordsByQuery(params) {
   const acceptedParams = acceptParams(params, ['q', 'start_date', 'end_date', 'sources[]', 'collections[]']);
   return createPostingApiPromise('/api/topics/create/preview/words/count', acceptedParams);
+}
+
+export function fetchTopicTopWords(topicId, params) {
+  const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId', 'q', 'sample_size']);
+  return createApiPromise(`/api/topics/${topicId}/words`, acceptedParams);
 }
 
 export function updateTopic(topicId, params) {
