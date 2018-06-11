@@ -5,10 +5,14 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
-import composeTopicEditableWordCloudContainer from '../TopicEditableWordCloudContainer';
+import withSampleSize from '../../common/composers/SampleSize';
+import composeCsvDownloadNotifyContainer from '../../common/composers/CsvDownloadNotifyContainer';
+import { filteredLinkTo, filtersAsUrlParams } from '../../util/location';
 import { fetchTopicTopWords } from '../../../actions/topicActions';
 import messages from '../../../resources/messages';
 import { generateParamStr } from '../../../lib/apiUtil';
+import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
+import { topicDownloadFilename } from '../../util/topicUtil';
 
 const localMessages = {
   helpTitle: { id: 'media.words.help.title', defaultMessage: 'About Media Top Words' },
@@ -16,6 +20,9 @@ const localMessages = {
     defaultMessage: '<p>This is a visualization showing the top words used by this Media Source within the Topic.</p>',
   },
 };
+
+const WORD_CLOUD_DOM_ID = 'topic-summary-media-word-cloud';
+
 
 class MediaWordsContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
@@ -26,7 +33,23 @@ class MediaWordsContainer extends React.Component {
   }
 
   render() {
-    return <div />;
+    const { topicInfo, initSampleSize, onViewSampleSizeClick, filters, handleWordCloudClick } = this.props;
+    const urlDownload = `/api/topics/${topicInfo.topicId}/words.csv?${filtersAsUrlParams(filters)}`;
+    const { formatMessage } = this.props.intl;
+    return (
+      <EditableWordCloudDataCard
+        words={this.props.words}
+        explore={filteredLinkTo(`/topics/${topicInfo.topicId}/words`, filters)}
+        initSampleSize={initSampleSize}
+        downloadUrl={urlDownload}
+        onViewModeClick={handleWordCloudClick}
+        onViewSampleSizeClick={onViewSampleSizeClick}
+        title={formatMessage(messages.topWords)}
+        domId={WORD_CLOUD_DOM_ID}
+        svgDownloadPrefix={`${topicDownloadFilename(topicInfo.name, filters)}-words`}
+        includeTopicWord2Vec
+      />
+    );
   }
 }
 
@@ -45,10 +68,14 @@ MediaWordsContainer.propTypes = {
   words: PropTypes.array,
   fetchStatus: PropTypes.string.isRequired,
   handleWordCloudClick: PropTypes.func,
+  topicInfo: PropTypes.object,
+  onViewSampleSizeClick: PropTypes.func.isRequired,
+  initSampleSize: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.mediaSource.words.fetchStatus,
+  topicInfo: state.topics.selected.info,
   words: state.topics.selected.mediaSource.words.list,
   filters: state.topics.selected.filters,
 });
@@ -77,9 +104,11 @@ export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.wordCloudTopicWord2VecLayoutHelp])(
-        composeAsyncContainer(
-          composeTopicEditableWordCloudContainer(
-            MediaWordsContainer
+        withSampleSize(
+          composeAsyncContainer(
+            composeCsvDownloadNotifyContainer(
+              MediaWordsContainer
+            )
           )
         )
       )
