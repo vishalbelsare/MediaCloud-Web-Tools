@@ -1,8 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { injectIntl } from 'react-intl';
-import { connect } from 'react-redux';
-import { VIEW_1K } from '../../lib/topicFilterUtil';
+import { VIEW_1K } from '../../../lib/topicFilterUtil';
 
 /**
  * Wrap any component that wants to display an EditableWordCloud. This passes

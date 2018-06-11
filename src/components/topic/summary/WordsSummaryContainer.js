@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeDescribedDataCard from '../../common/DescribedDataCard';
-import composeTopicEditableWordCloudContainer from '../TopicEditableWordCloudContainer';
+import withSampleSize from '../../common/composers/SampleSize';
 import composeCsvDownloadNotifyContainer from '../../common/composers/CsvDownloadNotifyContainer';
 import { filteredLinkTo, filtersAsUrlParams } from '../../util/location';
 import { fetchTopicTopWords } from '../../../actions/topicActions';
@@ -71,7 +71,6 @@ WordsSummaryContainer.propTypes = {
   fetchStatus: PropTypes.string.isRequired,
   handleWordCloudClick: PropTypes.func,
   onViewSampleSizeClick: PropTypes.func.isRequired,
-  children: PropTypes.array,
 };
 
 const mapStateToProps = state => ({
@@ -104,7 +103,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeTopicEditableWordCloudContainer(
+      withSampleSize(
         composeDescribedDataCard(localMessages.descriptionIntro,
           [messages.wordcloudHelpText, messages.wordCloudTopicWord2VecLayoutHelp])(
           composeAsyncContainer(
