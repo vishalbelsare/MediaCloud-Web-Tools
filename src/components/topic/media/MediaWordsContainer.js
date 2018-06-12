@@ -33,8 +33,8 @@ class MediaWordsContainer extends React.Component {
   }
 
   render() {
-    const { topicInfo, initSampleSize, onViewSampleSizeClick, filters, handleWordCloudClick } = this.props;
-    const urlDownload = `/api/topics/${topicInfo.topicId}/words.csv?${filtersAsUrlParams(filters)}`;
+    const { topicInfo, mediaId, initSampleSize, onViewSampleSizeClick, filters, handleWordCloudClick } = this.props;
+    const urlDownload = `/api/topics/${topicInfo.topics_id}/words.csv?${filtersAsUrlParams(filters)}`;
     const { formatMessage } = this.props.intl;
     return (
       <EditableWordCloudDataCard
@@ -46,7 +46,7 @@ class MediaWordsContainer extends React.Component {
         onViewSampleSizeClick={onViewSampleSizeClick}
         title={formatMessage(messages.topWords)}
         domId={WORD_CLOUD_DOM_ID}
-        svgDownloadPrefix={`${topicDownloadFilename(topicInfo.name, filters)}-words`}
+        svgDownloadPrefix={`${topicDownloadFilename(topicInfo.name, filters)}-media-${mediaId}--words`}
         includeTopicWord2Vec
       />
     );
@@ -57,6 +57,8 @@ MediaWordsContainer.propTypes = {
   // from compositional chain
   intl: PropTypes.object.isRequired,
   helpButton: PropTypes.node.isRequired,
+  onViewSampleSizeClick: PropTypes.func.isRequired,
+  initSampleSize: PropTypes.string.isRequired,
   // from parent
   mediaId: PropTypes.number.isRequired,
   topicId: PropTypes.number.isRequired,
@@ -69,8 +71,7 @@ MediaWordsContainer.propTypes = {
   fetchStatus: PropTypes.string.isRequired,
   handleWordCloudClick: PropTypes.func,
   topicInfo: PropTypes.object,
-  onViewSampleSizeClick: PropTypes.func.isRequired,
-  initSampleSize: PropTypes.string.isRequired,
+
 };
 
 const mapStateToProps = state => ({

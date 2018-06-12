@@ -90,7 +90,7 @@ class EditableWordCloudDataCard extends React.Component {
 
   downloadCsv = (ngramSize) => {
     const { downloadUrl, onDownload } = this.props;
-    const sampleSize = this.state.sampleSize;
+    const sampleSize = this.props.initSampleSize;
     if (onDownload) {
       onDownload(ngramSize);
     } else {
@@ -103,10 +103,12 @@ class EditableWordCloudDataCard extends React.Component {
           url = `${url}?ngram_size=${ngramSize}`;
         }
       }
-      if (url.indexOf('?') !== -1) {
-        url = `${url}&sample_size=${sampleSize}`;
-      } else {
-        url = `${url}?sample_size=${sampleSize}`;
+      if (sampleSize) {
+        if (url.indexOf('?') !== -1) {
+          url = `${url}&sample_size=${sampleSize}`;
+        } else {
+          url = `${url}?sample_size=${sampleSize}`;
+        }
       }
       window.location = url;
     }
