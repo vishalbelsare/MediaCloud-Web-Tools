@@ -33,19 +33,20 @@ class StoryWordsContainer extends React.Component {
   }
 
   render() {
-    const { storiesId, topicInfo, words, helpButton, handleWordCloudClick, filters } = this.props;
+    const { storiesId, topicInfo, handleWordCloudClick, filters, initSampleSize, onViewSampleSizeClick } = this.props;
     const { formatMessage } = this.props.intl;
     const urlDownload = `/api/topics/${topicInfo.topics_id}/words.csv?${filtersAsUrlParams(filters)}`;
     return (
       <EditableWordCloudDataCard
-        words={words}
+        words={this.props.words}
         explore={filteredLinkTo(`/topics/${topicInfo.topics_id}/words`, filters)}
+        initSampleSize={initSampleSize}
         downloadUrl={urlDownload}
         onViewModeClick={handleWordCloudClick}
+        onViewSampleSizeClick={onViewSampleSizeClick}
         title={formatMessage(messages.topWords)}
-        helpButton={helpButton}
         domId={WORD_CLOUD_DOM_ID}
-        svgDownloadPrefix={`${topicDownloadFilename(topicInfo.name, filters)}-story-${storiesId}-words`}
+        svgDownloadPrefix={`${topicDownloadFilename(topicInfo.name, filters)}-story-${storiesId}--words`}
         includeTopicWord2Vec
       />
     );
@@ -90,7 +91,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     asyncFetch: () => {
-      dispatchProps.fetchData(stateProps); // fetch the info we need
+      dispatchProps.fetchData(); // fetch the info we need
     },
     handleWordCloudClick: (word) => {
       const params = generateParamStr({ ...stateProps.filters, stem: word.stem, term: word.term });

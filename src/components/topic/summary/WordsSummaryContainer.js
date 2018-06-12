@@ -31,12 +31,12 @@ class WordsSummaryContainer extends React.Component {
   }
   render() {
     const { topicInfo, initSampleSize, onViewSampleSizeClick, filters, handleWordCloudClick } = this.props;
-    const urlDownload = `/api/topics/${topicInfo.topicId}/words.csv?${filtersAsUrlParams(filters)}`;
+    const urlDownload = `/api/topics/${topicInfo.topics_id}/words.csv?${filtersAsUrlParams(filters)}`;
     const { formatMessage } = this.props.intl;
     return (
       <EditableWordCloudDataCard
         words={this.props.words}
-        explore={filteredLinkTo(`/topics/${topicInfo.topicId}/words`, filters)}
+        explore={filteredLinkTo(`/topics/${topicInfo.topics_id}/words`, filters)}
         initSampleSize={initSampleSize}
         downloadUrl={urlDownload}
         onViewModeClick={handleWordCloudClick}
