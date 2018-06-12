@@ -7,10 +7,11 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import withSampleSize from '../../common/composers/SampleSize';
 import composeCsvDownloadNotifyContainer from '../../common/composers/CsvDownloadNotifyContainer';
-import { filteredLinkTo, filtersAsUrlParams } from '../../util/location';
+import { filteredLinkTo, filtersAsUrlParams, combineQueryParams } from '../../util/location';
 import { fetchTopicTopWords } from '../../../actions/topicActions';
 import messages from '../../../resources/messages';
 import { generateParamStr } from '../../../lib/apiUtil';
+import { VIEW_1K } from '../../../lib/topicFilterUtil';
 import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
 import { topicDownloadFilename } from '../../util/topicUtil';
 
@@ -34,7 +35,7 @@ class MediaWordsContainer extends React.Component {
 
   render() {
     const { topicInfo, mediaId, initSampleSize, onViewSampleSizeClick, filters, handleWordCloudClick } = this.props;
-    const urlDownload = `/api/topics/${topicInfo.topics_id}/words.csv?${filtersAsUrlParams(filters)}`;
+    const urlDownload = `/api/topics/${topicInfo.topics_id}/words.csv?${filtersAsUrlParams({ ...filters, q: combineQueryParams(filters.q, `media_id:${mediaId}`) })}`;
     const { formatMessage } = this.props.intl;
     return (
       <EditableWordCloudDataCard
@@ -82,8 +83,22 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  fetchData: (sampleSize) => {
-    dispatch(fetchTopicTopWords(ownProps.topicId, { ...ownProps.filters, sample_size: sampleSize, q: `media_id:${ownProps.mediaId}` }));
+  fetchData: (sampleSize, props) => {
+    let filterObj = {};
+    const currentPropFilters = ownProps.filters || props.filters;
+    if (currentPropFilters) {
+      filterObj = {
+        ...currentPropFilters,
+        sample_size: sampleSize,
+        q: combineQueryParams(currentPropFilters.q, `media_id:${ownProps.mediaId}`),
+      };
+    } else {
+      filterObj = {
+        sample_size: sampleSize,
+        q: `media_id:${ownProps.mediaId}`,
+      };
+    }
+    dispatch(fetchTopicTopWords(ownProps.topicId, filterObj));
   },
   pushToUrl: url => dispatch(push(url)),
 });
@@ -91,7 +106,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     asyncFetch: () => {
-      dispatchProps.fetchData();
+      dispatchProps.fetchData(VIEW_1K, stateProps);
     },
     handleWordCloudClick: (word) => {
       const params = generateParamStr({ ...stateProps.filters, stem: word.stem, term: word.term });
