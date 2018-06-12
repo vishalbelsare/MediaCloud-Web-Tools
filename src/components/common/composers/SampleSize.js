@@ -13,9 +13,9 @@ const withSampleSize = (ChildComponent) => {
     };
 
     setSampleSize = (nextSize) => {
-      const { fetchData } = this.props;
+      const { fetchData, filters } = this.props;
       this.setState({ sampleSize: nextSize });
-      fetchData(nextSize);
+      fetchData({ filters, sample_size: nextSize });
     }
     render() {
       const { sampleSize } = this.state; // must instantiate here and pass as props to child component - this.state.sampleSize doesn't work
@@ -33,6 +33,7 @@ const withSampleSize = (ChildComponent) => {
   SampleSize.propTypes = {
     // from compositional chain
     fetchData: PropTypes.func.isRequired,
+    filters: PropTypes.object,
   };
   return SampleSize;
 };

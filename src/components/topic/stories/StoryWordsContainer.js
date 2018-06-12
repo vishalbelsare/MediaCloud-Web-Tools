@@ -84,9 +84,9 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (props) => {
-    const currentProps = ownProps || props;
+    const currentProps = props || ownProps;
     const filterObj = mergeFilters(currentProps, `stories_id:${ownProps.storiesId}`);
-    dispatch(fetchTopicTopWords(ownProps.topicId, ...filterObj));
+    dispatch(fetchTopicTopWords(ownProps.topicId, filterObj));
   },
   pushToUrl: url => dispatch(push(url)),
 });

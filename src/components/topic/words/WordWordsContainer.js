@@ -13,6 +13,7 @@ import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
 import { filteredLinkTo, filtersAsUrlParams, combineQueryParams } from '../../util/location';
 import messages from '../../../resources/messages';
 import { generateParamStr } from '../../../lib/apiUtil';
+import { VIEW_1K, mergeFilters } from '../../../lib/topicFilterUtil';
 import { topicDownloadFilename } from '../../util/topicUtil';
 
 const localMessages = {
@@ -35,7 +36,7 @@ class WordWordsContainer extends React.Component {
   render() {
     const { topicInfo, filters, term, handleWordCloudClick, initSampleSize, onViewSampleSizeClick } = this.props;
     const { formatMessage } = this.props.intl;
-    const urlDownload = `/api/topics/${topicInfo.topics_id}/words.csv?${filtersAsUrlParams(filters)}`;
+    const urlDownload = `/api/topics/${topicInfo.topics_id}/words.csv?${filtersAsUrlParams({ ...filters, q: combineQueryParams(filters.q, `${term}*`) })}`;
     return (
       <EditableWordCloudDataCard
         words={this.props.words}
@@ -83,24 +84,13 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   asyncFetch: () => {
-    dispatch(fetchTopicTopWords(ownProps.topicId, ownProps.stem, ownProps.filters));
+    const filterObj = mergeFilters(ownProps, `${ownProps.stem}*`, { sample_size: VIEW_1K });
+    dispatch(fetchTopicTopWords(ownProps.topicId, filterObj));
   },
   fetchData: (props) => {
-    const currentProps = ownProps || props;
-    let filterObj = {};
-    if (currentProps.filters) {
-      filterObj = {
-        ...currentProps.filters,
-        ...currentProps.sample_size,
-        q: combineQueryParams(currentProps.filters.q, `${ownProps.stem}*`),
-      };
-    } else {
-      filterObj = {
-        ...currentProps.sample_size,
-        q: `${ownProps.stem}*`,
-      };
-    }
-    dispatch(fetchTopicTopWords(ownProps.topicId, ...filterObj));
+    const currentProps = props || ownProps;
+    const filterObj = mergeFilters(currentProps, `${ownProps.stem}*`);
+    dispatch(fetchTopicTopWords(ownProps.topicId, filterObj));
   },
   handleWordCloudClick: (word) => {
     const params = generateParamStr({ ...ownProps.filters, stem: word.stem, term: word.term });
