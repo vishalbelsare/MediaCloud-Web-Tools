@@ -11,7 +11,7 @@ import { filteredLinkTo, filtersAsUrlParams, combineQueryParams } from '../../ut
 import { fetchTopicTopWords } from '../../../actions/topicActions';
 import messages from '../../../resources/messages';
 import { generateParamStr } from '../../../lib/apiUtil';
-import { VIEW_1K } from '../../../lib/topicFilterUtil';
+import { VIEW_1K, mergeFilters } from '../../../lib/topicFilterUtil';
 import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
 import { topicDownloadFilename } from '../../util/topicUtil';
 
@@ -83,22 +83,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  fetchData: (sampleSize, props) => {
-    let filterObj = {};
-    const currentPropFilters = ownProps.filters || props.filters;
-    if (currentPropFilters) {
-      filterObj = {
-        ...currentPropFilters,
-        sample_size: sampleSize,
-        q: combineQueryParams(currentPropFilters.q, `media_id:${ownProps.mediaId}`),
-      };
-    } else {
-      filterObj = {
-        sample_size: sampleSize,
-        q: `media_id:${ownProps.mediaId}`,
-      };
-    }
-    dispatch(fetchTopicTopWords(ownProps.topicId, filterObj));
+  fetchData: (props) => {
+    const currentProps = ownProps || props;
+    const filterObj = mergeFilters(currentProps, `media_id:${ownProps.mediaId}`);
+    dispatch(fetchTopicTopWords(ownProps.topicId, ...filterObj));
   },
   pushToUrl: url => dispatch(push(url)),
 });
@@ -106,7 +94,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     asyncFetch: () => {
-      dispatchProps.fetchData(VIEW_1K, stateProps);
+      dispatchProps.fetchData({ ...stateProps, sample_size: VIEW_1K });
     },
     handleWordCloudClick: (word) => {
       const params = generateParamStr({ ...stateProps.filters, stem: word.stem, term: word.term });

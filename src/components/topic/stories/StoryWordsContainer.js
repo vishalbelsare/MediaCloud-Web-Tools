@@ -9,9 +9,10 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import { fetchTopicTopWords } from '../../../actions/topicActions';
 import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
-import { filteredLinkTo, filtersAsUrlParams } from '../../util/location';
+import { filteredLinkTo, filtersAsUrlParams, combineQueryParams } from '../../util/location';
 import messages from '../../../resources/messages';
 import { generateParamStr } from '../../../lib/apiUtil';
+import { VIEW_1K, mergeFilters } from '../../../lib/topicFilterUtil';
 import { topicDownloadFilename } from '../../util/topicUtil';
 
 const localMessages = {
@@ -35,7 +36,7 @@ class StoryWordsContainer extends React.Component {
   render() {
     const { storiesId, topicInfo, handleWordCloudClick, filters, initSampleSize, onViewSampleSizeClick } = this.props;
     const { formatMessage } = this.props.intl;
-    const urlDownload = `/api/topics/${topicInfo.topics_id}/words.csv?${filtersAsUrlParams(filters)}`;
+    const urlDownload = `/api/topics/${topicInfo.topics_id}/words.csv?${filtersAsUrlParams({ ...filters, q: combineQueryParams(filters.q, `stories_id:${storiesId}`) })}`;
     return (
       <EditableWordCloudDataCard
         words={this.props.words}
@@ -82,8 +83,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  fetchData: (sampleSize) => {
-    dispatch(fetchTopicTopWords(ownProps.topicId, { ...ownProps.filters, sample_size: sampleSize, q: `stories_id:${ownProps.storiesId}` }));
+  fetchData: (props) => {
+    const currentProps = ownProps || props;
+    const filterObj = mergeFilters(currentProps, `stories_id:${ownProps.storiesId}`);
+    dispatch(fetchTopicTopWords(ownProps.topicId, ...filterObj));
   },
   pushToUrl: url => dispatch(push(url)),
 });
@@ -91,7 +94,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     asyncFetch: () => {
-      dispatchProps.fetchData(); // fetch the info we need
+      dispatchProps.fetchData({ ...stateProps, sample_size: VIEW_1K }); // fetch the info we need
     },
     handleWordCloudClick: (word) => {
       const params = generateParamStr({ ...stateProps.filters, stem: word.stem, term: word.term });

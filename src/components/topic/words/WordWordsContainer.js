@@ -10,7 +10,7 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import { fetchTopicTopWords } from '../../../actions/topicActions';
 import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
-import { filteredLinkTo, filtersAsUrlParams } from '../../util/location';
+import { filteredLinkTo, filtersAsUrlParams, combineQueryParams } from '../../util/location';
 import messages from '../../../resources/messages';
 import { generateParamStr } from '../../../lib/apiUtil';
 import { topicDownloadFilename } from '../../util/topicUtil';
@@ -85,8 +85,22 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   asyncFetch: () => {
     dispatch(fetchTopicTopWords(ownProps.topicId, ownProps.stem, ownProps.filters));
   },
-  fetchData: (sampleSize) => {
-    dispatch(fetchTopicTopWords(ownProps.topicId, { ...ownProps.filters, sample_size: sampleSize, q: `${ownProps.stem}*` }));
+  fetchData: (props) => {
+    const currentProps = ownProps || props;
+    let filterObj = {};
+    if (currentProps.filters) {
+      filterObj = {
+        ...currentProps.filters,
+        ...currentProps.sample_size,
+        q: combineQueryParams(currentProps.filters.q, `${ownProps.stem}*`),
+      };
+    } else {
+      filterObj = {
+        ...currentProps.sample_size,
+        q: `${ownProps.stem}*`,
+      };
+    }
+    dispatch(fetchTopicTopWords(ownProps.topicId, ...filterObj));
   },
   handleWordCloudClick: (word) => {
     const params = generateParamStr({ ...ownProps.filters, stem: word.stem, term: word.term });
