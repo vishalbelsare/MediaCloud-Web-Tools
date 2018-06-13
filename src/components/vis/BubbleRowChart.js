@@ -8,6 +8,7 @@ const DEFAULT_WIDTH = 530;
 const DEFAULT_MIN_BUBBLE_RADIUS = 5;
 const DEFAULT_MAX_BUBBLE_RADIUS = 70;
 const DEFAULT_HEIGHT = 200;
+const PADDING_BETWEEN_BUBBLES = 10;
 
 
 const localMessages = {
@@ -76,7 +77,7 @@ class BubbleRowChart extends React.Component {
     if (asPercentage) {
       circles = trimmedData.map((d, idx) => {
         let xOffset = 0;
-        xOffset = options.maxBubbleRadius + (((options.maxBubbleRadius * 2) + 10) * idx);
+        xOffset = options.maxBubbleRadius + (((options.maxBubbleRadius * 2) + PADDING_BETWEEN_BUBBLES) * idx);
         return {
           ...d,
           r: radius(d.value),
@@ -89,7 +90,7 @@ class BubbleRowChart extends React.Component {
         let xOffset = 0;
         if (idx > 0) {
           const preceeding = list.slice(0, idx);
-          const diameters = preceeding.map(d2 => (radius(d2.value) * 2) + 10);
+          const diameters = preceeding.map(d2 => (radius(d2.value) * 2) + PADDING_BETWEEN_BUBBLES);
           xOffset = d3.sum(diameters);
         }
         xOffset += radius(d.value);
@@ -117,7 +118,10 @@ class BubbleRowChart extends React.Component {
       const rollover = d3.select('#bubble-chart-tooltip')
         .style('opacity', 0);
 
-      const horizontalTranslaton = options.padding ? options.padding : 0;
+
+      // calculate the diameter of all the circles, subtract that from the width and divide by two
+      const paddingAroundAllBubbles = (options.width - ((options.maxBubbleRadius * 2 * circles.length) + (PADDING_BETWEEN_BUBBLES * (circles.length - 1)))) / 2;
+      const horizontalTranslaton = paddingAroundAllBubbles;
       // draw background circles
       if (asPercentage) {
         const totalBubbles = svg.append('g')

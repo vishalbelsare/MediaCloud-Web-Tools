@@ -117,7 +117,7 @@ class NytLabelSummaryContainer extends React.Component {
           <BubbleRowChart
             maxBubbleRadius={60}
             data={bubbleData.slice(0, BUBBLES_TO_SHOW)}
-            width={800}
+            width={700}
             height={220}
             domId={BUBBLE_CHART_DOM_ID}
             asPercentage

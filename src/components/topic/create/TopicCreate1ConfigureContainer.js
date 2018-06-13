@@ -10,6 +10,8 @@ import TopicForm, { TOPIC_FORM_MODE_CREATE } from './TopicForm';
 import { goToCreateTopicStep } from '../../../actions/topicActions';
 import messages from '../../../resources/messages';
 import { getCurrentDate, getMomentDateSubtraction } from '../../../lib/dateUtil';
+import { MAX_RECOMMENDED_STORIES } from '../../../lib/formValidators';
+
 
 const localMessages = {
   title: { id: 'topic.create.setup.title', defaultMessage: 'Step 1: Create A Topic' },
@@ -28,7 +30,7 @@ const TopicCreate1ConfigureContainer = (props) => {
   const { formatMessage } = props.intl;
   const endDate = getCurrentDate();
   const startDate = getMomentDateSubtraction(endDate, 3, 'months');
-  const initialValues = { start_date: startDate, end_date: endDate, max_iterations: 15, buttonLabel: formatMessage(messages.preview) };
+  const initialValues = { start_date: startDate, end_date: endDate, max_iterations: 15, max_stories: MAX_RECOMMENDED_STORIES, buttonLabel: formatMessage(messages.preview) };
   return (
     <Grid>
       <Helmet><title>{formatMessage(localMessages.title)}</title></Helmet>
