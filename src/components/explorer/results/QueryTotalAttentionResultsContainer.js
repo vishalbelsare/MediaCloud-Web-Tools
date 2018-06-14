@@ -4,92 +4,118 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import MenuItem from 'material-ui/MenuItem';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import { fetchDemoQueryStoryCount, fetchQueryStoryCount, resetStoryCounts } from '../../../actions/explorerActions';
 import composeSummarizedVisualization from './SummarizedVizualization';
 import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import BubbleRowChart from '../../vis/BubbleRowChart';
-import { queryChangedEnoughToUpdate, postToDownloadUrl, downloadExplorerSvg } from '../../../lib/explorerUtil';
+import { queryChangedEnoughToUpdate, postToCombinedDownloadUrl } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
+import { FETCH_INVALID } from '../../../lib/fetchConstants';
 
 const BUBBLE_CHART_DOM_ID = 'bubble-chart-story-total';
 
 const localMessages = {
   title: { id: 'explorer.storyCount.title', defaultMessage: 'Total Attention' },
   helpIntro: { id: 'explorer.storyCount.help.into',
-    defaultMessage: '<p>Compare the total number of stories where at least one sentence matched each of your queries.  Rollover the circles to see the exact numbers, or click the menu in the top right to download the data.</p>',
+    defaultMessage: '<p>Compare the total number of stories where at least one sentence matched each of your queries.  Rollover the circles to see the exact numbers, or click the menu in the bottom right to download the data.</p>',
   },
   helpDetails: { id: 'explorer.storyCount.help.details',
     defaultMessage: '<p>It is harder to determine how much of the media\'s attention your search got. If you want to dig into that, a good place to start is comparing your query to a search for everything from the sources and collections you are searching.  You can do this by searching for * in the same date range and media; that matches every story.</p>',
   },
-  downloadCSV: { id: 'explorer.attention.downloadcsv', defaultMessage: 'Download {name}' },
+  downloadCsv: { id: 'explorer.attention.total.downloadCsv', defaultMessage: 'Download { name } total story count CSV' },
+  viewNormalized: { id: 'explorer.attention.mode.viewNormalized', defaultMessage: 'View by Story Count (default)' },
+  viewRegular: { id: 'explorer.attention.mode.viewRegular', defaultMessage: 'View by Story Percentage' },
 };
 
+const VIEW_NORMALIZED = 'VIEW_NORMALIZED';
+const VIEW_REGULAR = 'VIEW_REGULAR';
+
 class QueryTotalAttentionResultsContainer extends React.Component {
-  componentWillReceiveProps(nextProps) {
-    const { lastSearchTime, fetchData } = this.props;
-    if (nextProps.lastSearchTime !== lastSearchTime) {
-      fetchData(nextProps.queries);
-    }
+  state = {
+    view: VIEW_REGULAR, // which view to show (see view constants above)
   }
+
   shouldComponentUpdate(nextProps) {
     const { results, queries } = this.props;
     return queryChangedEnoughToUpdate(queries, nextProps.queries, results, nextProps.results);
   }
+
+  setView = (nextView) => {
+    this.setState({ view: nextView });
+  }
+
   // if demo, use only sample search queries to download
   downloadCsv = (query) => {
-    postToDownloadUrl('/api/explorer/stories/count.csv', query);
+    postToCombinedDownloadUrl('/api/explorer/stories/count.csv', [query]);
   }
+
   render() {
     const { results, queries } = this.props;
     const { formatNumber, formatMessage } = this.props.intl;
     let content = null;
 
-    const mergedResultsWithQueryInfo = results.map((r, idx) => Object.assign({}, r, queries[idx]));
+    const safeResults = results.map((r, idx) => Object.assign({}, r, queries[idx]));
 
     let bubbleData = [];
-    if (mergedResultsWithQueryInfo !== undefined && mergedResultsWithQueryInfo !== null && mergedResultsWithQueryInfo.length > 0) {
-      bubbleData = [
-        ...mergedResultsWithQueryInfo.sort((a, b) => b.count - a.count).map((query, idx) => ({
-          value: query.count,
+    if (safeResults !== undefined && safeResults !== null && safeResults.length > 0) {
+      bubbleData = safeResults.map((query, idx) => {
+        const value = (this.state.view === VIEW_REGULAR) ? query.total : query.ratio;
+        let centerText;
+        if (this.state.view === VIEW_REGULAR) {
+          centerText = formatNumber(value);
+        } else {
+          centerText = formatNumber(value, { style: 'percent', maximumFractionDigits: 2 });
+        }
+        const rolloverText = `${query.label}: ${centerText}`;
+        return {
+          value,
           aboveText: (idx % 2 === 0) ? query.label : null,
           belowText: (idx % 2 !== 0) ? query.label : null,
-          rolloverText: `${query.label}: ${formatNumber(query.count)}`,
+          centerText,
+          rolloverText,
+          centerTextColor: '#FFFFFF',
           fill: query.color,
-        })),
-      ];
-      content = (<BubbleRowChart
-        data={bubbleData}
-        padding={0}
-        domId={BUBBLE_CHART_DOM_ID}
-        width={650}
-      />);
-    }
-    return (
-      <div>
-        {content}
-        <div className="actions">
-          <ActionMenu actionTextMsg={messages.downloadOptions}>
-            {mergedResultsWithQueryInfo.map((q, idx) =>
-              <span key={`q${idx}-items`}>
+        };
+      });
+      content = (
+        <div>
+          <BubbleRowChart
+            data={bubbleData}
+            padding={0}
+            domId={BUBBLE_CHART_DOM_ID}
+            width={650}
+          />
+          <div className="actions">
+            <ActionMenu actionTextMsg={messages.downloadOptions}>
+              {safeResults.map((q, idx) =>
                 <MenuItem
+                  key={idx}
                   className="action-icon-menu-item"
-                  primaryText={formatMessage(messages.downloadDataCsv, { name: q.label })}
+                  primaryText={formatMessage(localMessages.downloadCsv, { name: q.label })}
                   rightIcon={<DownloadButton />}
                   onTouchTap={() => this.downloadCsv(q)}
                 />
-                <MenuItem
-                  className="action-icon-menu-item"
-                  primaryText={formatMessage(messages.downloadDataSvg, { name: q.label })}
-                  rightIcon={<DownloadButton />}
-                  onTouchTap={() => downloadExplorerSvg(q.label, 'story-count', BUBBLE_CHART_DOM_ID)}
-                />
-              </span>
-            )}
-          </ActionMenu>
+              )}
+            </ActionMenu>
+            <ActionMenu actionTextMsg={messages.viewOptions}>
+              <MenuItem
+                className="action-icon-menu-item"
+                primaryText={formatMessage(localMessages.viewNormalized)}
+                disabled={this.state.view === VIEW_REGULAR}
+                onClick={() => this.setView(VIEW_REGULAR)}
+              />
+              <MenuItem
+                className="action-icon-menu-item"
+                primaryText={formatMessage(localMessages.viewRegular)}
+                disabled={this.state.view === VIEW_NORMALIZED}
+                onClick={() => this.setView(VIEW_NORMALIZED)}
+              />
+            </ActionMenu>
+          </div>
         </div>
-      </div>
-    );
+      );
+    }
+    return (content);
   }
 }
 
@@ -100,7 +126,6 @@ QueryTotalAttentionResultsContainer.propTypes = {
   // from composition
   intl: PropTypes.object.isRequired,
   // from dispatch
-  fetchData: PropTypes.func.isRequired,
   results: PropTypes.array.isRequired,
   // from mergeProps
   asyncFetch: PropTypes.func.isRequired,
@@ -110,56 +135,18 @@ QueryTotalAttentionResultsContainer.propTypes = {
 
 const mapStateToProps = state => ({
   lastSearchTime: state.explorer.lastSearchTime.time,
-  user: state.user,
-  fetchStatus: state.explorer.storyCount.fetchStatus,
-  results: state.explorer.storyCount.results,
+  fetchStatus: state.explorer.storySplitCount.fetchStatus || FETCH_INVALID,
+  results: state.explorer.storySplitCount.results,
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
-  fetchData: (queries) => {
-    /* this should trigger when the user clicks the Search button or changes the URL
-     for n queries, run the dispatch with each parsed query
-    */
-    dispatch(resetStoryCounts());
-    if (ownProps.isLoggedIn) {
-      const runTheseQueries = queries || ownProps.queries;
-      runTheseQueries.map((q) => {
-        const infoToQuery = {
-          start_date: q.startDate,
-          end_date: q.endDate,
-          q: q.q,
-          index: q.index,
-          sources: q.sources.map(s => s.id),
-          collections: q.collections.map(c => c.id),
-        };
-        return dispatch(fetchQueryStoryCount(infoToQuery));
-      });
-    } else if (queries || ownProps.queries) { // else assume DEMO mode, but assume the queries have been loaded
-      const runTheseQueries = queries || ownProps.queries;
-      runTheseQueries.map((q, index) => {
-        const demoInfo = {
-          index, // should be same as q.index btw
-          search_id: q.searchId, // may or may not have these
-          query_id: q.id,
-          q: q.q, // only if no query id, means demo user added a keyword
-        };
-        return dispatch(fetchDemoQueryStoryCount(demoInfo)); // id
-      });
-    }
-  },
+const mapDispatchToProps = () => ({
+  asyncFetch: () => null, // don't do anything, becuase the attention-over-time widget is fetching the data for us
 });
 
-function mergeProps(stateProps, dispatchProps, ownProps) {
-  return Object.assign({}, stateProps, dispatchProps, ownProps, {
-    asyncFetch: () => {
-      dispatchProps.fetchData(ownProps.queries);
-    },
-  });
-}
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-       composeSummarizedVisualization(localMessages.title, localMessages.helpIntro, localMessages.helpDetails)(
+    connect(mapStateToProps, mapDispatchToProps)(
+      composeSummarizedVisualization(localMessages.title, localMessages.helpIntro, [localMessages.helpDetails, messages.countsVsPercentageHelp])(
         composeAsyncContainer(
           QueryTotalAttentionResultsContainer
         )

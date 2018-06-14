@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import Title from 'react-title-component';
+import { Helmet } from 'react-helmet';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
@@ -8,7 +8,7 @@ import { selectWord } from '../../../actions/topicActions';
 import WordDetails from './WordDetails';
 import WordWordsContainer from './WordWordsContainer';
 import WordStoriesContainer from './WordStoriesContainer';
-import WordSentenceCountContainer from './WordSentenceCountContainer';
+import WordSplitStoryCountContainer from './WordSplitStoryCountContainer';
 import WordInContextContainer from './WordInContextContainer';
 import messages from '../../../resources/messages';
 
@@ -34,11 +34,9 @@ class WordContainer extends React.Component {
   render() {
     const { topicId, stem, term, filters, topicName } = this.props;
     const { formatMessage } = this.props.intl;
-    const titleHandler = `${formatMessage(messages.word)}`;
-
     return (
       <div>
-        <Title render={titleHandler} />
+        <Helmet><title>{formatMessage(messages.word)}</title></Helmet>
         <Grid>
           <Row>
             <Col lg={12}>
@@ -48,10 +46,12 @@ class WordContainer extends React.Component {
             </Col>
           </Row>
           <Row>
-            <Col lg={6} xs={12}>
-              <WordSentenceCountContainer topicId={topicId} stem={stem} term={term} filters={filters} />
+            <Col lg={12}>
+              <WordSplitStoryCountContainer topicId={topicId} stem={stem} term={term} filters={filters} />
             </Col>
-            <Col lg={6} xs={12}>
+          </Row>
+          <Row>
+            <Col lg={12}>
               <WordWordsContainer topicId={topicId} stem={stem} term={term} filters={filters} topicName={topicName} />
             </Col>
           </Row>

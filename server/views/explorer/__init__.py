@@ -36,32 +36,16 @@ def access_public_topic(topics_id):
     return False
 
 
-# note similarity above.  JSON versus python prepped fields
-def prep_simple_solr_query(query):
-    solr_query = concatenate_query_for_solr(solr_seed_query=query['q'],
-                                            start_date=query['startDate'], end_date=query['endDate'],
-                                            media_ids=query['sources'], tags_ids=query['collections'])
-    return solr_query
-
-
 # helper for preview queries
-def concatenate_query_for_solr(solr_seed_query, start_date, end_date, media_ids, tags_ids):
+def concatenate_query_for_solr(solr_seed_query, media_ids, tags_ids):
     query = u'({})'.format(solr_seed_query)
 
     if len(media_ids) > 0 or len(tags_ids) > 0:
         query += " AND ("
         # add in the media sources they specified
         if len(media_ids) > 0:
-            id_chain = []
-            if type(media_ids) is list:  # if an object versus a string - see sample_searches.json
-                for t in media_ids:
-                    if type(t) is dict:
-                        id_chain.append(t['id'] if 'id' in t else 0)
-                    else:
-                        id_chain.append(t)
-            else:
-                id_chain = media_ids
-            query_media_ids = u" ".join(map(str, id_chain))
+            media_ids = media_ids.split(',') if isinstance(media_ids, basestring) else media_ids
+            query_media_ids = u" ".join([str(m) for m in media_ids])
             query_media_ids = u" media_id:({})".format(query_media_ids)
             query += '('+query_media_ids+')'
 
@@ -69,37 +53,27 @@ def concatenate_query_for_solr(solr_seed_query, start_date, end_date, media_ids,
             query += " OR "
         # add in the collections they specified
         if len(tags_ids) > 0:
-            id_chain = []
-            if type(tags_ids) is list:
-                for t in tags_ids:
-                    if type(t) is dict:
-                        id_chain.append(t['id'] if 'id' in t else 0)
-                    else:
-                        id_chain.append(t)
-            else:
-                id_chain = tags_ids
-            query_tags_ids = u" ".join(map(str, id_chain))
+            tags_ids = tags_ids.split(',') if isinstance(tags_ids, basestring) else tags_ids
+            query_tags_ids = u" ".join([str(t) for t in tags_ids])
             query_tags_ids = u" tags_id_media:({})".format(query_tags_ids)
             query += u'('+query_tags_ids+')'
         query += ')'
 
-    if start_date:
-        start_date = u'{}'.format(start_date)
-        end_date = u'{}'.format(end_date)
-        query += " AND (+" + concatenate_query_and_dates(start_date, end_date) + ")"
-    
     return query
 
 
 def concatenate_query_and_dates(start_date, end_date):
-    testa = datetime.datetime.strptime(start_date, '%Y-%m-%d').date()
-    testb = datetime.datetime.strptime(end_date, '%Y-%m-%d').date()
-    publish_date = mc.publish_date_query(testa, testb, True, True)
-    return publish_date
+    date_query = u""
+    if start_date:
+        testa = datetime.datetime.strptime(start_date, u'%Y-%m-%d').date()
+        testb = datetime.datetime.strptime(end_date, u'%Y-%m-%d').date()
+        date_query = mc.publish_date_query(testa, testb, True, True)
+    return date_query
 
 
 def parse_query_with_keywords(args):
-    solr_query = ''
+    solr_q = ''
+    solr_fq = None
     # default dates
     one_month_before_now = datetime.datetime.now() - datetime.timedelta(days=30)
     default_start_date = one_month_before_now.strftime("%Y-%m-%d")
@@ -137,36 +111,35 @@ def parse_query_with_keywords(args):
         else:
             tags_ids = DEFAULT_COLLECTION_IDS
 
-        solr_query = concatenate_query_for_solr(solr_seed_query=current_query,
-                                                start_date=start_date,
-                                                end_date=end_date,
+        solr_q = concatenate_query_for_solr(solr_seed_query=current_query,
                                                 media_ids=media_ids,
                                                 tags_ids=tags_ids)
+        solr_fq = concatenate_query_and_dates(start_date, end_date)
+
 
     # otherwise, default
     except Exception as e:
         # tags_ids = args['collections'] if 'collections' in args and len(args['collections']) > 0 else []
         logger.warn("user custom query failed, there's a problem with the arguments " + str(e))
 
-    return solr_query
+    return solr_q, solr_fq
 
 
-def parse_query_for_sample_search(sample_search_id, query_id):
+def _parse_query_for_sample_search(sample_search_id, query_id):
     sample_searches = load_sample_searches()
     current_query_info = sample_searches[int(sample_search_id)]['queries'][int(query_id)]
-    solr_query = concatenate_query_for_solr(solr_seed_query=current_query_info['q'],
-                                            start_date= current_query_info['startDate'],
-                                            end_date=current_query_info['endDate'],
-                                            media_ids=current_query_info['sources'],
-                                            tags_ids=current_query_info['collections'])
-    return solr_query
+    solr_q = concatenate_query_for_solr(solr_seed_query=current_query_info['q'],
+                                        media_ids=current_query_info['sources'],
+                                        tags_ids=current_query_info['collections'])
+    solr_fq = concatenate_query_and_dates(current_query_info['startDate'], current_query_info['endDate'])
+    return solr_q, solr_fq
 
 
 def parse_as_sample(search_id_or_query, query_id=None):
     try:
         if isinstance(search_id_or_query, int): # special handling for an indexed query
             sample_search_id = search_id_or_query
-            return parse_query_for_sample_search(sample_search_id, query_id)
+            return _parse_query_for_sample_search(sample_search_id, query_id)
 
     except Exception as e:
         logger.warn("error " + str(e))
@@ -176,7 +149,7 @@ def parse_as_sample(search_id_or_query, query_id=None):
 # args_or_query - either search-id/index in parameters or in request.args 
 # this came from demo url calls versus request.args for custom queries
 # this is only called when handling a sample search
-def parse_query_with_args_and_sample_search(args_or_query, current_search) :
+def parse_query_with_args_and_sample_search(args_or_query, current_search):
     # default dates
     one_month_before_now = datetime.datetime.now() - datetime.timedelta(days=30)
     default_start_date = one_month_before_now.strftime("%Y-%m-%d")
@@ -194,11 +167,9 @@ def parse_query_with_args_and_sample_search(args_or_query, current_search) :
         media_ids = current_search[index]['sources']
         tags_ids = current_search[index]['collections']
 
-        solr_query = concatenate_query_for_solr(solr_seed_query=current_query,
-                                                start_date=start_date,
-                                                end_date=end_date,
-                                                media_ids=media_ids,
-                                                tags_ids=tags_ids)
+        solr_q = concatenate_query_for_solr(solr_seed_query=current_query, media_ids=media_ids, tags_ids=tags_ids)
+        solr_fq = concatenate_query_and_dates(start_date, end_date)
+
 
     # we dont have a query_id. Do we have a q param?
     except Exception as e:
@@ -208,13 +179,12 @@ def parse_query_with_args_and_sample_search(args_or_query, current_search) :
         except Exception as e:
             current_query = args_or_query['q'] if 'q' in args_or_query else None
 
-        solr_query = concatenate_query_for_solr(solr_seed_query=current_query,
-                                                start_date=start_date,
-                                                end_date=end_date,
+        solr_q = concatenate_query_for_solr(solr_seed_query=current_query,
                                                 media_ids=[],
                                                 tags_ids=[9139487])
+        solr_fq = concatenate_query_and_dates(start_date, end_date)
 
-    return solr_query
+    return solr_q, solr_fq
 
 
 sample_searches = None  # use as singeton, not cache so that we can change the file and restart and see changes

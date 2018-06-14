@@ -10,7 +10,7 @@ import DataCard from './DataCard';
 import messages from '../../resources/messages';
 import OrderedWordCloud from '../vis/OrderedWordCloud';
 import WordCloud from '../vis/WordCloud';
-import Word2VecChart from '../vis/Word2VecChart';
+import WordSpace from '../vis/WordSpace';
 import { DownloadButton, ExploreButton, EditButton } from './IconButton';
 import { getBrandDarkColor } from '../../styles/colors';
 import { downloadSvg } from '../util/svg';
@@ -22,6 +22,8 @@ const VIEW_ORDERED = 'VIEW_ORDERED';
 const VIEW_GOOGLE_W2V = 'VIEW_GOOGLE_W2V';
 const VIEW_TOPIC_W2V = 'VIEW_TOPIC_W2V';
 
+const WORD_SPACE_WORD_LIMIT = 50;
+
 const localMessages = {
   editing: { id: 'wordcloud.editable.editingNotice', defaultMessage: 'You are temporarily editing this word cloud. Click words you want to hide, then use the menu to flip back into view mode and export it to SVG.' },
   edited: { id: 'wordcloud.editable.edited', defaultMessage: 'You have temporarily edited this word cloud to remove some of the words. Your changes will be lost when you leave this page.' },
@@ -32,9 +34,9 @@ const localMessages = {
   modeGoogleW2V: { id: 'wordcloud.editable.mode.googleW2V', defaultMessage: 'View GoogleNews Word2Vec 2D Layout' },
   noGoogleW2VData: { id: 'wordcloud.editable.mode.googleW2V.noData', defaultMessage: 'Sorry, but the Google News word2vec data is missing.' },
   invalidView: { id: 'wordcloud.editable.mode.invalid', defaultMessage: 'Sorry, but an invalid view is selected' },
-  downloadWordCSV: { id: 'wordcount.editable.download.wordCsv', defaultMessage: 'Download Word Frequency CSV' },
-  downloadBigramCSV: { id: 'wordcount.editable.download.brigramCsv', defaultMessage: 'Download Bigram Frequency CSV' },
-  downloadTrigramCSV: { id: 'wordcount.editable.download.trigramCsv', defaultMessage: 'Download Trigram Frequency CSV' },
+  downloadWordCSV: { id: 'wordcount.editable.download.wordCsv', defaultMessage: 'Download Sampled Word Frequency CSV' },
+  downloadBigramCSV: { id: 'wordcount.editable.download.brigramCsv', defaultMessage: 'Download Sampled Bigram Frequency CSV' },
+  downloadTrigramCSV: { id: 'wordcount.editable.download.trigramCsv', defaultMessage: 'Download Sampled Trigram Frequency CSV' },
 };
 
 class EditableWordCloudDataCard extends React.Component {
@@ -299,8 +301,8 @@ class EditableWordCloudDataCard extends React.Component {
         break;
       case VIEW_GOOGLE_W2V:
         cloudContent = (
-          <Word2VecChart
-            words={wordsArray.slice(0, 100)}  // can't draw too many as it gets unreadable
+          <WordSpace
+            words={wordsArray.slice(0, WORD_SPACE_WORD_LIMIT)}  // can't draw too many as it gets unreadable
             domId={uniqueDomId}
             width={width}
             height={height}
@@ -312,8 +314,8 @@ class EditableWordCloudDataCard extends React.Component {
         break;
       case VIEW_TOPIC_W2V:
         cloudContent = (
-          <Word2VecChart
-            words={wordsArray.slice(0, 100)}  // can't draw too many as it gets unreadable
+          <WordSpace
+            words={wordsArray.slice(0, WORD_SPACE_WORD_LIMIT)}  // can't draw too many as it gets unreadable
             domId={uniqueDomId}
             width={width}
             height={height}

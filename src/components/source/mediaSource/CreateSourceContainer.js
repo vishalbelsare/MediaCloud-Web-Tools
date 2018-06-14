@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import Title from 'react-title-component';
+import { Helmet } from 'react-helmet';
 import { push } from 'react-router-redux';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
@@ -28,7 +28,7 @@ const CreateSourceContainer = (props) => {
   return (
     <div className="create-source">
       <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
-        <Title render={titleHandler} />
+        <Helmet><title>{titleHandler()}</title></Helmet>
         <Grid>
           <Row>
             <Col lg={12}>

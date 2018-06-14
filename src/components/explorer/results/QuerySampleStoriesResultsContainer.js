@@ -9,48 +9,32 @@ import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import StoryTable from '../../common/StoryTable';
 import { fetchQuerySampleStories, fetchDemoQuerySampleStories, resetSampleStories } from '../../../actions/explorerActions';
-import { queryChangedEnoughToUpdate, postToDownloadUrl } from '../../../lib/explorerUtil';
+import { postToDownloadUrl } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
-import QueryResultsSelector from './QueryResultsSelector';
+import composeQueryResultsSelector from './QueryResultsSelector';
 
 const localMessages = {
   title: { id: 'explorer.stories.title', defaultMessage: 'Sample Stories' },
-  helpIntro: { id: 'explorer.stories.help.title', defaultMessage: '<p>This is a random sample of the stories matching your queries.  These are stories where are least one sentence matches your query.  Click on story title to read it.  Click the menu on the top right to download a CSV of stories with their urls.</p>' },
+  helpIntro: { id: 'explorer.stories.help.title', defaultMessage: '<p>This is a random sample of the stories matching your queries.  These are stories where are least one sentence matches your query.  Click on story title to read it.  Click the menu on the bottom right to download a CSV of stories with their urls.</p>' },
   helpDetails: { id: 'explorer.stories.help.text',
     defaultMessage: '<p>We can provide basic information about stories like the media source, date of publication, and URL.  However, due to copyright restrictions we cannot provide you with the original full text of the stories. Download the CSV results to see all the metadata we have about the stories.</p>',
   },
+  downloadCsv: { id: 'explorer.stories.downloadCsv', defaultMessage: 'Download { name } sampled stories CSV' },
 };
 
 class QuerySampleStoriesResultsContainer extends React.Component {
-  state = {
-    selectedQueryIndex: 0,
-  }
-  componentWillReceiveProps(nextProps) {
-    const { lastSearchTime, fetchData } = this.props;
-    if (nextProps.lastSearchTime !== lastSearchTime) {
-      fetchData(nextProps.queries);
-    }
-  }
-  shouldComponentUpdate(nextProps) { // , nextState) {
-    const { results, queries } = this.props;
-    return queryChangedEnoughToUpdate(queries, nextProps.queries, results, nextProps.results);
-//      const selectedQueryChanged = this.state.selectedQueryIndex !== nextState.selectedQueryIndex;
-  }
   downloadCsv = (query) => {
     postToDownloadUrl('/api/explorer/stories/samples.csv', query);
   }
   render() {
-    const { results, queries, handleStorySelection } = this.props;
+    const { results, queries, handleStorySelection, selectedTabIndex, tabSelector } = this.props;
     const { formatMessage } = this.props.intl;
     return (
       <div>
-        <QueryResultsSelector
-          options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
-          onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
-        />
+        {tabSelector}
         <StoryTable
           className="story-table"
-          stories={results[this.state.selectedQueryIndex] ? results[this.state.selectedQueryIndex].slice(0, 10) : []}
+          stories={results[selectedTabIndex] ? results[selectedTabIndex].slice(0, 10) : []}
           onChangeFocusSelection={handleStorySelection}
           maxTitleLength={50}
         />
@@ -60,7 +44,7 @@ class QuerySampleStoriesResultsContainer extends React.Component {
               <MenuItem
                 key={idx}
                 className="action-icon-menu-item"
-                primaryText={formatMessage(messages.downloadDataCsv, { name: q.label })}
+                primaryText={formatMessage(localMessages.downloadCsv, { name: q.label })}
                 rightIcon={<DownloadButton />}
                 onTouchTap={() => this.downloadCsv(q)}
               />
@@ -86,6 +70,8 @@ QuerySampleStoriesResultsContainer.propTypes = {
   // from state
   fetchStatus: PropTypes.string.isRequired,
   handleStorySelection: PropTypes.func.isRequired,
+  selectedTabIndex: PropTypes.number.isRequired,
+  tabSelector: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -141,7 +127,9 @@ export default
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeSummarizedVisualization(localMessages.title, localMessages.helpIntro, localMessages.helpDetails)(
         composeAsyncContainer(
-          QuerySampleStoriesResultsContainer
+          composeQueryResultsSelector(
+            QuerySampleStoriesResultsContainer
+          )
         )
       )
     )

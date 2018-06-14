@@ -16,6 +16,7 @@ export const PICK_COUNTRY = 2;
 // export const PICK_ADVANCED = 3;
 export const PICK_STARRED = 3;
 
+export const COVERAGE_REQUIRED = 0.8;
 
 export const QUERY_LABEL_CHARACTER_LIMIT = 30;
 export const QUERY_LABEL_AUTOMAGIC_DISPLAY_LIMIT = 27;
@@ -72,7 +73,7 @@ export function queryChangedEnoughToUpdate(queries, nextQueries, results, nextRe
     const colorsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextQueries.slice(0, results.length), 'color');
     return (
       ((labelsHaveChanged || colorsHaveChanged))
-       || (results !== nextResults.results)
+       || (results !== nextResults)
     );
   }
   return false; // if both results and queries are empty, don't update
@@ -82,7 +83,7 @@ export function queryChangedEnoughToUpdate(queries, nextQueries, results, nextRe
 export const autoMagicQueryLabel = query => decodeURIComponent(trimToMaxLength(query.q, QUERY_LABEL_AUTOMAGIC_DISPLAY_LIMIT));
 
 
-// This handles samples or user-generated queries for you.  To handle quotes and utf and such, we do this
+// This handles downloading a single query (samples or user-generated) for you.  To handle quotes and utf and such, we do this
 // via a form submission (after trying lots of other options).
 export function postToDownloadUrl(url, query, otherData) {
   // figure out if it is sample or user-created query
@@ -91,6 +92,20 @@ export function postToDownloadUrl(url, query, otherData) {
     data.sampleId = query.searchId;
   } else {
     data.q = JSON.stringify(generateQueryParamObject(query, true)); // don't encode the params because we're not putting them on the url
+  }
+  if (otherData) {
+    data = { ...data, ...otherData };
+  }
+  downloadViaFormPost(url, data);
+}
+
+// This handles downloading *multiple* queries (samples or user-generated) for you.  To handle quotes and utf and such, we do this
+// via a form submission (after trying lots of other options).
+export function postToCombinedDownloadUrl(url, queries, otherData) {
+  // figure out if it is sample or user-created query
+  let data = { queries: JSON.stringify(queries.map(q => generateQueryParamObject(q, true))) };
+  if (parseInt(queries[0].searchId, 10) >= 0) {
+    data.sampleId = queries[0].searchId;
   }
   if (otherData) {
     data = { ...data, ...otherData };

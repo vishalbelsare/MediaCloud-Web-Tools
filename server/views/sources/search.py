@@ -56,7 +56,7 @@ def api_source_name_exists():
     id = int(request.args['id']) if 'id' in request.args else None
     matching_sources = mc.mediaList(name_like=search_str)[:MAX_SOURCES]
     if id:
-        matching_source_names = [s['name'].lower().strip() for s in matching_sources if s['id'] != id]
+        matching_source_names = [s['name'].lower().strip() for s in matching_sources if s['media_id'] != id]
     else:
         matching_source_names = [s['name'].lower().strip() for s in matching_sources]
 

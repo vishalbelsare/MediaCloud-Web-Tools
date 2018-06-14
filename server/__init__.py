@@ -11,7 +11,7 @@ from raven.conf import setup_logging
 from raven.contrib.flask import Sentry
 from raven.handlers.logging import SentryHandler
 import mediacloud
-from mediameter.cliff import Cliff
+from cliff.api import Cliff
 import redis
 
 from server.sessions import RedisSessionInterface
@@ -67,8 +67,8 @@ logger.info(u"Connected to mediacloud")
 # Connect to CLIFF if the settings are there
 cliff = None
 try:
-    cliff = Cliff(config.CLIFF_URL)
-except Exception:
+    cliff = Cliff(config.get('CLIFF_URL'))
+except KeyError as e:
     logger.warn(u"no CLIFF connection")
 
 NYT_THEME_LABELLER_URL = config.get('NYT_THEME_LABELLER_URL')
@@ -188,12 +188,11 @@ if (server_app == SERVER_APP_SOURCES) or is_dev_mode():
     import server.views.sources.source
     import server.views.sources.feeds
     import server.views.sources.suggestions
-    import server.views.sources.sentences
     import server.views.sources.words
     import server.views.sources.geocount
 if (server_app == SERVER_APP_TOPICS) or is_dev_mode():
     import server.views.topics.media
-    import server.views.topics.sentences
+    import server.views.topics.splitstories
     import server.views.topics.stories
     import server.views.topics.topic
     import server.views.topics.words
@@ -213,6 +212,7 @@ if (server_app == SERVER_APP_EXPLORER) or is_dev_mode():
     import server.views.explorer.explorer_query
     import server.views.explorer.sentences
     import server.views.explorer.words
-    import server.views.explorer.stories
+    import server.views.explorer.story_samples
+    import server.views.explorer.story_counts
     import server.views.explorer.geo
     import server.views.explorer.tags

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import Title from 'react-title-component';
+import { Helmet } from 'react-helmet';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
@@ -11,7 +11,7 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import MediaInlinkContainer from './MediaInlinkContainer';
 import MediaOutlinkContainer from './MediaOutlinkContainer';
 import MediaStoriesContainer from './MediaStoriesContainer';
-import MediaSentenceCountContainer from './MediaSentenceCountContainer';
+import MediaSplitStoryCountContainer from './MediaSplitStoryCountContainer';
 import MediaWordsContainer from './MediaWordsContainer';
 import messages from '../../../resources/messages';
 import { RemoveButton, ReadItNowButton } from '../../common/IconButton';
@@ -40,7 +40,7 @@ class MediaContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.mediaId !== this.props.mediaId) {
       const { fetchData } = this.props;
-      fetchData(nextProps.mediaId);
+      fetchData(nextProps.topicId, nextProps.mediaId, nextProps.filters);
     }
   }
 
@@ -89,7 +89,7 @@ class MediaContainer extends React.Component {
     }
     return (
       <div>
-        <Title render={titleHandler} />
+        <Helmet><title>{titleHandler()}</title></Helmet>
         <Grid>
           <Row>
             <Col lg={12} md={12} sm={12}>
@@ -117,13 +117,13 @@ class MediaContainer extends React.Component {
             <ComingSoon />
           </Dialog>
           <Row>
-            <Col lg={6} md={6} sm={12}>
-              <StatBar
-                stats={summaryStats}
-              />
+            <Col lg={12}>
+              <StatBar stats={summaryStats} columnWidth={2} />
             </Col>
-            <Col lg={6} md={6} sm={12}>
-              <MediaSentenceCountContainer topicId={topicId} mediaId={mediaId} />
+          </Row>
+          <Row>
+            <Col lg={12}>
+              <MediaSplitStoryCountContainer topicId={topicId} mediaId={mediaId} />
             </Col>
           </Row>
           <Row>
@@ -142,9 +142,11 @@ class MediaContainer extends React.Component {
             </Col>
           </Row>
           <Row>
-            <Col lg={6} md={6} sm={12}>
+            <Col lg={12}>
               <MediaWordsContainer topicId={topicId} mediaId={mediaId} topicName={topicName} />
             </Col>
+          </Row>
+          <Row>
             <Col lg={6} xs={12}>
               <CollectionList
                 title={formatMessage(localMessages.collectionTitle)}
@@ -153,10 +155,8 @@ class MediaContainer extends React.Component {
                 linkToFullUrl
               />
             </Col>
-          </Row>
-          <Row>
-            <Col lg={12}>
-              <SourceMetadataStatBar source={media} />
+            <Col lg={6} xs={12}>
+              <SourceMetadataStatBar source={media} columnWidth={6} />
             </Col>
           </Row>
         </Grid>
@@ -192,20 +192,25 @@ const mapStateToProps = (state, ownProps) => ({
   media: state.topics.selected.mediaSource.info,
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
-  asyncFetch: () => {
-    dispatch(selectMedia(ownProps.params.mediaId));    // save it to the state
-    dispatch(fetchMedia(ownProps.params.topicId, ownProps.params.mediaId)); // fetch the info we need
-  },
-  fetchData: (mediaId) => {
+const mapDispatchToProps = dispatch => ({
+  fetchData: (topicId, mediaId, filters) => {
     dispatch(selectMedia(mediaId));    // save it to the state
-    dispatch(fetchMedia(mediaId)); // fetch the info we need
+    dispatch(fetchMedia(topicId, mediaId, filters)); // fetch the info we need
   },
 });
 
+function mergeProps(stateProps, dispatchProps, ownProps) {
+  return Object.assign({}, stateProps, dispatchProps, ownProps, {
+    asyncFetch: () => {
+      dispatchProps.fetchData(stateProps.topicId, ownProps.params.mediaId, stateProps.filters);
+    },
+
+  });
+}
+
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
+    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeAsyncContainer(
         MediaContainer
       )

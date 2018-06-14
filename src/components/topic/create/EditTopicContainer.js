@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { push } from 'react-router-redux';
-import Title from 'react-title-component';
+import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import { reduxForm } from 'redux-form';
@@ -17,6 +17,7 @@ import BackLinkingControlBar from '../BackLinkingControlBar';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_TOPIC_WRITE } from '../../../lib/auth';
 import TopicForm, { TOPIC_FORM_MODE_EDIT } from './TopicForm';
+import UpdateForStorySearchWarning from '../UpdateForStorySearchWarning';
 
 const localMessages = {
   editTopicTitle: { id: 'topic.edit.title', defaultMessage: 'Edit Topic Settings' },
@@ -124,11 +125,12 @@ class EditTopicContainer extends React.Component {
       <div className="topic-edit-form">
         <BackLinkingControlBar message={messages.backToTopic} linkTo={`/topics/${topicId}/summary`} />
         <Grid>
-          <Title render={formatMessage(localMessages.editTopicTitle)} />
+          <Helmet><title>{formatMessage(localMessages.editTopicTitle)}</title></Helmet>
           <Row>
             <Col lg={12}>
               <h1><FormattedMessage {...localMessages.editTopicTitle} /></h1>
               <p><FormattedMessage {...localMessages.editTopicText} /></p>
+              {(topicInfo.is_story_index_ready === false) && (<UpdateForStorySearchWarning />)}
             </Col>
           </Row>
           {dialogContent}

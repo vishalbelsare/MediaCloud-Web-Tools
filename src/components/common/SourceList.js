@@ -14,7 +14,7 @@ const localMessages = {
 };
 
 const SourceList = (props) => {
-  const { sources, title, intro, downloadUrl, extraHeaderColumns, extraColumns } = props;
+  const { sources, title, intro, downloadUrl, extraHeaderColumns, extraColumns, onDownload } = props;
   const { formatMessage } = props.intl;
 
   let titleRefactor = null;
@@ -42,7 +42,7 @@ const SourceList = (props) => {
   return (
     <DataCard className="source-list">
       {downloadUrl && <div className="actions">
-        <DownloadButton tooltip={formatMessage(messages.download)} onClick={() => { window.location = downloadUrl; }} />
+        <DownloadButton tooltip={formatMessage(messages.download)} onClick={() => { window.location = downloadUrl; onDownload(); }} />
       </div>}
       <h2>{titleRefactor}</h2>
       <p>
@@ -63,6 +63,7 @@ SourceList.propTypes = {
   downloadUrl: PropTypes.string,
   extraHeaderColumns: PropTypes.func,
   extraColumns: PropTypes.func,
+  onDownload: PropTypes.func,
 };
 
 export default

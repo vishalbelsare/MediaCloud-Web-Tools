@@ -96,18 +96,20 @@ def format_name_from_label(user_label):
     return formatted_name
 
 
-def format_metadata_fields(media_dict, tag):
+def label_for_metadata_tag(tag):
+    label = None
     tag_sets_id = tag['tag_sets_id']
     if tag_sets_id == TAG_SETS_ID_PUBLICATION_COUNTRY:
-        media_dict['pub_country'] = tag['tag'][-3:]
+        label = tag['tag'][-3:]
     elif tag_sets_id == TAG_SETS_ID_PUBLICATION_STATE:
-        media_dict['pub_state'] = tag['tag'][4:]
+        label = tag['tag'][4:]
     elif tag_sets_id == TAG_SETS_ID_PRIMARY_LANGUAGE:
-        media_dict['primary_language'] = tag['tag']
+        label = tag['tag']
     elif tag_sets_id == TAG_SETS_ID_COUNTRY_OF_FOCUS:
-        media_dict['subject_country'] = tag['tag']
+        label = tag['tag']
     elif tag_sets_id == TAG_SETS_ID_MEDIA_TYPE:
-        media_dict['media_type'] = tag['tag']
+        label = tag['tag']
+    return label
 
 static_tag_set_cache_dir = os.path.join(base_dir, 'server', 'static', 'data')
 
@@ -180,9 +182,9 @@ def cached_media_with_tag_page(tags_id, max_media_id):
     '''
     We have to do this on the page, not the full list because memcache has a 1MB cache upper limit,
     and some of the collections have TONS of sources
+    Ok to be a cross-user cache here
     '''
-    user_mc = user_mediacloud_client()
-    return user_mc.mediaList(tags_id=tags_id, last_media_id=max_media_id, rows=100)
+    return _media_with_tag_page(tags_id, max_media_id)
 
 
 def _media_with_tag_page(tags_id, max_media_id):

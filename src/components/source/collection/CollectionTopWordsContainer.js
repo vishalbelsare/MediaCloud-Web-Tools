@@ -13,7 +13,7 @@ import { urlToExplorerQuery } from '../../../lib/urlUtil';
 const localMessages = {
   title: { id: 'collection.summary.topWords.title', defaultMessage: 'Top Words' },
   intro: { id: 'collection.summary.topWords.intro',
-    defaultMessage: '<p>This wordcloud shows you the most commonly used words in this collection (based on a sample of sentences). Click a word to load a Dashboard search showing you how sources in this colleciton write about it.</p>' },
+    defaultMessage: '<p>This wordcloud shows you the most commonly used words in this collection (based on a sample of sentences). Click a word to load an Explorer search showing you how sources in this colleciton write about it.</p>' },
   helpTitle: { id: 'collection.summary.topWords.help.title', defaultMessage: 'About Top Words' },
 };
 
@@ -25,11 +25,11 @@ class CollectionTopWordsContainer extends React.Component {
   }
 
   handleWordClick = (word) => {
-    const { collectionId } = this.props;
+    const { collectionName, collectionId } = this.props;
     const endDate = getCurrentDate();
     const startDate = oneMonthBefore(endDate);
     const searchStr = `${word.stem}*`;
-    const explorerUrl = urlToExplorerQuery(collectionId, searchStr, collectionId, '', startDate, endDate);
+    const explorerUrl = urlToExplorerQuery(collectionName, searchStr, [], [collectionId], startDate, endDate);
     window.open(explorerUrl, '_blank');
   }
 
@@ -57,6 +57,7 @@ class CollectionTopWordsContainer extends React.Component {
 CollectionTopWordsContainer.propTypes = {
   // from parent
   collectionId: PropTypes.number.isRequired,
+  collectionName: PropTypes.string.isRequired,
   // from dispath
   asyncFetch: PropTypes.func.isRequired,
   fetchData: PropTypes.func.isRequired,
@@ -93,7 +94,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeHelpfulContainer(localMessages.helpTitle, [localMessages.intro, messages.wordcloudHelpText, messages.wordCloudWord2VecLayoutHelp])(
+      composeHelpfulContainer(localMessages.helpTitle, [localMessages.intro, messages.wordSpaceLayoutHelp])(
         composeAsyncContainer(
           CollectionTopWordsContainer
         )

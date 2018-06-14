@@ -1,66 +1,70 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { injectIntl, FormattedHTMLMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import MenuItem from 'material-ui/MenuItem';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeSummarizedVisualization from './SummarizedVizualization';
+import composeQueryResultsSelector from './QueryResultsSelector';
 import GeoChart from '../../vis/GeoChart';
 import { fetchDemoQueryGeo, fetchQueryGeo, resetGeo } from '../../../actions/explorerActions';
 import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import messages from '../../../resources/messages';
-import { queryChangedEnoughToUpdate, postToDownloadUrl } from '../../../lib/explorerUtil';
-import QueryResultsSelector from './QueryResultsSelector';
+import { postToDownloadUrl, COVERAGE_REQUIRED } from '../../../lib/explorerUtil';
 
 const localMessages = {
   title: { id: 'explorer.geo.title', defaultMessage: 'Geographic Coverage' },
   help: { id: 'explorer.geo.help',
     defaultMessage: '<p>Sometimes media coverage can differ based on the place being talked about. Digging into the <i>geography</i> of the coverage can provide clues to help you understand the narratives. This heatmap shows you the countries that were most often the focus of stories. Click a country to load an Explorer search showing you how the sources in this collection cover it.</p>' },
   descriptionIntro: { id: 'explorer.geo.help.title', defaultMessage: 'About Geographic Attention' },
+  downloadCsv: { id: 'explorer.geo.downloadCsv', defaultMessage: 'Download { name } geographic attention CSV' },
 };
 
 class QueryGeoResultsContainer extends React.Component {
-  state = {
-    selectedQueryIndex: 0,
-  }
-  componentWillReceiveProps(nextProps) {
-    const { lastSearchTime, fetchData } = this.props;
-
-    if (nextProps.lastSearchTime !== lastSearchTime) {
-      fetchData(nextProps.queries);
-    }
-  }
-  shouldComponentUpdate(nextProps) {
-    const { results, queries } = this.props;
-    return queryChangedEnoughToUpdate(queries, nextProps.queries, results, nextProps.results);
-  }
   downloadCsv = (query) => {
     postToDownloadUrl('/api/explorer/geography/geography.csv', query);
   }
   render() {
-    const { results, intl, queries, handleCountryClick } = this.props;
-    const { formatMessage } = intl;
+    const { results, intl, queries, handleCountryClick, selectedTabIndex, tabSelector } = this.props;
+    const { formatMessage, formatNumber } = intl;
+    let content;
+    const coverageRatio = results[selectedTabIndex] ? results[selectedTabIndex].coverage_percentage : 0;
+    if (coverageRatio > COVERAGE_REQUIRED) {
+      content = (
+        <div>
+          {results[selectedTabIndex] &&
+            <GeoChart
+              data={results[selectedTabIndex].results}
+              countryMaxColorScale={queries[selectedTabIndex].color}
+              hideLegend
+              onCountryClick={handleCountryClick}
+              backgroundColor="#f5f5f5"
+            />
+          }
+        </div>
+      );
+    } else {
+      content = (
+        <p>
+          <FormattedHTMLMessage
+            {...messages.notEnoughCoverage}
+            values={{ pct: formatNumber(coverageRatio, { style: 'percent', maximumFractionDigits: 2 }) }}
+          />
+        </p>
+      );
+    }
     return (
       <div>
-        <QueryResultsSelector
-          options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
-          onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
-        />
-        <GeoChart
-          data={results[this.state.selectedQueryIndex]}
-          countryMaxColorScale={queries[this.state.selectedQueryIndex].color}
-          hideLegend
-          onCountryClick={handleCountryClick}
-          backgroundColor="#f5f5f5"
-        />
+        { tabSelector }
+        { content }
         <div className="actions">
           <ActionMenu actionTextMsg={messages.downloadOptions}>
             {queries.map((q, idx) =>
               <MenuItem
                 key={idx}
                 className="action-icon-menu-item"
-                primaryText={formatMessage(messages.downloadDataCsv, { name: q.label })}
+                primaryText={formatMessage(localMessages.downloadCsv, { name: q.label })}
                 rightIcon={<DownloadButton />}
                 onTouchTap={() => this.downloadCsv(q)}
               />
@@ -89,6 +93,8 @@ QueryGeoResultsContainer.propTypes = {
   asyncFetch: PropTypes.func.isRequired,
   // from state
   fetchStatus: PropTypes.string.isRequired,
+  tabSelector: PropTypes.object.isRequired,
+  selectedTabIndex: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -148,7 +154,9 @@ export default
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeSummarizedVisualization(localMessages.title, localMessages.help, [messages.heatMapHelpText])(
         composeAsyncContainer(
-          QueryGeoResultsContainer
+          composeQueryResultsSelector(
+            QueryGeoResultsContainer
+          )
         )
       )
     )

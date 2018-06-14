@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import Title from 'react-title-component';
+import { Helmet } from 'react-helmet';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import Snackbar from 'material-ui/Snackbar';
@@ -44,7 +44,7 @@ const AppContainer = (props) => {
 
   return (
     <div className={`app-contiainer app-${name}`}>
-      <Title render={formatMessage(messages.suiteName)} />
+      <Helmet><title>{formatMessage(messages.suiteName)}</title></Helmet>
       <AppNoticesContainer />
       <header>
         <NavToolbar />
@@ -72,6 +72,8 @@ const AppContainer = (props) => {
       <Snackbar
         open={feedback.open}
         message={feedback.message}
+        action={feedback.action}
+        onActionClick={feedback.onActionClick}
         autoHideDuration={8000}
         onRequestClose={handleSnackBarRequestClose}
       />

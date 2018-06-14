@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import Title from 'react-title-component';
+import { Helmet } from 'react-helmet';
 import { push } from 'react-router-redux';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
@@ -35,7 +35,7 @@ const EditCollectionContainer = (props) => {
   };
   return (
     <div className="edit-collection">
-      <Title render={titleHandler} />
+      <Helmet><title>{titleHandler()}</title></Helmet>
       <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
         <Grid>
           <Row>

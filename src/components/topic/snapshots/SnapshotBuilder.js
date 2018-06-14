@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import Title from 'react-title-component';
+import { Helmet } from 'react-helmet';
 import { injectIntl } from 'react-intl';
 
 const localMessages = {
@@ -9,7 +9,7 @@ const localMessages = {
 
 const SnapshotBuilder = props => (
   <div className="snapshot-builder">
-    <Title render={props.intl.formatMessage(localMessages.title)} />
+    <Helmet><title>{props.intl.formatMessage(localMessages.title)}</title></Helmet>
     {props.children}
   </div>
 );

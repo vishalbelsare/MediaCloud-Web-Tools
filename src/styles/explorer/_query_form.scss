@@ -7,6 +7,10 @@
   border-bottom: 1px solid $material-grey200;
 
   .media-field-wrapper {
+    .explorer-source-collection-form {
+      max-height: 280px;
+      overflow-y: scroll;
+    }
     .media-widget {
       padding: 10px;
       border: 1px solid $material-grey200;

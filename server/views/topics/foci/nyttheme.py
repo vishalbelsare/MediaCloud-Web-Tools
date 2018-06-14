@@ -3,6 +3,7 @@ from flask import jsonify, request
 import flask_login
 
 from server import app
+from server.views import TAG_COUNT_SAMPLE_SIZE
 from server.util.request import api_error_handler, json_error_response, form_fields_required, arguments_required
 from server.views.topics.apicache import topic_story_count
 from server.auth import user_mediacloud_key, user_mediacloud_client
@@ -13,10 +14,8 @@ import json
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_SAMPLE_SIZE = 5000
 
-
-def get_top_themes_by_sentence_field_counts(topics_id, num_themes):
+def get_top_themes_by_story_tag_counts(topics_id, num_themes):
     user_mc_key = user_mediacloud_key()
     nyt_counts = []
 
@@ -26,8 +25,9 @@ def get_top_themes_by_sentence_field_counts(topics_id, num_themes):
     overall_timespan = next(iter(overall_timespan))
     timespan_query = "timespans_id:{}".format(overall_timespan['timespans_id'])
 
-    # get the top themes by the sentence field counts iwth overall timespan
-    top_nyt_tags = _cached_topic_tag_counts(user_mediacloud_key(), topics_id, NYT_LABELS_TAG_SET_ID, DEFAULT_SAMPLE_SIZE, timespan_query)
+    # get the top themes by the story counts iwth overall timespan
+    top_nyt_tags = _cached_topic_tag_counts(user_mediacloud_key(), topics_id, NYT_LABELS_TAG_SET_ID,
+                                            TAG_COUNT_SAMPLE_SIZE, timespan_query)
     # get the total stories for a topic
     total_stories = topic_story_count(user_mediacloud_key(), topics_id)['count']
 
@@ -39,7 +39,7 @@ def get_top_themes_by_sentence_field_counts(topics_id, num_themes):
             'geo_tag': tag['tag'],
             'tags_id': tag['tags_id'],
             'count': tag['count'],
-            'pct': float(tag['count']) / float(total_stories), #sentence_field_count / total story per topic count
+            'pct': float(tag['count']) / float(total_stories), #story_tag_count / total story per topic count
         })
 
     return nyt_counts
@@ -51,7 +51,7 @@ def get_top_themes_by_sentence_field_counts(topics_id, num_themes):
 @api_error_handler
 def nyt_theme_story_counts(topics_id):
     num_themes = int(request.args['numThemes'])
-    return jsonify({'story_counts': get_top_themes_by_sentence_field_counts(topics_id, num_themes)})
+    return jsonify({'story_counts': get_top_themes_by_story_tag_counts(topics_id, num_themes)})
 
 
 @app.route('/api/topics/<topics_id>/focal-sets/nyt-theme/preview/coverage', methods=['GET'])
@@ -63,7 +63,7 @@ def nyt_theme_coverage(topics_id):
     total_stories = topic_story_count(user_mediacloud_key(), topics_id)['count']
     num_themes = int(request.args['numThemes'])
 
-    nyt_top_themes = get_top_themes_by_sentence_field_counts(topics_id, num_themes)
+    nyt_top_themes = get_top_themes_by_story_tag_counts(topics_id, num_themes)
     tag_list = [i['tags_id'] for i in nyt_top_themes]
     query_nyt_tags = "({})".format(" ".join(map(str, tag_list)))
     coverage = topic_tag_coverage(topics_id, query_nyt_tags)   # gets count and total

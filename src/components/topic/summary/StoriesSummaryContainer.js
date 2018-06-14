@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import MenuItem from 'material-ui/MenuItem';
 import composeAsyncContainer from '../../common/AsyncContainer';
+import composeCsvDownloadNotifyContainer from '../../common/composers/CsvDownloadNotifyContainer';
 import composeDescribedDataCard from '../../common/DescribedDataCard';
 import { fetchTopicTopStories, sortTopicTopStories, filterByFocus } from '../../../actions/topicActions';
 import DataCard from '../../common/DataCard';
@@ -16,6 +17,7 @@ import ActionMenu from '../../common/ActionMenu';
 import TopicStoryTable from '../TopicStoryTable';
 import messages from '../../../resources/messages';
 import { filteredLinkTo, filteredLocation, filtersAsUrlParams } from '../../util/location';
+import { HELP_STORIES_CSV_COLUMNS } from '../../../lib/helpConstants';
 
 const localMessages = {
   title: { id: 'topic.summary.stories.title', defaultMessage: 'Top Stories' },
@@ -38,14 +40,16 @@ class StoriesSummaryContainer extends React.Component {
     sortData(newSort);
   };
   downloadCsvNoFBData = () => {
-    const { filters, sort, topicId } = this.props;
+    const { filters, sort, topicId, notifyOfCsvDownload } = this.props;
     const url = `/api/topics/${topicId}/stories.csv?${filtersAsUrlParams(filters)}&sort=${sort}`;
     window.location = url;
+    notifyOfCsvDownload(HELP_STORIES_CSV_COLUMNS);
   }
   downloadCsvWithFBData = () => {
-    const { filters, sort, topicId } = this.props;
+    const { filters, sort, topicId, notifyOfCsvDownload } = this.props;
     const url = `/api/topics/${topicId}/stories.csv?${filtersAsUrlParams(filters)}&sort=${sort}&fbData=1`;
     window.location = url;
+    notifyOfCsvDownload(HELP_STORIES_CSV_COLUMNS);
   }
   render() {
     const { stories, sort, topicId, filters, handleFocusSelected, user, showTweetCounts } = this.props;
@@ -97,6 +101,7 @@ class StoriesSummaryContainer extends React.Component {
 StoriesSummaryContainer.propTypes = {
   // from the composition chain
   intl: PropTypes.object.isRequired,
+  notifyOfCsvDownload: PropTypes.func.isRequired,
   // from parent
   topicId: PropTypes.number.isRequired,
   filters: PropTypes.object.isRequired,
@@ -162,7 +167,9 @@ export default
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeDescribedDataCard(localMessages.descriptionIntro, messages.storiesTableHelpText)(
         composeAsyncContainer(
-          StoriesSummaryContainer
+          composeCsvDownloadNotifyContainer(
+            StoriesSummaryContainer
+          )
         )
       )
     )

@@ -22,7 +22,7 @@ const localMessages = {
   q8: { id: 'faq.q8', defaultMessage: 'What can I do with the Topic Mapper tool?' },
   a8: { id: 'faq.a8', defaultMessage: 'Topic Mapper allows you to answer deeper questions than Explorer, such as: Which are the most influential sources when covering a particular topic? Which were the most relevant stories about a specific issue? Which media form different linking communities? Are there groups of sources that use similar language when talking about an issue? Which stories have more social media traction? How does the structure of online news coverage about an issue evolve over time?' },
   q9: { id: 'faq.q9', defaultMessage: 'Can I run my own topic?' },
-  a9: { id: 'faq.a9', defaultMessage: 'You will be able to create new topics very soon. For now you can explore a series of topics we’ve created for different research projects.' },
+  a9: { id: 'faq.a9', defaultMessage: 'Yes, you can use the Topic Mapper tool to create new topics of your own.  These are limited in size (less than 100,000 total stories) to make sure our technical systems aren\'t overhwelmed.' },
   q10: { id: 'faq.q10', defaultMessage: 'Can I add sources to the database?' },
   a10: { id: 'faq.a10', defaultMessage: 'If a source or a set of sources is not already part of our database, you can suggest its addition through the Sources tool, and we will carefully consider your suggestion. Our first inclination is to say yes to suggestions.' },
   q11: { id: 'faq.q11', defaultMessage: 'How can I get more help?' },

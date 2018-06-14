@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import Title from 'react-title-component';
+import { Helmet } from 'react-helmet';
 import { push, replace } from 'react-router-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { injectIntl, FormattedMessage } from 'react-intl';
@@ -121,7 +121,7 @@ class TopicContainer extends React.Component {
     return (
       <div className="topic-container">
         <div>
-          <Title render={titleHandler} />
+          <Helmet><title>{titleHandler()}</title></Helmet>
           <TopicHeaderContainer topicId={topicId} topicInfo={topicInfo} filters={filters} />
           {contentToShow}
         </div>

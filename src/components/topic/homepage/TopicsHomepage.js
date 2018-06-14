@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import Title from 'react-title-component';
+import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
 import Link from 'react-router/lib/Link';
 import { FormattedMessage, injectIntl, FormattedHTMLMessage } from 'react-intl';
@@ -9,7 +9,7 @@ import TopicSearchContainer from '../search/TopicSearchContainer';
 import TopicListContainer from '../list/TopicListContainer';
 import LoginForm from '../../user/LoginForm';
 import TopicIcon from '../../common/icons/TopicIcon';
-import PublicTopicListContainer from '../list/PublicTopicListContainer';
+import PublicTopicsContainer from '../list/PublicTopicsContainer';
 import DataCard from '../../common/DataCard';
 import { AddButton } from '../../common/IconButton';
 import messages from '../../../resources/messages';
@@ -41,7 +41,7 @@ const TopicsHomepage = (props) => {
     content = (
       <div>
 
-        <Title render={titleHandler} />
+        <Helmet><title>{titleHandler()}</title></Helmet>
 
         <div className="controlbar">
           <div className="main">
@@ -73,7 +73,7 @@ const TopicsHomepage = (props) => {
     content = (
       <div>
 
-        <Title render={titleHandler} />
+        <Helmet><title>{titleHandler()}</title></Helmet>
 
         <Grid>
           <Row>
@@ -98,7 +98,7 @@ const TopicsHomepage = (props) => {
           <Row>
             <Col lg={12}>
               <h1><FormattedMessage {...localMessages.publicHomeTitle} /></h1>
-              <PublicTopicListContainer />
+              <PublicTopicsContainer />
             </Col>
           </Row>
         </Grid>

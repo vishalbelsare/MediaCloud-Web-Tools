@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import Title from 'react-title-component';
+import { Helmet } from 'react-helmet';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
@@ -17,15 +17,14 @@ const localMessages = {
 
 class LinkMapContainer extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      viewMap: false,
-    };
+  state = {
+    viewMap: false,
   }
   componentWillReceiveProps(nextProps) {
     const { fetchData, filters } = this.props;
-    if (nextProps.filters !== filters) {
+    if (nextProps.filters.snapshotId !== filters.snapshotId ||
+      nextProps.filters.timespanId !== filters.timespanId ||
+      nextProps.filters.focusId !== filters.focusId) {
       fetchData(nextProps);
     }
   }
@@ -42,7 +41,7 @@ class LinkMapContainer extends React.Component {
 
     return (
       <Grid>
-        <Title render={titleHandler} />
+        <Helmet><title>{titleHandler()}</title></Helmet>
         <Row>
           <Col lg={12} md={12} sm={12}>
             <h1><FormattedMessage {...localMessages.title} /></h1>

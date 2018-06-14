@@ -57,16 +57,26 @@ export function sourceDetails(id) {
   return createApiPromise(`/api/sources/${id}/details`);
 }
 
-export function collectionDetails(id) {
-  return createApiPromise(`/api/collections/${id}/details`);
+export function collectionDetails(id, params) {
+  const acceptedParams = acceptParams(params, ['getSources']);
+  return createApiPromise(`/api/collections/${id}/details`, acceptedParams);
 }
 
-export function sourceSentenceCount(id) {
-  return createApiPromise(`api/sources/${id}/sentences/count`);
+export function sourceSplitStoryCount(id) {
+  return createApiPromise(`api/sources/${id}/story-split/count`);
 }
 
-export function collectionSentenceCount(id) {
-  return createApiPromise(`api/collections/${id}/sentences/count`);
+export function collectionSplitStoryCount(id) {
+  return createApiPromise(`api/collections/${id}/story-split/count`);
+}
+
+export function collectionSourceSplitStoryCounts(id) {
+  return createApiPromise(`api/collections/${id}/sources/story-split/count`);
+}
+
+export function collectionSourceSplitStoryHistoricalCounts(id, params) {
+  const acceptedParams = acceptParams(params, ['start', 'end']);
+  return createApiPromise(`/api/collections/${id}/sources/story-split/historical-counts`, acceptedParams);
 }
 
 export function collectionSourceList(id, params) {
@@ -96,13 +106,8 @@ export function similarCollections(id) {
   return createApiPromise(`api/collections/${id}/similar-collections`);
 }
 
-export function collectionSourceSentenceCounts(id) {
-  return createApiPromise(`api/collections/${id}/sources/sentences/count`);
-}
-
-export function collectionSourceSentenceHistoricalCounts(id, params) {
-  const acceptedParams = acceptParams(params, ['start', 'end']);
-  return createApiPromise(`/api/collections/${id}/sources/sentences/historical-counts`, acceptedParams);
+export function collectionSourceRepresentation(id) {
+  return createApiPromise(`api/collections/${id}/sources/representation`);
 }
 
 export function createCollection(params) {

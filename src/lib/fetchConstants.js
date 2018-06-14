@@ -4,7 +4,14 @@ export const FETCH_ONGOING = 'FETCH_ONGOING';
 export const FETCH_SUCCEEDED = 'FETCH_SUCCEEDED';
 export const FETCH_FAILED = 'FETCH_FAILED';
 
+const missingFetchStatusError = {
+  msg: 'fetchStatuses is undefined!',
+};
+
 export const combineFetchStatuses = (fetchStatuses) => {
+  if (fetchStatuses === undefined) {
+    throw missingFetchStatusError;
+  }
   const allInvalid = fetchStatuses.reduce((total, status) => total && (status === FETCH_INVALID), true);
   const anyOngoing = fetchStatuses.reduce((total, status) => total || (status === FETCH_ONGOING), false);
   const anyFailed = fetchStatuses.reduce((total, status) => total || (status === FETCH_FAILED), false);

@@ -1,6 +1,257 @@
 {
   "releases": [
     {
+      "date": "2018-06-08",
+      "version": "v3.1.2",
+      "notes": [
+        {
+          "apps": ["topics"],
+          "type": "Fix",
+          "note": "Filtering a Topic by a search string works better, and doesn't allow network mapping."
+        },
+        {
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Don't show themes on Explorer if not enough stories have them set."
+        },
+        {
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Better display when you use lots of sources/collections in Explorer."
+        },
+        {
+          "apps": ["sources"],
+          "type": "Fix",
+          "note": "Better consistent columns in the various places you can download a list of sources."
+        },
+        {
+          "apps": ["sources"],
+          "type": "Fix",
+          "note": "Better feedback for errors when uploading a list of sources to a collection in Source Manager."
+        },
+        {
+          "apps": ["sources"],
+          "type": "Fix",
+          "note": "Media source feeds are now either active or disabled (no skipped or other confusing states)."
+        },
+        {
+          "apps": ["sources"],
+          "type": "Fix",
+          "note": "Better handling and display of internal private collections."
+        },
+        {
+          "apps": ["sources"],
+          "type": "Fix",
+          "note": "Source and Collections pages now show better geographic attention maps."
+        }
+      ]
+    },
+    {
+      "date": "2018-05-24",
+      "version": "v3.1.1",
+      "notes": [
+        {
+          "apps": ["explorer", "topics"],
+          "type": "Fix",
+          "note": "Add CSV download for word space charts (<a href=\"https://mediacloud.org/news/2018/5/23/word-spaces-visualizing-word2vec-to-support-media-analysis\">the blog post for more details</a>)"
+        }
+      ]
+    },
+    {
+      "date": "2018-05-24",
+      "version": "v3.1.0",
+      "notes": [
+        {
+          "apps": ["explorer","sources", "topics"],
+          "type": "Feature",
+          "note": "Rolls out our new \"word space\" visualization! Read <a href=\"https://mediacloud.org/news/2018/5/23/word-spaces-visualizing-word2vec-to-support-media-analysis\">the blog post for more details</a>."
+        },
+        {
+          "apps": ["topics"],
+          "type": "Fix",
+          "note": "Resolved problem where some topic attention charts didn't draw all the dates."
+        }
+      ]
+    },
+    {
+      "date": "2018-05-23",
+      "version": "v3.0.5",
+      "notes": [
+        {
+          "apps": ["sources", "topics"],
+          "type": "Fix",
+          "note": "Links to explorer in Source Manager and Topic Mapper work again."
+        },
+        {
+          "apps": ["sources", "explorer", "topics"],
+          "type": "Fix",
+          "note": "Updated some of our plumbing."
+        }
+      ]
+    },
+    {
+      "date": "2018-05-23",
+      "version": "v3.0.4",
+      "notes": [
+        {
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Better download of entities and geography in Explorer."
+        },
+        {
+          "apps": ["sources"],
+          "type": "Fix",
+          "note": "Show last year of coverage for sources and collections correctly."
+        }
+      ]
+    },
+    {
+      "date": "2018-05-20",
+      "version": "v3.0.3",
+      "notes": [
+        {
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Downloading story-list and story-count CSVs in Explorer works again."
+        },
+        {
+          "apps": ["explorer"],
+          "type": "Feature",
+          "note": "See normalized total attention in Explorer (based on the same query, without the keywords)."
+        },
+        {
+          "apps": ["sources"],
+          "type": "Fix",
+          "note": "Links in the various Source Manager pages to \"seach in Explorer\" work again."
+        }
+      ]
+    },
+    {
+      "date": "2018-05-19",
+      "version": "v3.0.2",
+      "notes": [
+        {
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Clicking on attention chart to drill down with sentence excerpts for the day works again."
+        }
+      ]
+    },
+    {
+      "date": "2018-05-18",
+      "version": "v3.0.1",
+      "notes": [
+        {
+          "apps": ["topics"],
+          "type": "Fix",
+          "note": "Make sure attention chart only show stories within the topic timespan you are looking at."
+        },
+        {
+          "apps": ["topics"],
+          "type": "Fix",
+          "note": "Correctly show chart of word use within a topic over time."
+        },
+        {
+          "apps": ["explorer"],
+          "type": "Feature",
+          "note": "See normalized attention charts in Explorer (based on the same query, without the keywords)."
+        },
+        {
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Fix attention chart to render 0s correctly when there are no stories matching your query."
+        }
+      ]
+    },
+    {
+      "date": "2018-05-17",
+      "version": "v3.0.0",
+      "notes": [
+        {
+          "apps": ["explorer", "topics", "sources"],
+          "type": "Feature",
+          "note": "Switched to story-based searching (<a href=\"https://mediacloud.org/news/2018/4/12/switching-to-story-based-searching-on-may-12th\" target=\"_new\">learn more</a>)."
+        },
+        {
+          "apps": ["topics", "explorer", "sources"],
+          "type": "Fix",
+          "note": "The default sample size for word clouds is now 1,000 stories (for performance reasons). More details coming soon as we validate that."
+        },
+        {
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Saved searches from Dashboard now show up in Explorer."
+        }
+      ]
+    },
+    {
+      "date": "2018-05-02",
+      "version": "v2.9.1",
+      "notes": [
+        {
+          "apps": ["explorer", "topics"],
+          "type": "Feature",
+          "note": "Warn people that <a href=\"https://mediacloud.org/news/2018/4/12/switching-to-story-based-searching-on-may-12th\" target=\"_new\">we are switching to story-based searches</a>."
+        },
+        {
+          "apps": ["topics"],
+          "type": "Fix",
+          "note": "Fix shortcut that lets you seach a Topic in Explorer."
+        },
+        {
+          "apps": ["sources", "explorer", "topics"],
+          "type": "Fix",
+          "note": "Use the same word-count, and tag-count, sample sizes everywhere."
+        },
+        {
+          "apps": ["sources"],
+          "type": "Fix",
+          "note": "You can import sources from one collection into another again."
+        }
+      ]
+    },
+    {
+      "date": "2018-04-27",
+      "version": "v2.9.0",
+      "notes": [
+        {
+          "apps": ["explorer", "topics"],
+          "type": "Feature",
+          "note": "Link to list of <a href=\"https://mediacloud.org/support/theme-list\">the 600 themes</a> we code for."
+        },
+        {
+          "apps": ["sources"],
+          "type": "Fix",
+          "note": "Clarify attention chart on collection page."
+        },
+        {
+          "apps": ["sources", "explorer", "topics"],
+          "type": "Feature",
+          "note": "Update default collection to new Pew US Mainstream list for 2017."
+        },
+        {
+          "apps": ["topics", "explorer"],
+          "type": "Fix",
+          "note": "Remove some confusing internal data from story list CSV download."
+        },
+        {
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Layout and text improvements on word comparison chart."
+        },
+        {
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Speedup on showing languaeg results in Explorer."
+        },
+        {
+          "apps": ["topics"],
+          "type": "Fix",
+          "note": "Re-organized topic homepage to load faster."
+        }        
+      ]
+    },
+    {
       "date": "2018-04-25",
       "version": "v2.8.1",
       "notes": [
@@ -15,7 +266,7 @@
           "note": "Better explanatory text next to visualizations in Explorer."
         },
         {
-          "apps": ["sources, explorer, topics"],
+          "apps": ["sources", "explorer", "topics"],
           "type": "Fix",
           "note": "Updated our featured collections to be more current."
         },

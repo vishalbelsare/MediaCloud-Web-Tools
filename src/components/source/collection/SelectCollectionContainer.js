@@ -4,7 +4,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import Link from 'react-router/lib/Link';
 import { Grid } from 'react-flexbox-grid/lib';
-import Title from 'react-title-component';
+import { Helmet } from 'react-helmet';
 import { selectCollection, fetchCollectionDetails } from '../../../actions/sourceActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import SourceControlBar from '../controlbar/SourceControlBar';
@@ -12,8 +12,11 @@ import Permissioned from '../../common/Permissioned';
 import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
 import { EditButton, ExploreButton } from '../../common/IconButton';
 import SourceMgrHeaderContainer from '../SourceMgrHeaderContainer';
+import { getCurrentDate, oneMonthBefore } from '../../../lib/dateUtil';
+import { urlToExplorerQuery } from '../../../lib/urlUtil';
 
 const localMessages = {
+  searchNow: { id: 'collection.details.searchNow', defaultMessage: 'Search in Explorer' },
   editCollection: { id: 'collection.edit', defaultMessage: 'Modify this Collection' },
   contentHistory: { id: 'collection.contentHistory', defaultMessage: 'Content History' },
   manageSources: { id: 'collection.manageSources', defaultMessage: 'Review Sources' },
@@ -33,21 +36,32 @@ class SelectCollectionContainer extends React.Component {
     removeCollectionId();
   }
 
+  searchInExplorer = (evt) => {
+    const { collection } = this.props;
+    const endDate = getCurrentDate();
+    const startDate = oneMonthBefore(endDate);
+    const explorerUrl = urlToExplorerQuery(collection.label || collection.tag, '*', [], [collection.id], startDate, endDate);
+    evt.preventDefault();
+    window.open(explorerUrl, '_blank');
+  }
+
   render() {
     const { children, collection } = this.props;
     const titleHandler = parentTitle => `${collection.label} | ${parentTitle}`;
     return (
       <div className="collection-container">
-        <Title render={titleHandler} />
+        <Helmet><title>{titleHandler()}</title></Helmet>
         <SourceMgrHeaderContainer />
-        <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
-          <SourceControlBar>
-            <span className="collection-edit-link">
-              <Link to={`/collections/${collection.tags_id}/edit`} >
-                <EditButton />
-                <FormattedMessage {...localMessages.editCollection} />
-              </Link>
-            </span>
+        <SourceControlBar>
+          <a href="search-in-explorer" onClick={this.searchInExplorer} >
+            <ExploreButton />
+            <FormattedMessage {...localMessages.searchNow} />
+          </a>
+          <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
+            <Link to={`/collections/${collection.tags_id}/edit`} >
+              <EditButton />
+              <FormattedMessage {...localMessages.editCollection} />
+            </Link>
             <Link to={`/collections/${collection.tags_id}/manage-source-list`} >
               <ExploreButton />
               <FormattedMessage {...localMessages.manageSources} />
@@ -56,8 +70,8 @@ class SelectCollectionContainer extends React.Component {
               <ExploreButton />
               <FormattedMessage {...localMessages.contentHistory} />
             </Link>
-          </SourceControlBar>
-        </Permissioned>
+          </Permissioned>
+        </SourceControlBar>
         <Grid className="details collection-details">
           {children}
         </Grid>

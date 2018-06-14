@@ -10,12 +10,15 @@ import { DeleteButton } from '../../common/IconButton';
 import AppButton from '../../common/AppButton';
 import { getDateFromTimestamp } from '../../../lib/dateUtil';
 
+const STORY_SEARCH_RELEASE_DATE = new Date(2018, 5, 18);
+
 const localMessages = {
   loadSearchTitle: { id: 'explorer.querypicker.loadSearchTitle', defaultMessage: 'Load One of Your Saved Searches' },
   loadSavedSearches: { id: 'explorer.querypicker.loadSavedSearches', defaultMessage: 'Load Saved Search...' },
   delete: { id: 'explorer.querypicker.deleteSearch', defaultMessage: 'Delete' },
   load: { id: 'explorer.querypicker.loadSearch', defaultMessage: 'Load' },
   noSavedSearches: { id: 'explorer.querypicker.noSearches', defaultMessage: '<p>You have no saved searches.  You can save any searches you find useful and use this screen to reload it later.</p>' },
+  needsUpdating: { id: 'explorer.querypicker.needsUpdating', defaultMessage: 'We\'ve switched to story-level searching since you saved this. Results will be different; you might need to update it. <a target="_new" href="https://mediacloud.org/news/2018/4/12/switching-to-story-based-searching-on-may-12th">Learn more</a>.' },
 };
 
 class QueryPickerLoadUserSearchesDialog extends React.Component {
@@ -68,17 +71,26 @@ class QueryPickerLoadUserSearchesDialog extends React.Component {
           id="searchNameInDialog"
           name="searchNameInDialog"
         >
-          {searches.map((search, idx) => (
-            <div key={idx}>
-              <Col lg={11} >
-                <ListItem onTouchTap={() => this.onLoadConfirm(search)}>
-                  <Link to={`queries/search?q=${search.queryParams}`}>{search.queryName}</Link>
-                  <br /><FormattedDate value={getDateFromTimestamp(search.timestamp)} />
-                </ListItem>
-              </Col>
-              <DeleteButton className="delete-search" onClick={() => this.onDeleteRequest(search)} />
-            </div>
-          ))}
+          {searches.map((search, idx) => {
+            const searchDate = getDateFromTimestamp(search.timestamp);
+            const needsUpdating = searchDate < STORY_SEARCH_RELEASE_DATE;
+            return (
+              <div key={idx}>
+                <DeleteButton className="delete-search" onClick={() => this.onDeleteRequest(search)} />
+                <Col lg={11} >
+                  <ListItem onTouchTap={() => this.onLoadConfirm(search)}>
+                    <Link to={`queries/search?q=${search.queryParams}`}>{search.queryName}</Link>
+                    <br /><FormattedDate value={searchDate} />
+                    {needsUpdating && (
+                      <div className="story-switchover">
+                        <FormattedHTMLMessage {...localMessages.needsUpdating} />
+                      </div>
+                    )}
+                  </ListItem>
+                </Col>
+              </div>
+            );
+          })}
         </List>
       );
     } else {
@@ -95,6 +107,7 @@ class QueryPickerLoadUserSearchesDialog extends React.Component {
           actions={actions}
           open={this.state.loadSearchDialogOpen}
           onRequestClose={this.handleDialogClose}
+          autoScrollBodyContent
         >
           {searchList}
         </Dialog>

@@ -16,14 +16,18 @@ const DEFAULT_BACKGROUND_COLOR = '#FFFFFF';
 const SERIES_MARKER_THRESHOLD = 30;
 
 const localMessages = {
-  chartTitle: { id: 'chart.sentencesOverTime.title', defaultMessage: 'Attention Over Time' },
-  tooltipSeriesName: { id: 'chart.sentencesOverTime.tooltipSeriesName', defaultMessage: 'Series: {name}' },
-  tooltipText: { id: 'chart.sentencesOverTime.tooltipText', defaultMessage: 'Average {count} {count, plural, =1 {sentence} other {sentences} }/day' },
-  seriesTitle: { id: 'chart.sentencesOverTime.seriesTitle', defaultMessage: 'avg sentences/day' },
-  totalCount: { id: 'chart.sentencesOverTime.totalCount',
-    defaultMessage: 'We have collected {total, plural, =0 {No sentences} one {One sentence} other {{formattedTotal} sentences} over the past year}.',
+  chartTitle: { id: 'chart.storiesOverTime.title', defaultMessage: 'Attention Over Time' },
+  tooltipSeriesName: { id: 'chart.storiesOverTime.tooltipSeriesName', defaultMessage: 'Query: {name}' },
+  tooltipText: { id: 'chart.storiesOverTime.tooltipText', defaultMessage: '{count} {count, plural, =1 {story} other {stories} }' },
+  normalizedTooltipText: { id: 'chart.storiesOverTime.normalizedTooltipText', defaultMessage: '{count}% of stories' },
+  seriesTitle: { id: 'chart.storiesOverTime.seriesTitle', defaultMessage: 'stories/day' },
+  totalCount: { id: 'chart.storiesOverTime.totalCount',
+    defaultMessage: 'We have collected {total, plural, =0 {No stories} one {One story} other {{formattedTotal} stories}}.',
   },
+  yAxisNormalizedTitle: { id: 'chart.storiesOverTime.series.yaxis', defaultMessage: 'percentage of stories' },
 };
+
+function makePercentage(value) { return value * 100; }
 
 /**
  * Pass in "data" if you are using one series, otherwise configure them yourself and pass in "series".
@@ -31,11 +35,12 @@ const localMessages = {
 class AttentionOverTimeChart extends React.Component {
 
   getConfig() {
-    const { backgroundColor } = this.props;
+    const { backgroundColor, normalizeYAxis } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
     const config = {
       title: formatMessage(localMessages.chartTitle),
       lineColor: getBrandDarkColor(),
+      interval: 1,
       chart: {
         type: 'spline',
         zoomType: 'x',
@@ -43,6 +48,7 @@ class AttentionOverTimeChart extends React.Component {
       },
       plotOptions: {
         series: {
+          connectNulls: false,
           marker: {
             enabled: true,
           },
@@ -65,8 +71,9 @@ class AttentionOverTimeChart extends React.Component {
         pointFormatter: function afmtxn() {
           // important to name this, rather than use arrow function, so `this` is preserved to be what highcharts gives us
           const rounded = formatNumber(this.y, { style: 'decimal', maximumFractionDigits: 2 });
+          const pct = formatNumber(this.y * 100, { style: 'decimal', maximumFractionDigits: 2 });
           const seriesName = this.series.name ? formatMessage(localMessages.tooltipSeriesName, { name: this.series.name }) : '';
-          const val = formatMessage(localMessages.tooltipText, { count: rounded });
+          const val = normalizeYAxis === true ? formatMessage(localMessages.normalizedTooltipText, { count: pct }) : formatMessage(localMessages.tooltipText, { count: rounded });
           const thisDate = getVisDate(new Date(this.category));
           const nextDate = getVisDate(new Date(this.category + this.series.pointInterval));
           const intervalDays = this.series.pointInterval / SECS_PER_DAY;
@@ -77,8 +84,9 @@ class AttentionOverTimeChart extends React.Component {
         },
       },
       yAxis: {
+        labels: { formatter: function afxn() { return normalizeYAxis === true ? `${makePercentage(this.value)}%` : this.value; } },
         min: 0,
-        title: { text: formatMessage(localMessages.seriesTitle) },
+        title: { text: normalizeYAxis === true ? formatMessage(localMessages.yAxisNormalizedTitle) : formatMessage(localMessages.seriesTitle) },
       },
       exporting: {
       },
@@ -87,12 +95,12 @@ class AttentionOverTimeChart extends React.Component {
   }
 
   render() {
-    const { total, data, series, height, onDataPointClick, lineColor, health, filename, showLegend } = this.props;
+    const { total, data, series, height, interval, onDataPointClick, lineColor, health, filename, showLegend, introText } = this.props;
     const { formatMessage } = this.props.intl;
     // setup up custom chart configuration
     const config = this.getConfig();
     config.chart.height = height;
-    let classNameForPath = 'sentences-over-time-chart';
+    let classNameForPath = 'stories-over-time-chart';
     if (filename !== undefined) {
       config.exporting.filename = filename;
     } else {
@@ -103,6 +111,9 @@ class AttentionOverTimeChart extends React.Component {
     }
     if ((lineColor !== null) && (lineColor !== undefined)) {
       config.lineColor = lineColor;
+    }
+    if ((interval !== null) && (interval !== undefined)) {
+      config.interval = interval === 'day' ? 1 : 1; // does nothing right now
     }
     if (onDataPointClick) {
       config.plotOptions.series.allowPointSelect = true;
@@ -126,7 +137,7 @@ class AttentionOverTimeChart extends React.Component {
       // clean up the data
       const dates = data.map(d => d.date);
       // turning variable time unit into days
-      const intervalMs = (dates[1] - dates[0]);
+      const intervalMs = SECS_PER_DAY * config.interval; // default is a day...
       const intervalDays = intervalMs / SECS_PER_DAY;
       const values = data.map(d => (d.count / intervalDays));
       allSeries = [{
@@ -145,7 +156,9 @@ class AttentionOverTimeChart extends React.Component {
     config.series = allSeries;
     // show total if it is included
     let totalInfo = null;
-    if ((total !== null) && (total !== undefined)) {
+    if (introText) {
+      totalInfo = (<p>{introText}</p>);
+    } else if ((total !== null) && (total !== undefined)) {
       totalInfo = (
         <p>
           <FormattedMessage
@@ -174,10 +187,13 @@ AttentionOverTimeChart.propTypes = {
   lineColor: PropTypes.string,
   backgroundColor: PropTypes.string,
   health: PropTypes.array,
+  interval: PropTypes.string,
   onDataPointClick: PropTypes.func, // (date0, date1, evt, chartObj)
   total: PropTypes.number,
+  introText: PropTypes.string,  // overrides automatic total string generation
   filename: PropTypes.string,
   showLegend: PropTypes.bool,
+  normalizeYAxis: PropTypes.bool,
   // from composition chain
   intl: PropTypes.object.isRequired,
 };

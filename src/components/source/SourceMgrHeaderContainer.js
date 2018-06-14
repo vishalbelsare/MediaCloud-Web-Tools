@@ -38,6 +38,7 @@ const SourceMgrHeaderContainer = (props) => {
           subTitle={details}
           isFavorite={sourceInfo.isFavorite}
           onSetFavorited={isFav => handleSetFavorited('source', sourceInfo.id, isFav)}
+          link={`sources/${sourceInfo.id}`}
         />
       </div>
     );
@@ -55,6 +56,7 @@ const SourceMgrHeaderContainer = (props) => {
           subTitle={details}
           isFavorite={collectionInfo.isFavorite}
           onSetFavorited={isFav => handleSetFavorited('collection', collectionInfo.id, isFav)}
+          link={`collections/${collectionInfo.id}`}
         />
       </div>
     );

@@ -20,7 +20,7 @@ const localMessages = {
 class BubbleRowChart extends React.Component {
 
   render() {
-    const { data, width, height, maxBubbleRadius, asPercentage, minBubbleRadius, padding, domId, onBubbleClick } = this.props;
+    const { data, width, height, minCutoffValue, maxBubbleRadius, asPercentage, minBubbleRadius, padding, domId, onBubbleClick } = this.props;
 
     // bail if no data
     if (data.length === 0) {
@@ -38,6 +38,7 @@ class BubbleRowChart extends React.Component {
       maxBubbleRadius,
       minBubbleRadius,
       padding,
+      minCutoffValue,
     };
     if ((width === null) || (width === undefined)) {
       options.width = DEFAULT_WIDTH;
@@ -55,6 +56,10 @@ class BubbleRowChart extends React.Component {
       options.padding = 0;
     }
 
+    if (minCutoffValue === null || minCutoffValue === undefined) {
+      options.minCutoffValue = 0;
+    }
+
     let circles = null;
 
     // prep the data and some config (scale by sqrt of value so we map to area, not radius)
@@ -66,8 +71,10 @@ class BubbleRowChart extends React.Component {
       radius = d3.scaleSqrt().domain([0, maxValue]).range([0, options.maxBubbleRadius]);
     }
 
+    const trimmedData = data.filter(d => (d.value > options.minCutoffValue ? d : null));
+
     if (asPercentage) {
-      circles = data.map((d, idx) => {
+      circles = trimmedData.map((d, idx) => {
         let xOffset = 0;
         xOffset = options.maxBubbleRadius + (((options.maxBubbleRadius * 2) + 10) * idx);
         return {
@@ -78,7 +85,7 @@ class BubbleRowChart extends React.Component {
         };
       });
     } else {
-      circles = data.map((d, idx, list) => {
+      circles = trimmedData.map((d, idx, list) => {
         let xOffset = 0;
         if (idx > 0) {
           const preceeding = list.slice(0, idx);
@@ -160,7 +167,7 @@ class BubbleRowChart extends React.Component {
       // add center labels
       bubbles.append('text')
         .attr('x', d => d.x)
-        .attr('y', d => d.y)
+        .attr('y', d => d.y + 4)
         .attr('text-anchor', 'middle')
         .attr('fill', d => `${d.centerTextColor} !important` || '')
         .attr('font-family', 'Lato, Helvetica, sans')
@@ -215,6 +222,7 @@ BubbleRowChart.propTypes = {
   placement: PropTypes.string,
   maxBubbleRadius: PropTypes.number,
   minBubbleRadius: PropTypes.number,
+  minCutoffValue: PropTypes.number,
   asPercentage: PropTypes.bool, // draw each circle as a pct of a larger one
   padding: PropTypes.number,
 };

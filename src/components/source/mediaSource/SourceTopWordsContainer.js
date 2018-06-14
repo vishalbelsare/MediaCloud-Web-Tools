@@ -6,14 +6,14 @@ import { fetchSourceTopWords } from '../../../actions/sourceActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import messages from '../../../resources/messages';
-import PeriodicEditableWordCloudDataCard from '../../common/PeriodicEditableWordCloudDataCard';
+import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
 import { calculateTimePeriods, getCurrentDate, oneMonthBefore } from '../../../lib/dateUtil';
 import { urlToExplorerQuery } from '../../../lib/urlUtil';
 
 const localMessages = {
   title: { id: 'source.summary.topWords.title', defaultMessage: 'Top Words' },
   intro: { id: 'source.summary.topWords.info',
-    defaultMessage: '<p>This wordcloud shows you the most commonly used words in this source (based on a sample of sentences). Click a word to load a Dashboard search showing you how the this source writes about it.</p>' },
+    defaultMessage: '<p>This wordcloud shows you the most commonly used words in this source (based on a sample of stories). Click a word to load an Explorer search showing you how the this source writes about it.</p>' },
   helpTitle: { id: 'source.summary.sentenceCount.help.title', defaultMessage: 'About Top Words' },
 };
 
@@ -27,7 +27,7 @@ class SourceTopWordsContainer extends React.Component {
     const endDate = getCurrentDate();
     const startDate = oneMonthBefore(endDate);
     const searchStr = `${word.stem}*`;
-    const explorerUrl = urlToExplorerQuery(source.name, searchStr, source.media_id, '', startDate, endDate);
+    const explorerUrl = urlToExplorerQuery(source.name || source.url, searchStr, [source.media_id], [], startDate, endDate);
     window.open(explorerUrl, '_blank');
   }
   render() {
@@ -35,7 +35,7 @@ class SourceTopWordsContainer extends React.Component {
     const { formatMessage } = this.props.intl;
     const downloadUrl = `/api/sources/${source.media_id}/words/wordcount.csv`;
     return (
-      <PeriodicEditableWordCloudDataCard
+      <EditableWordCloudDataCard
         words={words}
         handleTimePeriodClick={this.fetchWordsByTimePeriod}
         selectedTimePeriod={timePeriod}
@@ -44,7 +44,7 @@ class SourceTopWordsContainer extends React.Component {
         onViewModeClick={this.defaultOnWordClick}
         title={formatMessage(localMessages.title)}
         domId={`media-source-top-words-${source.media_id}`}
-        width={520}
+        width={900}
         helpButton={helpButton}
       />
     );
@@ -90,7 +90,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeHelpfulContainer(localMessages.helpTitle, [localMessages.intro, messages.wordcloudHelpText, messages.wordCloudWord2VecLayoutHelp])(
+      composeHelpfulContainer(localMessages.helpTitle, [localMessages.intro, messages.wordSpaceLayoutHelp])(
         composeAsyncContainer(
           SourceTopWordsContainer
         )

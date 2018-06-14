@@ -1,7 +1,6 @@
-import datetime
 import logging
 from multiprocessing import Pool
-
+from operator import itemgetter
 import flask_login
 import os
 from flask import jsonify, request
@@ -11,21 +10,20 @@ import server.util.csv as csv
 from server import app, mc, db
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_mediacloud_client, user_name,\
     user_has_auth_role, ROLE_MEDIA_EDIT
-from server.cache import cache, key_generator
-import server.views.sources.apicache as apicache
 from server.util.request import arguments_required, form_fields_required, api_error_handler
-from server.util.tags import TAG_SETS_ID_COLLECTIONS, is_metadata_tag_set, format_name_from_label, \
-    format_metadata_fields, media_with_tag
-from server.views.sources import SOURCES_TEMPLATE_PROPS_EDIT, \
-    COLLECTIONS_TEMPLATE_PROPS_EDIT, _cached_source_story_count
+
+from server.util.tags import TAG_SETS_ID_COLLECTIONS, is_metadata_tag_set, format_name_from_label, format_metadata_fields, media_with_tag
+from server.views.sources import SOURCES_TEMPLATE_PROPS_EDIT, COLLECTIONS_TEMPLATE_PROPS_EDIT, SOURCE_LIST_CSV_EDIT_PROPS, _cached_source_story_count
 from server.views.favorites import add_user_favorite_flag_to_collections, add_user_favorite_flag_to_sources
+
 from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
-from server.views.sources.sentences import cached_recent_sentence_counts, stream_sentence_count_csv
+from server.views.sources.stories_split_by_time import stream_split_stories_csv
+import server.views.sources.apicache as apicache
 from server.views.sources.words import word_count, stream_wordcount_csv
 
 logger = logging.getLogger(__name__)
 
-HISTORICAL_COUNT_POOL_SIZE = 10  # number of parallel processes to use while fetching historical sentence counts for each media source
+HISTORICAL_COUNT_POOL_SIZE = 10  # number of parallel processes to use while fetching historical story counts for each media source
 FEED_SCRAPE_JOB_POOL_SIZE = 10
 
 
@@ -40,27 +38,25 @@ def allowed_file(filename):
 def api_metadata_download(collection_id):
     all_media = media_with_tag(user_mediacloud_key(), collection_id)
 
-    metadata_items = []
+    metadata_counts = {}  # from tag_sets_id to info
     for media_source in all_media:
-        for tag in media_source['media_source_tags']:
-            if is_metadata_tag_set(tag['tag_sets_id']):
-                found = False
-                for dictItem in metadata_items:
-                    if dictItem['metadataId'] == tag['tag_sets_id']:
-                        temp = dictItem['tagged']
-                        dictItem.update({'tagged': temp + 1})
-                        found = True
-                if not found:
-                    metadata_items.append(
-                        {'metadataCoverage': tag['tag_set'], 'metadataId': tag['tag_sets_id'], 'tagged': 1})
+        for metadata_label, info in media_source['metadata'].iteritems():
+            if metadata_label not in metadata_counts:  # lazily populate counts
+                metadata_counts[metadata_label] = {
+                    'metadataCoverage': metadata_label,
+                    'tagged': 0
+                }
+            if info is not None:
+                metadata_counts[metadata_label]['tagged'] += 1
 
-    for i in metadata_items:
-        temp = len(all_media) - i['tagged']
-        i.update({'notTagged': temp})
+    for item_info in metadata_counts.values():
+        temp = len(all_media) - item_info['tagged']
+        item_info.update({'notTagged': temp})
 
     props = ['metadataCoverage', 'tagged', 'notTagged']
     filename = "metadataCoverageForCollection" + collection_id + ".csv"
-    return csv.stream_response(metadata_items, props, filename)
+    return csv.stream_response(metadata_counts.values(), props, filename,
+                               ['metadata category', 'sources with info', 'sources missing info'])
 
 
 @app.route('/api/collections/set/<tag_sets_id>', methods=['GET'])
@@ -79,7 +75,7 @@ def api_collection_set(tag_sets_id):
 
     add_user_favorite_flag_to_collections(info['tags'])
     # rename to make more sense here
-    info['collections'] = info['tags']
+    info['collections'] = sorted(info['tags'], key=itemgetter('label', 'tag'))
     del info['tags']
     return jsonify(info)
 
@@ -126,11 +122,18 @@ def collection_set_favorited(collection_id):
 @flask_login.login_required
 @api_error_handler
 def api_collection_details(collection_id):
+    add_in_sources = False
+    if ('getSources' in request.args) and (request.args['getSources'] == 'true'):
+        add_in_sources = True
+
     user_mc = user_mediacloud_client()
     info = user_mc.tag(collection_id)
     add_user_favorite_flag_to_collections([info])
     info['id'] = collection_id
     info['tag_set'] = _tag_set_info(user_mediacloud_key(), info['tag_sets_id'])
+    if add_in_sources:
+        media_in_collection = media_with_tag(user_mediacloud_key(), collection_id)
+        info['sources'] = media_in_collection
     return jsonify({'results': info})
 
 
@@ -182,9 +185,9 @@ def api_collection_sources(collection_id):
 @flask_login.login_required
 @api_error_handler
 def api_download_sources_template():
-    filename = "Collection_Template_for_sources.csv"
+    filename = "media cloud collection upload template.csv"
 
-    what_type_download = SOURCES_TEMPLATE_PROPS_EDIT
+    what_type_download = SOURCE_LIST_CSV_EDIT_PROPS
 
     return csv.stream_response(what_type_download, what_type_download, filename)
 
@@ -196,130 +199,78 @@ def api_collection_sources_csv(collection_id):
     user_mc = user_mediacloud_client()
     collection = user_mc.tag(collection_id)    # not cached because props can change often
     all_media = media_with_tag(user_mediacloud_key(), collection_id)
-    for src in all_media:
-        for tag in src['media_source_tags']:
-            if is_metadata_tag_set(tag['tag_sets_id']):
-                format_metadata_fields(src, tag)
     file_prefix = "Collection {} ({}) - sources ".format(collection_id, collection['tag'])
-    properties_to_include = COLLECTIONS_TEMPLATE_PROPS_EDIT
+    properties_to_include = SOURCE_LIST_CSV_EDIT_PROPS
     return csv.download_media_csv(all_media, file_prefix, properties_to_include)
 
 
-@app.route('/api/collections/<collection_id>/sources/sentences/historical-counts')
-@arguments_required('start', 'end')
+@app.route('/api/collections/<collection_id>/sources/story-split/historical-counts')
 @flask_login.login_required
 @api_error_handler
-def collection_source_sentence_historical_counts(collection_id):
-    start_date_str = request.args['start']
-    end_date_str = request.args['end']
-    results = _collection_source_sentence_historical_counts(collection_id, start_date_str, end_date_str)
+def collection_source_story_split_historical_counts(collection_id):
+    results = _collection_source_story_split_historical_counts(collection_id)
     return jsonify({'counts': results})
 
 
-@app.route('/api/collections/<collection_id>/sources/stories/historical-counts.csv')
-@arguments_required('start', 'end')
+@app.route('/api/collections/<collection_id>/sources/story-split/historical-counts.csv')
 @flask_login.login_required
 @api_error_handler
-def collection_source_sentence_historical_counts_csv(collection_id):
-    start_date_str = request.args['start']
-    end_date_str = request.args['end']
-    results = _collection_source_sentence_historical_counts(collection_id, start_date_str, end_date_str)
+def collection_source_story_split_historical_counts_csv(collection_id):
+    results = _collection_source_story_split_historical_counts(collection_id)
     date_cols = None
+    #TODO verify this
     for source in results:
         if date_cols is None:
-            date_cols = sorted(source['sentences_over_time'].keys())
-        for date, count in source['sentences_over_time'].iteritems():
-            source[date] = count
-        del source['sentences_over_time']
-    props = ['media_id', 'media_name', 'media_url', 'total_stories', 'total_sentences'] + date_cols
-    filename = "{} - source content count ({} to {})".format(collection_id, start_date_str, end_date_str)
+            date_cols = sorted([s['date'] for s in source['splits_over_time']])
+        for day in source['splits_over_time']:
+            source[day['date']] = day['count']
+        del source['splits_over_time']
+    props = ['media_id', 'media_name', 'media_url', 'total_stories', 'splits_over_time'] + date_cols
+    filename = "{} - source content count".format(collection_id)
     return csv.stream_response(results, props, filename)
 
 
 # worker function to help in parallel
-def _source_sentence_counts_worker(info):
+def _source_story_split_count_worker(info):
     source = info['media']
-    media_query = "(media_id:{}) {}".format(source['media_id'], info['q'])
-    total_story_count = _cached_source_story_count(user_mediacloud_key(), media_query)
-    split_sentence_count = _cached_source_split_sentence_count(user_mediacloud_key, media_query,
-                                                               info['start_date_str'], info['end_date_str'])
-    del split_sentence_count['split']['end']
-    del split_sentence_count['split']['start']
-    del split_sentence_count['split']['gap']
+    q = "media_id:{}".format(source['media_id'])
+    split_stories = apicache.last_year_split_story_count(user_mediacloud_key(), q)
     source_data = {
         'media_id': source['media_id'],
         'media_name': source['name'],
         'media_url': source['url'],
-        'total_stories': total_story_count,
-        'total_sentences': split_sentence_count['count'],
-        'sentences_over_time': split_sentence_count['split'],
+        'total_story_count': split_stories['total_story_count'],
+        'splits_over_time': split_stories['counts'],
     }
     return source_data
 
 
-def _collection_source_sentence_historical_counts(collection_id, start_date_str, end_date_str):
-    user_mc = user_mediacloud_client()
-    start_date = datetime.datetime.strptime(start_date_str, "%Y-%m-%d").date()
-    end_date = datetime.datetime.strptime(end_date_str, "%Y-%m-%d").date()
-    q = " AND ({})".format(user_mc.publish_date_query(start_date, end_date))
+def _collection_source_story_split_historical_counts(collection_id):
     media_list = media_with_tag(user_mediacloud_key(), collection_id)
-    jobs = [{'media': m, 'q': q, 'start_date_str': start_date_str, 'end_date_str': end_date_str} for m in media_list]
+    jobs = [{'media': m} for m in media_list]
     # fetch in parallel to make things faster
     pool = Pool(processes=HISTORICAL_COUNT_POOL_SIZE)
-    results = pool.map(_source_sentence_counts_worker, jobs)  # blocks until they are all done
+    results = pool.map(_source_story_split_count_worker, jobs)  # blocks until they are all done
     pool.terminate()  # extra safe garbage collection
     return results
 
 
-@cache.cache_on_arguments(function_key_generator=key_generator)
-def _cached_source_sentence_count(user_mc_key, query):
-    user_mc = user_mediacloud_client()
-    return user_mc.sentenceCount(query)['count']
-
-
-@cache.cache_on_arguments(function_key_generator=key_generator)
-def _cached_source_split_sentence_count(user_mc_key, query, split_start, split_end):
-    user_mc = user_mediacloud_client()
-    return user_mc.sentenceCount(query, split=True, split_start_date=split_start, split_end_date=split_end)
-
-
-@app.route('/api/collections/<collection_id>/sources/sentences/count')
+@app.route('/api/collections/<collection_id>/story-split/count')
 @flask_login.login_required
 @api_error_handler
-def collection_source_sentence_counts(collection_id):
-    results = _cached_media_with_sentence_counts(user_mediacloud_key(), collection_id)
-    return jsonify({'sources': results})
+def collection_source_split_stories(collection_id):
+    q = "tags_id_media:{}".format(collection_id)
+    results = apicache.last_year_split_story_count(user_mediacloud_key(), q)
+    interval = 'day' # default, and not currently passed to the calls above
+    return jsonify({'results': {'list': results['counts'], 'total_story_count': results['total_story_count'], 'interval': interval}})
 
 
-@app.route('/api/collections/<collection_id>/sources/sentences/count.csv')
+@app.route('/api/collections/<collection_id>/story-split/count.csv')
 @flask_login.login_required
 @api_error_handler
-def collection_source_sentence_counts_csv(collection_id):
+def collection_split_stories_csv(collection_id):
     user_mc = user_mediacloud_client()
-    info = user_mc.tag(collection_id)
-    results = _cached_media_with_sentence_counts(user_mediacloud_key(), collection_id)
-    props = ['media_id', 'name', 'url', 'sentence_count', 'sentence_pct']
-    filename = info['label'] + "-source sentence counts.csv"
-    return csv.stream_response(results, props, filename)
-
-
-@cache.cache_on_arguments(function_key_generator=key_generator)
-def _cached_media_with_sentence_counts(user_mc_key, tag_sets_id):
-    sample_size = 2000  # kind of arbitrary
-    # list all sources first
-    sources_by_id = {int(c['media_id']): c for c in media_with_tag(user_mediacloud_key(), tag_sets_id)}
-    sentences = mc.sentenceList('*', 'tags_id_media:' + str(tag_sets_id), rows=sample_size, sort=mc.SORT_RANDOM)
-    # sum the number of sentences per media source
-    sentence_counts = {int(media_id): 0 for media_id in sources_by_id.keys()}
-    if 'docs' in sentences['response']:
-        for sentence in sentences['response']['docs']:
-            if (sentence['media_id'] is not None) and (int(sentence['media_id']) in sentence_counts):  # safety check
-                sentence_counts[int(sentence['media_id'])] = sentence_counts[int(sentence['media_id'])] + 1.
-    # add in sentence count info to media info
-    for media_id in sentence_counts.keys():
-        sources_by_id[media_id]['sentence_count'] = sentence_counts[media_id]
-        sources_by_id[media_id]['sentence_pct'] = sentence_counts[media_id] / sample_size
-    return sources_by_id.values()
+    return stream_split_stories_csv(user_mediacloud_key(), 'splitStoryCounts-Collection-' + collection_id, collection_id, "tags_id_media")
 
 
 def _tag_set_info(user_mc_key, tag_sets_id):
@@ -327,22 +278,24 @@ def _tag_set_info(user_mc_key, tag_sets_id):
     return user_mc.tagSet(tag_sets_id)
 
 
-@app.route('/api/collections/<collection_id>/sentences/count', methods=['GET'])
+@app.route('/api/collections/<collection_id>/sources/representation', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
-def api_collection_sentence_count(collection_id):
-    info = {}
-    info['sentenceCounts'] = cached_recent_sentence_counts(user_mediacloud_key(),
-                                                           ['tags_id_media:' + str(collection_id)])
-    return jsonify({'results': info})
+def api_collection_source_representation(collection_id):
+    source_representation = apicache.collection_source_representation(user_mediacloud_key(), collection_id)
+    return jsonify({'sources': source_representation})
 
 
-@app.route('/api/collections/<collection_id>/sentences/sentence-count.csv', methods=['GET'])
+@app.route('/api/collections/<collection_id>/sources/representation/representation.csv', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
-def collection_sentence_count_csv(collection_id):
-    return stream_sentence_count_csv(user_mediacloud_key(), 'sentenceCounts-Collection-' + collection_id, collection_id,
-                                     "tags_id_media")
+def api_collection_source_representation_csv(collection_id):
+    user_mc = user_mediacloud_client()
+    info = user_mc.tag(collection_id)
+    source_representation = apicache.collection_source_representation(user_mediacloud_key(), collection_id)
+    props = ['media_id', 'media_name', 'media_url', 'stories', 'sample_size', 'story_pct']
+    filename = info['label'] + "-source sentence counts.csv"
+    return csv.stream_response(source_representation, props, filename)
 
 
 @app.route('/api/collections/<collection_id>/geography')
@@ -367,11 +320,13 @@ def collection_geo_csv(collection_id):
 @flask_login.login_required
 @api_error_handler
 def collection_words(collection_id):
-    query_arg = 'tags_id_media:' + str(collection_id)
+    solr_q = 'tags_id_media:' + str(collection_id)
+    solr_fq = None
+    # add in the publish_date clause if there is one
     if ('q' in request.args) and (len(request.args['q']) > 0):
-        query_arg = 'tags_id_media:' + str(collection_id) + " AND " + request.args.get('q')
+        solr_fq = request.args['q']
     info = {
-        'wordcounts': word_count(user_mediacloud_key, query_arg)
+        'wordcounts': word_count(user_mediacloud_key, solr_q, solr_fq)
     }
     return jsonify({'results': info})
 
@@ -380,10 +335,12 @@ def collection_words(collection_id):
 @flask_login.login_required
 @api_error_handler
 def collection_wordcount_csv(collection_id):
-    query_arg = 'tags_id_media:' + str(collection_id)
+    solr_q = 'tags_id_media:' + str(collection_id)
+    solr_fq = None
+    # add in the publish_date clause if there is one
     if ('q' in request.args) and (len(request.args['q']) > 0):
-        query_arg = 'tags_id_media:' + str(collection_id) + " AND " + request.args.get('q')
-    return stream_wordcount_csv(user_mediacloud_key(), 'wordcounts-Collection-' + collection_id, query_arg)
+        solr_fq = request.args['q']
+    return stream_wordcount_csv(user_mediacloud_key(), 'wordcounts-Collection-' + collection_id, solr_q, solr_fq)
 
 
 @app.route('/api/collections/<collection_id>/similar-collections', methods=['GET'])

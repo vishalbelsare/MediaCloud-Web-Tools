@@ -4,12 +4,14 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { fetchWordStories, sortWordStories } from '../../../actions/topicActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
+import composeCsvDownloadNotifyContainer from '../../common/composers/CsvDownloadNotifyContainer';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import messages from '../../../resources/messages';
 import TopicStoryTable from '../TopicStoryTable';
 import DataCard from '../../common/DataCard';
 import { DownloadButton } from '../../common/IconButton';
 import { filtersAsUrlParams } from '../../util/location';
+import { HELP_STORIES_CSV_COLUMNS } from '../../../lib/helpConstants';
 
 const STORIES_TO_SHOW = 10;
 
@@ -33,9 +35,10 @@ class WordStoriesContainer extends React.Component {
     sortData(newSort);
   }
   downloadCsv = () => {
-    const { term, topicId, filters } = this.props;
+    const { term, topicId, filters, notifyOfCsvDownload } = this.props;
     const url = `/api/topics/${topicId}/words/${term}*/stories.csv?${filtersAsUrlParams(filters)}`;
     window.location = url;
+    notifyOfCsvDownload(HELP_STORIES_CSV_COLUMNS);
   }
   render() {
     const { inlinkedStories, topicId, helpButton, showTweetCounts } = this.props;
@@ -59,6 +62,7 @@ WordStoriesContainer.propTypes = {
   // from composition chain
   intl: PropTypes.object.isRequired,
   helpButton: PropTypes.node.isRequired,
+  notifyOfCsvDownload: PropTypes.func.isRequired,
   // from parent
   stem: PropTypes.string.isRequired,
   term: PropTypes.string.isRequired,
@@ -111,10 +115,10 @@ export default
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpIntro, messages.storiesTableHelpText])(
         composeAsyncContainer(
-          WordStoriesContainer
+          composeCsvDownloadNotifyContainer(
+            WordStoriesContainer
+          )
         )
       )
     )
   );
-
-// lightweight wrapper around a TopicStoryTable

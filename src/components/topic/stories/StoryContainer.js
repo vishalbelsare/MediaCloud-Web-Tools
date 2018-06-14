@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import Title from 'react-title-component';
+import { Helmet } from 'react-helmet';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import Dialog from 'material-ui/Dialog';
 import Link from 'react-router/lib/Link';
@@ -13,17 +13,17 @@ import StoryInlinksContainer from './StoryInlinksContainer';
 import StoryOutlinksContainer from './StoryOutlinksContainer';
 import StoryEntitiesContainer from '../../common/story/StoryEntitiesContainer';
 import StoryNytThemesContainer from '../../common/story/StoryNytThemesContainer';
+import { TAG_SET_GEOGRAPHIC_PLACES, TAG_SET_NYT_THEMES } from '../../../lib/tagUtil';
+import StoryDetails from './StoryDetails';
+import StoryPlaces from './StoryPlaces';
 import messages from '../../../resources/messages';
 import { EditButton, RemoveButton, ReadItNowButton } from '../../common/IconButton';
 import ComingSoon from '../../common/ComingSoon';
 import StoryIcon from '../../common/icons/StoryIcon';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_TOPIC_WRITE, PERMISSION_STORY_EDIT } from '../../../lib/auth';
-import { TAG_SET_GEOGRAPHIC_PLACES, TAG_SET_NYT_THEMES } from '../../../lib/tagUtil';
 import StatBar from '../../common/statbar/StatBar';
 import AppButton from '../../common/AppButton';
-import StoryDetails from './StoryDetails';
-import StoryPlaces from './StoryPlaces';
 
 const MAX_STORY_TITLE_LENGTH = 70;  // story titles longer than this will be trimmed and ellipses added
 
@@ -44,7 +44,7 @@ class StoryContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.storiesId !== this.props.storiesId) {
       const { fetchData } = this.props;
-      fetchData(nextProps.storiesId);
+      fetchData(nextProps.storiesId, nextProps.filters);
     }
   }
 
@@ -78,7 +78,7 @@ class StoryContainer extends React.Component {
     ];
     return (
       <div>
-        <Title render={titleHandler} />
+        <Helmet><title>{titleHandler()}</title></Helmet>
         <Grid>
           <Row>
             <Col lg={12}>
@@ -111,7 +111,7 @@ class StoryContainer extends React.Component {
             </Col>
           </Row>
           <Row>
-            <Col lg={6} xs={12} >
+            <Col lg={12}>
               <StatBar
                 stats={[
                   { message: messages.mediaInlinks, data: formatNumber(story.media_inlink_count) },
@@ -120,29 +120,40 @@ class StoryContainer extends React.Component {
                   { message: messages.facebookShares, data: formatNumber(story.facebook_share_count) },
                   { message: messages.language, data: story.language || formatMessage(localMessages.unknownLanguage) },
                 ]}
+                columnWidth={2}
               />
             </Col>
-            <Col lg={6} xs={12} >
-              <StoryWordsContainer topicId={topicId} storiesId={storiesId} topicName={topicName} />
-            </Col>
+          </Row>
+          <Row>
             <Col lg={12}>
               <StoryInlinksContainer topicId={topicId} storiesId={storiesId} />
             </Col>
+          </Row>
+          <Row>
             <Col lg={12}>
               <StoryOutlinksContainer topicId={topicId} storiesId={storiesId} />
             </Col>
+          </Row>
+          <Row>
+            <Col lg={12}>
+              <StoryWordsContainer topicId={topicId} storiesId={storiesId} topicName={topicName} />
+            </Col>
+          </Row>
+          <Row>
             <Col lg={6}>
               <StoryPlaces
-                tags={story.story_tags.filter(t => t.tag_sets_id === TAG_SET_GEOGRAPHIC_PLACES)}
+                tags={story.story_tags ? story.story_tags.filter(t => t.tag_sets_id === TAG_SET_GEOGRAPHIC_PLACES) : []}
                 geocoderVersion={story.geocoderVersion}
               />
             </Col>
             <Col lg={6}>
               <StoryNytThemesContainer
                 storyId={storiesId}
-                tags={story.story_tags.filter(t => t.tag_sets_id === TAG_SET_NYT_THEMES)}
+                tags={story.story_tags ? story.story_tags.filter(t => t.tag_sets_id === TAG_SET_NYT_THEMES) : []}
               />
             </Col>
+          </Row>
+          <Row>
             <Col lg={6}>
               <StoryDetails topicId={topicId} story={story} />
             </Col>
@@ -173,10 +184,12 @@ StoryContainer.propTypes = {
   topicName: PropTypes.string.isRequired,
   topicId: PropTypes.number.isRequired,
   fetchStatus: PropTypes.string.isRequired,
+  filters: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({
   fetchStatus: state.topics.selected.story.info.fetchStatus,
+  filters: state.topics.selected.filters,
   storiesId: parseInt(ownProps.params.storiesId, 10),
   topicId: state.topics.selected.id,
   topicName: state.topics.selected.info.name,
@@ -184,23 +197,23 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  asyncFetch: () => {
-    dispatch(selectStory(ownProps.params.storiesId));
-    dispatch(fetchStory(ownProps.params.topicId, ownProps.params.storiesId));
-  },
-  fetchData: (storiesId) => {
+  fetchData: (storiesId, filters) => {
     dispatch(selectStory(storiesId));
-    dispatch(fetchStory(ownProps.params.topicId, storiesId));
+    dispatch(fetchStory(ownProps.params.topicId, storiesId, filters));
   },
 });
 
+function mergeProps(stateProps, dispatchProps, ownProps) {
+  return Object.assign({}, stateProps, dispatchProps, ownProps, {
+    asyncFetch: () => dispatchProps.fetchData(ownProps.storiesId, stateProps.filters),
+  });
+}
+
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
+    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeAsyncContainer(
-        injectIntl(
-          StoryContainer
-        )
+        StoryContainer
       )
     )
   );

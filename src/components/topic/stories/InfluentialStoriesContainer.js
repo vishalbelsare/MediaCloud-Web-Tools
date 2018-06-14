@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import Title from 'react-title-component';
+import { Helmet } from 'react-helmet';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
@@ -12,9 +12,11 @@ import { DownloadButton } from '../../common/IconButton';
 import DataCard from '../../common/DataCard';
 import LinkWithFilters from '../LinkWithFilters';
 import composeAsyncContainer from '../../common/AsyncContainer';
+import composeCsvDownloadNotifyContainer from '../../common/composers/CsvDownloadNotifyContainer';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import { pagedAndSortedLocation } from '../../util/location';
 import composePagedContainer from '../../common/PagedContainer';
+import { HELP_STORIES_CSV_COLUMNS } from '../../../lib/helpConstants';
 
 const localMessages = {
   title: { id: 'topic.influentialStories.title', defaultMessage: 'Influential Stories' },
@@ -33,9 +35,10 @@ class InfluentialStoriesContainer extends React.Component {
     sortData(newSort);
   }
   downloadCsv = () => {
-    const { filters, sort, topicId } = this.props;
+    const { filters, sort, topicId, notifyOfCsvDownload } = this.props;
     const url = `/api/topics/${topicId}/stories.csv?snapshotId=${filters.snapshotId}&timespanId=${filters.timespanId}&sort=${sort}`;
     window.location = url;
+    notifyOfCsvDownload(HELP_STORIES_CSV_COLUMNS);
   }
   render() {
     const { stories, showTweetCounts, sort, topicId, previousButton, nextButton, helpButton } = this.props;
@@ -45,7 +48,7 @@ class InfluentialStoriesContainer extends React.Component {
       <Grid>
         <Row>
           <Col lg={12} md={12} sm={12}>
-            <Title render={titleHandler} />
+            <Helmet><title>{titleHandler()}</title></Helmet>
             <DataCard border={false}>
               <div className="actions">
                 <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
@@ -77,6 +80,7 @@ InfluentialStoriesContainer.propTypes = {
   intl: PropTypes.object.isRequired,
   helpButton: PropTypes.node.isRequired,
   location: PropTypes.object.isRequired,
+  notifyOfCsvDownload: PropTypes.func,
   // from parent
   // from dispatch
   fetchData: PropTypes.func.isRequired,
@@ -154,7 +158,9 @@ export default
       composeHelpfulContainer(messages.storiesTableHelpTitle, messages.storiesTableHelpText)(
         composePagedContainer(
           composeAsyncContainer(
-            InfluentialStoriesContainer
+            composeCsvDownloadNotifyContainer(
+              InfluentialStoriesContainer
+            )
           )
         )
       )

@@ -14,18 +14,17 @@ import MediaPickerDialog from '../../common/mediaPicker/MediaPickerDialog';
 import QueryHelpDialog from '../../common/help/QueryHelpDialog';
 import SavedSearchControls from './SavedSearchControls';
 import { emptyString, validDate } from '../../../lib/formValidators';
-import { isStartDateAfterEndDate } from '../../../lib/dateUtil';
+import { isStartDateAfterEndDate, isValidSolrDate } from '../../../lib/dateUtil';
 import { KEYWORD, MEDIA, DATES } from '../../../lib/explorerUtil';
 
 const localMessages = {
   mainTitle: { id: 'explorer.queryBuilder.maintitle', defaultMessage: 'Create Query' },
   addButton: { id: 'explorer.queryBuilder.saveAll', defaultMessage: 'Search' },
   feedback: { id: 'explorer.queryBuilder.feedback', defaultMessage: 'We saved your new source' },
-  query: { id: 'explorer.queryBuilder.query', defaultMessage: 'Enter a query' },
+  query: { id: 'explorer.queryBuilder.query', defaultMessage: 'Enter search terms' },
   selectSandC: { id: 'explorer.queryBuilder.selectSAndC', defaultMessage: 'Select media' },
   SandC: { id: 'explorer.queryBuilder.sAndC', defaultMessage: 'Media' },
   color: { id: 'explorer.queryBuilder.color', defaultMessage: 'Choose a color' },
-  sentenceHeadline: { id: 'explorer.queryBuilder.sentenceHeadline', defaultMessage: 'Choose a sentence or headline' },
   dates: { id: 'explorer.queryBuilder.dates', defaultMessage: 'For dates' },
   dateTo: { id: 'explorer.queryBuilder.dateTo', defaultMessage: 'to' },
   queryHelpTitle: { id: 'explorer.queryBuilder.queryHelp.title', defaultMessage: 'Building Query Strings' },
@@ -43,32 +42,14 @@ const localMessages = {
   copyQueryMediaMsg: { id: 'explorer.queryform.title.copyQueryMedia', defaultMessage: 'Are you sure you want to copy these media to all your queries? This will replace the media for all your queries.' },
 };
 
-/*
-const focusQueryInputField = (input) => {
-  if (input && input.input !== null && input.input.refs) {
-    setTimeout(() => {
-      if (input.input !== null) {
-        input.input.refs.input.focus();
-      }
-    }, 100);
-  }
-};
-*/
-
 class QueryForm extends React.Component {
   state = { // do not focus on primary textfield if we have a dialog open
     childDialogOpen: false,
   }
 
-  componentDidMount() {
-    this.queryRef.input.refs.input.focus();
-  }
-
   setQueryFormChildDialogOpen = () => {
     this.setState({ childDialogOpen: !this.state.childDialogOpen });
   }
-  // required to be able to reference the Field/TextField component in order to set focus
-  preserveRef = ref => (this.queryRef = ref);
 
   render() {
     const { initialValues, onWillSearch, isEditable, selected, buttonLabel, onMediaDelete, onDateChange, handleLoadSearches, handleDeleteSearch, handleLoadSelectedSearch, savedSearches, searchNickname, handleSaveSearch,
@@ -86,14 +67,6 @@ class QueryForm extends React.Component {
       ...selected.sources,
       ...selected.collections,
     ];
-    /*
-    if (selected === null) return 'Error';
-    else if (this.queryRef) { // set the focus to query field ref when a query is selected
-      if ((selected.q === undefined || selected.q === '*') && !this.state.childDialogOpen) {
-        focusQueryInputField(this.queryRef);
-      }
-    }
-    */
     const currentColor = selected.color; // for ColorPicker
     const currentQ = selected.q;
     let mediaPicker = null;
@@ -109,8 +82,6 @@ class QueryForm extends React.Component {
       mediaLabel = formatMessage(localMessages.selectSandC);
     }
     if (!selected) { return null; }
-    // if we have a ref field, we have intend to set the focus to a particular field - the query field
-    // essentially an autofocus for the form
     return (
       <form className="app-form query-form" name="queryForm" onSubmit={handleSubmit(onSave)}>
         <div className="query-form-wrapper">
@@ -129,8 +100,6 @@ class QueryForm extends React.Component {
                     rowsMax={4}
                     fullWidth
                     onChange={this.focusSelect}
-                    withRef
-                    saveRef={(input) => { this.preserveRef(input); }}
                     component={renderTextFieldWithFocus}
                   />
                   <QueryHelpDialog />
@@ -263,15 +232,16 @@ function validate(values, props) {
     const errString = formatMessage(localMessages.queryStringError, { name: values.label });
     errors.q = { _error: errString };
   }
-  if (!validDate(values.startDate)) {
+  if (!validDate(values.startDate) || !isValidSolrDate(values.startDate)) {
     errors.startDate = { _error: formatMessage(localMessages.invalidDateWarning) };
   }
-  if (!validDate(values.endDate)) {
+  if (!validDate(values.endDate) || !isValidSolrDate(values.endDate)) {
     errors.endDate = { _error: formatMessage(localMessages.invalidDateWarning) };
   }
   if (validDate(values.startDate) && validDate(values.endDate) && isStartDateAfterEndDate(values.startDate, values.endDate)) {
     errors.startDate = { _error: formatMessage(localMessages.startDateWarning) };
   }
+
   return errors;
 }
 

@@ -6,13 +6,13 @@ const messages = {
   blogToolName: { id: 'app.blog.name', defaultMessage: 'Blog' },
   blogToolDescription: { id: 'app.blog.description', defaultMessage: 'Read updates on our research, projects, and ideas from us and our partners' },
   sourcesToolName: { id: 'app.sources.name', defaultMessage: 'Source Manager' },
-  sourcesToolDescription: { id: 'app.sources.description', defaultMessage: 'Browse the media sources and collections in our database, and suggest more to add.' },
+  sourcesToolDescription: { id: 'app.sources.description', defaultMessage: 'Check the breadth of our global coverage by browsing the media sources and collections in our database, and suggesting more to add.' },
   topicsToolName: { id: 'app.topics.name', defaultMessage: 'Topic Mapper' },
-  topicsToolDescription: { id: 'app.topics.description', defaultMessage: 'Dive deeply into coverage of issue with more stories, influence metrics, and techniques for finding different narratives.' },
+  topicsToolDescription: { id: 'app.topics.description', defaultMessage: 'Dive deeply into coverage of an issue by collecting more stories, analyzing influence, and slicing and dicing the stories to discover narratives.' },
   toolsAppName: { id: 'app.tools.name', defaultMessage: 'Tools' },
   toolsAppDescription: { id: 'app.tools.description', defaultMessage: 'Support for MediaCloud, including FAQs, tools and how to use them' },
   explorerToolName: { id: 'app.explorer.name', defaultMessage: 'Explorer' },
-  explorerToolDescription: { id: 'app.explorer.description', defaultMessage: 'Get a quick overview of how your topic of interest is covered by digital news media.' },
+  explorerToolDescription: { id: 'app.explorer.description', defaultMessage: 'Get a quick overview of how your topic of interest is covered by digital news media by exploring attention, language, and representation.' },
   readGuide: { id: 'app.readGuide', defaultMessage: 'Read User Guide' },
 
   c4cmName: { id: 'c4cm.name', defaultMessage: 'MIT Center for Civic Media' },
@@ -87,6 +87,10 @@ const messages = {
   language: { id: 'common.language', defaultMessage: 'Language' },
   unknown: { id: 'common.Unknown', defaultMessage: 'Unknown' },
 
+  notEnoughCoverage: { id: 'common.themes.notEnoughCoverage',
+    defaultMessage: '<b>Not enough data to show.</b><br /><i>Only {pct} of your stories have been processed for themes, people, organizations and geographic places.  We don\'t want to show you data that isn\'t representative, so we won\'t show partial results here. This percentage might be low because we only process English stories for this data, and your query might be in other languages. It also could be that your query is using older stories that were collected before we added this processing.</i>',
+  },
+
   startDate: { id: 'common.startDate', defaultMessage: 'Start Date' },
   endDate: { id: 'common.endDate', defaultMessage: 'End Date' },
 
@@ -94,8 +98,10 @@ const messages = {
   wordcloudHelpText: { id: 'wordcloud.help.text',
     defaultMessage: '<p>This is an ordered word cloud. The words that show up more often appear bigger, and show up first in the list.  This is based on a sample of the stories, not all of them. We have validated that the sample size is representative of the entire set of results.</p><p>You can download a CSV file of word counts (from a larger sample of stories). You can also download CSV files listing the bigrams (two-word phrases) or trigrams (three-word phrases) used most often.</p><p>Use the view options to render a more standard, unordered, word cloud.</p><p>We count words based on their stem, but show you the most commonly used stem within the sample.  That means if you see a word like "education" as the top word, that includes any variations of the "educ" stem (ie. educated, education, etc).We have removed common english stop-words (ie. "if", "the", etc.), but you might see words in other languages that we don\'t have stop-word lists for.</p><p>',
   },
-  wordCloudWord2VecLayoutHelp: { id: 'wordcloud.word2VecHelp', defaultMessage: '<p><b>About the Word2Vec 2D Views</b></p><p>The Word2Vec Map shows you how the most common words are used together. Each word is bigger and darker if it is used more, and it is positioned next to other words it is used with. This "Goolgle News" map is based on a pretrained model of vectors from the Google News project (<a href="https://code.google.com/archive/p/word2vec/">code</a>, <a href="https://arxiv.org/pdf/1310.4546.pdf">citation</a>). On this view, words that are used together more often in general news reporting show up closer together on the map. Looking at physical clusters of words can help you identify potential subtopics that capture different takes on your issue.</p>' },
-  wordCloudTopicWord2VecLayoutHelp: { id: 'wordcloud.topicWord2VecHelp', defaultMessage: '<p>On the Topic-specific map, words that are used together more often in the topic show up closer together on this map. The difference between the two maps can reveal how reporting on this topic is different than more general news reporting.</p>' },
+
+  wordSpaceLayoutHelp: { id: 'wordSpace.help', defaultMessage: '<p><b>Reading the Word Space</b></p><p>This chart highlight the parts of the general news conversations that match your queries. Learn more about it in <A href="https://mediacloud.org/news/2018/5/23/word-spaces-visualizing-word2vec-to-support-media-analysis">our recent blog post</a>. Words that are close together have a high probability of showing up in similar contexts in the news. Words that are farther apart are very unlikely to be used in similar contexts.</p><p>Like a standard word cloud, the and size of a word tells you how often it is used; bigger and darker words are used more often.</p><p>When you hover over a word with your mouse, it changes color to make it easier to read. Words that are used in similar phrases also change color, and are highlighted inside a light cone. This "similarity" is based on an algorithmic analysis of how all the words are used together.</p><p>You can Double-click to zoom in to a specific area of the chart; double-click again to zoom out.</p><p><b>Data Source</b></p><p>The layout of words is based on a word2vec machine learning model, which uses neural networks to build a model of how likely a word is to show up in phrases, and how likely phrases are to contain a word. We have integrated the pretrained word2vec model from the Google News project (<a href="https://code.google.com/archive/p/word2vec/">code</a>, <a href="https://arxiv.org/pdf/1310.4546.pdf">citation</a>). This was built based on the patterns of use in a huge corpus of English language news reporting, and thus reflects biases and narratives that are commonly seen there.</p>' },
+
+  wordCloudTopicWord2VecLayoutHelp: { id: 'wordcloud.topicWord2VecHelp', defaultMessage: '<b>About this Custom word2vec Model</b></p><p>The layout of words is based on a word2vec machine learning model, which uses neural networks to build a model of how likely a word is to show up in phrases, and how likely phrases are to contain a word. We have created a custom model for this word2vec topic based solely on the stories it contains (unlike in Explorer, where we use the Google News public model).</p>' },
 
   media: { id: 'media', defaultMessage: 'Media Source' },
   mediaPlural: { id: 'media.plural', defaultMessage: 'Media Sources' },
@@ -123,7 +129,7 @@ const messages = {
     defaultMessage: '<p>This table has one row for each Story.  The column currently being used to sort the results has a little down arrow next to it.  Click one of the green column headers to change how it is sorted.  Here is a summary of the columns:</p><ul><li>Title: the title of the story; click to see details about this story</li><li>Media Source: the name of the Media Source; click to see details about this source\'s content within this Topic</li><li>Publish Date: our best guess of the date and time this content was published</li><li>Media Inlinks: how many unique other Media Sources have links to this content in the Topic</li><li>Outlinks: the number of links in this story to other stories</li><li>Bit.ly Clicks: the number of clicks on links to this story shortened using the Bit.ly URL shortening service</li><li>Facebook Shares: the number of times this story was shared on Facebook</li></ul><p>Click the download button in the top right to download a CSV of the full list of stories</p>',
   },
   heatMapHelpText: { id: 'heatmap.help.text',
-    defaultMessage: '<p>The country map shows you an intensity of how often countries are the main focus of stories. This uses our <a href="https://cliff.mediacloud.org" target="_top">CLIFF-CLAVIN</a> geolocation engine to determine which countries each story is about (based on the places mentioned). The darker the color, the more a country was focused on. Note that this is using a sampling of the sentences, not all of them. If you download a CSV of the results, the counts you see are also based on this sampling.</p><p>We have been tagging all english language stories with the places they mention since June 1, 2016.</p>',
+    defaultMessage: '<p>The country map shows you an intensity of how often countries are the main focus of stories. This uses our <a href="https://cliff.mediacloud.org" target="_top">CLIFF-CLAVIN</a> geolocation engine to determine which countries each story is about (based on the places mentioned). The darker the color, the more a country was focused on. Note that this is using a sampling of the stories, not all of them. If you download a CSV of the results, the counts you see are also based on this sampling.</p><p>We have been tagging all english language stories with the places they mention since June 1, 2016.</p>',
   },
   word: { id: 'word', defaultMessage: 'Word Source' },
   ok: { id: 'ok', defaultMessage: 'OK' },
@@ -174,8 +180,8 @@ const messages = {
   home: { id: 'home', defaultMessage: 'Home' },
   required: { id: 'required', defaultMessage: 'Required' },
   unimplemented: { id: 'unimplemented', defaultMessage: 'Unimplemented' },
-  downloadDataCsv: { id: 'downloadDataCsv', defaultMessage: 'Download {name} data CSV' },
-  downloadDataSvg: { id: 'downloadDataSvg', defaultMessage: 'Download {name} data SVG' },
+  downloadDataCsv: { id: 'downloadDataCsv', defaultMessage: 'Download {name} list CSV' },
+  downloadDataSvg: { id: 'downloadDataSvg', defaultMessage: 'Download {name} list SVG' },
   play: { id: 'play', defaultMessage: 'Play' },
   pause: { id: 'pause', defaultMessage: 'Pause' },
   skipNext: { id: 'skipNext', defaultMessage: 'Next' },
@@ -204,12 +210,14 @@ const messages = {
   passwordsMismatch: { id: 'user.mismatchPassword', defaultMessage: 'Passwords do not match.' },
   passwordTooShort: { id: 'user.passwordTooShort', defaultMessage: 'Passwords must be at least 8 characters long.' },
 
+  currentlyDownloadingCsv: { id: 'download.csv.downloading', defaultMessage: 'Your CSV is downloading.' },
+  learnMoreAboutColumnsCsv: { id: 'download.csv.learnMore', defaultMessage: 'Learn more about the columns' },
   attentionChartHelpText: { id: 'attentionChart.help.text',
-    defaultMessage: '<p>The vertical axis shows the number of sentences that are about the topic in the stories we have collected.</p><p>Roll over the line chart to see the sentences per day in each timespan shown on the graph.</p><p>Click the download button in the top right to download the raw counts in a CSV spreadsheet.  Click the three lines in the top right of the chart to export the chart as an image file.</p>',
+    defaultMessage: '<p>The vertical axis shows the number of stories that are about the topic in the stories we have collected.</p><p>Roll over the line chart to see the stories per day in each timespan shown on the graph.</p><p>Click the download button in the top right to download the raw counts in a CSV spreadsheet.  Click the three lines in the top right of the chart to export the chart as an image file.</p>',
   },
 
   wordTreeHelpText: { id: 'wordTree.help.text',
-    defaultMessage: '<p>This "word tree" visualization lets you explore the use of this word in context.  Revealing the words it is used with can be far more revealing than the simple word cloud presented.  The word is at the center, with the words that are most often used just before it on the left, and the words used most often just after on the right.</p><p>Notes:</p><ul><li>This is based on a random sample of 1000 sentences fragments, which we haven\'t exhaustively tested to see if is a representative sample (but seems to work well).</li><li>This only includes the 5 words before and after the use of the keyword you are looking at (due to copywrite sensitivities).</li><li>This uses the term, not the stem.</li></ul><p>Those caveat noted, it can still be useful to get a sense of <b>how</b> this word is being used.</p>',
+    defaultMessage: '<p>This "word tree" visualization lets you explore the use of this word in context.  Revealing the words it is used with can be far more revealing than the simple word cloud presented.  The word is at the center, with the words that are most often used just before it on the left, and the words used most often just after on the right.</p><p>Notes:</p><ul><li>This is based on a random sample of 1000 sentence fragments, which we haven\'t exhaustively tested to see if is a representative sample (but seems to work well).</li><li>This only includes the 5 words before and after the use of the keyword you are looking at (due to copywrite sensitivities).</li><li>This uses the term, not the stem.</li></ul><p>Those caveat noted, it can still be useful to get a sense of <b>how</b> this word is being used.</p>',
   },
 
   totalStoriesStat: { id: 'totalStories', defaultMessage: 'Total Stories' },
@@ -225,7 +233,7 @@ const messages = {
   entityHelpTitle: { id: 'geo.help.title', defaultMessage: 'About Our Entity Detection' },
   entityHelpContent: { id: 'geo.help.content', defaultMessage: 'We automatically detect the people, organizations, and places in articles using our <a href="https://cliff.mediacloud.org/" target="_top">CLIFF-CLAVIN engine</a>. This tags each story with the people and organizations that it mentions.  We do additional processing and disambiguation to tag stories with the country and state that our custom heuristic algorithm thinks they are about (ie. not each country/state mentioned).' },
 
-  nytThemeHelpDetails: { id: 'nytTheme.help.deatils', defaultMessage: '<p>We run all our english stories through set of trained models to predict what themes they focus on.  To build these models we took the approach of transfer learning - starting with the <a href="https://code.google.com/archive/p/word2vec/">Google News word2vec</a> models and then adapting them to produce based on the <a href="https://catalog.ldc.upenn.edu/ldc2008t19">New York Times annotated corpus</a>.  We score each story against the most common 600 descriptors from the NYT corpus.  Any descriptors that score above 0.2 probability are counted as themes this story focuses on.</p>' },
+  nytThemeHelpDetails: { id: 'nytTheme.help.deatils', defaultMessage: '<p>We run all our english stories through set of trained models to predict what themes they focus on.  To build these models we took the approach of transfer learning - starting with the <a href="https://code.google.com/archive/p/word2vec/" target="_blank">Google News word2vec</a> models and then adapting them to produce based on the <a href="https://catalog.ldc.upenn.edu/ldc2008t19" target="_blank">New York Times annotated corpus</a>.  We score each story against <a href="https://mediacloud.org/support/theme-list" target="_blank">the list of the 600 most used descriptors</a> from the NYT corpus.  Any descriptors that score above 0.2 probability are counted as themes this story focuses on.</p>' },
 
   mediaTypeHelpTitle: { id: 'mediaType.help.title', defaultMessage: 'About Media Type' },
   mediaTypeHelpContent: { id: 'mediaType.help.content', defaultMessage: `
@@ -254,6 +262,8 @@ const messages = {
   peopleAndPlaces: { id: 'peopleAndPlaces', defaultMessage: 'People & Places' },
   storiesPerDay: { id: 'source.storiesPerDay', defaultMessage: 'Stories per Day' },
   sourceStartDate: { id: 'source.startDate', defaultMessage: 'First Story' },
+
+  countsVsPercentageHelp: { id: 'explorer.countsVsPercentageHelp', defaultMessage: '<p><b>Counts vs. Percentage</b><br />You can view the attention devoted to your issue in terms of absolute counts or as percentages.  Absolute counts suffer from weekly ebbs and flows, and while searching collections don\'t reflect when we add more sources.  You can switch to view percentages in order to see normalized results that you can compare across sources and collections. To generate the normalization we run each query again without the keywords.</p>' },
 
 };
 
