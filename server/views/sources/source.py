@@ -18,9 +18,7 @@ from server.views.sources.words import word_count, stream_wordcount_csv
 from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
 from server.views.sources.stories_split_by_time import stream_split_stories_csv
 import server.views.sources.apicache as apicache
-from server.views.sources.favorites import add_user_favorite_flag_to_sources, add_user_favorite_flag_to_collections
->>>>>>> b204f9f6cdd98486d585be08965f12de0c3abe1a
-
+# from server.views.sources.favorites import add_user_favorite_flag_to_sources, add_user_favorite_flag_to_collections
 
 logger = logging.getLogger(__name__)
 

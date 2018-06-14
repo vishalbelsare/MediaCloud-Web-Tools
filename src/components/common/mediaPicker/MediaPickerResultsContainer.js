@@ -3,7 +3,7 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { selectMedia, toggleMedia, selectMediaPickerQueryArgs, resetMediaPickerQueryArgs, resetMediaPickerSources, resetMediaPickerCollections } from '../../../actions/systemActions';
-import { PICK_COLLECTION, PICK_SOURCE, PICK_COUNTRY, PICK_STARRED } from '../../../lib/explorerUtil';
+import { PICK_COLLECTION, PICK_SOURCE, PICK_COUNTRY, PICK_STARRED, PICK_FEATURED } from '../../../lib/explorerUtil';
 import * as fetchConstants from '../../../lib/fetchConstants';
 import CountryCollectionSearchResultsContainer from './results/CountryCollectionSearchResultsContainer';
 import AllCollectionSearchResultsContainer from './results/AllCollectionSearchResultsContainer';
@@ -38,11 +38,7 @@ class MediaPickerResultsContainer extends React.Component {
 
     switch (whichProps.selectedMediaQueryType) {
       case PICK_COUNTRY:
-        if (whichProps.selectedMediaQueryKeyword !== null && whichProps.selectedMediaQueryKeyword !== undefined) {
-          whichList = whichProps.collectionResults;
-        } else {
-          whichList = whichProps.featured;
-        }
+        whichList = whichProps.collectionResults;
         break;
       case PICK_COLLECTION:
         whichList = whichProps.collectionResults;
@@ -52,6 +48,9 @@ class MediaPickerResultsContainer extends React.Component {
         break;
       case PICK_STARRED:
         whichList = whichProps.favoritedCollectionResults;
+        break;
+      case PICK_FEATURED:
+        whichList = whichProps.featured;
         break;
       default:
         break;
@@ -111,6 +110,15 @@ class MediaPickerResultsContainer extends React.Component {
         break;
       case PICK_STARRED:
         content = <StarredSearchResultsContainer handleMediaConcurrency={toggleConcurrency} handleToggleAndSelectMedia={handleToggleAndSelectMedia} />;
+        break;
+      case PICK_FEATURED:
+        content = (
+          <AllCollectionSearchResultsContainer
+            whichTagSet={VALID_COLLECTION_IDS}
+            handleMediaConcurrency={toggleConcurrency}
+            handleToggleAndSelectMedia={handleToggleAndSelectMedia}
+          />
+        );
         break;
       default:
         break;
