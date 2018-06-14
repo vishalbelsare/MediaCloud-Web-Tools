@@ -25,7 +25,7 @@ const TabSearchResultsContainer = (props) => {
   if (fetchStatus === FETCH_ONGOING) {
     // we have to do this here to show a loading spinner when first searching (and featured collections are showing)
     content = <LoadingSpinner />;
-  } else if (queryResults && (queryResults.list && selectedMediaQueryKeyword)) {
+  } else if (queryResults && (queryResults.featured || queryResults.favoritedCollections || queryResults.favoritedSources)) {
     content = (
       <div className="media-picker-results-container">
         <Grid>
@@ -33,7 +33,7 @@ const TabSearchResultsContainer = (props) => {
             <TabSelector
               tabLabels={[
                 formatMessage(localMessages.featured),
-                formatMessage(localMessages.starred),
+                formatMessage(localMessages.favorited),
               ]}
               onViewSelected={index => this.setState({ selectedViewIndex: index })}
             />
@@ -42,7 +42,7 @@ const TabSearchResultsContainer = (props) => {
         <div className="media-picker-tabbed-content-wrapper">
           <CollectionResultsTable
             title={formatMessage(localMessages.title, { name: selectedMediaQueryKeyword })}
-            collections={queryResults.list}
+            collections={queryResults.featured.list}
             handleToggleAndSelectMedia={handleToggleAndSelectMedia}
           />
         </div>

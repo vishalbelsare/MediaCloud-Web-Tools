@@ -2,9 +2,10 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { selectMediaPickerQueryArgs, fetchMediaPickerCollections } from '../../../../actions/systemActions';
-import { TabSearchResultsContainer from './CollectionSearchResultsContainer';
-import { notEmptyString } from '../../../../lib/formValidators';
+import composeAsyncContainer from '../../AsyncContainer';
+import { selectMediaPickerQueryArgs, fetchMediaPickerFeaturedCollections, fetchFavoriteCollections, fetchFavoriteSources } from '../../../../actions/systemActions';
+import TabSearchResultsContainer from './TabSearchResultsContainer';
+import TAG_SET_MC_ID from '../../../../lib/tagUtil';
 
 const localMessages = {
   title: { id: 'system.mediaPicker.collections.title', defaultMessage: 'Collections matching "{name}"' },
@@ -20,8 +21,12 @@ class FeaturedFavoriteSearchResultsContainer extends React.Component {
     updateMediaQuerySelection(updatedQueryObj);
   }
   render() {
-    const { selectedMediaQueryType, selectedMediaQueryKeyword, queryResults, handleToggleAndSelectMedia, fetchStatus } = this.props;
-    // merge sources and collections here ...
+    const { selectedMediaQueryType, selectedMediaQueryKeyword, featured, favoritedCollections, favoritedSources, handleToggleAndSelectMedia, fetchStatus } = this.props;
+    const queryResults = {
+      featured,
+      favoritedCollections,
+      favoritedSources,
+    };
     return (
       <div>
         <TabSearchResultsContainer
@@ -50,32 +55,41 @@ FeaturedFavoriteSearchResultsContainer.propTypes = {
   // from state
   selectedMediaQueryKeyword: PropTypes.string,
   selectedMediaQueryType: PropTypes.number,
-  collectionResults: PropTypes.object,
-  sourceResults: PropTypes.object,
+  featured: PropTypes.object,
+  favoritedCollections: PropTypes.object,
+  favoritedSources: PropTypes.object,
   fetchStatus: PropTypes.string,
 };
 
 const mapStateToProps = state => ({
-  fetchStatus: state.system.mediaPicker.collectionQueryResults.fetchStatus,
+  fetchStatus: state.system.mediaPicker.featured.fetchStatus,
   selectedMediaQueryType: state.system.mediaPicker.selectMediaQuery ? state.system.mediaPicker.selectMediaQuery.args.type : 0,
   selectedMediaQueryKeyword: state.system.mediaPicker.selectMediaQuery ? state.system.mediaPicker.selectMediaQuery.args.mediaKeyword : null,
-  collectionResults: state.system.mediaPicker.collectionQueryResults,
-  sourceResults: state.system.mediaPicker.sourceQueryResults,
+  featured: state.system.mediaPicker.featured ? state.system.mediaPicker.featured : null,
+  favoritedCollections: state.system.mediaPicker.favoritedCollections ? state.system.mediaPicker.favoritedCollections.results : null,
+  favoritedSources: state.system.mediaPicker.favoritedSources ? state.system.mediaPicker.favoritedSources.results : null,
+
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = dispatch => ({
   updateMediaQuerySelection: (values) => {
-    if (values && notEmptyString(values.mediaKeyword)) {
+    if (values) {
       dispatch(selectMediaPickerQueryArgs(values));
-      dispatch(fetchMediaPickerCollections({ media_keyword: values.mediaKeyword, which_set: ownProps.whichTagSet }));
+      dispatch(fetchMediaPickerFeaturedCollections(TAG_SET_MC_ID));
+      dispatch(fetchFavoriteCollections({ media_keyword: values.mediaKeyword }));
+      dispatch(fetchFavoriteSources({ media_keyword: values.mediaKeyword }));
     }
+  },
+  asyncFetch: () => {
+    dispatch(fetchMediaPickerFeaturedCollections(TAG_SET_MC_ID));
   },
 });
 
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      FeaturedFavoriteSearchResultsContainer
+      composeAsyncContainer(
+        FeaturedFavoriteSearchResultsContainer
+      )
     )
   );
-
