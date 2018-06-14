@@ -62,7 +62,7 @@ FeaturedFavoriteSearchResultsContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  fetchStatus: state.system.mediaPicker.featured.fetchStatus,
+  fetchStatus: state.system.mediaPicker.featured.fetchStatus || state.system.mediaPicker.favoritedCollections.fetchStatus || state.system.mediaPicker.favoritedSources.fetchStatus,
   selectedMediaQueryType: state.system.mediaPicker.selectMediaQuery ? state.system.mediaPicker.selectMediaQuery.args.type : 0,
   selectedMediaQueryKeyword: state.system.mediaPicker.selectMediaQuery ? state.system.mediaPicker.selectMediaQuery.args.mediaKeyword : null,
   featured: state.system.mediaPicker.featured ? state.system.mediaPicker.featured : null,
@@ -81,7 +81,10 @@ const mapDispatchToProps = dispatch => ({
     }
   },
   asyncFetch: () => {
+    dispatch(selectMediaPickerQueryArgs(3));
     dispatch(fetchMediaPickerFeaturedCollections(TAG_SET_MC_ID));
+    dispatch(fetchFavoriteCollections());
+    dispatch(fetchFavoriteSources());
   },
 });
 

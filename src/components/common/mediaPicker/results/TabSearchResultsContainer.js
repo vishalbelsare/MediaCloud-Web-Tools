@@ -4,6 +4,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row } from 'react-flexbox-grid/lib';
 import CollectionResultsTable from './CollectionResultsTable';
+import StarredSearchResultsContainer from './StarredSearchResultsContainer';
 import MediaPickerSearchForm from '../MediaPickerSearchForm';
 import { FETCH_ONGOING } from '../../../../lib/fetchConstants';
 import LoadingSpinner from '../../../common/LoadingSpinner';
@@ -17,28 +18,49 @@ const localMessages = {
   favorited: { id: 'system.mediaPicker.collections.title', defaultMessage: 'favorited' },
 };
 
+const VIEW_FAVORITES = 0;
+const VIEW_FEATURED = 1;
 
-const TabSearchResultsContainer = (props) => {
-  const { selectedMediaQueryKeyword, initItems, queryResults, onSearch, handleToggleAndSelectMedia, fetchStatus, hintTextMsg } = props;
-  const { formatMessage } = props.intl;
-  let content = null;
-  if (fetchStatus === FETCH_ONGOING) {
-    // we have to do this here to show a loading spinner when first searching (and featured collections are showing)
-    content = <LoadingSpinner />;
-  } else if (queryResults && (queryResults.featured || queryResults.favoritedCollections || queryResults.favoritedSources)) {
-    content = (
+class TabSearchResultsContainer extends React.Component {
+  state = {
+    selectedViewIndex: VIEW_FAVORITES,
+  };
+  render() {
+    const { selectedMediaQueryKeyword, queryResults, onSearch, handleToggleAndSelectMedia, fetchStatus, hintTextMsg } = this.props;
+    const { formatMessage } = this.props.intl;
+    const tabs = (
       <div className="media-picker-results-container">
         <Grid>
           <Row>
             <TabSelector
               tabLabels={[
-                formatMessage(localMessages.featured),
                 formatMessage(localMessages.favorited),
+                formatMessage(localMessages.featured),
               ]}
               onViewSelected={index => this.setState({ selectedViewIndex: index })}
             />
           </Row>
         </Grid>
+      </div>
+    );
+    let tabContent = null;
+    if (fetchStatus === FETCH_ONGOING) {
+      // we have to do this here to show a loading spinner when first searching (and featured collections are showing)
+      tabContent = <LoadingSpinner />;
+    } else if (this.state.selectedViewIndex === VIEW_FAVORITES &&
+      queryResults && (queryResults.favoritedCollections || queryResults.favoritedSources)) {
+      tabContent = (
+        <div className="media-picker-tabbed-content-wrapper">
+          <StarredSearchResultsContainer
+            title={formatMessage(localMessages.title, { name: selectedMediaQueryKeyword })}
+            collections={queryResults.featured.list}
+            handleToggleAndSelectMedia={handleToggleAndSelectMedia}
+          />
+        </div>
+      );
+    } else if (this.state.selectedViewIndex === VIEW_FEATURED &&
+      queryResults && (queryResults.featured)) {
+      tabContent = (
         <div className="media-picker-tabbed-content-wrapper">
           <CollectionResultsTable
             title={formatMessage(localMessages.title, { name: selectedMediaQueryKeyword })}
@@ -46,24 +68,23 @@ const TabSearchResultsContainer = (props) => {
             handleToggleAndSelectMedia={handleToggleAndSelectMedia}
           />
         </div>
+      );
+    } else {
+      tabContent = <FormattedMessage {...localMessages.noResults} />;
+    }
+    return (
+      <div>
+        <MediaPickerSearchForm
+          initValues={{ storedKeyword: { mediaKeyword: selectedMediaQueryKeyword } }}
+          onSearch={val => onSearch(val)}
+          hintText={formatMessage(hintTextMsg || localMessages.hintText)}
+        />
+        {tabs}
+        {tabContent}
       </div>
     );
-  } else if (initItems) {
-    content = initItems;
-  } else {
-    content = <FormattedMessage {...localMessages.noResults} />;
   }
-  return (
-    <div>
-      <MediaPickerSearchForm
-        initValues={{ storedKeyword: { mediaKeyword: selectedMediaQueryKeyword } }}
-        onSearch={val => onSearch(val)}
-        hintText={formatMessage(hintTextMsg || localMessages.hintText)}
-      />
-      {content}
-    </div>
-  );
-};
+}
 
 
 TabSearchResultsContainer.propTypes = {
