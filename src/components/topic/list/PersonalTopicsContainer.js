@@ -12,12 +12,16 @@ const localMessages = {
   empty: { id: 'topics.personal.none', defaultMessage: 'You haven\'t created any topics yet. Explore the public topics, or click the "Create a New Topic" button above to make your own.' },
 };
 
+const userIsOwner = (owners, user) => owners.filter(topicUser => topicUser.email === user.email).length > 0;
+
+const topicsUserOwns = (topics, user) => topics.filter(topic => userIsOwner(topic.owners, user));
+
 const PersonalTopicsContainer = (props) => {
-  const { topics, onSetFavorited, asyncFetch, prevButton, nextButton } = props;
+  const { topics, onSetFavorited, asyncFetch, prevButton, nextButton, user, showAll } = props;
   return (
     <div className="personal-topics-list">
       <TopicPreviewList
-        topics={topics}
+        topics={(showAll === true) ? topics : topicsUserOwns(topics, user)}
         linkGenerator={t => `/topics/${t.topics_id}/summary`}
         onSetFavorited={(id, isFav) => { onSetFavorited(id, isFav); asyncFetch(); }}
         emptyMsg={localMessages.empty}
@@ -35,8 +39,10 @@ const PersonalTopicsContainer = (props) => {
 PersonalTopicsContainer.propTypes = {
   // from parent
   onSetFavorited: PropTypes.func,
+  showAll: PropTypes.bool,
   // from state
   topics: PropTypes.array,
+  user: PropTypes.object.isRequired,
   // from compositional chain
   intl: PropTypes.object.isRequired,
   prevButton: PropTypes.node,
@@ -46,6 +52,7 @@ PersonalTopicsContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
+  user: state.user,
   fetchStatus: state.topics.personalList.fetchStatus,
   topics: state.topics.personalList.topics,
   links: state.topics.personalList.link_ids,
