@@ -5,9 +5,10 @@ import * as d3 from 'd3';
 import dimensions from 'react-dimensions';
 import { getBrandDarkColor } from '../../../../styles/colors';
 
-function drawViz(wrapperElement, props) {
-  const { containerWidth, timespans, selectedTimespan, onTimespanSelected, startDate, endDate } = props;
-  const formattedDate = d => props.intl.formatDate(d, { year: '2-digit', month: 'numeric', day: 'numeric' });
+function drawViz(wrapperElement, {
+  containerWidth, timespans, selectedTimespan, onTimespanSelected, startDate, endDate, intl,
+}) {
+  const formattedDate = d => intl.formatDate(d, { year: '2-digit', month: 'numeric', day: 'numeric' });
   const horizontalPadding = 30;
   const verticalPadding = 0;
   const width = containerWidth - horizontalPadding;
