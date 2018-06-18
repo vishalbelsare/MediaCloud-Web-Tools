@@ -32,7 +32,7 @@ const SourceFeedTable = (props) => {
                 {feed.name}
               </td>
               <td>
-                {feed.feed_type}
+                {feed.type}
               </td>
               <td>
                 {feed.active ? 'active' : 'disabled'}

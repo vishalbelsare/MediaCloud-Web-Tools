@@ -45,7 +45,7 @@ const CreateSourceFeedContainer = (props) => {
       </h2>
       <SourceFeedForm
         initialValues={{
-          feed_type: 'syndicated',
+          type: 'syndicated',
           active: true,
         }}
         onSave={handleSave}
@@ -83,7 +83,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       name: values.name,
       url: values.url,
       active: values.active,
-      feed_type: values.feed_type,
+      type: values.type,
     };
     dispatch(createFeed(ownProps.params.sourceId, infoToSave))
       .then((result) => {

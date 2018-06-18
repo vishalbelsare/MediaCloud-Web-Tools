@@ -56,7 +56,7 @@ const SourceFeedForm = (props) => {
           </span>
         </Col>
         <Col md={8}>
-          <Field name="feed_type" component={renderSelectField} >
+          <Field name="type" component={renderSelectField} >
             <MenuItem key="syndicated" value="syndicated" primaryText={formatMessage(localMessages.typeSyndicated)} />
             <MenuItem key="web_page" value="web_page" primaryText={formatMessage(localMessages.typeWebPage)} />
           </Field>
@@ -104,8 +104,8 @@ SourceFeedForm.propTypes = {
 
 function validate(values) {
   const errors = {};
-  if (emptyString(values.feed_type)) {
-    errors.feed_type = messages.required;
+  if (emptyString(values.type)) {
+    errors.type = messages.required;
   }
   if (emptyString(values.url)) {
     errors.url = messages.required;

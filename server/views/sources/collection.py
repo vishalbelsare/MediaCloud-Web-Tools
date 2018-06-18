@@ -146,7 +146,7 @@ def _media_list_edit_worker(media_id):
         latest_scrape_job = scrape_jobs['job_states'][0]
     # active feed count
     feeds = user_mc.feedList(media_id)
-    active_syndicated_feeds = [f for f in feeds if f['active'] and f['feed_type'] == 'syndicated']
+    active_syndicated_feeds = [f for f in feeds if f['active'] and f['type'] == 'syndicated']
     active_feed_count = len(active_syndicated_feeds)
     return {
         'media_id': media_id,

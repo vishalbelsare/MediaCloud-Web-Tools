@@ -42,7 +42,7 @@ def feed_create(media_id):
     user_mc = user_admin_mediacloud_client()
     name = request.form['name']
     url = request.form['url']
-    feed_type = request.form['feed_type'] if 'feed_type' in request.form else None  # this is optional
+    feed_type = request.form['type'] if 'type' in request.form else None  # this is optional
     active = request.form['active'] if 'active' in request.form else None  # this is optional
 
     result = user_mc.feedCreate(media_id, name, url, feed_type, active)
@@ -56,7 +56,7 @@ def feed_update(feed_id):
     user_mc = user_admin_mediacloud_client()
     name = request.form['name']
     url = request.form['url']
-    feed_type = request.form['feed_type'] if 'feed_type' in request.form else None  # this is optional
+    feed_type = request.form['type'] if 'type' in request.form else None  # this is optional
     active = request.form['active'] if 'active' in request.form else None  # this is optional
 
     result = user_mc.feedUpdate(feeds_id=feed_id, name=name, url=url, feed_type=feed_type, active=active)
@@ -83,7 +83,7 @@ def source_feed_list_page(media_id, max_feed_id):
 
 def stream_feed_csv(filename, media_id):
     response = cached_feed(media_id)
-    props = ['name', 'feed_type', 'url']
+    props = ['name', 'type', 'url']
     return csv.stream_response(response, props, filename)
 
 

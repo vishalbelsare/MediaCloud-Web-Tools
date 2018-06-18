@@ -164,12 +164,12 @@ export function sourceFeed(mediaId, feedId) {
 }
 
 export function createFeed(mediaId, params) {
-  const acceptedParams = acceptParams(params, ['name', 'url', 'feed_type', 'active']);
+  const acceptedParams = acceptParams(params, ['name', 'url', 'type', 'active']);
   return createPostingApiPromise(`/api/sources/${mediaId}/feeds/create`, acceptedParams);
 }
 
 export function updateFeed(feedId, params) {
-  const acceptedParams = acceptParams(params, ['name', 'url', 'feed_type', 'active']);
+  const acceptedParams = acceptParams(params, ['name', 'url', 'type', 'active']);
   return createPostingApiPromise(`/api/sources/feeds/${feedId}/update`, acceptedParams);
 }
 
