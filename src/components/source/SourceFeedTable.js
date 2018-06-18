@@ -23,11 +23,11 @@ const SourceFeedTable = (props) => {
           <tr>
             <th><FormattedMessage {...messages.feedName} /></th>
             <th><FormattedMessage {...messages.feedType} /></th>
-            <th><FormattedMessage {...messages.feedStatus} /></th>
+            <th><FormattedMessage {...messages.feedIsActive} /></th>
             <th><FormattedMessage {...messages.feedUrl} /></th>
           </tr>
           {feeds.map((feed, idx) =>
-            (<tr key={feed.feeds_id} className={`${(idx % 2 === 0) ? 'even' : 'odd'} feed-${feed.feed_status}`}>
+            (<tr key={feed.feeds_id} className={`${(idx % 2 === 0) ? 'even' : 'odd'} feed-${(feed.active) ? 'active' : 'disabled'}`}>
               <td>
                 {feed.name}
               </td>
@@ -35,7 +35,7 @@ const SourceFeedTable = (props) => {
                 {feed.feed_type}
               </td>
               <td>
-                {feed.feed_status === 'active' ? 'active' : 'disabled'}
+                {feed.active ? 'active' : 'disabled'}
               </td>
               <td>
                 <a href={feed.url}>{feed.url}</a>
