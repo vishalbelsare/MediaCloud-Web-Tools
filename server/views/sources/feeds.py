@@ -43,9 +43,9 @@ def feed_create(media_id):
     name = request.form['name']
     url = request.form['url']
     feed_type = request.form['feed_type'] if 'feed_type' in request.form else None  # this is optional
-    feed_status = request.form['feed_status'] if 'feed_status' in request.form else None  # this is optional
+    active = request.form['active'] if 'active' in request.form else None  # this is optional
 
-    result = user_mc.feedCreate(media_id, name, url, feed_type, feed_status)
+    result = user_mc.feedCreate(media_id, name, url, feed_type, active)
     return jsonify(result)
 
 
@@ -57,9 +57,9 @@ def feed_update(feed_id):
     name = request.form['name']
     url = request.form['url']
     feed_type = request.form['feed_type'] if 'feed_type' in request.form else None  # this is optional
-    feed_status = request.form['feed_status'] if 'feed_status' in request.form else None  # this is optional
+    active = request.form['active'] if 'active' in request.form else None  # this is optional
 
-    result = user_mc.feedUpdate(feeds_id=feed_id, name=name, url=url, feed_type=feed_type, feed_status=feed_status)
+    result = user_mc.feedUpdate(feeds_id=feed_id, name=name, url=url, feed_type=feed_type, active=active)
     return jsonify(result)
 
 
