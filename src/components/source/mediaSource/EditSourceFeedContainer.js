@@ -102,7 +102,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       name: values.name,
       url: values.url,
       active: values.active,
-      feed_type: values.feed_type,
+      type: values.type,
     };
     dispatch(updateFeed(ownProps.params.feedId, infoToSave))
       .then((result) => {
