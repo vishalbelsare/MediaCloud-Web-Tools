@@ -81,12 +81,12 @@ class TopicContainer extends React.Component {
           <TopicUnderConstruction />
         </div>
       );
-    } else if (topicInfo.state === TOPIC_SNAPSHOT_STATE_CREATED_NOT_QUEUED) {
+    } else if ((topicInfo.state === TOPIC_SNAPSHOT_STATE_CREATED_NOT_QUEUED) || (topicInfo.state === TOPIC_SNAPSHOT_STATE_ERROR)) {
       contentToShow = (
         <Grid>
           <Row>
             <Col lg={12}>
-              <div className="topic-created-not-queued-error">
+              <div className="topic-stuck-created-or-error">
                 <h1><FormattedMessage {...localMessages.hasAnError} /></h1>
                 <AppButton
                   label={formatMessage(localMessages.trySpidering)}
