@@ -26,7 +26,7 @@ class TabSearchResultsContainer extends React.Component {
     selectedViewIndex: VIEW_FAVORITES,
   };
   render() {
-    const { selectedMediaQueryKeyword, queryResults, handleToggleAndSelectMedia, fetchStatus, displayResults } = this.props;
+    const { queryResults, handleToggleAndSelectMedia, fetchStatus, displayResults } = this.props;
     const { formatMessage } = this.props.intl;
     const tabs = (
       <div className="media-picker-results-container">
@@ -49,12 +49,12 @@ class TabSearchResultsContainer extends React.Component {
       tabContent = <LoadingSpinner />;
     } else if (this.state.selectedViewIndex === VIEW_FAVORITES &&
       queryResults && (queryResults.favoritedCollections || queryResults.favoritedSources)) {
-      const favoritedCombo = queryResults.favoritedCollections.concat(queryResults.favoritedSources);
       tabContent = (
         <div className="media-picker-tabbed-content-wrapper">
           <StarredSearchResultsContainer
-            title={formatMessage(localMessages.title, { name: selectedMediaQueryKeyword })}
-            collections={favoritedCombo}
+            title={formatMessage(localMessages.title, { name: 'Starred' })}
+            favoritedCollections={queryResults.favoritedCollections}
+            favoritedSources={queryResults.favoritedSources}
             handleToggleAndSelectMedia={handleToggleAndSelectMedia}
           />
         </div>
@@ -64,7 +64,7 @@ class TabSearchResultsContainer extends React.Component {
       tabContent = (
         <div className="media-picker-tabbed-content-wrapper">
           <CollectionResultsTable
-            title={formatMessage(localMessages.title, { name: selectedMediaQueryKeyword })}
+            title={formatMessage(localMessages.title, { name: 'Featured' })}
             collections={queryResults.featured}
             handleToggleAndSelectMedia={handleToggleAndSelectMedia}
           />
@@ -92,7 +92,6 @@ TabSearchResultsContainer.propTypes = {
   hintTextMsg: PropTypes.object,
   onSearch: PropTypes.func.isRequired,
   // from state
-  selectedMediaQueryKeyword: PropTypes.string,
   selectedMediaQueryType: PropTypes.number,
   queryResults: PropTypes.object,
   initItems: PropTypes.object,

@@ -24,7 +24,9 @@ class MediaPickerResultsContainer extends React.Component {
       // because featured collections has an async call, we either compare selected to featured here, or do something else
       // if the results have changed from a keyword entry, we need to update the UI
       (nextProps.sourceResults && nextProps.sourceResults.lastFetchSuccess !== this.props.sourceResults.lastFetchSuccess) ||
-      (nextProps.featured && nextProps.featured.lastFetchSuccess !== this.props.featured.lastFetchSuccess)) {
+      (nextProps.featured && nextProps.featured.lastFetchSuccess !== this.props.featured.lastFetchSuccess) ||
+      (nextProps.favoritedCollections && nextProps.favoritedCollections.lastFetchSuccess !== this.props.favoritedCollections.lastFetchSuccess) ||
+      (nextProps.favoritedSources && nextProps.favoritedSources.lastFetchSuccess !== this.props.favoritedSources.lastFetchSuccess)) {
       this.correlateSelection(nextProps);
     }
   }
@@ -47,8 +49,13 @@ class MediaPickerResultsContainer extends React.Component {
         whichList = whichProps.sourceResults;
         break;
       case PICK_FEATURED:
-        whichList = whichProps.featured;
-        // or whichProps.favoritedCollectionResults;
+        if (whichProps.favoritedCollections.list && whichProps.favoritedCollections.list.length > 0) {
+          whichList = whichProps.favoritedCollections;
+        } else if (whichProps.favoritedSources.list && whichProps.favoritedSources.list.length > 0) {
+          whichList = whichProps.favoritedSources;
+        } else {
+          whichList = whichProps.featured;
+        }
         break;
       default:
         break;
@@ -134,21 +141,23 @@ MediaPickerResultsContainer.propTypes = {
   selectedMediaQueryType: PropTypes.number,
   resetComponents: PropTypes.func.isRequired,
   featured: PropTypes.object,
+  favoritedCollections: PropTypes.object,
+  favoritedSources: PropTypes.object,
   collectionResults: PropTypes.object,
   sourceResults: PropTypes.object,
   selectedMedia: PropTypes.array,
 };
 
 const mapStateToProps = state => ({
-  fetchStatus: (state.system.mediaPicker.sourceQueryResults.fetchStatus === fetchConstants.FETCH_SUCCEEDED || state.system.mediaPicker.collectionQueryResults.fetchStatus === fetchConstants.FETCH_SUCCEEDED || state.system.mediaPicker.featured.fetchStatus === fetchConstants.FETCH_SUCCEEDED) ? fetchConstants.FETCH_SUCCEEDED : fetchConstants.FETCH_INVALID,
+  fetchStatus: (state.system.mediaPicker.sourceQueryResults.fetchStatus === fetchConstants.FETCH_SUCCEEDED || state.system.mediaPicker.collectionQueryResults.fetchStatus === fetchConstants.FETCH_SUCCEEDED || state.system.mediaPicker.favoritedCollections.fetchStatus === fetchConstants.FETCH_SUCCEEDED) ? fetchConstants.FETCH_SUCCEEDED : fetchConstants.FETCH_INVALID,
   selectedMedia: state.system.mediaPicker.selectMedia.list,
   selectedMediaQueryType: state.system.mediaPicker.selectMediaQuery ? state.system.mediaPicker.selectMediaQuery.args.type : 0,
   timestamp: state.system.mediaPicker.featured ? state.system.mediaPicker.featured.timestamp : null,
   collectionResults: state.system.mediaPicker.collectionQueryResults,
   featured: state.system.mediaPicker.featured ? state.system.mediaPicker.featured : null,
   sourceResults: state.system.mediaPicker.sourceQueryResults,
-  favoritedCollections: state.system.mediaPicker.favoritedCollections ? state.system.mediaPicker.favoritedCollections.results : null,
-  favoritedSources: state.system.mediaPicker.favoritedSources ? state.system.mediaPicker.favoritedSources.results : null,
+  favoritedCollections: state.system.mediaPicker.favoritedCollections ? state.system.mediaPicker.favoritedCollections : null,
+  favoritedSources: state.system.mediaPicker.favoritedSources ? state.system.mediaPicker.favoritedSources : null,
 });
 
 const mapDispatchToProps = dispatch => ({

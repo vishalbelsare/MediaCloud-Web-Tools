@@ -65,7 +65,7 @@ FeaturedFavoriteSearchResultsContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  fetchStatus: state.system.mediaPicker.featured.fetchStatus,
+  fetchStatus: state.system.mediaPicker.favoritedCollections.fetchStatus || state.system.mediaPicker.favoritedSources.fetchStatus || state.system.mediaPicker.featured.fetchStatus,
   displayResults: state.system.mediaPicker.featured.fetchStatus === fetchConstants.FETCH_SUCCEEDED || state.system.mediaPicker.favoritedCollections.fetchStatus === fetchConstants.FETCH_SUCCEEDED || state.system.mediaPicker.favoritedSources.fetchStatus === fetchConstants.FETCH_SUCCEEDED,
   selectedMediaQueryType: state.system.mediaPicker.selectMediaQuery ? state.system.mediaPicker.selectMediaQuery.args.type : 0,
   selectedMediaQueryKeyword: state.system.mediaPicker.selectMediaQuery ? state.system.mediaPicker.selectMediaQuery.args.mediaKeyword : null,
