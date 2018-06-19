@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Grid, Row } from 'react-flexbox-grid/lib';
 import CollectionResultsTable from './CollectionResultsTable';
 import StarredSearchResultsContainer from './StarredSearchResultsContainer';
-import MediaPickerSearchForm from '../MediaPickerSearchForm';
+// import MediaPickerSearchForm from '../MediaPickerSearchForm';
 import { FETCH_ONGOING } from '../../../../lib/fetchConstants';
 import LoadingSpinner from '../../../common/LoadingSpinner';
 import TabSelector from '../../../common/TabSelector';
@@ -14,8 +14,8 @@ const localMessages = {
   title: { id: 'system.mediaPicker.collections.title', defaultMessage: 'Collections matching "{name}"' },
   hintText: { id: 'system.mediaPicker.collections.hint', defaultMessage: 'Search for collections by name' },
   noResults: { id: 'system.mediaPicker.collections.noResults', defaultMessage: 'No results. Try searching for issues like online news, health, blogs, conservative to see if we have collections made up of those types of sources.' },
-  featured: { id: 'system.mediaPicker.collections.title', defaultMessage: 'featured' },
-  favorited: { id: 'system.mediaPicker.collections.title', defaultMessage: 'favorited' },
+  featured: { id: 'system.mediaPicker.collections.featured', defaultMessage: 'featured' },
+  favorited: { id: 'system.mediaPicker.collections.favorite', defaultMessage: 'favorited' },
 };
 
 const VIEW_FAVORITES = 0;
@@ -26,7 +26,7 @@ class TabSearchResultsContainer extends React.Component {
     selectedViewIndex: VIEW_FAVORITES,
   };
   render() {
-    const { selectedMediaQueryKeyword, queryResults, onSearch, handleToggleAndSelectMedia, fetchStatus, displayResults, hintTextMsg } = this.props;
+    const { selectedMediaQueryKeyword, queryResults, handleToggleAndSelectMedia, fetchStatus, displayResults } = this.props;
     const { formatMessage } = this.props.intl;
     const tabs = (
       <div className="media-picker-results-container">
@@ -49,11 +49,12 @@ class TabSearchResultsContainer extends React.Component {
       tabContent = <LoadingSpinner />;
     } else if (this.state.selectedViewIndex === VIEW_FAVORITES &&
       queryResults && (queryResults.favoritedCollections || queryResults.favoritedSources)) {
+      const favoritedCombo = queryResults.favoritedCollections.concat(queryResults.favoritedSources);
       tabContent = (
         <div className="media-picker-tabbed-content-wrapper">
           <StarredSearchResultsContainer
             title={formatMessage(localMessages.title, { name: selectedMediaQueryKeyword })}
-            collections={queryResults.featured.list}
+            collections={favoritedCombo}
             handleToggleAndSelectMedia={handleToggleAndSelectMedia}
           />
         </div>
@@ -64,7 +65,7 @@ class TabSearchResultsContainer extends React.Component {
         <div className="media-picker-tabbed-content-wrapper">
           <CollectionResultsTable
             title={formatMessage(localMessages.title, { name: selectedMediaQueryKeyword })}
-            collections={queryResults.featured.list}
+            collections={queryResults.featured}
             handleToggleAndSelectMedia={handleToggleAndSelectMedia}
           />
         </div>
@@ -74,11 +75,6 @@ class TabSearchResultsContainer extends React.Component {
     }
     return (
       <div>
-        <MediaPickerSearchForm
-          initValues={{ storedKeyword: { mediaKeyword: selectedMediaQueryKeyword } }}
-          onSearch={val => onSearch(val)}
-          hintText={formatMessage(hintTextMsg || localMessages.hintText)}
-        />
         {tabs}
         {tabContent}
       </div>

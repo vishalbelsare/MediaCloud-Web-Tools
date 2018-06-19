@@ -57,9 +57,9 @@ FeaturedFavoriteSearchResultsContainer.propTypes = {
   // from state
   selectedMediaQueryKeyword: PropTypes.string,
   selectedMediaQueryType: PropTypes.number,
-  featured: PropTypes.object,
-  favoritedCollections: PropTypes.object,
-  favoritedSources: PropTypes.object,
+  featured: PropTypes.array,
+  favoritedCollections: PropTypes.array,
+  favoritedSources: PropTypes.array,
   fetchStatus: PropTypes.string,
   displayResults: PropTypes.bool,
 };
@@ -69,9 +69,9 @@ const mapStateToProps = state => ({
   displayResults: state.system.mediaPicker.featured.fetchStatus === fetchConstants.FETCH_SUCCEEDED || state.system.mediaPicker.favoritedCollections.fetchStatus === fetchConstants.FETCH_SUCCEEDED || state.system.mediaPicker.favoritedSources.fetchStatus === fetchConstants.FETCH_SUCCEEDED,
   selectedMediaQueryType: state.system.mediaPicker.selectMediaQuery ? state.system.mediaPicker.selectMediaQuery.args.type : 0,
   selectedMediaQueryKeyword: state.system.mediaPicker.selectMediaQuery ? state.system.mediaPicker.selectMediaQuery.args.mediaKeyword : null,
-  featured: state.system.mediaPicker.featured ? state.system.mediaPicker.featured : null,
-  favoritedCollections: state.system.mediaPicker.favoritedCollections ? state.system.mediaPicker.favoritedCollections.results : null,
-  favoritedSources: state.system.mediaPicker.favoritedSources ? state.system.mediaPicker.favoritedSources.results : null,
+  featured: state.system.mediaPicker.featured ? state.system.mediaPicker.featured.list : null,
+  favoritedCollections: state.system.mediaPicker.favoritedCollections ? state.system.mediaPicker.favoritedCollections.list : null,
+  favoritedSources: state.system.mediaPicker.favoritedSources ? state.system.mediaPicker.favoritedSources.list : null,
 
 });
 
@@ -80,12 +80,12 @@ const mapDispatchToProps = dispatch => ({
     if (values) {
       dispatch(selectMediaPickerQueryArgs(values));
       dispatch(fetchMediaPickerFeaturedCollections(TAG_SET_MC_ID));
-      dispatch(fetchFavoriteCollections({ media_keyword: values.mediaKeyword }));
-      dispatch(fetchFavoriteSources({ media_keyword: values.mediaKeyword }));
+      // dispatch(fetchFavoriteCollections({ media_keyword: values.mediaKeyword }));
+      // dispatch(fetchFavoriteSources({ media_keyword: values.mediaKeyword }));
     }
   },
   asyncFetch: () => {
-    dispatch(selectMediaPickerQueryArgs(3));
+    dispatch(selectMediaPickerQueryArgs(0));
     dispatch(fetchMediaPickerFeaturedCollections(TAG_SET_MC_ID));
     dispatch(fetchFavoriteCollections());
     dispatch(fetchFavoriteSources());

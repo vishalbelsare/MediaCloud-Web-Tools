@@ -71,7 +71,7 @@ PickedMediaContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  selectedMediaQueryType: state.system.mediaPicker.selectMediaQuery ? state.system.mediaPicker.selectMediaQuery.args.type : PICK_COUNTRY,
+  selectedMediaQueryType: state.system.mediaPicker.selectMediaQuery ? state.system.mediaPicker.selectMediaQuery.args.type : PICK_FEATURED,
   sourcesResults: state.system.mediaPicker.media ? state.system.mediaPicker.media.results : null, // resutl of query?
   collectionsResults: state.system.mediaPicker.collections ? state.system.mediaPicker.collections.results : null,
   favoritedCollections: state.system.mediaPicker.favoritedCollections ? state.system.mediaPicker.favoritedCollections.results : null,
