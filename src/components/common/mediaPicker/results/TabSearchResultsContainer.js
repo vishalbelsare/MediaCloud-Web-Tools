@@ -19,14 +19,14 @@ const localMessages = {
 };
 
 const VIEW_FAVORITES = 0;
-const VIEW_FEATURED = 1;
+// const VIEW_FEATURED = 1;
 
 class TabSearchResultsContainer extends React.Component {
   state = {
     selectedViewIndex: VIEW_FAVORITES,
   };
   render() {
-    const { selectedMediaQueryKeyword, queryResults, onSearch, handleToggleAndSelectMedia, fetchStatus, hintTextMsg } = this.props;
+    const { selectedMediaQueryKeyword, queryResults, onSearch, handleToggleAndSelectMedia, fetchStatus, displayResults, hintTextMsg } = this.props;
     const { formatMessage } = this.props.intl;
     const tabs = (
       <div className="media-picker-results-container">
@@ -44,7 +44,7 @@ class TabSearchResultsContainer extends React.Component {
       </div>
     );
     let tabContent = null;
-    if (fetchStatus === FETCH_ONGOING) {
+    if (fetchStatus === FETCH_ONGOING || !displayResults) {
       // we have to do this here to show a loading spinner when first searching (and featured collections are showing)
       tabContent = <LoadingSpinner />;
     } else if (this.state.selectedViewIndex === VIEW_FAVORITES &&
@@ -58,7 +58,7 @@ class TabSearchResultsContainer extends React.Component {
           />
         </div>
       );
-    } else if (this.state.selectedViewIndex === VIEW_FEATURED &&
+    } else if (displayResults &&
       queryResults && (queryResults.featured)) {
       tabContent = (
         <div className="media-picker-tabbed-content-wrapper">
@@ -101,6 +101,7 @@ TabSearchResultsContainer.propTypes = {
   queryResults: PropTypes.object,
   initItems: PropTypes.object,
   fetchStatus: PropTypes.string,
+  displayResults: PropTypes.bool,
 };
 
 export default

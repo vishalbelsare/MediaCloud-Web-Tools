@@ -3,6 +3,7 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../../AsyncContainer';
+import * as fetchConstants from '../../../../lib/fetchConstants';
 import { selectMediaPickerQueryArgs, fetchMediaPickerFeaturedCollections, fetchFavoriteCollections, fetchFavoriteSources } from '../../../../actions/systemActions';
 import TabSearchResultsContainer from './TabSearchResultsContainer';
 import TAG_SET_MC_ID from '../../../../lib/tagUtil';
@@ -21,7 +22,7 @@ class FeaturedFavoriteSearchResultsContainer extends React.Component {
     updateMediaQuerySelection(updatedQueryObj);
   }
   render() {
-    const { selectedMediaQueryType, selectedMediaQueryKeyword, featured, favoritedCollections, favoritedSources, handleToggleAndSelectMedia, fetchStatus } = this.props;
+    const { selectedMediaQueryType, selectedMediaQueryKeyword, featured, favoritedCollections, favoritedSources, handleToggleAndSelectMedia, fetchStatus, displayResults } = this.props;
     const queryResults = {
       featured,
       favoritedCollections,
@@ -31,6 +32,7 @@ class FeaturedFavoriteSearchResultsContainer extends React.Component {
       <div>
         <TabSearchResultsContainer
           fetchStatus={fetchStatus}
+          displayResults={displayResults}
           handleToggleAndSelectMedia={handleToggleAndSelectMedia}
           selectedMediaQueryType={selectedMediaQueryType}
           selectedMediaQueryKeyword={selectedMediaQueryKeyword}
@@ -59,10 +61,12 @@ FeaturedFavoriteSearchResultsContainer.propTypes = {
   favoritedCollections: PropTypes.object,
   favoritedSources: PropTypes.object,
   fetchStatus: PropTypes.string,
+  displayResults: PropTypes.bool,
 };
 
 const mapStateToProps = state => ({
-  fetchStatus: state.system.mediaPicker.featured.fetchStatus || state.system.mediaPicker.favoritedCollections.fetchStatus || state.system.mediaPicker.favoritedSources.fetchStatus,
+  fetchStatus: state.system.mediaPicker.featured.fetchStatus,
+  displayResults: state.system.mediaPicker.featured.fetchStatus === fetchConstants.FETCH_SUCCEEDED || state.system.mediaPicker.favoritedCollections.fetchStatus === fetchConstants.FETCH_SUCCEEDED || state.system.mediaPicker.favoritedSources.fetchStatus === fetchConstants.FETCH_SUCCEEDED,
   selectedMediaQueryType: state.system.mediaPicker.selectMediaQuery ? state.system.mediaPicker.selectMediaQuery.args.type : 0,
   selectedMediaQueryKeyword: state.system.mediaPicker.selectMediaQuery ? state.system.mediaPicker.selectMediaQuery.args.mediaKeyword : null,
   featured: state.system.mediaPicker.featured ? state.system.mediaPicker.featured : null,
