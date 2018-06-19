@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import * as d3 from 'd3';
-import ReactFauxDOM from 'react-faux-dom';
 import { FormattedMessage, injectIntl } from 'react-intl';
 
 const DEFAULT_WIDTH = 530;
@@ -13,14 +12,148 @@ const localMessages = {
   noData: { id: 'chart.bubble.noData', defaultMessage: 'Sorry, but we don\'t have any data to draw this chart.' },
 };
 
+function drawViz(wrapperElement, {
+  data, width, height, maxBubbleRadius, minBubbleRadius, domId, onClick,
+}) {
+  // const { formatNumber } = this.props.intl;
+  const options = {
+    width,
+    height,
+    maxBubbleRadius,
+    minBubbleRadius,
+  };
+  if ((width === null) || (width === undefined)) {
+    options.width = DEFAULT_WIDTH;
+  }
+  if ((height === null) || (height === undefined)) {
+    options.height = DEFAULT_HEIGHT;
+  }
+  if ((minBubbleRadius === null) || (minBubbleRadius === undefined)) {
+    options.minBubbleRadius = DEFAULT_MIN_BUBBLE_RADIUS;
+  }
+  if ((maxBubbleRadius === null) || (maxBubbleRadius === undefined)) {
+    options.maxBubbleRadius = DEFAULT_MAX_BUBBLE_RADIUS;
+  }
+
+  let circles = null;
+  let hierarchialData = null;
+  let pack = null;
+
+  // put data in thin hierarchial order so d3 can pack it and size it for us
+  hierarchialData = [].concat(data).concat([{ name: 'top', id: 'top', value: 0, x: 0, y: 0 }]);
+  hierarchialData = d3.stratify()
+    .id((d, idx) => ((d.centerText ? d.centerText : d.name) ? d.name : idx))
+    .parentId(d => (d.centerText || d.name === undefined ? 'top' : undefined))(hierarchialData)
+    .sum(d => d.value)
+    .sort((a, b) => b.value - a.value);
+
+  pack = d3.pack().size([options.width, options.height]);
+
+  circles = pack(hierarchialData).descendants();
+
+  if (circles && circles.length > 0) {
+    // render it all
+    const node = d3.select(wrapperElement);
+    const div = node.append('div').attr('id', 'bubble-chart-wrapper');
+    const svg = div.append('svg:svg');
+    svg.attr('id', domId)
+      .attr('width', options.width)
+      .attr('height', options.height)
+      .attr('class', 'bubble-chart');
+    // rollover tooltip
+    const rollover = d3.select('#bubble-chart-tooltip')
+      .style('opacity', 0);
+
+    // only center align if auto layout
+    const horizontalTranslaton = options.width / 2;
+    const bubbles = svg.append('g')
+        .attr('transform', `translate(${horizontalTranslaton},${options.height / 2})`)
+        .selectAll('.bubble')
+        .data(circles)
+        .enter();
+
+    // create the bubbles
+    const midW = options.width / 2;
+    const midH = options.height / 2;
+
+    bubbles.append('circle')
+      .attr('className', 'bubble-chart-wrapper')
+      .style('fill', d => (d.data && d.data.fill ? d.data.fill : ''))
+      .style('fill-opacity', d => (d.parent !== null ? 1 : 0))
+      .style('display', d => (d.parent !== null ? 'inline' : 'none'))
+      .attr('transform', d => `translate(${d.x - midW},${d.y - midH})`)
+      .attr('r', d => d.r);
+          // add tooltip to bubbles
+    bubbles.selectAll('circle')
+    .on('click', (d) => {
+      const event = d3.event;
+      if ((onClick !== null) && (onClick !== undefined)) {
+        onClick(d, d3.select(event.target));
+      }
+      return null;
+    })
+    .on('mouseover', (d) => {
+      const pixel = 'px';
+      rollover.transition().duration(200).style('opacity', 0.9);
+      rollover.html(d.data && d.data.rolloverText ? d.data.rolloverText : '')
+      .style('left', d3.event.pageX + pixel)
+      .style('top', d3.event.pageY + pixel);
+    })
+    .on('mouseout', () => {
+      rollover.transition().duration(500).style('opacity', 0);
+    });
+
+    // add center labels
+    bubbles.append('text')
+      .attr('x', d => d.x - midW)
+      .attr('y', d => (d.y - midH))
+      .attr('text-anchor', 'middle')
+      .attr('fill', d => `${d.centerTextColor} !important` || '')
+      .attr('font-family', 'Lato, Helvetica, sans')
+      .attr('font-size', '10px')
+      .text(d => (d.data && d.data.centerText ? d.data.centerText : ''));
+    // add top labels
+    bubbles.append('text')
+      .attr('x', d => d.x - midW)
+      .attr('y', d => d.y - midH - d.r - 7)
+      .attr('text-anchor', 'middle')
+      .attr('fill', d => `${d.aboveTextColor} !important` || '')
+      .attr('font-family', 'Lato, Helvetica, sans')
+      .attr('font-size', '10px')
+      .text(d => (d.data && d.data.aboveText ? d.data.aboveText : ''));
+
+    // add bottom labels
+    bubbles.append('text')
+      .attr('x', d => d.x - midW)
+      .attr('y', d => (d.y - midH) + (d.r + 15))
+      .attr('text-anchor', 'middle')
+      .attr('fill', d => `${d.belowTextColor} !important` || '')
+      .attr('font-family', 'Lato, Helvetica, sans')
+      .attr('font-size', '10px')
+      .text(d => (d.data && d.data.belowText ? d.data.belowText : ''));
+  }
+}
+
 /**
  * Draw a bubble chart with labels.  Values are mapped to area, not radius.
  */
 class PackedBubbleChart extends React.Component {
 
-  render() {
-    const { data, width, height, maxBubbleRadius, minBubbleRadius, domId, onClick } = this.props;
+  constructor(props) {
+    super(props);
+    this.chartWrapperRef = React.createRef();
+  }
 
+  componentDidMount() {
+    drawViz(this.chartWrapperRef.current, this.props);
+  }
+
+  componentDidUpdate() {
+    drawViz(this.chartWrapperRef.current, this.props);
+  }
+
+  render() {
+    const { data } = this.props;
     // bail if no data
     if (data.length === 0) {
       return (
@@ -29,129 +162,7 @@ class PackedBubbleChart extends React.Component {
         </div>
       );
     }
-
-    // const { formatNumber } = this.props.intl;
-    const options = {
-      width,
-      height,
-      maxBubbleRadius,
-      minBubbleRadius,
-    };
-    if ((width === null) || (width === undefined)) {
-      options.width = DEFAULT_WIDTH;
-    }
-    if ((height === null) || (height === undefined)) {
-      options.height = DEFAULT_HEIGHT;
-    }
-    if ((minBubbleRadius === null) || (minBubbleRadius === undefined)) {
-      options.minBubbleRadius = DEFAULT_MIN_BUBBLE_RADIUS;
-    }
-    if ((maxBubbleRadius === null) || (maxBubbleRadius === undefined)) {
-      options.maxBubbleRadius = DEFAULT_MAX_BUBBLE_RADIUS;
-    }
-
-    let circles = null;
-    let hierarchialData = null;
-    let pack = null;
-
-    // put data in thin hierarchial order so d3 can pack it and size it for us
-    hierarchialData = [].concat(data).concat([{ name: 'top', id: 'top', value: 0, x: 0, y: 0 }]);
-    hierarchialData = d3.stratify()
-      .id((d, idx) => ((d.centerText ? d.centerText : d.name) ? d.name : idx))
-      .parentId(d => (d.centerText || d.name === undefined ? 'top' : undefined))(hierarchialData)
-      .sum(d => d.value)
-      .sort((a, b) => b.value - a.value);
-
-    pack = d3.pack().size([options.width, options.height]);
-
-    circles = pack(hierarchialData).descendants();
-
-    let content = null;
-    if (circles && circles.length > 0) {
-      // render it all
-      const node = ReactFauxDOM.createElement('div');
-      const div = d3.select(node).append('div').attr('id', 'bubble-chart-wrapper');
-      const svg = div.append('svg:svg');
-      svg.attr('id', domId)
-        .attr('width', options.width)
-        .attr('height', options.height)
-        .attr('class', 'bubble-chart');
-      // rollover tooltip
-      const rollover = d3.select('#bubble-chart-tooltip')
-        .style('opacity', 0);
-
-      // only center align if auto layout
-      const horizontalTranslaton = options.width / 2;
-      const bubbles = svg.append('g')
-          .attr('transform', `translate(${horizontalTranslaton},${options.height / 2})`)
-          .selectAll('.bubble')
-          .data(circles)
-          .enter();
-
-      // create the bubbles
-      const midW = options.width / 2;
-      const midH = options.height / 2;
-
-      bubbles.append('circle')
-        .attr('className', 'bubble-chart-wrapper')
-        .style('fill', d => (d.data && d.data.fill ? d.data.fill : ''))
-        .style('fill-opacity', d => (d.parent !== null ? 1 : 0))
-        .style('display', d => (d.parent !== null ? 'inline' : 'none'))
-        .attr('transform', d => `translate(${d.x - midW},${d.y - midH})`)
-        .attr('r', d => d.r);
-            // add tooltip to bubbles
-      bubbles.selectAll('circle')
-      .on('click', (d) => {
-        const event = d3.event;
-        if ((onClick !== null) && (onClick !== undefined)) {
-          onClick(d, d3.select(event.target));
-        }
-        return null;
-      })
-      .on('mouseover', (d) => {
-        const pixel = 'px';
-        rollover.transition().duration(200).style('opacity', 0.9);
-        rollover.html(d.data && d.data.rolloverText ? d.data.rolloverText : '')
-        .style('left', d3.event.pageX + pixel)
-        .style('top', d3.event.pageY + pixel);
-      })
-      .on('mouseout', () => {
-        rollover.transition().duration(500).style('opacity', 0);
-      });
-
-      // add center labels
-      bubbles.append('text')
-        .attr('x', d => d.x - midW)
-        .attr('y', d => (d.y - midH))
-        .attr('text-anchor', 'middle')
-        .attr('fill', d => `${d.centerTextColor} !important` || '')
-        .attr('font-family', 'Lato, Helvetica, sans')
-        .attr('font-size', '10px')
-        .text(d => (d.data && d.data.centerText ? d.data.centerText : ''));
-      // add top labels
-      bubbles.append('text')
-        .attr('x', d => d.x - midW)
-        .attr('y', d => d.y - midH - d.r - 7)
-        .attr('text-anchor', 'middle')
-        .attr('fill', d => `${d.aboveTextColor} !important` || '')
-        .attr('font-family', 'Lato, Helvetica, sans')
-        .attr('font-size', '10px')
-        .text(d => (d.data && d.data.aboveText ? d.data.aboveText : ''));
-
-      // add bottom labels
-      bubbles.append('text')
-        .attr('x', d => d.x - midW)
-        .attr('y', d => (d.y - midH) + (d.r + 15))
-        .attr('text-anchor', 'middle')
-        .attr('fill', d => `${d.belowTextColor} !important` || '')
-        .attr('font-family', 'Lato, Helvetica, sans')
-        .attr('font-size', '10px')
-        .text(d => (d.data && d.data.belowText ? d.data.belowText : ''));
-
-      content = node.toReact();
-    }
-
-    return content;
+    return (<div className="packed-bubble-chart" ref={this.chartWrapperRef} />);
   }
 }
 

@@ -10,12 +10,13 @@ import messages from '../../../resources/messages';
 import FavoriteTopicsContainer from './FavoriteTopicsContainer';
 import PersonalTopicsContainer from './PersonalTopicsContainer';
 import PublicTopicsContainer from './PublicTopicsContainer';
-
+import { getUserRoles, hasPermissions, PERMISSION_ADMIN } from '../../../lib/auth';
 
 const localMessages = {
   topicsListPublic: { id: 'topics.list.public', defaultMessage: 'Public Topics' },
   topicsListFavorites: { id: 'topics.list.favorite', defaultMessage: 'Starred Topics' },
   topicsListPersonal: { id: 'topics.list.personal', defaultMessage: 'Personal Topics' },
+  topicsListAll: { id: 'topics.list.all', defaultMessage: 'Other Topics (admin)' },
   noAccess: { id: 'topics.list.noAccess', defaultMessage: "Sorry, you don't have the permissions to view this list." },
 };
 
@@ -29,7 +30,7 @@ class TopicListContainer extends React.Component {
   }
 
   render() {
-    const { handleSetFavorited } = this.props;
+    const { handleSetFavorited, user } = this.props;
     const { formatMessage } = this.props.intl;
 
     let viewContent = null;
@@ -42,6 +43,9 @@ class TopicListContainer extends React.Component {
         break;
       case 2:
         viewContent = <PublicTopicsContainer onSetFavorited={handleSetFavorited} />;
+        break;
+      case 3:
+        viewContent = <PersonalTopicsContainer onSetFavorited={handleSetFavorited} showAll />;
         break;
       default:
         break;
@@ -56,6 +60,7 @@ class TopicListContainer extends React.Component {
               formatMessage(localMessages.topicsListPersonal),
               formatMessage(localMessages.topicsListFavorites),
               formatMessage(localMessages.topicsListPublic),
+              hasPermissions(getUserRoles(user), PERMISSION_ADMIN) ? formatMessage(localMessages.topicsListAll) : undefined,
             ]}
             onViewSelected={index => this.setState({ selectedViewIndex: index })}
           />
@@ -75,9 +80,15 @@ class TopicListContainer extends React.Component {
 TopicListContainer.propTypes = {
   // from context
   intl: PropTypes.object.isRequired,
+  // from state
+  user: PropTypes.object.isRequired,
   // from dispatch
   handleSetFavorited: PropTypes.func.isRequired,
 };
+
+const mapStateToProps = state => ({
+  user: state.user,
+});
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   handleSetFavorited: (topicId, isFavorite) => {
@@ -91,7 +102,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 
 export default
   injectIntl(
-    connect(null, mapDispatchToProps)(
+    connect(mapStateToProps, mapDispatchToProps)(
       TopicListContainer
     )
   );

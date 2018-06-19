@@ -234,11 +234,13 @@ def stream_story_list_csv(user_key, filename, topics_id, **kwargs):
         params['q'] = params['q'] if 'q' not in [None, '', 'null', 'undefined'] else None
     params['limit'] = 1000  # an arbitrary value to let us page through with big topics
 
-    props = ['stories_id', 'publish_date', 'title', 'url', 'language', 'ap_syndicated',
-             'themes','subtopics',
-             'media_id', 'media_name', 'media_url',
-             'media_pub_country', 'media_pub_state', 'media_language', 'media_about_country',
-             'media_media_type']
+    props = [
+        'stories_id', 'publish_date', 'title', 'url', 'language', 'ap_syndicated',
+        'themes', 'subtopics',
+        'inlink_count', 'facebook_share_count', 'outlink_count', 'media_inlink_count', 'foci',
+        'media_id', 'media_name', 'media_url',
+        # 'media_pub_country', 'media_pub_state', 'media_language', 'media_about_country', 'media_media_type'
+    ]
 
     if fb_data:
         all_fb_count = []
@@ -282,6 +284,8 @@ def _topic_story_list_by_page_as_csv_row(user_key, topics_id, props, **kwargs):
         else:
             more_pages = False
         for s in page['stories']:
+            # first foci down to just the readable names
+            s['foci'] = [u"{}: {}".format(f['focal_set_name'], f['name']) for f in s['foci']]
             cleaned_row = csv.dict2row(props, s)
             row_string = u','.join(cleaned_row) + u'\n'
             yield row_string
