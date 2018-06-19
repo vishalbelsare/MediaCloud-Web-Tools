@@ -18,7 +18,7 @@
           "apps": ["topics"],
           "type": "Fix",
           "note": "Added influence data back to story CSV download in Topic Mapper."
-        },
+        }
       ]
     },
     {
