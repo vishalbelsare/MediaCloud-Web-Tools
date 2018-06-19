@@ -49,10 +49,12 @@ class MediaPickerResultsContainer extends React.Component {
         whichList = whichProps.sourceResults;
         break;
       case PICK_FEATURED:
-        if (whichProps.favoritedCollections.list && whichProps.favoritedCollections.list.length > 0) {
-          whichList = whichProps.favoritedCollections;
-        } else if (whichProps.favoritedSources.list && whichProps.favoritedSources.list.length > 0) {
-          whichList = whichProps.favoritedSources;
+        if ((whichProps.favoritedCollections.list && whichProps.favoritedCollections.list.length > 0) ||
+          (whichProps.favoritedSources.list && whichProps.favoritedSources.list.length > 0)) {
+          whichList.list = whichProps.favoritedCollections.list;
+          if (whichProps.favoritedSources.list && whichProps.favoritedSources.list.length > 0) {
+            whichList.list.concat(whichProps.favoritedSources.list);
+          }
         } else {
           whichList = whichProps.featured;
         }

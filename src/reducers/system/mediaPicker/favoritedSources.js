@@ -11,7 +11,7 @@ const favoritedSources = createAsyncReducer({
     list: payload.list.map(c => ({
       ...c,
       name: `${c.name}`,
-      id: parseInt(c.media_id, 10),
+      id: c.media_id,
       type: 'source',
       selected: false,
     })),
