@@ -21,12 +21,8 @@ class MediaPickerResultsContainer extends React.Component {
       this.updateMediaQuery({ type: nextProps.selectedMediaQueryType });
     }
     if (nextProps.selectedMedia !== this.props.selectedMedia ||
-      // because featured collections has an async call, we either compare selected to featured here, or do something else
       // if the results have changed from a keyword entry, we need to update the UI
-      (nextProps.sourceResults && nextProps.sourceResults.lastFetchSuccess !== this.props.sourceResults.lastFetchSuccess) ||
-      (nextProps.featured && nextProps.featured.lastFetchSuccess !== this.props.featured.lastFetchSuccess) ||
-      (nextProps.favoritedCollections && nextProps.favoritedCollections.lastFetchSuccess !== this.props.favoritedCollections.lastFetchSuccess) ||
-      (nextProps.favoritedSources && nextProps.favoritedSources.lastFetchSuccess !== this.props.favoritedSources.lastFetchSuccess)) {
+      (nextProps.sourceResults && nextProps.sourceResults.lastFetchSuccess !== this.props.sourceResults.lastFetchSuccess)) {
       this.correlateSelection(nextProps);
     }
   }
@@ -34,9 +30,8 @@ class MediaPickerResultsContainer extends React.Component {
     const { resetComponents } = this.props;
     resetComponents();
   }
-
   correlateSelection(whichProps) {
-    let whichList = [];
+    let whichList = {};
 
     switch (whichProps.selectedMediaQueryType) {
       case PICK_COUNTRY:
@@ -47,17 +42,6 @@ class MediaPickerResultsContainer extends React.Component {
         break;
       case PICK_SOURCE:
         whichList = whichProps.sourceResults;
-        break;
-      case PICK_FEATURED:
-        if ((whichProps.favoritedCollections.list && whichProps.favoritedCollections.list.length > 0) ||
-          (whichProps.favoritedSources.list && whichProps.favoritedSources.list.length > 0)) {
-          whichList.list = whichProps.favoritedCollections.list;
-          if (whichProps.favoritedSources.list && whichProps.favoritedSources.list.length > 0) {
-            whichList.list.concat(whichProps.favoritedSources.list);
-          }
-        } else {
-          whichList = whichProps.featured;
-        }
         break;
       default:
         break;
