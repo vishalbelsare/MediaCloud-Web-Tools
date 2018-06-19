@@ -20,7 +20,10 @@ def process_tags_for_coverage(topics_id, tag_counts):
     coverage = topic_tag_coverage(topics_id, processed_by_cliff_tag_ids())
     top_tag_counts = tag_counts[:DEFAULT_DISPLAY_AMOUNT]
     for t in tag_counts:  # add in pct to ALL counts, not top, so CSV download can include them
-        t['pct'] = float(t['count']) / float(coverage['counts']['count'])
+        try:
+            t['pct'] = float(t['count']) / float(coverage['counts']['count'])
+        except ZeroDivisionError:
+            t['pct'] = 0
     data = {
         'entities': top_tag_counts,
         'coverage': coverage['counts'],

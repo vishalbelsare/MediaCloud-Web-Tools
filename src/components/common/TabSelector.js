@@ -15,7 +15,7 @@ class TabSelector extends React.Component {
     }
     return (
       <ul className="tab-selector">
-        {tabLabels.map((label, idx) =>
+        {tabLabels.filter(label => label !== undefined).map((label, idx) =>
           <li
             role="button"
             tabIndex={0}
