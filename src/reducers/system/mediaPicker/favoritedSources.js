@@ -1,4 +1,4 @@
-import { FETCH_FAVORITE_SOURCES, MEDIA_PICKER_TOGGLE_MEDIA_IN_LIST } from '../../../actions/systemActions';
+import { FETCH_FAVORITE_SOURCES, MEDIA_PICKER_TOGGLE_MEDIA_IN_LIST, RESET_MEDIAPICKER_SOURCE_SEARCH } from '../../../actions/systemActions';
 import { createAsyncReducer } from '../../../lib/reduxHelpers';
 
 const favoritedSources = createAsyncReducer({
@@ -16,14 +16,18 @@ const favoritedSources = createAsyncReducer({
       selected: false,
     })),
   }),
-  [MEDIA_PICKER_TOGGLE_MEDIA_IN_LIST]: (payload, state) => {
-    const updatedState = [...state.list];
-    const mediaIndex = updatedState.findIndex(q => q.id !== null && q.id === payload.selectedMedia.id);
-    if (mediaIndex >= 0) {
-      updatedState[mediaIndex].selected = payload.setSelected;
-    }
-    return { list: updatedState };
-  },
+  [MEDIA_PICKER_TOGGLE_MEDIA_IN_LIST]: (payload, state) => ({
+    list: state.list.map((c) => {
+      if (c.id === payload.selectedMedia.id) {
+        return ({
+          ...c,
+          selected: payload.setSelected,
+        });
+      }
+      return c;
+    }),
+  }),
+  [RESET_MEDIAPICKER_SOURCE_SEARCH]: () => ({ list: [] }),
 });
 
 export default favoritedSources;
