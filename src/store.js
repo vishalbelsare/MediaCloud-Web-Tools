@@ -21,8 +21,16 @@ const middlewares = [
 
 function configDevelopmentStore(appName) {
   return createStore(getRootReducer(appName), {}, compose(
-    applyMiddleware(...middlewares,
-      createRavenMiddleware(Raven),
+    applyMiddleware(
+      promiseMiddleware(),
+      reduxRouterMiddleware,
+      thunkMiddleware,
+      // errorReportingMiddleware,
+      createRavenMiddleware(Raven, {
+        breadcrumbDataFromAction: action => (
+          { STRING: action.str }
+        ),
+      }),
     ),
     window.devToolsExtension ? window.devToolsExtension() : f => f
   ));
