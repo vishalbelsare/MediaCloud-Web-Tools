@@ -5,7 +5,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { connect } from 'react-redux';
 import Link from 'react-router/lib/Link';
 import { fetchFeaturedCollectionList } from '../../../actions/sourceActions';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncContainer from '../../common/hocs/AsyncContainer';
 import DataCard from '../../common/DataCard';
 import { ExploreButton } from '../../common/IconButton';
 
@@ -76,7 +76,7 @@ const mapDispatchToProps = dispatch => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeAsyncContainer(
+      withAsyncContainer(
         FeaturedCollectionsContainer
       )
     )

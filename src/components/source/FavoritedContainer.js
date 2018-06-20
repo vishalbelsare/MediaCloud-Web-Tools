@@ -3,7 +3,7 @@ import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import composeAsyncContainer from '../common/AsyncContainer';
+import withAsyncContainer from '../common/AsyncContainer';
 import { fetchFavoriteSources, fetchFavoriteCollections } from '../../actions/systemActions';
 import SourceList from '../common/SourceList';
 import CollectionList from '../common/CollectionList';
@@ -75,7 +75,7 @@ const mapDispatchToProps = dispatch => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeAsyncContainer(
+      withAsyncContainer(
         FavoritedContainer
       )
     )

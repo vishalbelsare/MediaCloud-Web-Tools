@@ -3,7 +3,7 @@ import React from 'react';
 import { injectIntl, FormattedHTMLMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import MenuItem from 'material-ui/MenuItem';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncContainer from '../../common/hocs/AsyncContainer';
 import composeSummarizedVisualization from './SummarizedVizualization';
 import composeQueryResultsSelector from './QueryResultsSelector';
 import GeoChart from '../../vis/GeoChart';
@@ -153,7 +153,7 @@ export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeSummarizedVisualization(localMessages.title, localMessages.help, [messages.heatMapHelpText])(
-        composeAsyncContainer(
+        withAsyncContainer(
           composeQueryResultsSelector(
             QueryGeoResultsContainer
           )

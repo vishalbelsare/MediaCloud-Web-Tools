@@ -11,7 +11,7 @@ import messages from '../../../resources/messages';
 import { DownloadButton } from '../../common/IconButton';
 import DataCard from '../../common/DataCard';
 import LinkWithFilters from '../LinkWithFilters';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncContainer from '../../common/hocs/AsyncContainer';
 import withCsvDownloadNotifyContainer from '../../common/hocs/CsvDownloadNotifyContainer';
 import withHelpfulContainer from '../../common/hocs/HelpfulContainer';
 import { pagedAndSortedLocation } from '../../util/location';
@@ -157,7 +157,7 @@ export default
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       withHelpfulContainer(messages.storiesTableHelpTitle, messages.storiesTableHelpText)(
         withPagedContainer(
-          composeAsyncContainer(
+          withAsyncContainer(
             withCsvDownloadNotifyContainer(
               InfluentialStoriesContainer
             )

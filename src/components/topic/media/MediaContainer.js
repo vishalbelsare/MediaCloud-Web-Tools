@@ -7,7 +7,7 @@ import FlatButton from 'material-ui/FlatButton';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { selectMedia, fetchMedia } from '../../../actions/topicActions';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncContainer from '../../common/hocs/AsyncContainer';
 import MediaInlinkContainer from './MediaInlinkContainer';
 import MediaOutlinkContainer from './MediaOutlinkContainer';
 import MediaStoriesContainer from './MediaStoriesContainer';
@@ -211,7 +211,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeAsyncContainer(
+      withAsyncContainer(
         MediaContainer
       )
     )

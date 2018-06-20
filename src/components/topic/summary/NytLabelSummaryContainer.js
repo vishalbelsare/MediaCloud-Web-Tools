@@ -6,7 +6,7 @@ import MenuItem from 'material-ui/MenuItem';
 import { schemeCategory10 } from 'd3';
 import { push } from 'react-router-redux';
 import { fetchTopicNytLabelCounts, filterByQuery } from '../../../actions/topicActions';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncContainer from '../../common/hocs/AsyncContainer';
 import withDescribedDataCard from '../../common/hocs/DescribedDataCard';
 import BubbleRowChart from '../../vis/BubbleRowChart';
 import { downloadSvg } from '../../util/svg';
@@ -205,7 +205,7 @@ export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       withDescribedDataCard(localMessages.descriptionIntro, messages.nytThemeHelpDetails)(
-        composeAsyncContainer(
+        withAsyncContainer(
           NytLabelSummaryContainer
         )
       )

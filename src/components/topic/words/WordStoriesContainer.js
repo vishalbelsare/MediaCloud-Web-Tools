@@ -3,7 +3,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { fetchWordStories, sortWordStories } from '../../../actions/topicActions';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncContainer from '../../common/hocs/AsyncContainer';
 import withCsvDownloadNotifyContainer from '../../common/hocs/CsvDownloadNotifyContainer';
 import withHelpfulContainer from '../../common/hocs/HelpfulContainer';
 import messages from '../../../resources/messages';
@@ -114,7 +114,7 @@ export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       withHelpfulContainer(localMessages.helpTitle, [localMessages.helpIntro, messages.storiesTableHelpText])(
-        composeAsyncContainer(
+        withAsyncContainer(
           withCsvDownloadNotifyContainer(
             WordStoriesContainer
           )

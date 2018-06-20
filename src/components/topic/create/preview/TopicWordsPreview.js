@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
-import composeAsyncContainer from '../../../common/AsyncContainer';
+import withAsyncContainer from '../../../common/hocs/AsyncContainer';
 import withDescribedDataCard from '../../../common/hocs/DescribedDataCard';
 import OrderedWordCloud from '../../../vis/OrderedWordCloud';
 import DataCard from '../../../common/DataCard';
@@ -95,7 +95,7 @@ export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       withDescribedDataCard(localMessages.descriptionIntro, [messages.wordcloudHelpText])(
-        composeAsyncContainer(
+        withAsyncContainer(
           TopicWordsPreview
         )
       )

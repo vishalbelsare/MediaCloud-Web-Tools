@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import { schemeCategory10 } from 'd3';
 import { push } from 'react-router-redux';
-import composeAsyncContainer from '../common/AsyncContainer';
+import withAsyncContainer from '../common/AsyncContainer';
 import LoadingSpinner from '../common/LoadingSpinner';
 import { LEVEL_ERROR } from '../common/Notice';
 import { addNotice } from '../../actions/appActions';
@@ -245,7 +245,7 @@ function composeUrlBasedQueryContainer() {
 
     return injectIntl(
       connect(mapStateToProps, mapDispatchToProps)(
-        composeAsyncContainer(
+        withAsyncContainer(
           UrlBasedQueryContainer
         )
       )

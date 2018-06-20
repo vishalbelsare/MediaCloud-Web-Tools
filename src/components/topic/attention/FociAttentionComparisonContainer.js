@@ -5,7 +5,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import { fetchTopicSplitStoryCounts, fetchTopicFocalSetSplitStoryCounts } from '../../../actions/topicActions';
-import { asyncContainerize } from '../../common/AsyncContainer';
+import { asyncContainerize } from '../../common/hocs/AsyncContainer';
 import DataCard from '../../common/DataCard';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
 import PackedBubbleChart from '../../vis/PackedBubbleChart';

@@ -3,7 +3,7 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncContainer from '../../common/hocs/AsyncContainer';
 import withDescribedDataCard from '../../common/hocs/DescribedDataCard';
 import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
 import { fetchTopicTopWords } from '../../../actions/topicActions';
@@ -97,7 +97,7 @@ export default
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       withDescribedDataCard(localMessages.descriptionIntro,
         [messages.wordcloudHelpText, messages.wordCloudTopicWord2VecLayoutHelp])(
-        composeAsyncContainer(
+        withAsyncContainer(
           WordsSummaryContainer
         )
       )

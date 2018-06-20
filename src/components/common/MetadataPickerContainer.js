@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Field } from 'redux-form';
 import MenuItem from 'material-ui/MenuItem';
 import { FETCH_SUCCEEDED } from '../../lib/fetchConstants';
-import composeAsyncContainer from './AsyncContainer';
+import withAsyncContainer from './AsyncContainer';
 import { fetchMetadataValuesForCountry, fetchMetadataValuesForState, fetchMetadataValuesForPrimaryLanguage, fetchMetadataValuesForCountryOfFocus, fetchMetadataValuesForMediaType } from '../../actions/sourceActions';
 import withIntlForm from './IntlForm';
 import { TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE, TAG_SET_PRIMARY_LANGUAGE, TAG_SET_COUNTRY_OF_FOCUS, TAG_SET_MEDIA_TYPE } from '../../lib/tagUtil';
@@ -157,7 +157,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   connect(mapStateToProps, mapDispatchToProps, mergeProps)(
     withIntlForm(
-      composeAsyncContainer(
+      withAsyncContainer(
         MetadataPickerContainer
       )
     )

@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedHTMLMessage } from 'react-intl';
 import { connect } from 'react-redux';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncContainer from '../../common/hocs/AsyncContainer';
 import { fetchUserQueuedAndRunningTopics } from '../../../actions/topicActions';
 import { WarningNotice } from '../../common/Notice';
 import TopicBuilderWizard from './TopicBuilderWizard';
@@ -52,7 +52,7 @@ const mapDispatchToProps = dispatch => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeAsyncContainer(
+      withAsyncContainer(
         CreateTopicContainer
       )
     )

@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncContainer from '../../common/hocs/AsyncContainer';
 import { fetchAdminTopicList } from '../../../actions/topicActions';
 import TopicStatusTable from './TopicStatusTable';
 
@@ -77,7 +77,7 @@ const mapDispatchToProps = dispatch => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeAsyncContainer(
+      withAsyncContainer(
         TopicStatusDashboardContainer
       )
     )

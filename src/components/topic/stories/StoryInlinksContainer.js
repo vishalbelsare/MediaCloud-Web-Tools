@@ -3,7 +3,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { fetchStoryInlinks } from '../../../actions/topicActions';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncContainer from '../../common/hocs/AsyncContainer';
 import withHelpfulContainer from '../../common/hocs/HelpfulContainer';
 import messages from '../../../resources/messages';
 import TopicStoryTable from '../TopicStoryTable';
@@ -88,7 +88,7 @@ export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       withHelpfulContainer(localMessages.helpTitle, [localMessages.helpIntro, messages.wordcloudHelpText])(
-        composeAsyncContainer(
+        withAsyncContainer(
           StoryInlinksContainer
         )
       )

@@ -3,7 +3,7 @@ import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncContainer from '../../common/hocs/AsyncContainer';
 import DataCard from '../../common/DataCard';
 import WordSpace from '../../vis/WordSpace';
 import withDescribedDataCard from '../../common/hocs/DescribedDataCard';
@@ -87,7 +87,7 @@ export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
       withDescribedDataCard(localMessages.descriptionIntro, [messages.wordCloudTopicWord2VecLayoutHelp])(
-        composeAsyncContainer(
+        withAsyncContainer(
           TopicWordSpaceContainer
         )
       )

@@ -6,7 +6,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { updateCollection, fetchCollectionDetails, fetchCollectionSourceList } from '../../../actions/sourceActions';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncContainer from '../../common/hocs/AsyncContainer';
 import { updateFeedback } from '../../../actions/appActions';
 import CollectionForm from './form/CollectionForm';
 import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
@@ -116,7 +116,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeAsyncContainer(
+      withAsyncContainer(
         EditCollectionContainer
       )
     ),

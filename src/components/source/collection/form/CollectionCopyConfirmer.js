@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import AppButton from '../../../common/AppButton';
-import composeAsyncContainer from '../../../common/AsyncContainer';
+import withAsyncContainer from '../../../common/hocs/AsyncContainer';
 import { fetchCollectionToCopy } from '../../../../actions/sourceActions';
 import messages from '../../../../resources/messages';
 
@@ -84,7 +84,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeAsyncContainer(
+      withAsyncContainer(
         CollectionCopyConfirmer
       )
     )

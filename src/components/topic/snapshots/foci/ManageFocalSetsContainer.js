@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import Link from 'react-router/lib/Link';
-import composeAsyncContainer from '../../../common/AsyncContainer';
+import withAsyncContainer from '../../../common/hocs/AsyncContainer';
 import AppButton from '../../../common/AppButton';
 import ConfirmationDialog from '../../../common/ConfirmationDialog';
 import { fetchFocalSetDefinitions, deleteFocalSetDefinition, deleteFocusDefinition, setTopicNeedsNewSnapshot }
@@ -188,7 +188,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeAsyncContainer(
+      withAsyncContainer(
         ManageFocalSetsContainer
       )
     )

@@ -3,7 +3,7 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid/lib';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncContainer from '../../common/hocs/AsyncContainer';
 import { fetchPersonalTopicsList } from '../../../actions/topicActions';
 import TopicPreviewList from './TopicPreviewList';
 import withPagedContainer from '../../common/hocs/PagedContainer';
@@ -81,7 +81,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeAsyncContainer(
+      withAsyncContainer(
         withPagedContainer(
           PersonalTopicsContainer
         )

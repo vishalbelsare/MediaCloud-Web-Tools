@@ -4,7 +4,7 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import slugify from 'slugify';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncContainer from '../../common/hocs/AsyncContainer';
 import withHelpfulContainer from '../../common/hocs/HelpfulContainer';
 import { fetchWordWords } from '../../../actions/topicActions';
 import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
@@ -92,7 +92,7 @@ export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
       withHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.wordcloudHelpText, messages.wordCloudTopicWord2VecLayoutHelp])(
-        composeAsyncContainer(
+        withAsyncContainer(
           WordWordsContainer
         )
       )

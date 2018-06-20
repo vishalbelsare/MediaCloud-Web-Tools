@@ -3,7 +3,7 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { connect } from 'react-redux';
-import composeAsyncContainer from '../../../common/AsyncContainer';
+import withAsyncContainer from '../../../common/hocs/AsyncContainer';
 import CollectionIcon from '../../../common/icons/CollectionIcon';
 import { fetchCollectionList } from '../../../../actions/sourceActions';
 import CollectionList from '../../../common/CollectionList';
@@ -77,7 +77,7 @@ const mapDispatchToProps = dispatch => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeAsyncContainer(
+      withAsyncContainer(
         CountryCollectionListContainer
       )
     )

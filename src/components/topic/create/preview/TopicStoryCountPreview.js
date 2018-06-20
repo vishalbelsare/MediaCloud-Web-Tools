@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import composeAsyncContainer from '../../../common/AsyncContainer';
+import withAsyncContainer from '../../../common/hocs/AsyncContainer';
 import { fetchStoryCountByQuery } from '../../../../actions/topicActions';
 import withDescribedDataCard from '../../../common/hocs/DescribedDataCard';
 import DataCard from '../../../common/DataCard';
@@ -161,7 +161,7 @@ export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
        withDescribedDataCard(localMessages.descriptionIntro, [messages.storyCountHelpText])(
-        composeAsyncContainer(
+        withAsyncContainer(
           TopicStoryCountPreview
         )
       )

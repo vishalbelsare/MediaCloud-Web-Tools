@@ -4,7 +4,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { Row, Col } from 'react-flexbox-grid/lib';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncContainer from '../../common/hocs/AsyncContainer';
 import DataCard from '../../common/DataCard';
 import messages from '../../../resources/messages';
 import withHelpfulContainer from '../../common/hocs/HelpfulContainer';
@@ -156,7 +156,7 @@ export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
       withHelpfulContainer(localMessages.helpTitle, [localMessages.helpText])(
-        composeAsyncContainer(
+        withAsyncContainer(
           CollectionMetadataCoverageSummaryContainer
         )
       )

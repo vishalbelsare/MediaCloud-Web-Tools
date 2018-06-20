@@ -4,7 +4,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import MenuItem from 'material-ui/MenuItem';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncContainer from '../../common/hocs/AsyncContainer';
 import withCsvDownloadNotifyContainer from '../../common/hocs/CsvDownloadNotifyContainer';
 import withDescribedDataCard from '../../common/hocs/DescribedDataCard';
 import { fetchTopicTopStories, sortTopicTopStories, filterByFocus } from '../../../actions/topicActions';
@@ -166,7 +166,7 @@ export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       withDescribedDataCard(localMessages.descriptionIntro, messages.storiesTableHelpText)(
-        composeAsyncContainer(
+        withAsyncContainer(
           withCsvDownloadNotifyContainer(
             StoriesSummaryContainer
           )

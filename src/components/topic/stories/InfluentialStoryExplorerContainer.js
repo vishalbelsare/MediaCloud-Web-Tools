@@ -5,7 +5,7 @@ import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { fetchTopicStoryCounts } from '../../../actions/topicActions';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncContainer from '../../common/hocs/AsyncContainer';
 import InfluentialStoryExplorer from './InfluentialStoryExplorer';
 
 const localMessages = {
@@ -106,7 +106,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeAsyncContainer(
+      withAsyncContainer(
         InfluentialStoryExplorerContainer
       )
     )

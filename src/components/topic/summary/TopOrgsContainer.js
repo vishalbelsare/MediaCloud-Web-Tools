@@ -3,7 +3,7 @@ import React from 'react';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncContainer from '../../common/hocs/AsyncContainer';
 import { fetchTopicEntitiesOrgs, filterByQuery } from '../../../actions/topicActions';
 import DataCard from '../../common/DataCard';
 import EntitiesTable from '../../common/EntitiesTable';
@@ -128,7 +128,7 @@ export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       withHelpfulContainer(messages.entityHelpTitle, messages.entityHelpContent)(
-        composeAsyncContainer(
+        withAsyncContainer(
           TopOrgsContainer
         )
       )

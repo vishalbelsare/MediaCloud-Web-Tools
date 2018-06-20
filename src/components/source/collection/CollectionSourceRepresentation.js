@@ -5,7 +5,7 @@ import * as d3 from 'd3';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import MenuItem from 'material-ui/MenuItem';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncContainer from '../../common/hocs/AsyncContainer';
 import DataCard from '../../common/DataCard';
 import { fetchCollectionSourceRepresentation } from '../../../actions/sourceActions';
 import messages from '../../../resources/messages';
@@ -153,7 +153,7 @@ export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
       withHelpfulContainer(localMessages.helpTitle, [localMessages.helpText])(
-        composeAsyncContainer(
+        withAsyncContainer(
           CollectionSourceRepresentation
         )
       )

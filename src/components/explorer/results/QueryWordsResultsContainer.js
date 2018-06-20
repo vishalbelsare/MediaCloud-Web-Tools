@@ -3,7 +3,7 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeSummarizedVisualization from './SummarizedVizualization';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncContainer from '../../common/hocs/AsyncContainer';
 import { fetchQueryTopWords, fetchDemoQueryTopWords, resetTopWords } from '../../../actions/explorerActions';
 import { postToDownloadUrl, slugifiedQueryLabel } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
@@ -118,7 +118,7 @@ export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeSummarizedVisualization(localMessages.title, localMessages.descriptionIntro, messages.wordcloudHelpText)(
-        composeAsyncContainer(
+        withAsyncContainer(
           composeQueryResultsSelector(
             QueryWordsResultsContainer
           )

@@ -4,7 +4,7 @@ import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import { connect } from 'react-redux';
 import { fetchStoryNytThemes } from '../../../actions/storyActions';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncContainer from '../../common/hocs/AsyncContainer';
 import withHelpfulContainer from '../../common/hocs/HelpfulContainer';
 import messages from '../../../resources/messages';
 import DataCard from '../../common/DataCard';
@@ -152,7 +152,7 @@ export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
       withHelpfulContainer(localMessages.helpTitle, messages.nytThemeHelpDetails)(
-        composeAsyncContainer(
+        withAsyncContainer(
           StoryNytThemesContainer
         )
       )

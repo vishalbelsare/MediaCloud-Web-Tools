@@ -10,7 +10,7 @@ import { fetchTopicInfluentialMedia, sortTopicInfluentialMedia } from '../../../
 import { DownloadButton } from '../../common/IconButton';
 import messages from '../../../resources/messages';
 import DataCard from '../../common/DataCard';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncContainer from '../../common/hocs/AsyncContainer';
 import { pagedAndSortedLocation } from '../../util/location';
 import withPagedContainer from '../../common/hocs/PagedContainer';
 import MediaSourceIcon from '../../common/icons/MediaSourceIcon';
@@ -135,7 +135,7 @@ export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       withPagedContainer(
-        composeAsyncContainer(
+        withAsyncContainer(
           InfluentialMediaContainer
         )
       )

@@ -3,7 +3,7 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { fetchSourceTopWords } from '../../../actions/sourceActions';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncContainer from '../../common/hocs/AsyncContainer';
 import withHelpfulContainer from '../../common/hocs/HelpfulContainer';
 import messages from '../../../resources/messages';
 import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
@@ -91,7 +91,7 @@ export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       withHelpfulContainer(localMessages.helpTitle, [localMessages.intro, messages.wordSpaceLayoutHelp])(
-        composeAsyncContainer(
+        withAsyncContainer(
           SourceTopWordsContainer
         )
       )

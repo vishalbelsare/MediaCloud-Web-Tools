@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncContainer from '../../common/hocs/AsyncContainer';
 import GeoChart from '../../vis/GeoChart';
 import DataCard from '../../common/DataCard';
 import { filtersAsUrlParams } from '../../util/location';
@@ -101,7 +101,7 @@ export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
       withDescribedDataCard(localMessages.helpIntro, messages.heatMapHelpText)(
-        composeAsyncContainer(
+        withAsyncContainer(
           GeoTagSummaryContainer
         )
       )

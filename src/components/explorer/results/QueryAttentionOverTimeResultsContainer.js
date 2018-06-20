@@ -4,7 +4,7 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import MenuItem from 'material-ui/MenuItem';
 import { fetchQuerySplitStoryCount, fetchDemoQuerySplitStoryCount, resetSentenceCounts, setSentenceDataPoint, resetSentenceDataPoint } from '../../../actions/explorerActions';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncContainer from '../../common/hocs/AsyncContainer';
 import composeSummarizedVisualization from './SummarizedVizualization';
 import composeQueryResultsSelector from './QueryResultsSelector';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
@@ -206,7 +206,7 @@ export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeSummarizedVisualization(localMessages.lineChartTitle, localMessages.descriptionIntro, [localMessages.descriptionDetail, messages.countsVsPercentageHelp])(
-        composeAsyncContainer(
+        withAsyncContainer(
           composeQueryResultsSelector(
             QueryAttentionOverTimeResultsContainer
           )

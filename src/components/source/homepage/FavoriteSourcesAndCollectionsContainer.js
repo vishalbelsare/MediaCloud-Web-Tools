@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import Link from 'react-router/lib/Link';
 import DataCard from '../../common/DataCard';
 import { fetchFavoriteCollections, fetchFavoriteSources } from '../../../actions/systemActions';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncContainer from '../../common/hocs/AsyncContainer';
 import { ExploreButton } from '../../common/IconButton';
 
 const NUMBER_TO_SHOW = 8; // how many of each to show
@@ -89,7 +89,7 @@ const mapDispatchToProps = dispatch => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeAsyncContainer(
+      withAsyncContainer(
         FavoriteSourcesAndCollectionsContainer
       )
     )

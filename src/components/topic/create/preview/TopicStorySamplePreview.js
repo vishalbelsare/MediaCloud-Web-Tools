@@ -3,7 +3,7 @@ import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import withDescribedDataCard from '../../../common/hocs/DescribedDataCard';
-import composeAsyncContainer from '../../../common/AsyncContainer';
+import withAsyncContainer from '../../../common/hocs/AsyncContainer';
 import StoryTable from '../../../common/StoryTable';  // use this istead of TopicStoryTable because here we don't have extra metadata
 import { fetchStorySampleByQuery } from '../../../../actions/topicActions';
 import DataCard from '../../../common/DataCard';
@@ -96,7 +96,7 @@ export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       withDescribedDataCard(localMessages.descriptionIntro)(
-        composeAsyncContainer(
+        withAsyncContainer(
           TopicStorySamplePreview
         )
       )

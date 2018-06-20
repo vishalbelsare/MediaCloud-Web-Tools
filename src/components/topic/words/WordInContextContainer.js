@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import slugify from 'slugify';
 import { fetchWordSampleSentences } from '../../../actions/topicActions';
 import withHelpfulContainer from '../../common/hocs/HelpfulContainer';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncContainer from '../../common/hocs/AsyncContainer';
 import DataCard from '../../common/DataCard';
 import WordTree from '../../vis/WordTree';
 import messages from '../../../resources/messages';
@@ -103,7 +103,7 @@ export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
       withHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.wordTreeHelpText])(
-        composeAsyncContainer(
+        withAsyncContainer(
           WordInContextContainer
         )
       )

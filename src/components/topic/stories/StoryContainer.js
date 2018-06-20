@@ -7,7 +7,7 @@ import Link from 'react-router/lib/Link';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { selectStory, fetchStory } from '../../../actions/topicActions';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncContainer from '../../common/hocs/AsyncContainer';
 import StoryWordsContainer from './StoryWordsContainer';
 import StoryInlinksContainer from './StoryInlinksContainer';
 import StoryOutlinksContainer from './StoryOutlinksContainer';
@@ -212,7 +212,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeAsyncContainer(
+      withAsyncContainer(
         StoryContainer
       )
     )
