@@ -6,7 +6,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { filteredLocation, urlWithFilters } from '../util/location';
-import withAsyncContainer from '../common/AsyncContainer';
+import withAsyncContainer from '../common/hocs/AsyncContainer';
 import AppButton from '../common/AppButton';
 import { selectTopic, filterBySnapshot, filterByTimespan, filterByFocus, fetchTopicSummary, filterByQuery,
   topicStartSpider } from '../../actions/topicActions';

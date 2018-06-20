@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import withAsyncContainer from '../../AsyncContainer';
+import withAsyncContainer from '../../hocs/AsyncContainer';
 import { fetchMediaPickerFeaturedCollections } from '../../../../actions/systemActions';
 import CollectionResultsTable from './CollectionResultsTable';
 import * as fetchConstants from '../../../../lib/fetchConstants';

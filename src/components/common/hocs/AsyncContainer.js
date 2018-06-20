@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import ErrorTryAgain from '../common/ErrorTryAgain';
-import LoadingSpinner from '../common/LoadingSpinner';
-import * as fetchConstants from '../../lib/fetchConstants';
+import ErrorTryAgain from '../../common/ErrorTryAgain';
+import LoadingSpinner from '../../common/LoadingSpinner';
+import * as fetchConstants from '../../../lib/fetchConstants';
 
 // pass this in as the second arg to not show a spinner
 export const NO_SPINNER = 0;

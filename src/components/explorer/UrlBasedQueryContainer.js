@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import { schemeCategory10 } from 'd3';
 import { push } from 'react-router-redux';
-import withAsyncContainer from '../common/AsyncContainer';
+import withAsyncContainer from '../common/hocs/AsyncContainer';
 import LoadingSpinner from '../common/LoadingSpinner';
 import { LEVEL_ERROR } from '../common/Notice';
 import { addNotice } from '../../actions/appActions';

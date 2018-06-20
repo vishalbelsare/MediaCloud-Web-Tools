@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import withAsyncContainer from './AsyncContainer';
+import withAsyncContainer from './hocs/AsyncContainer';
 import { fetchTopEntitiesPeople } from '../../actions/systemActions';
 import DataCard from './DataCard';
 import EntitiesTable from './EntitiesTable';

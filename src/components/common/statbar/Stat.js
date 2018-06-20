@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import DataCard from '../DataCard';
-import withHelpfulContainer from '../HelpfulContainer';
+import withHelpfulContainer from '../hocs/HelpfulContainer';
 
 class Stat extends React.Component {
 

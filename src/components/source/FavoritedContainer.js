@@ -3,7 +3,7 @@ import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import withAsyncContainer from '../common/AsyncContainer';
+import withAsyncContainer from '../common/hocs/AsyncContainer';
 import { fetchFavoriteSources, fetchFavoriteCollections } from '../../actions/systemActions';
 import SourceList from '../common/SourceList';
 import CollectionList from '../common/CollectionList';
