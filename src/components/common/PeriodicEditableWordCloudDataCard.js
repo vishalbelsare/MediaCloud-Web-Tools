@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import EditableWordCloudDataCard from './EditableWordCloudDataCard';
-import composePeriodicContent from './PeriodicContent';
+import withPeriodicContent from './hocs/PeriodicContent';
 import { calculateTimePeriods } from '../../lib/dateUtil';
 
 const PeriodicEditableWordCloudDataCard = props => (
@@ -45,7 +45,7 @@ PeriodicEditableWordCloudDataCard.propTypes = {
 
 export default
   injectIntl(
-    composePeriodicContent(
+    withPeriodicContent(
       PeriodicEditableWordCloudDataCard
     )
   );

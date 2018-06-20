@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import composeAsyncContainer from '../../../common/AsyncContainer';
 import AttentionOverTimeChart from '../../../vis/AttentionOverTimeChart';
 import { fetchAttentionByQuery } from '../../../../actions/topicActions';
-import composeDescribedDataCard from '../../../common/DescribedDataCard';
+import withDescribedDataCard from '../../../common/hocs/DescribedDataCard';
 import DataCard from '../../../common/DataCard';
 import { getBrandDarkColor } from '../../../../styles/colors';
 
@@ -97,7 +97,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeDescribedDataCard(localMessages.descriptionIntro, localMessages.helpText)(
+      withDescribedDataCard(localMessages.descriptionIntro, localMessages.helpText)(
         composeAsyncContainer(
           TopicAttentionPreview
         )

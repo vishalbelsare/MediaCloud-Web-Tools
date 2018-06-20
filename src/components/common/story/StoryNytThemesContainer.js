@@ -5,7 +5,7 @@ import { Row, Col } from 'react-flexbox-grid/lib';
 import { connect } from 'react-redux';
 import { fetchStoryNytThemes } from '../../../actions/storyActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import composeHelpfulContainer from '../../common/HelpfulContainer';
+import withHelpfulContainer from '../../common/hocs/HelpfulContainer';
 import messages from '../../../resources/messages';
 import DataCard from '../../common/DataCard';
 import { DownloadButton } from '../../common/IconButton';
@@ -151,7 +151,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeHelpfulContainer(localMessages.helpTitle, messages.nytThemeHelpDetails)(
+      withHelpfulContainer(localMessages.helpTitle, messages.nytThemeHelpDetails)(
         composeAsyncContainer(
           StoryNytThemesContainer
         )

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import composeHelpfulContainer from '../../common/HelpfulContainer';
+import withHelpfulContainer from '../../common/hocs/HelpfulContainer';
 import DataCard from '../../common/DataCard';
 
 const localMessages = {
@@ -64,7 +64,7 @@ StoryPlaces.propTypes = {
 
 export default
   injectIntl(
-    composeHelpfulContainer(localMessages.helpTitle, localMessages.helpText)(
+    withHelpfulContainer(localMessages.helpTitle, localMessages.helpText)(
       StoryPlaces
     )
   );

@@ -6,7 +6,7 @@ import { push } from 'react-router-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import DataCard from '../../common/DataCard';
 import WordSpace from '../../vis/WordSpace';
-import composeDescribedDataCard from '../../common/DescribedDataCard';
+import withDescribedDataCard from '../../common/hocs/DescribedDataCard';
 import messages from '../../../resources/messages';
 import { DownloadButton } from '../../common/IconButton';
 import { topicDownloadFilename } from '../../util/topicUtil';
@@ -86,7 +86,7 @@ const mapDispatchToProps = dispatch => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeDescribedDataCard(localMessages.descriptionIntro, [messages.wordCloudTopicWord2VecLayoutHelp])(
+      withDescribedDataCard(localMessages.descriptionIntro, [messages.wordCloudTopicWord2VecLayoutHelp])(
         composeAsyncContainer(
           TopicWordSpaceContainer
         )

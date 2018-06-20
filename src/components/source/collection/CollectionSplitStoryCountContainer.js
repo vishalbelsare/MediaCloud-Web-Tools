@@ -8,7 +8,7 @@ import DataCard from '../../common/DataCard';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
 import { getBrandDarkColor } from '../../../styles/colors';
 import messages from '../../../resources/messages';
-import composeHelpfulContainer from '../../common/HelpfulContainer';
+import withHelpfulContainer from '../../common/hocs/HelpfulContainer';
 import { DownloadButton } from '../../common/IconButton';
 import { urlToExplorerQuery } from '../../../lib/urlUtil';
 
@@ -106,7 +106,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.attentionChartHelpText])(
+      withHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.attentionChartHelpText])(
         composeAsyncContainer(
           CollectionSplitStoryCountContainer
         )

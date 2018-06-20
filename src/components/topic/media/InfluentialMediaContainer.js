@@ -12,7 +12,7 @@ import messages from '../../../resources/messages';
 import DataCard from '../../common/DataCard';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import { pagedAndSortedLocation } from '../../util/location';
-import composePagedContainer from '../../common/PagedContainer';
+import withPagedContainer from '../../common/hocs/PagedContainer';
 import MediaSourceIcon from '../../common/icons/MediaSourceIcon';
 
 const localMessages = {
@@ -134,7 +134,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composePagedContainer(
+      withPagedContainer(
         composeAsyncContainer(
           InfluentialMediaContainer
         )

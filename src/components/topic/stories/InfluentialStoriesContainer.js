@@ -12,10 +12,10 @@ import { DownloadButton } from '../../common/IconButton';
 import DataCard from '../../common/DataCard';
 import LinkWithFilters from '../LinkWithFilters';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import composeCsvDownloadNotifyContainer from '../../common/composers/CsvDownloadNotifyContainer';
-import composeHelpfulContainer from '../../common/HelpfulContainer';
+import withCsvDownloadNotifyContainer from '../../common/hocs/CsvDownloadNotifyContainer';
+import withHelpfulContainer from '../../common/hocs/HelpfulContainer';
 import { pagedAndSortedLocation } from '../../util/location';
-import composePagedContainer from '../../common/PagedContainer';
+import withPagedContainer from '../../common/hocs/PagedContainer';
 import { HELP_STORIES_CSV_COLUMNS } from '../../../lib/helpConstants';
 
 const localMessages = {
@@ -155,10 +155,10 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeHelpfulContainer(messages.storiesTableHelpTitle, messages.storiesTableHelpText)(
-        composePagedContainer(
+      withHelpfulContainer(messages.storiesTableHelpTitle, messages.storiesTableHelpText)(
+        withPagedContainer(
           composeAsyncContainer(
-            composeCsvDownloadNotifyContainer(
+            withCsvDownloadNotifyContainer(
               InfluentialStoriesContainer
             )
           )

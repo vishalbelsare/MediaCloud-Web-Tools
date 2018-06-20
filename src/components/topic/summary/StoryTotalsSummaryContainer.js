@@ -3,7 +3,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import composeDescribedDataCard from '../../common/DescribedDataCard';
+import withDescribedDataCard from '../../common/hocs/DescribedDataCard';
 import { fetchTopicStoryCounts } from '../../../actions/topicActions';
 import DataCard from '../../common/DataCard';
 import Permissioned from '../../common/Permissioned';
@@ -115,7 +115,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeDescribedDataCard(localMessages.descriptionIntro, localMessages.description)(
+      withDescribedDataCard(localMessages.descriptionIntro, localMessages.description)(
         composeAsyncContainer(
           StoryTotalsSummaryContainer
         )

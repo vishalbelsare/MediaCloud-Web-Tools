@@ -6,7 +6,7 @@ import { Row, Col } from 'react-flexbox-grid/lib';
 import MenuItem from 'material-ui/MenuItem';
 import { notEmptyString } from '../../../lib/formValidators';
 import AppButton from '../../common/AppButton';
-import composeIntlForm from '../../common/IntlForm';
+import withIntlForm from '../../common/hocs/IntlForm';
 import { DeleteButton } from '../../common/IconButton';
 import { PERMISSION_TOPIC_READ, PERMISSION_TOPIC_WRITE, PERMISSION_TOPIC_ADMIN } from '../../../lib/auth';
 
@@ -99,7 +99,7 @@ const reduxFormConfig = {
 
 export default
   injectIntl(
-    composeIntlForm(
+    withIntlForm(
       reduxForm(reduxFormConfig)(
         PermissionForm
       )

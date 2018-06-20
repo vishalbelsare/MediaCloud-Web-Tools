@@ -6,7 +6,7 @@ import { uploadSourceListFromTemplate } from '../../../actions/sourceActions';
 import { updateFeedback } from '../../../actions/appActions';
 import LoadingSpinner from '../../common/LoadingSpinner';
 import CollectionUploadConfirmer from './form/CollectionUploadConfirmer';
-import composeCsvDownloadNotifyContainer from '../../common/composers/CsvDownloadNotifyContainer';
+import withCsvDownloadNotifyContainer from '../../common/hocs/CsvDownloadNotifyContainer';
 import { DownloadButton } from '../../common/IconButton';
 import messages from '../../../resources/messages';
 import { HELP_SOURCES_CSV_COLUMNS } from '../../../lib/helpConstants';
@@ -127,7 +127,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeCsvDownloadNotifyContainer(
+      withCsvDownloadNotifyContainer(
         CollectionUploadSourceContainer
       )
     )

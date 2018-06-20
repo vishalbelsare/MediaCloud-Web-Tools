@@ -28,7 +28,7 @@ const localMessages = {
  * 1) savedFeedback: a div with info about whether this has been saved or not
  * 2) saveToNotebookButton: a button that can be displayed to request this content be saved
  */
-const composeSaveableContainer = (ChildComponent) => {
+const withSaveableContainer = (ChildComponent) => {
   class SaveableContainer extends React.Component {
     state = {
       open: false,
@@ -129,4 +129,4 @@ const composeSaveableContainer = (ChildComponent) => {
   );
 };
 
-export default composeSaveableContainer;
+export default withSaveableContainer;

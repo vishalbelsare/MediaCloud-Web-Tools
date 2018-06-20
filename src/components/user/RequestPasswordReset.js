@@ -11,7 +11,7 @@ import { addNotice } from '../../actions/appActions';
 import AppButton from '../common/AppButton';
 import messages from '../../resources/messages';
 import { invalidEmail } from '../../lib/formValidators';
-import composeIntlForm from '../common/IntlForm';
+import withIntlForm from '../common/hocs/IntlForm';
 
 const localMessages = {
   title: { id: 'user.forgotPassword.title', defaultMessage: 'Forgot Your Password?' },
@@ -108,7 +108,7 @@ const reduxFormConfig = {
 
 export default
   injectIntl(
-    composeIntlForm(
+    withIntlForm(
       reduxForm(reduxFormConfig)(
         connect(mapStateToProps, mapDispatchToProps)(
           RequestPasswordReset

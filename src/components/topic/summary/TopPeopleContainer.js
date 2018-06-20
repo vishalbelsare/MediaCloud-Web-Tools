@@ -10,7 +10,7 @@ import EntitiesTable from '../../common/EntitiesTable';
 import { filtersAsUrlParams, filteredLocation } from '../../util/location';
 import { DownloadButton } from '../../common/IconButton';
 import messages from '../../../resources/messages';
-import composeHelpfulContainer from '../../common/HelpfulContainer';
+import withHelpfulContainer from '../../common/hocs/HelpfulContainer';
 
 const COVERAGE_REQUIRED = 0.7;
 const NUMBER_TO_SHOW = 10;
@@ -127,7 +127,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeHelpfulContainer(messages.entityHelpTitle, messages.entityHelpContent)(
+      withHelpfulContainer(messages.entityHelpTitle, messages.entityHelpContent)(
         composeAsyncContainer(
           TopPeopleContainer
         )

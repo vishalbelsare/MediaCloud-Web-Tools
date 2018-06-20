@@ -3,7 +3,7 @@ import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
-import composeIntlForm from '../../../common/IntlForm';
+import withIntlForm from '../../../common/hocs/IntlForm';
 
 const localMessages = {
   nameLabel: { id: 'collection.add.name.label', defaultMessage: 'Name' },
@@ -89,7 +89,7 @@ const reduxFormConfig = {
 
 export default
   injectIntl(
-    composeIntlForm(
+    withIntlForm(
       reduxForm(reduxFormConfig)(
         CollectionDetailsForm
       )

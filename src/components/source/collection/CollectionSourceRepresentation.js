@@ -9,7 +9,7 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import DataCard from '../../common/DataCard';
 import { fetchCollectionSourceRepresentation } from '../../../actions/sourceActions';
 import messages from '../../../resources/messages';
-import composeHelpfulContainer from '../../common/HelpfulContainer';
+import withHelpfulContainer from '../../common/hocs/HelpfulContainer';
 import { DownloadButton, ExploreButton } from '../../common/IconButton';
 import PackedBubbleChart from '../../vis/PackedBubbleChart';
 import { getBrandDarkColor } from '../../../styles/colors';
@@ -152,7 +152,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText])(
+      withHelpfulContainer(localMessages.helpTitle, [localMessages.helpText])(
         composeAsyncContainer(
           CollectionSourceRepresentation
         )

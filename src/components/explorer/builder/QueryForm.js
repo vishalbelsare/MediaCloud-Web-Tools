@@ -4,10 +4,10 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { reduxForm, Field, propTypes } from 'redux-form';
 // import MenuItem from 'material-ui/MenuItem';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import composeIntlForm from '../../common/IntlForm';
+import withIntlForm from '../../common/hocs/IntlForm';
 import AppButton from '../../common/AppButton';
 import ColorPicker from '../../common/ColorPicker';
-import composeHelpfulContainer from '../../common/HelpfulContainer';
+import withHelpfulContainer from '../../common/hocs/HelpfulContainer';
 import CopyAllComponent from '../../common/CopyAllComponent';
 import SourceCollectionsFieldList from '../../common/mediaPicker/SourceCollectionsFieldList';
 import MediaPickerDialog from '../../common/mediaPicker/MediaPickerDialog';
@@ -258,8 +258,8 @@ function warn(values, props) {
 
 export default
   injectIntl(
-    composeIntlForm(
-      composeHelpfulContainer(localMessages.queryHelpTitle, localMessages.queryHelpContent)(
+    withIntlForm(
+      withHelpfulContainer(localMessages.queryHelpTitle, localMessages.queryHelpContent)(
         reduxForm({ propTypes, validate, warn })(
           QueryForm
         ),

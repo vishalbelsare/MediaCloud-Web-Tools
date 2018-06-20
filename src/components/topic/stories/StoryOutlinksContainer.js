@@ -4,7 +4,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { fetchStoryOutlinks } from '../../../actions/topicActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import composeHelpfulContainer from '../../common/HelpfulContainer';
+import withHelpfulContainer from '../../common/hocs/HelpfulContainer';
 import messages from '../../../resources/messages';
 import TopicStoryTable from '../TopicStoryTable';
 import DataCard from '../../common/DataCard';
@@ -88,7 +88,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpIntro, messages.wordcloudHelpText])(
+      withHelpfulContainer(localMessages.helpTitle, [localMessages.helpIntro, messages.wordcloudHelpText])(
         composeAsyncContainer(
           StoryOutlinksContainer
         )

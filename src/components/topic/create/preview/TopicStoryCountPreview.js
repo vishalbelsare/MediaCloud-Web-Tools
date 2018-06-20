@@ -4,7 +4,7 @@ import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../../../common/AsyncContainer';
 import { fetchStoryCountByQuery } from '../../../../actions/topicActions';
-import composeDescribedDataCard from '../../../common/DescribedDataCard';
+import withDescribedDataCard from '../../../common/hocs/DescribedDataCard';
 import DataCard from '../../../common/DataCard';
 import BubbleRowChart from '../../../vis/BubbleRowChart';
 import { getBrandDarkColor } from '../../../../styles/colors';
@@ -160,7 +160,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-       composeDescribedDataCard(localMessages.descriptionIntro, [messages.storyCountHelpText])(
+       withDescribedDataCard(localMessages.descriptionIntro, [messages.storyCountHelpText])(
         composeAsyncContainer(
           TopicStoryCountPreview
         )

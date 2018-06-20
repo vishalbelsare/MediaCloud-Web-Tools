@@ -6,7 +6,7 @@ import { Row, Col } from 'react-flexbox-grid/lib';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import { fetchPersonalTopicsList } from '../../../actions/topicActions';
 import TopicPreviewList from './TopicPreviewList';
-import composePagedContainer from '../../common/PagedContainer';
+import withPagedContainer from '../../common/hocs/PagedContainer';
 
 const localMessages = {
   empty: { id: 'topics.personal.none', defaultMessage: 'You haven\'t created any topics yet. Explore the public topics, or click the "Create a New Topic" button above to make your own.' },
@@ -82,7 +82,7 @@ export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeAsyncContainer(
-        composePagedContainer(
+        withPagedContainer(
           PersonalTopicsContainer
         )
       )

@@ -7,7 +7,7 @@ import GeoChart from '../../vis/GeoChart';
 import DataCard from '../../common/DataCard';
 import { fetchSourceGeo } from '../../../actions/sourceActions';
 import messages from '../../../resources/messages';
-import composeHelpfulContainer from '../../common/HelpfulContainer';
+import withHelpfulContainer from '../../common/hocs/HelpfulContainer';
 import { DownloadButton } from '../../common/IconButton';
 import { getBrandLightColor } from '../../../styles/colors';
 import { getCurrentDate, oneMonthBefore } from '../../../lib/dateUtil';
@@ -85,7 +85,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-       composeHelpfulContainer(localMessages.helpTitle, [localMessages.intro, messages.heatMapHelpText])(
+       withHelpfulContainer(localMessages.helpTitle, [localMessages.intro, messages.heatMapHelpText])(
         composeAsyncContainer(
           SourceGeographyContainer
         )

@@ -7,7 +7,7 @@ import GeoChart from '../../vis/GeoChart';
 import DataCard from '../../common/DataCard';
 import { filtersAsUrlParams } from '../../util/location';
 import messages from '../../../resources/messages';
-import composeDescribedDataCard from '../../common/DescribedDataCard';
+import withDescribedDataCard from '../../common/hocs/DescribedDataCard';
 import { DownloadButton } from '../../common/IconButton';
 import { getBrandLightColor } from '../../../styles/colors';
 import { fetchTopicGeocodedStoryCounts } from '../../../actions/topicActions';
@@ -100,7 +100,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeDescribedDataCard(localMessages.helpIntro, messages.heatMapHelpText)(
+      withDescribedDataCard(localMessages.helpIntro, messages.heatMapHelpText)(
         composeAsyncContainer(
           GeoTagSummaryContainer
         )

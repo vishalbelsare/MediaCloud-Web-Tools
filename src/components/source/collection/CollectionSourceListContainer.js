@@ -3,7 +3,7 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import composeCsvDownloadNotifyContainer from '../../common/composers/CsvDownloadNotifyContainer';
+import withCsvDownloadNotifyContainer from '../../common/hocs/CsvDownloadNotifyContainer';
 import { fetchCollectionSourceList } from '../../../actions/sourceActions';
 import SourceList from '../../common/SourceList';
 import { getUserRoles, hasPermissions, PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
@@ -58,7 +58,7 @@ export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeAsyncContainer(
-        composeCsvDownloadNotifyContainer(
+        withCsvDownloadNotifyContainer(
           CollectionSourceListContainer
         )
       )

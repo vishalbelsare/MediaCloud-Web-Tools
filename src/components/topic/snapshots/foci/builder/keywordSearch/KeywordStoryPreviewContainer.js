@@ -3,7 +3,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../../../../../common/AsyncContainer';
-import composeHelpfulContainer from '../../../../../common/HelpfulContainer';
+import withHelpfulContainer from '../../../../../common/hocs/HelpfulContainer';
 import { fetchCreateFocusKeywordStories } from '../../../../../../actions/topicActions';
 import DataCard from '../../../../../common/DataCard';
 import TopicStoryTable from '../../../../TopicStoryTable';
@@ -79,7 +79,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeHelpfulContainer(localMessages.helpTitle, messages.storiesTableHelpText)(
+      withHelpfulContainer(localMessages.helpTitle, messages.storiesTableHelpText)(
         composeAsyncContainer(
           KeywordStoryPreviewContainer
         )

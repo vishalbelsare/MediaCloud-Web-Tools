@@ -4,7 +4,7 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import { fetchSimilarCollections } from '../../../actions/sourceActions';
-import composeHelpfulContainer from '../../common/HelpfulContainer';
+import withHelpfulContainer from '../../common/hocs/HelpfulContainer';
 import CollectionList from '../../common/CollectionList';
 
 const localMessages = {
@@ -58,7 +58,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText])(
+      withHelpfulContainer(localMessages.helpTitle, [localMessages.helpText])(
         composeAsyncContainer(
           CollectionSimilarContainer
         )

@@ -5,8 +5,8 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { fetchMediaStories, sortMediaStories, filterByFocus } from '../../../actions/topicActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import composeCsvDownloadNotifyContainer from '../../common/composers/CsvDownloadNotifyContainer';
-import composeHelpfulContainer from '../../common/HelpfulContainer';
+import withCsvDownloadNotifyContainer from '../../common/hocs/CsvDownloadNotifyContainer';
+import withHelpfulContainer from '../../common/hocs/HelpfulContainer';
 import messages from '../../../resources/messages';
 import TopicStoryTable from '../TopicStoryTable';
 import { filteredLocation, filtersAsUrlParams } from '../../util/location';
@@ -124,9 +124,9 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpIntro, messages.storiesTableHelpText])(
+      withHelpfulContainer(localMessages.helpTitle, [localMessages.helpIntro, messages.storiesTableHelpText])(
         composeAsyncContainer(
-          composeCsvDownloadNotifyContainer(
+          withCsvDownloadNotifyContainer(
             MediaStoriesContainer
           )
         )

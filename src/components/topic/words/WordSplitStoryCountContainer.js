@@ -3,7 +3,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import composeHelpfulContainer from '../../common/HelpfulContainer';
+import withHelpfulContainer from '../../common/hocs/HelpfulContainer';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
 import { fetchWordSplitStoryCounts } from '../../../actions/topicActions';
 import messages from '../../../resources/messages';
@@ -88,7 +88,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeHelpfulContainer(localMessages.helpTitle, localMessages.helpText)(
+      withHelpfulContainer(localMessages.helpTitle, localMessages.helpText)(
         composeAsyncContainer(
           WordSplitStoryCountContainer
         )

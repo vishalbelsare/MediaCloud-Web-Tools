@@ -4,7 +4,7 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import composeDescribedDataCard from '../../common/DescribedDataCard';
+import withDescribedDataCard from '../../common/hocs/DescribedDataCard';
 import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
 import { fetchTopicTopWords } from '../../../actions/topicActions';
 import messages from '../../../resources/messages';
@@ -95,7 +95,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeDescribedDataCard(localMessages.descriptionIntro,
+      withDescribedDataCard(localMessages.descriptionIntro,
         [messages.wordcloudHelpText, messages.wordCloudTopicWord2VecLayoutHelp])(
         composeAsyncContainer(
           WordsSummaryContainer

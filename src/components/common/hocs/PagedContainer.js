@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import FlatButton from 'material-ui/FlatButton';
-import messages from '../../resources/messages';
+import messages from '../../../resources/messages';
 
 /**
  * Use this with the JS Composition pattern to make a Container that has paging controls.
