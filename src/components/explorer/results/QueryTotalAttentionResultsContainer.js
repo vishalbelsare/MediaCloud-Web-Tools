@@ -35,9 +35,10 @@ class QueryTotalAttentionResultsContainer extends React.Component {
     view: VIEW_REGULAR, // which view to show (see view constants above)
   }
 
-  shouldComponentUpdate(nextProps) {
+  shouldComponentUpdate(nextProps, nextState) {
     const { results, queries } = this.props;
-    return queryChangedEnoughToUpdate(queries, nextProps.queries, results, nextProps.results);
+    return queryChangedEnoughToUpdate(queries, nextProps.queries, results, nextProps.results) ||
+    (this.state.view !== nextState.view);
   }
 
   setView = (nextView) => {
