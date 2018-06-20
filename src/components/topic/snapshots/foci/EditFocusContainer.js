@@ -5,7 +5,7 @@ import { injectIntl } from 'react-intl';
 import { push } from 'react-router-redux';
 import { reset } from 'redux-form';
 import FocusBuilderWizard from './builder/FocusBuilderWizard';
-import withAsyncContainer from '../../../common/hocs/AsyncContainer';
+import withAsyncFetch from '../../../common/hocs/AsyncContainer';
 import { fetchFocalSetDefinitions, submitFocusUpdateOrCreate, setTopicNeedsNewSnapshot } from '../../../../actions/topicActions';
 import { updateFeedback } from '../../../../actions/appActions';
 
@@ -117,7 +117,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      withAsyncContainer(
+      withAsyncFetch(
         EditFocusContainer
       )
     )

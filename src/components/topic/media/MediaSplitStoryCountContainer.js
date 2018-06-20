@@ -2,8 +2,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import withAsyncContainer from '../../common/hocs/AsyncContainer';
-import withHelpfulContainer from '../../common/hocs/HelpfulContainer';
+import withAsyncFetch from '../../common/hocs/AsyncContainer';
+import withHelp from '../../common/hocs/HelpfulContainer';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
 import { fetchMediaSplitStoryCounts } from '../../../actions/topicActions';
 import messages from '../../../resources/messages';
@@ -90,8 +90,8 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      withHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.attentionChartHelpText])(
-        withAsyncContainer(
+      withHelp(localMessages.helpTitle, [localMessages.helpText, messages.attentionChartHelpText])(
+        withAsyncFetch(
           MediaSplitStoryCountContainer
         )
       )

@@ -3,9 +3,9 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { fetchWordStories, sortWordStories } from '../../../actions/topicActions';
-import withAsyncContainer from '../../common/hocs/AsyncContainer';
+import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import withCsvDownloadNotifyContainer from '../../common/hocs/CsvDownloadNotifyContainer';
-import withHelpfulContainer from '../../common/hocs/HelpfulContainer';
+import withHelp from '../../common/hocs/HelpfulContainer';
 import messages from '../../../resources/messages';
 import TopicStoryTable from '../TopicStoryTable';
 import DataCard from '../../common/DataCard';
@@ -113,8 +113,8 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      withHelpfulContainer(localMessages.helpTitle, [localMessages.helpIntro, messages.storiesTableHelpText])(
-        withAsyncContainer(
+      withHelp(localMessages.helpTitle, [localMessages.helpIntro, messages.storiesTableHelpText])(
+        withAsyncFetch(
           withCsvDownloadNotifyContainer(
             WordStoriesContainer
           )

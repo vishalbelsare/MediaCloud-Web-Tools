@@ -2,8 +2,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import withAsyncContainer from '../../../../../common/hocs/AsyncContainer';
-import withHelpfulContainer from '../../../../../common/hocs/HelpfulContainer';
+import withAsyncFetch from '../../../../../common/hocs/AsyncContainer';
+import withHelp from '../../../../../common/hocs/HelpfulContainer';
 import { fetchCreateFocusKeywordStories } from '../../../../../../actions/topicActions';
 import DataCard from '../../../../../common/DataCard';
 import TopicStoryTable from '../../../../TopicStoryTable';
@@ -79,8 +79,8 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      withHelpfulContainer(localMessages.helpTitle, messages.storiesTableHelpText)(
-        withAsyncContainer(
+      withHelp(localMessages.helpTitle, messages.storiesTableHelpText)(
+        withAsyncFetch(
           KeywordStoryPreviewContainer
         )
       )

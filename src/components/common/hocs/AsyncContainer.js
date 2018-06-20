@@ -95,7 +95,7 @@ export const asyncContainerize = (ChildComponent, loadingSpinnerSize) => {
   return ComposedAsyncContainer;
 };
 
-const withAsyncContainer = asyncContainerize;  // the method can't be used as the name of the default import
+const withAsyncFetch = asyncContainerize;  // the method can't be used as the name of the default import
 
-export default withAsyncContainer;
+export default withAsyncFetch;
 

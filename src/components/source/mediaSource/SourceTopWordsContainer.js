@@ -3,8 +3,8 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { fetchSourceTopWords } from '../../../actions/sourceActions';
-import withAsyncContainer from '../../common/hocs/AsyncContainer';
-import withHelpfulContainer from '../../common/hocs/HelpfulContainer';
+import withAsyncFetch from '../../common/hocs/AsyncContainer';
+import withHelp from '../../common/hocs/HelpfulContainer';
 import messages from '../../../resources/messages';
 import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
 import { calculateTimePeriods, getCurrentDate, oneMonthBefore } from '../../../lib/dateUtil';
@@ -90,8 +90,8 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      withHelpfulContainer(localMessages.helpTitle, [localMessages.intro, messages.wordSpaceLayoutHelp])(
-        withAsyncContainer(
+      withHelp(localMessages.helpTitle, [localMessages.intro, messages.wordSpaceLayoutHelp])(
+        withAsyncFetch(
           SourceTopWordsContainer
         )
       )

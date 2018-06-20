@@ -2,8 +2,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import withAsyncContainer from '../../common/hocs/AsyncContainer';
-import withDescribedDataCard from '../../common/hocs/DescribedDataCard';
+import withAsyncFetch from '../../common/hocs/AsyncContainer';
+import withDescription from '../../common/hocs/DescribedDataCard';
 import MediaTable from '../MediaTable';
 import messages from '../../../resources/messages';
 import { fetchTopicTopMedia, sortTopicTopMedia } from '../../../actions/topicActions';
@@ -125,8 +125,8 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      withDescribedDataCard(localMessages.descriptionIntro, localMessages.description)(
-        withAsyncContainer(
+      withDescription(localMessages.descriptionIntro, localMessages.description)(
+        withAsyncFetch(
           MediaSummaryContainer
         )
       )

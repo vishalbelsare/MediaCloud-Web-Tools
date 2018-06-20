@@ -17,7 +17,7 @@ const localMessages = {
  * It gives the child:
  * 1. `timePeriodControls` UI elements
  */
-const withPeriodicContent = (ChildComponent, hideAllTimeOption = false) => {
+const withTimePeriods = (ChildComponent, hideAllTimeOption = false) => {
   class PeriodicContent extends React.Component {
     saveStateAndTriggerFetch = (timePeriod) => {
       const { handleTimePeriodClick } = this.props;
@@ -83,4 +83,4 @@ const withPeriodicContent = (ChildComponent, hideAllTimeOption = false) => {
   );
 };
 
-export default withPeriodicContent;
+export default withTimePeriods;

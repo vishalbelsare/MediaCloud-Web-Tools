@@ -4,8 +4,8 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import slugify from 'slugify';
 import { fetchWordSampleSentences } from '../../../actions/topicActions';
-import withHelpfulContainer from '../../common/hocs/HelpfulContainer';
-import withAsyncContainer from '../../common/hocs/AsyncContainer';
+import withHelp from '../../common/hocs/HelpfulContainer';
+import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import DataCard from '../../common/DataCard';
 import WordTree from '../../vis/WordTree';
 import messages from '../../../resources/messages';
@@ -102,8 +102,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      withHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.wordTreeHelpText])(
-        withAsyncContainer(
+      withHelp(localMessages.helpTitle, [localMessages.helpText, messages.wordTreeHelpText])(
+        withAsyncFetch(
           WordInContextContainer
         )
       )

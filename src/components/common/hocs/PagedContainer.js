@@ -9,7 +9,7 @@ import messages from '../../../resources/messages';
  * Most likely those methods will call out to a fetchData property that loads the previous or
  * next page.
  */
-function withPagedContainer(ComposedContainer) {
+function withPaging(ComposedContainer) {
   const PagedContainer = (props) => {
     const { links, nextPage, previousPage } = props;
     const { formatMessage } = props.intl;
@@ -32,4 +32,4 @@ function withPagedContainer(ComposedContainer) {
   return PagedContainer;
 }
 
-export default withPagedContainer;
+export default withPaging;

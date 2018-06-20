@@ -3,8 +3,8 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import withAsyncContainer from '../../common/hocs/AsyncContainer';
-import withHelpfulContainer from '../../common/hocs/HelpfulContainer';
+import withAsyncFetch from '../../common/hocs/AsyncContainer';
+import withHelp from '../../common/hocs/HelpfulContainer';
 import { fetchMediaWords } from '../../../actions/topicActions';
 import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
 import { filteredLinkTo, filtersAsUrlParams } from '../../util/location';
@@ -97,8 +97,8 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      withHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.wordCloudTopicWord2VecLayoutHelp])(
-        withAsyncContainer(
+      withHelp(localMessages.helpTitle, [localMessages.helpText, messages.wordCloudTopicWord2VecLayoutHelp])(
+        withAsyncFetch(
           MediaWordsContainer
         )
       )

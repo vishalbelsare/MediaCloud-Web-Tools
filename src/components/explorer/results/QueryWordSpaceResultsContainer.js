@@ -9,7 +9,7 @@ import { DownloadButton } from '../../common/IconButton';
 import { postToDownloadUrl, downloadExplorerSvg } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
 import WordSpace from '../../vis/WordSpace';
-import withAsyncContainer from '../../common/hocs/AsyncContainer';
+import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import composeQueryResultsSelector from './QueryResultsSelector';
 
 const localMessages = {
@@ -108,7 +108,7 @@ export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
       composeSummarizedVisualization(localMessages.title, localMessages.descriptionIntro, messages.wordSpaceLayoutHelp)(
-        withAsyncContainer(
+        withAsyncFetch(
           composeQueryResultsSelector(
             QueryWordSpaceResultsContainer
           )

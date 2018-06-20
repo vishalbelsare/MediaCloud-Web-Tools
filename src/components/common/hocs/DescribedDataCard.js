@@ -11,7 +11,7 @@ const localMessage = {
 /**
  * Use this with the JS Composition pattern to make a DataCard that has help on the side.
  */
-function withDescribedDataCard(introMessage, descriptionMessage) {
+function withDescription(introMessage, descriptionMessage) {
   return (ChildComponent) => {
     class DescribedDataCard extends React.Component {
       state = {
@@ -72,4 +72,4 @@ function withDescribedDataCard(introMessage, descriptionMessage) {
   };
 }
 
-export default withDescribedDataCard;
+export default withDescription;

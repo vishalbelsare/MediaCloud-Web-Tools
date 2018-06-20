@@ -7,7 +7,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import withIntlForm from '../../common/hocs/IntlForm';
 import AppButton from '../../common/AppButton';
 import ColorPicker from '../../common/ColorPicker';
-import withHelpfulContainer from '../../common/hocs/HelpfulContainer';
+import withHelp from '../../common/hocs/HelpfulContainer';
 import CopyAllComponent from '../../common/CopyAllComponent';
 import SourceCollectionsFieldList from '../../common/mediaPicker/SourceCollectionsFieldList';
 import MediaPickerDialog from '../../common/mediaPicker/MediaPickerDialog';
@@ -259,7 +259,7 @@ function warn(values, props) {
 export default
   injectIntl(
     withIntlForm(
-      withHelpfulContainer(localMessages.queryHelpTitle, localMessages.queryHelpContent)(
+      withHelp(localMessages.queryHelpTitle, localMessages.queryHelpContent)(
         reduxForm({ propTypes, validate, warn })(
           QueryForm
         ),

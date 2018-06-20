@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import withAsyncContainer from '../../hocs/AsyncContainer';
+import withAsyncFetch from '../../hocs/AsyncContainer';
 import * as fetchConstants from '../../../../lib/fetchConstants';
 import { selectMediaPickerQueryArgs, fetchMediaPickerFeaturedCollections, fetchFavoriteCollections, fetchFavoriteSources } from '../../../../actions/systemActions';
 import TabSearchResultsContainer from './TabSearchResultsContainer';
@@ -139,7 +139,7 @@ const mapDispatchToProps = dispatch => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      withAsyncContainer(
+      withAsyncFetch(
         FeaturedFavoriteSearchResultsContainer
       )
     )

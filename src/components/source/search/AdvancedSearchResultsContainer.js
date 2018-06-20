@@ -4,7 +4,7 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid } from 'react-flexbox-grid/lib';
 import { push } from 'react-router-redux';
-import withAsyncContainer from '../../common/hocs/AsyncContainer';
+import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import AdvancedSearchResults from './AdvancedSearchResults';
 import { fetchSourceByMetadata, fetchCollectionByMetadata,
   selectAdvancedSearchCollection, selectAdvancedSearchSource } from '../../../actions/sourceActions';
@@ -165,7 +165,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      withAsyncContainer(
+      withAsyncFetch(
         AdvancedSearchResultsContainer
       )
     )

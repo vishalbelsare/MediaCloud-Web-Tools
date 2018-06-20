@@ -2,10 +2,10 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
-import withAsyncContainer from '../../../common/hocs/AsyncContainer';
+import withAsyncFetch from '../../../common/hocs/AsyncContainer';
 import AttentionOverTimeChart from '../../../vis/AttentionOverTimeChart';
 import { fetchAttentionByQuery } from '../../../../actions/topicActions';
-import withDescribedDataCard from '../../../common/hocs/DescribedDataCard';
+import withDescription from '../../../common/hocs/DescribedDataCard';
 import DataCard from '../../../common/DataCard';
 import { getBrandDarkColor } from '../../../../styles/colors';
 
@@ -97,8 +97,8 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      withDescribedDataCard(localMessages.descriptionIntro, localMessages.helpText)(
-        withAsyncContainer(
+      withDescription(localMessages.descriptionIntro, localMessages.helpText)(
+        withAsyncFetch(
           TopicAttentionPreview
         )
       )

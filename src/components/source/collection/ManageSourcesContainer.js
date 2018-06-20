@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import Link from 'react-router/lib/Link';
 import { FormattedMessage, FormattedNumber, injectIntl, FormattedDate } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import withAsyncContainer from '../../common/hocs/AsyncContainer';
+import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import { fetchCollectionSourceList, scrapeSourceFeeds } from '../../../actions/sourceActions';
 import AppButton from '../../common/AppButton';
 import messages from '../../../resources/messages';
@@ -215,7 +215,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      withAsyncContainer(
+      withAsyncFetch(
         ManageSourcesContainer
       )
     )

@@ -3,12 +3,12 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { getBrandDarkColor } from '../../../styles/colors';
-import withAsyncContainer from '../../common/hocs/AsyncContainer';
+import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import { fetchSourceSplitStoryCount } from '../../../actions/sourceActions';
 import DataCard from '../../common/DataCard';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
 import messages from '../../../resources/messages';
-import withHelpfulContainer from '../../common/hocs/HelpfulContainer';
+import withHelp from '../../common/hocs/HelpfulContainer';
 import { DownloadButton } from '../../common/IconButton';
 import { urlToExplorerQuery } from '../../../lib/urlUtil';
 
@@ -97,8 +97,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      withHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.attentionChartHelpText])(
-        withAsyncContainer(
+      withHelp(localMessages.helpTitle, [localMessages.helpText, messages.attentionChartHelpText])(
+        withAsyncFetch(
           SourceSplitStoryCountContainer
         )
       )

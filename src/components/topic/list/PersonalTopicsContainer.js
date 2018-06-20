@@ -3,10 +3,10 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid/lib';
-import withAsyncContainer from '../../common/hocs/AsyncContainer';
+import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import { fetchPersonalTopicsList } from '../../../actions/topicActions';
 import TopicPreviewList from './TopicPreviewList';
-import withPagedContainer from '../../common/hocs/PagedContainer';
+import withPaging from '../../common/hocs/PagedContainer';
 
 const localMessages = {
   empty: { id: 'topics.personal.none', defaultMessage: 'You haven\'t created any topics yet. Explore the public topics, or click the "Create a New Topic" button above to make your own.' },
@@ -81,8 +81,8 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      withAsyncContainer(
-        withPagedContainer(
+      withAsyncFetch(
+        withPaging(
           PersonalTopicsContainer
         )
       )

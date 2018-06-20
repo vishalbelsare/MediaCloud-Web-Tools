@@ -4,10 +4,10 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { Row, Col } from 'react-flexbox-grid/lib';
-import withAsyncContainer from '../../common/hocs/AsyncContainer';
+import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import DataCard from '../../common/DataCard';
 import messages from '../../../resources/messages';
-import withHelpfulContainer from '../../common/hocs/HelpfulContainer';
+import withHelp from '../../common/hocs/HelpfulContainer';
 import { DownloadButton } from '../../common/IconButton';
 import MetadataCoverageItem from './MetadataCoverageItem';
 import { TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE, TAG_SET_PRIMARY_LANGUAGE, TAG_SET_COUNTRY_OF_FOCUS,
@@ -155,8 +155,8 @@ const mapDispatchToProps = dispatch => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      withHelpfulContainer(localMessages.helpTitle, [localMessages.helpText])(
-        withAsyncContainer(
+      withHelp(localMessages.helpTitle, [localMessages.helpText])(
+        withAsyncFetch(
           CollectionMetadataCoverageSummaryContainer
         )
       )

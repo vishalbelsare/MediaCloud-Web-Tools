@@ -3,7 +3,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import * as d3 from 'd3';
-import withHelpfulContainer from '../../../common/hocs/HelpfulContainer';
+import withHelp from '../../../common/hocs/HelpfulContainer';
 import VisualTimespanSelector from './VisualTimespanSelector';
 import TimespanPeriodSelector from './TimespanPeriodSelector';
 import TimespanDateRange from '../../TimespanDateRange';
@@ -97,7 +97,7 @@ TimespanSelector.propTypes = {
 
 export default
   injectIntl(
-    withHelpfulContainer(localMessages.timespansHelpTitle, localMessages.timespansHelpText)(
+    withHelp(localMessages.timespansHelpTitle, localMessages.timespansHelpText)(
       TimespanSelector
     )
   );

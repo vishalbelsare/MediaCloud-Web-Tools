@@ -3,7 +3,7 @@ import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 // import ErrorIcon from 'material-ui/svg-icons/alert/error';
 import { reduxForm, FieldArray, Field, propTypes } from 'redux-form';
-import withHelpfulContainer from '../hocs/HelpfulContainer';
+import withHelp from '../hocs/HelpfulContainer';
 import withIntlForm from '../../common/hocs/IntlForm';
 import SourceOrCollectionWidget from '../../common/SourceOrCollectionWidget';
 import { urlToSource, urlToCollection } from '../../../lib/urlUtil';
@@ -102,7 +102,7 @@ SourceCollectionsFieldList.propTypes = {
 
 export default
   injectIntl(
-    withHelpfulContainer(localMessages.helpTitleMsg, localMessages.helpContentMsg)(
+    withHelp(localMessages.helpTitleMsg, localMessages.helpContentMsg)(
       withIntlForm(
         reduxForm({ propTypes })(
           SourceCollectionsFieldList

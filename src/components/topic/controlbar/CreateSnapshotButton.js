@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Link from 'react-router/lib/Link';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import withHelpfulContainer from '../../common/hocs/HelpfulContainer';
+import withHelp from '../../common/hocs/HelpfulContainer';
 import { AddButton } from '../../common/IconButton';
 
 const localMessages = {
@@ -38,7 +38,7 @@ CreateSnapshotButton.propTypes = {
 
 export default
   injectIntl(
-    withHelpfulContainer(localMessages.helpTitle, localMessages.helpText)(
+    withHelp(localMessages.helpTitle, localMessages.helpText)(
       CreateSnapshotButton
     )
   );

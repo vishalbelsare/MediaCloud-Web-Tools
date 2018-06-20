@@ -13,7 +13,7 @@ import { HelpButton } from '../IconButton';
  * that you specify.
  * `contentHTMLTextMsg` can be a intl message  or an array of intl message s.
  */
-function withHelpfulContainer(contentTitleMsg, contentHTMLTextMsg, showHelpSidebar) {
+function withHelp(contentTitleMsg, contentHTMLTextMsg, showHelpSidebar) {
   return (ChildComponent) => {
     class HelpfulContainer extends React.Component {
       state = {
@@ -103,4 +103,4 @@ function withHelpfulContainer(contentTitleMsg, contentHTMLTextMsg, showHelpSideb
   };
 }
 
-export default withHelpfulContainer;
+export default withHelp;
