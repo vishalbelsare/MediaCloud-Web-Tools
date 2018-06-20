@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import ErrorTryAgain from '../common/ErrorTryAgain';
-import LoadingSpinner from '../common/LoadingSpinner';
-import * as fetchConstants from '../../lib/fetchConstants';
+import ErrorTryAgain from '../../common/ErrorTryAgain';
+import LoadingSpinner from '../../common/LoadingSpinner';
+import * as fetchConstants from '../../../lib/fetchConstants';
 
 // pass this in as the second arg to not show a spinner
 export const NO_SPINNER = 0;
@@ -95,7 +95,7 @@ export const asyncContainerize = (ChildComponent, loadingSpinnerSize) => {
   return ComposedAsyncContainer;
 };
 
-const composeAsyncContainer = asyncContainerize;  // the method can't be used as the name of the default import
+const withAsyncFetch = asyncContainerize;  // the method can't be used as the name of the default import
 
-export default composeAsyncContainer;
+export default withAsyncFetch;
 

@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import { updateFeedback } from '../../../../actions/appActions';
-import composeIntlForm from '../../../common/IntlForm';
+import withIntlForm from '../../../common/hocs/IntlForm';
 import SourceSearchContainer from '../../controlbar/SourceSearchContainer';
 import CollectionUploadSourceContainer from '../CollectionUploadSourceContainer';
 import { googleFavIconUrl } from '../../../../lib/urlUtil';
@@ -239,7 +239,7 @@ SourceSelectionRendererRaw.propTypes = {
 };
 
 const SourceSelectionRenderer =
-  composeIntlForm(
+  withIntlForm(
     SourceSelectionRendererRaw
   );
 
@@ -297,7 +297,7 @@ const reduxFormConfig = {
 };
 
 export default
-  composeIntlForm(
+  withIntlForm(
     reduxForm(reduxFormConfig)(
       connect(mapStateToProps, mapDispatchToProps)(
         CollectionMediaForm

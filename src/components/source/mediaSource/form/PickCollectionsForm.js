@@ -3,7 +3,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import { reduxForm, FieldArray, Field, propTypes } from 'redux-form';
-import composeIntlForm from '../../../common/IntlForm';
+import withIntlForm from '../../../common/hocs/IntlForm';
 import SourceOrCollectionChip from '../../../common/SourceOrCollectionChip';
 import SourceSearchContainer from '../../controlbar/SourceSearchContainer';
 
@@ -74,7 +74,7 @@ PickCollectionsForm.propTypes = {
 
 export default
   injectIntl(
-    composeIntlForm(
+    withIntlForm(
       reduxForm({ propTypes })(
         PickCollectionsForm
       )

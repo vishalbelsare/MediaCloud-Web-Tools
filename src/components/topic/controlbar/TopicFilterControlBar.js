@@ -14,7 +14,7 @@ import { toggleFilterControls, filterByFocus, filterByQuery, fetchTopicFocalSets
 import { updateFeedback, addNotice } from '../../../actions/appActions';
 import FilterSelectorContainer from './FilterSelectorContainer';
 import ActiveFiltersContainer from './ActiveFiltersContainer';
-import { asyncContainerize } from '../../common/AsyncContainer';
+import { asyncContainerize } from '../../common/hocs/AsyncContainer';
 import ModifyTopicDialog from './ModifyTopicDialog';
 import { LEVEL_WARNING } from '../../common/Notice';
 import { urlToExplorerQuery } from '../../../lib/urlUtil';

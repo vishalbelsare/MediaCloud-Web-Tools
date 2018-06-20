@@ -12,7 +12,7 @@ import DatePicker from 'material-ui/DatePicker';
  * This exposes render methods that you can use with redux-form's <Field> tag.  Pass in message objects
  * instead of strings for anything you want localized (error messages, hint text, etc.).
  */
-function composeIntlForm(Component) {
+function withIntlForm(Component) {
   class IntlFormForm extends React.Component {
     intlIfObject = (value) => {
       if (typeof value === 'object') {
@@ -146,4 +146,4 @@ function composeIntlForm(Component) {
   return injectIntl(IntlFormForm);
 }
 
-export default composeIntlForm;
+export default withIntlForm;

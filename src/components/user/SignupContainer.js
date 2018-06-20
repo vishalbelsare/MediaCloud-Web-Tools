@@ -11,7 +11,7 @@ import AppButton from '../common/AppButton';
 import Captcha from '../common/form/Captcha';
 import messages from '../../resources/messages';
 import { emptyString, invalidEmail, passwordTooShort, stringsDoNotMatch } from '../../lib/formValidators';
-import composeIntlForm from '../common/IntlForm';
+import withIntlForm from '../common/hocs/IntlForm';
 import { addNotice } from '../../actions/appActions';
 import { LEVEL_ERROR } from '../../components/common/Notice';
 
@@ -205,7 +205,7 @@ const reduxFormConfig = {
 };
 
 export default
-  composeIntlForm(
+  withIntlForm(
     reduxForm(reduxFormConfig)(
       connect(mapStateToProps, mapDispatchToProps)(
         SignupContainer

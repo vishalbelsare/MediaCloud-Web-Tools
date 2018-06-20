@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import composeAsyncContainer from '../AsyncContainer';
+import withAsyncFetch from '../hocs/AsyncContainer';
 import StatBar from '../statbar/StatBar';
 import messages from '../../../resources/messages';
 import { fetchSystemStats } from '../../../actions/systemActions';
@@ -58,7 +58,7 @@ const mapDispatchToProps = dispatch => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeAsyncContainer(
+      withAsyncFetch(
         SystemStatsContainer
       )
     )

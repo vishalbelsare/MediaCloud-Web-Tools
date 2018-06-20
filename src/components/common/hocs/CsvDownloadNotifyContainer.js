@@ -10,7 +10,7 @@ import { updateFeedback } from '../../../actions/appActions';
  * a `notifyOfCsvDownload` helper to the child component, which can accept a URL to link to. If that url
  * is passed in, the notification shows that as a link for more details about the download.
  */
-const composeCsvDownloadNotifyContainer = (ChildComponent) => {
+const withCsvDownloadNotifyContainer = (ChildComponent) => {
   const CsvDownloadNotifyContainer = props => (
     <div className="csv-download-notifier">
       <ChildComponent {...props} notifyOfCsvDownload={props.notifyOfCsvDownload} />
@@ -44,4 +44,4 @@ const composeCsvDownloadNotifyContainer = (ChildComponent) => {
   );
 };
 
-export default composeCsvDownloadNotifyContainer;
+export default withCsvDownloadNotifyContainer;

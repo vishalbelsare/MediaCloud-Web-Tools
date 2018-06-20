@@ -3,10 +3,10 @@ import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import DataCard from '../../common/DataCard';
 import WordSpace from '../../vis/WordSpace';
-import composeDescribedDataCard from '../../common/DescribedDataCard';
+import withDescription from '../../common/hocs/DescribedDataCard';
 import messages from '../../../resources/messages';
 import { DownloadButton } from '../../common/IconButton';
 import { topicDownloadFilename } from '../../util/topicUtil';
@@ -86,8 +86,8 @@ const mapDispatchToProps = dispatch => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeDescribedDataCard(localMessages.descriptionIntro, [messages.wordCloudTopicWord2VecLayoutHelp])(
-        composeAsyncContainer(
+      withDescription(localMessages.descriptionIntro, [messages.wordCloudTopicWord2VecLayoutHelp])(
+        withAsyncFetch(
           TopicWordSpaceContainer
         )
       )

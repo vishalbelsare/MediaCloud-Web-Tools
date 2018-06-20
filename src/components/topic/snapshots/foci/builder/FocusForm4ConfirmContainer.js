@@ -4,7 +4,7 @@ import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import composeIntlForm from '../../../../common/IntlForm';
+import withIntlForm from '../../../../common/hocs/IntlForm';
 import KeywordSearchSummary from './keywordSearch/KeywordSearchSummary';
 import RetweetPartisanshipSummary from './retweetPartisanship/RetweetPartisanshipSummary';
 import TopCountriesSummary from './topCountries/TopCountriesSummary';
@@ -150,7 +150,7 @@ const reduxFormConfig = {
 
 export default
   injectIntl(
-    composeIntlForm(
+    withIntlForm(
       reduxForm(reduxFormConfig)(
         connect(mapStateToProps, mapDispatchToProps, mergeProps)(
           FocusForm4ConfirmContainer

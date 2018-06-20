@@ -6,7 +6,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { filteredLocation, urlWithFilters } from '../util/location';
-import composeAsyncContainer from '../common/AsyncContainer';
+import withAsyncFetch from '../common/hocs/AsyncContainer';
 import AppButton from '../common/AppButton';
 import { selectTopic, filterBySnapshot, filterByTimespan, filterByFocus, fetchTopicSummary, filterByQuery,
   topicStartSpider } from '../../actions/topicActions';
@@ -318,7 +318,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-        composeAsyncContainer(
+        withAsyncFetch(
           TopicContainer
         )
       )

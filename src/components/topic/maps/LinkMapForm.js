@@ -7,7 +7,7 @@ import { Sigma, RelativeSize, LoadGEXF, ForceAtlas2, RandomizeNodePositions } fr
 import { Row, Col } from 'react-flexbox-grid/lib';
 import MenuItem from 'material-ui/MenuItem';
 import AppButton from '../../common/AppButton';
-import composeIntlForm from '../../common/IntlForm';
+import withIntlForm from '../../common/hocs/IntlForm';
 import { generateParamStr } from '../../../lib/apiUtil';
 
 export const NEW_FOCAL_SET_PLACEHOLDER_ID = -1;
@@ -178,7 +178,7 @@ const reduxFormConfig = {
 
 export default
   injectIntl(
-    composeIntlForm(
+    withIntlForm(
       reduxForm(reduxFormConfig)(
         connect(mapStateToProps)(
           LinkMapForm

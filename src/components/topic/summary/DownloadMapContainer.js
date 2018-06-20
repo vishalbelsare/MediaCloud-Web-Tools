@@ -2,8 +2,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import composeAsyncContainer from '../../common/AsyncContainer';
-import composeDescribedDataCard from '../../common/DescribedDataCard';
+import withAsyncFetch from '../../common/hocs/AsyncContainer';
+import withDescription from '../../common/hocs/DescribedDataCard';
 import DataCard from '../../common/DataCard';
 import LinkWithFilters from '../LinkWithFilters';
 import { fetchTopicMapFiles } from '../../../actions/topicActions';
@@ -119,8 +119,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeDescribedDataCard(localMessages.helpIntro, localMessages.helpText)(
-        composeAsyncContainer(
+      withDescription(localMessages.helpIntro, localMessages.helpText)(
+        withAsyncFetch(
           DownloadMapContainer
         )
       )
