@@ -89,7 +89,7 @@ function drawViz(wrapperElement, {
 
   if (circles && circles.length > 0) {
     // render it all
-    const node = d3.select(wrapperElement);
+    const node = d3.select(wrapperElement).html('');  // important to empty this out
     const div = node.append('div').attr('id', 'bubble-chart-wrapper');
     const svg = div.append('svg:svg');
     svg.attr('id', domId)

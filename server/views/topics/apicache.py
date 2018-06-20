@@ -107,6 +107,7 @@ def topic_story_list(user_mc_key, topics_id, **kwargs):
     merged_args.update(kwargs)    # passed in args override anything pulled form the request.args
     return _cached_topic_story_list(user_mc_key, topics_id, **merged_args)
 
+
 @cache.cache_on_arguments(function_key_generator=key_generator)
 def _cached_topic_story_list(user_mc_key, topics_id, **kwargs):
     '''

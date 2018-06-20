@@ -28,7 +28,7 @@ import AppButton from '../../common/AppButton';
 const MAX_STORY_TITLE_LENGTH = 70;  // story titles longer than this will be trimmed and ellipses added
 
 const localMessages = {
-  mainTitle: { id: 'story.details.mainTitle', defaultMessage: 'Story Details: {title}' },
+  mainTitle: { id: 'story.details.mainTitle', defaultMessage: 'Story: {title}' },
   removeTitle: { id: 'story.details.remove', defaultMessage: 'Remove from Next Snapshot' },
   removeAbout: { id: 'story.details.remove.about', defaultMessage: 'If story is clearly not related to the Topic, or is messing up your analysis, you can remove it from the next Snapshot.  Be careful, because this means it won\'t show up anywhere on the new Snapshot you generate.' },
   unknownLanguage: { id: 'story.details.language.unknown', defaultMessage: 'Unknown' },
@@ -64,7 +64,6 @@ class StoryContainer extends React.Component {
   render() {
     const { story, topicId, storiesId, topicName } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
-    const titleHandler = parentTitle => `${formatMessage(messages.story)} | ${parentTitle}`;
     let displayTitle = story.title;
     if (story.title.length > MAX_STORY_TITLE_LENGTH) {
       displayTitle = `${story.title.substr(0, MAX_STORY_TITLE_LENGTH)}...`;
@@ -78,7 +77,7 @@ class StoryContainer extends React.Component {
     ];
     return (
       <div>
-        <Helmet><title>{titleHandler()}</title></Helmet>
+        <Helmet><title>{formatMessage(localMessages.mainTitle, { title: displayTitle })}</title></Helmet>
         <Grid>
           <Row>
             <Col lg={12}>

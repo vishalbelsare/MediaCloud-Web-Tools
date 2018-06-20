@@ -70,7 +70,6 @@ class TopicContainer extends React.Component {
   render() {
     const { children, goToUrl, topicInfo, topicId, snapshotCount, handleSpiderRequest, filters, needsNewSnapshot } = this.props;
     const { formatMessage } = this.props.intl;
-    const titleHandler = parentTitle => `${topicInfo.name} | ${parentTitle}`;
     // show a big error if there is one to show
     let contentToShow = children;
     if ((topicInfo.state === TOPIC_SNAPSHOT_STATE_RUNNING) && (snapshotCount === 0)) {
@@ -121,7 +120,7 @@ class TopicContainer extends React.Component {
     return (
       <div className="topic-container">
         <div>
-          <Helmet><title>{titleHandler()}</title></Helmet>
+          <Helmet><title>{topicInfo.name}</title></Helmet>
           <TopicHeaderContainer topicId={topicId} topicInfo={topicInfo} filters={filters} />
           {contentToShow}
         </div>
