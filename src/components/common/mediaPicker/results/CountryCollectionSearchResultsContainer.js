@@ -4,7 +4,6 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { selectMediaPickerQueryArgs, fetchMediaPickerCountryCollections } from '../../../../actions/systemActions';
 import CollectionSearchResultsContainer from './CollectionSearchResultsContainer';
-import FeaturedCollectionsContainer from './FeaturedCollectionsContainer';
 import { notEmptyString } from '../../../../lib/formValidators';
 
 const localMessages = {
@@ -22,13 +21,10 @@ class CountryCollectionSearchResultsContainer extends React.Component {
   }
   render() {
     const { selectedMediaQueryType, selectedMediaQueryKeyword, collectionResults, handleToggleAndSelectMedia, fetchCountryStatus } = this.props;
-
-    const initCollections = <FeaturedCollectionsContainer handleToggleAndSelectMedia={handleToggleAndSelectMedia} />;
     return (
       <div>
         <CollectionSearchResultsContainer
           fetchStatus={fetchCountryStatus}
-          initCollections={initCollections}
           handleToggleAndSelectMedia={handleToggleAndSelectMedia}
           selectedMediaQueryType={selectedMediaQueryType}
           selectedMediaQueryKeyword={selectedMediaQueryKeyword}

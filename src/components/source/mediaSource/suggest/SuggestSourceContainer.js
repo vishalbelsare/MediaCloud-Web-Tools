@@ -5,7 +5,7 @@ import { reduxForm, reset } from 'redux-form';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import composeIntlForm from '../../../common/IntlForm';
+import withIntlForm from '../../../common/hocs/IntlForm';
 import SourceSuggestionForm from './SourceSuggestionForm';
 import PickCollectionsForm from '../form/PickCollectionsForm';
 import { emptyString } from '../../../../lib/formValidators';
@@ -112,7 +112,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 
 export default
   injectIntl(
-    composeIntlForm(
+    withIntlForm(
       reduxForm(reduxFormConfig)(
         connect(mapStateToProps, mapDispatchToProps)(
          SuggestSourceContainer

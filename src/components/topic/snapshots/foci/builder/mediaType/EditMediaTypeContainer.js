@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import AppButton from '../../../../../common/AppButton';
-import composeIntlForm from '../../../../../common/IntlForm';
+import withIntlForm from '../../../../../common/hocs/IntlForm';
 import messages from '../../../../../../resources/messages';
 import MediaTypeCoveragePreviewContainer from './MediaTypeCoveragePreviewContainer';
 import MediaTypeStoryCountsPreviewContainer from './MediaTypeStoryCountsPreviewContainer';
@@ -96,7 +96,7 @@ const reduxFormConfig = {
 
 export default
   injectIntl(
-    composeIntlForm(
+    withIntlForm(
       reduxForm(reduxFormConfig)(
         connect(mapStateToProps, mapDispatchToProps)(
           EditMediaTypeContainer

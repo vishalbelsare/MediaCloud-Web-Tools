@@ -7,7 +7,7 @@ import { push } from 'react-router-redux';
 import Link from 'react-router/lib/Link';
 import { SubmissionError } from 'redux-form';
 import MediaSourceIcon from '../../common/icons/MediaSourceIcon';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import { selectSourceFeed, updateFeed, fetchSourceFeed } from '../../../actions/sourceActions';
 import { updateFeedback, addNotice } from '../../../actions/appActions';
 import { LEVEL_ERROR } from '../../common/Notice';
@@ -139,7 +139,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeAsyncContainer(
+      withAsyncFetch(
         EditSourceFeedContainer
       )
     )

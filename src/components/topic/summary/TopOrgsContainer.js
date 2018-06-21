@@ -3,14 +3,14 @@ import React from 'react';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import { fetchTopicEntitiesOrgs, filterByQuery } from '../../../actions/topicActions';
 import DataCard from '../../common/DataCard';
 import EntitiesTable from '../../common/EntitiesTable';
 import { filtersAsUrlParams, filteredLocation } from '../../util/location';
 import { DownloadButton } from '../../common/IconButton';
 import messages from '../../../resources/messages';
-import composeHelpfulContainer from '../../common/HelpfulContainer';
+import withHelp from '../../common/hocs/HelpfulContainer';
 
 const COVERAGE_REQUIRED = 0.7;
 const NUMBER_TO_SHOW = 10;
@@ -127,8 +127,8 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeHelpfulContainer(messages.entityHelpTitle, messages.entityHelpContent)(
-        composeAsyncContainer(
+      withHelp(messages.entityHelpTitle, messages.entityHelpContent)(
+        withAsyncFetch(
           TopOrgsContainer
         )
       )

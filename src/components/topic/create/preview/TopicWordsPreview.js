@@ -2,8 +2,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
-import composeAsyncContainer from '../../../common/AsyncContainer';
-import composeDescribedDataCard from '../../../common/DescribedDataCard';
+import withAsyncFetch from '../../../common/hocs/AsyncContainer';
+import withDescription from '../../../common/hocs/DescribedDataCard';
 import OrderedWordCloud from '../../../vis/OrderedWordCloud';
 import DataCard from '../../../common/DataCard';
 import { fetchWordsByQuery } from '../../../../actions/topicActions';
@@ -94,8 +94,8 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeDescribedDataCard(localMessages.descriptionIntro, [messages.wordcloudHelpText])(
-        composeAsyncContainer(
+      withDescription(localMessages.descriptionIntro, [messages.wordcloudHelpText])(
+        withAsyncFetch(
           TopicWordsPreview
         )
       )

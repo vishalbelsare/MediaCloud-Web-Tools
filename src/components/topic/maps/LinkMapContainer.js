@@ -17,15 +17,14 @@ const localMessages = {
 
 class LinkMapContainer extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      viewMap: false,
-    };
+  state = {
+    viewMap: false,
   }
   componentWillReceiveProps(nextProps) {
     const { fetchData, filters } = this.props;
-    if (nextProps.filters !== filters) {
+    if (nextProps.filters.snapshotId !== filters.snapshotId ||
+      nextProps.filters.timespanId !== filters.timespanId ||
+      nextProps.filters.focusId !== filters.focusId) {
       fetchData(nextProps);
     }
   }

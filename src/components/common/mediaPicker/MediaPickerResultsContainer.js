@@ -3,11 +3,12 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { selectMedia, toggleMedia, selectMediaPickerQueryArgs, resetMediaPickerQueryArgs, resetMediaPickerSources, resetMediaPickerCollections } from '../../../actions/systemActions';
-import { PICK_COLLECTION, PICK_SOURCE, PICK_COUNTRY } from '../../../lib/explorerUtil';
+import { PICK_COLLECTION, PICK_SOURCE, PICK_COUNTRY, PICK_FEATURED } from '../../../lib/explorerUtil';
 import * as fetchConstants from '../../../lib/fetchConstants';
 import CountryCollectionSearchResultsContainer from './results/CountryCollectionSearchResultsContainer';
 import AllCollectionSearchResultsContainer from './results/AllCollectionSearchResultsContainer';
 import SourceSearchResultsContainer from './results/SourceSearchResultsContainer';
+import FeaturedFavoriteSearchResultsContainer from './results/FeaturedFavoriteSearchResultsContainer';
 import { TAG_SET_ABYZ_GEO_COLLECTIONS, VALID_COLLECTION_IDS } from '../../../lib/tagUtil';
 
 class MediaPickerResultsContainer extends React.Component {
@@ -20,10 +21,8 @@ class MediaPickerResultsContainer extends React.Component {
       this.updateMediaQuery({ type: nextProps.selectedMediaQueryType });
     }
     if (nextProps.selectedMedia !== this.props.selectedMedia ||
-      // because featured collections has an async call, we either compare selected to featured here, or do something else
       // if the results have changed from a keyword entry, we need to update the UI
-      (nextProps.sourceResults && nextProps.sourceResults.lastFetchSuccess !== this.props.sourceResults.lastFetchSuccess) ||
-      (nextProps.featured && nextProps.featured.lastFetchSuccess !== this.props.featured.lastFetchSuccess)) {
+      (nextProps.sourceResults && nextProps.sourceResults.lastFetchSuccess !== this.props.sourceResults.lastFetchSuccess)) {
       this.correlateSelection(nextProps);
     }
   }
@@ -31,17 +30,12 @@ class MediaPickerResultsContainer extends React.Component {
     const { resetComponents } = this.props;
     resetComponents();
   }
-
   correlateSelection(whichProps) {
-    let whichList = [];
+    let whichList = {};
 
     switch (whichProps.selectedMediaQueryType) {
       case PICK_COUNTRY:
-        if (whichProps.selectedMediaQueryKeyword !== null && whichProps.selectedMediaQueryKeyword !== undefined) {
-          whichList = whichProps.collectionResults;
-        } else {
-          whichList = whichProps.featured;
-        }
+        whichList = whichProps.collectionResults;
         break;
       case PICK_COLLECTION:
         whichList = whichProps.collectionResults;
@@ -105,6 +99,15 @@ class MediaPickerResultsContainer extends React.Component {
       case PICK_SOURCE:
         content = <SourceSearchResultsContainer handleMediaConcurrency={toggleConcurrency} handleToggleAndSelectMedia={handleToggleAndSelectMedia} />;
         break;
+      case PICK_FEATURED:
+        content = (
+          <FeaturedFavoriteSearchResultsContainer
+            whichTagSet={VALID_COLLECTION_IDS}
+            handleMediaConcurrency={toggleConcurrency}
+            handleToggleAndSelectMedia={handleToggleAndSelectMedia}
+          />
+        );
+        break;
       default:
         break;
     }
@@ -124,19 +127,23 @@ MediaPickerResultsContainer.propTypes = {
   selectedMediaQueryType: PropTypes.number,
   resetComponents: PropTypes.func.isRequired,
   featured: PropTypes.object,
+  favoritedCollections: PropTypes.object,
+  favoritedSources: PropTypes.object,
   collectionResults: PropTypes.object,
   sourceResults: PropTypes.object,
   selectedMedia: PropTypes.array,
 };
 
 const mapStateToProps = state => ({
-  fetchStatus: (state.system.mediaPicker.sourceQueryResults.fetchStatus === fetchConstants.FETCH_SUCCEEDED || state.system.mediaPicker.collectionQueryResults.fetchStatus === fetchConstants.FETCH_SUCCEEDED || state.system.mediaPicker.featured.fetchStatus === fetchConstants.FETCH_SUCCEEDED) ? fetchConstants.FETCH_SUCCEEDED : fetchConstants.FETCH_INVALID,
+  fetchStatus: (state.system.mediaPicker.sourceQueryResults.fetchStatus === fetchConstants.FETCH_SUCCEEDED || state.system.mediaPicker.collectionQueryResults.fetchStatus === fetchConstants.FETCH_SUCCEEDED || state.system.mediaPicker.favoritedCollections.fetchStatus === fetchConstants.FETCH_SUCCEEDED) ? fetchConstants.FETCH_SUCCEEDED : fetchConstants.FETCH_INVALID,
   selectedMedia: state.system.mediaPicker.selectMedia.list,
   selectedMediaQueryType: state.system.mediaPicker.selectMediaQuery ? state.system.mediaPicker.selectMediaQuery.args.type : 0,
   timestamp: state.system.mediaPicker.featured ? state.system.mediaPicker.featured.timestamp : null,
   collectionResults: state.system.mediaPicker.collectionQueryResults,
   featured: state.system.mediaPicker.featured ? state.system.mediaPicker.featured : null,
   sourceResults: state.system.mediaPicker.sourceQueryResults,
+  favoritedCollections: state.system.mediaPicker.favoritedCollections ? state.system.mediaPicker.favoritedCollections : null,
+  favoritedSources: state.system.mediaPicker.favoritedSources ? state.system.mediaPicker.favoritedSources : null,
 });
 
 const mapDispatchToProps = dispatch => ({

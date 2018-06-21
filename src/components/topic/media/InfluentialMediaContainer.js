@@ -10,9 +10,9 @@ import { fetchTopicInfluentialMedia, sortTopicInfluentialMedia } from '../../../
 import { DownloadButton } from '../../common/IconButton';
 import messages from '../../../resources/messages';
 import DataCard from '../../common/DataCard';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import { pagedAndSortedLocation } from '../../util/location';
-import composePagedContainer from '../../common/PagedContainer';
+import withPaging from '../../common/hocs/PagedContainer';
 import MediaSourceIcon from '../../common/icons/MediaSourceIcon';
 
 const localMessages = {
@@ -134,8 +134,8 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composePagedContainer(
-        composeAsyncContainer(
+      withPaging(
+        withAsyncFetch(
           InfluentialMediaContainer
         )
       )

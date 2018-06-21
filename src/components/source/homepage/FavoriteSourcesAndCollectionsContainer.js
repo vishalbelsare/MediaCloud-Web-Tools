@@ -4,8 +4,8 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import Link from 'react-router/lib/Link';
 import DataCard from '../../common/DataCard';
-import { fetchFavoriteCollections, fetchFavoriteSources } from '../../../actions/sourceActions';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import { fetchFavoriteCollections, fetchFavoriteSources } from '../../../actions/systemActions';
+import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import { ExploreButton } from '../../common/IconButton';
 
 const NUMBER_TO_SHOW = 8; // how many of each to show
@@ -89,7 +89,7 @@ const mapDispatchToProps = dispatch => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeAsyncContainer(
+      withAsyncFetch(
         FavoriteSourcesAndCollectionsContainer
       )
     )

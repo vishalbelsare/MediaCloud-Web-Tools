@@ -3,7 +3,7 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import { Row, Col } from 'react-flexbox-grid/lib';
-import composeIntlForm from '../../../common/IntlForm';
+import withIntlForm from '../../../common/hocs/IntlForm';
 import AppButton from '../../../common/AppButton';
 import CollectionDetailsForm from './CollectionDetailsForm';
 import CollectionMediaForm from './CollectionMediaForm';
@@ -94,7 +94,7 @@ const reduxFormConfig = {
 
 export default
   injectIntl(
-    composeIntlForm(
+    withIntlForm(
       reduxForm(reduxFormConfig)(
         CollectionForm
       ),

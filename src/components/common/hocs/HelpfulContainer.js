@@ -4,8 +4,8 @@ import { FormattedHTMLMessage, injectIntl } from 'react-intl';
 import FlatButton from 'material-ui/FlatButton';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import Dialog from 'material-ui/Dialog';
-import messages from '../../resources/messages';
-import { HelpButton } from './IconButton';
+import messages from '../../../resources/messages';
+import { HelpButton } from '../IconButton';
 
 /**
  * Use this with the JS Composition pattern to make a Container that has a help button.
@@ -13,7 +13,7 @@ import { HelpButton } from './IconButton';
  * that you specify.
  * `contentHTMLTextMsg` can be a intl message  or an array of intl message s.
  */
-function composeHelpfulContainer(contentTitleMsg, contentHTMLTextMsg, showHelpSidebar) {
+function withHelp(contentTitleMsg, contentHTMLTextMsg, showHelpSidebar) {
   return (ChildComponent) => {
     class HelpfulContainer extends React.Component {
       state = {
@@ -103,4 +103,4 @@ function composeHelpfulContainer(contentTitleMsg, contentHTMLTextMsg, showHelpSi
   };
 }
 
-export default composeHelpfulContainer;
+export default withHelp;

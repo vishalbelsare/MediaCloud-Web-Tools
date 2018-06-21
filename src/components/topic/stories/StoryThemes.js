@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import composeHelpfulContainer from '../../common/HelpfulContainer';
+import withHelp from '../../common/hocs/HelpfulContainer';
 import DataCard from '../../common/DataCard';
 import messages from '../../../resources/messages';
 
@@ -56,7 +56,7 @@ StoryThemes.propTypes = {
 
 export default
   injectIntl(
-    composeHelpfulContainer(messages.themeHelpTitle, messages.themeHelpContent)(
+    withHelp(messages.themeHelpTitle, messages.themeHelpContent)(
       StoryThemes
     )
   );

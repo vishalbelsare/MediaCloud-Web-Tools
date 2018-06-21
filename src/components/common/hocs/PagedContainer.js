@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import FlatButton from 'material-ui/FlatButton';
-import messages from '../../resources/messages';
+import messages from '../../../resources/messages';
 
 /**
  * Use this with the JS Composition pattern to make a Container that has paging controls.
@@ -9,7 +9,7 @@ import messages from '../../resources/messages';
  * Most likely those methods will call out to a fetchData property that loads the previous or
  * next page.
  */
-function composePagedContainer(ComposedContainer) {
+function withPaging(ComposedContainer) {
   const PagedContainer = (props) => {
     const { links, nextPage, previousPage } = props;
     const { formatMessage } = props.intl;
@@ -32,4 +32,4 @@ function composePagedContainer(ComposedContainer) {
   return PagedContainer;
 }
 
-export default composePagedContainer;
+export default withPaging;

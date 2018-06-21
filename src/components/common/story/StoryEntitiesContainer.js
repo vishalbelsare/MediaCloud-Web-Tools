@@ -4,8 +4,8 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import { connect } from 'react-redux';
 import { fetchStoryEntities } from '../../../actions/storyActions';
-import composeAsyncContainer from '../../common/AsyncContainer';
-import composeHelpfulContainer from '../../common/HelpfulContainer';
+import withAsyncFetch from '../../common/hocs/AsyncContainer';
+import withHelp from '../../common/hocs/HelpfulContainer';
 import messages from '../../../resources/messages';
 import DataCard from '../../common/DataCard';
 import { DownloadButton } from '../../common/IconButton';
@@ -108,8 +108,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeHelpfulContainer(localMessages.helpTitle, localMessages.helpIntro)(
-        composeAsyncContainer(
+      withHelp(localMessages.helpTitle, localMessages.helpIntro)(
+        withAsyncFetch(
           StoryEntitiesContainer
         )
       )
