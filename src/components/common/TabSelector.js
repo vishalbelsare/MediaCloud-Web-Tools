@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { trimToMaxLength } from '../../lib/stringUtil';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 
 class TabSelector extends React.Component {
   state = {
@@ -14,24 +15,21 @@ class TabSelector extends React.Component {
       return null;
     }
     return (
-      <ul className="tab-selector">
-        {tabLabels.filter(label => label !== undefined).map((label, idx) =>
-          <li
-            role="button"
-            tabIndex={0}
+      <Tabs
+        onChange={(idx) => {
+          this.setState({ selectedViewIndex: idx });
+          onViewSelected(idx);
+        }}
+        scrollable
+        scrollButtons="on"
+      >
+        {tabLabels.filter(label => label !== undefined).map(label =>
+          <Tab
+            label={label.label}
             style={{ color: label.color }}
-            onKeyPress={evt => evt.preventDefault()}
-            key={idx}
-            className={`${this.state.selectedViewIndex === idx ? 'selected' : ''}`}
-            onClick={() => {
-              this.setState({ selectedViewIndex: idx });
-              onViewSelected(idx);
-            }}
-          >
-            {trimToMaxLength(label.label || label, 20)}
-          </li>
+          />
         )}
-      </ul>
+      </Tabs>
     );
   }
 }
