@@ -12,8 +12,7 @@ import messages from '../../../../resources/messages';
 const localMessages = {
   typeSyndicated: { id: 'source.feed.add.type.syndicated', defaultMessage: 'Syndicated' },
   typeWebPage: { id: 'source.feed.add.type.webpage', defaultMessage: 'Web Page' },
-  statusActive: { id: 'source.feed.add.status.active', defaultMessage: 'Active' },
-  statusDisabled: { id: 'source.feed.add.status.inactive', defaultMessage: 'Disabled' },
+  feedIsActive: { id: 'source.feed.add.active', defaultMessage: 'Feed is Active' },
   urlInvalid: { id: 'source.feed.url.invalid', defaultMessage: 'That isn\'t a valid feed URL. Please enter just the full url of one RSS or Atom feed.' },
 };
 
@@ -57,7 +56,7 @@ const SourceFeedForm = (props) => {
           </span>
         </Col>
         <Col md={8}>
-          <Field name="feed_type" component={renderSelectField} >
+          <Field name="type" component={renderSelectField} >
             <MenuItem key="syndicated" value="syndicated" primaryText={formatMessage(localMessages.typeSyndicated)} />
             <MenuItem key="web_page" value="web_page" primaryText={formatMessage(localMessages.typeWebPage)} />
           </Field>
@@ -66,14 +65,17 @@ const SourceFeedForm = (props) => {
       <Row>
         <Col md={2}>
           <span className="label unlabeled-field-label">
-            <FormattedMessage {...messages.feedStatus} />
+            <FormattedMessage {...messages.feedIsActive} />
           </span>
         </Col>
         <Col md={8}>
-          <Field name="binaryFeedStatus" value="active" component={renderSelectField} >
-            <MenuItem value="active" primaryText={formatMessage(localMessages.statusActive)} />
-            <MenuItem value="disabled" primaryText={formatMessage(localMessages.statusDisabled)} />
-          </Field>
+          <Field
+            name="active"
+            component={renderCheckbox}
+            fullWidth
+            label={formatMessage(messages.feedIsActive)}
+            value=true
+          />
         </Col>
       </Row>
       <AppButton
@@ -102,11 +104,8 @@ SourceFeedForm.propTypes = {
 
 function validate(values) {
   const errors = {};
-  if (emptyString(values.binaryFeedStatus)) {
-    errors.feed_status = messages.required;
-  }
-  if (emptyString(values.feed_type)) {
-    errors.feed_type = messages.required;
+  if (emptyString(values.type)) {
+    errors.type = messages.required;
   }
   if (emptyString(values.url)) {
     errors.url = messages.required;

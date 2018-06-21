@@ -101,8 +101,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     const infoToSave = {
       name: values.name,
       url: values.url,
-      feed_status: values.binaryFeedStatus === 'active' ? 'active' : 'inactive',
-      feed_type: values.feed_type,
+      active: values.active,
+      type: values.type,
     };
     dispatch(updateFeed(ownProps.params.feedId, infoToSave))
       .then((result) => {
