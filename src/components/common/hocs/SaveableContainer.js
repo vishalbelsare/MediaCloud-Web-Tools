@@ -3,14 +3,14 @@ import React from 'react';
 import TextField from 'material-ui/TextField';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import messages from '../../resources/messages';
-import * as fetchConstants from '../../lib/fetchConstants';
-import { SaveButton } from './IconButton';
-import { saveToNotebook } from '../../actions/notebookActions';
-import { getAppName } from '../../config';
-import { updateFeedback } from '../../actions/appActions';
-import ConfirmationDialog from '../common/ConfirmationDialog';
-import { WarningNotice, InfoNotice, ErrorNotice } from '../common/Notice';
+import messages from '../../../resources/messages';
+import * as fetchConstants from '../../../lib/fetchConstants';
+import { SaveButton } from '../IconButton';
+import { saveToNotebook } from '../../../actions/notebookActions';
+import { getAppName } from '../../../config';
+import { updateFeedback } from '../../../actions/appActions';
+import ConfirmationDialog from '../../common/ConfirmationDialog';
+import { WarningNotice, InfoNotice, ErrorNotice } from '../../common/Notice';
 
 const localMessages = {
   saving: { id: 'notebook.save.inProgress', defaultMessage: 'Saving to the server...' },
