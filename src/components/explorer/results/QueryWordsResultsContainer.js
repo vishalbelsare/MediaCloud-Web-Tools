@@ -3,7 +3,9 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeSummarizedVisualization from './SummarizedVizualization';
+import QueryWordDrillDownContainer from './drilldowns/QueryWordDrillDownContainer';
 import withAsyncFetch from '../../common/hocs/AsyncContainer';
+import withDrillDown from '../../common/hocs/DrillDownContainer';
 import { fetchQueryTopWords, fetchDemoQueryTopWords, resetTopWords } from '../../../actions/explorerActions';
 import { postToDownloadUrl, slugifiedQueryLabel } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
@@ -23,7 +25,7 @@ class QueryWordsResultsContainer extends React.Component {
     postToDownloadUrl('/api/explorer/words/wordcount.csv', query, { ngramSize });
   }
   render() {
-    const { results, queries, handleWordCloudClick, tabSelector, selectedTabIndex } = this.props;
+    const { results, queries, handleOpen, tabSelector, selectedTabIndex } = this.props;
     const { formatMessage } = this.props.intl;
     const selectedQuery = queries[selectedTabIndex];
     return (
@@ -31,7 +33,7 @@ class QueryWordsResultsContainer extends React.Component {
         actionMenuHeaderText={formatMessage(localMessages.menuHeader, { queryName: selectedQuery.label })}
         subHeaderContent={tabSelector}
         words={results[selectedTabIndex].list}
-        onViewModeClick={handleWordCloudClick}
+        onViewModeClick={handleOpen}
         border={false}
         domId={WORD_CLOUD_DOM_ID}
         width={585}
@@ -51,6 +53,7 @@ QueryWordsResultsContainer.propTypes = {
   queries: PropTypes.array.isRequired,
   isLoggedIn: PropTypes.bool.isRequired,
   onQueryModificationRequested: PropTypes.func.isRequired,
+  handleOpen: PropTypes.func.isRequired,
   // from composition
   intl: PropTypes.object.isRequired,
   selectedTabIndex: PropTypes.number.isRequired,
@@ -58,7 +61,7 @@ QueryWordsResultsContainer.propTypes = {
   // from dispatch
   fetchData: PropTypes.func.isRequired,
   results: PropTypes.array.isRequired,
-  handleWordCloudClick: PropTypes.func.isRequired,
+  handleDrillDownAction: PropTypes.func.isRequired,
   // from mergeProps
   asyncFetch: PropTypes.func.isRequired,
   // from state
@@ -94,14 +97,14 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         const demoInfo = {
           index, // should be same as q.index btw
           search_id: q.searchId, // may or may not have these
-          query_id: q.id, // TODO if undefined, what to do?
+          query_id: q.id,
           q: q.q, // only if no query id, means demo user added a keyword
         };
         return dispatch(fetchDemoQueryTopWords(demoInfo)); // id
       });
     }
   },
-  handleWordCloudClick: (word) => {
+  handleDrillDownAction: (word) => {
     ownProps.onQueryModificationRequested(word.term);
   },
 });
@@ -120,7 +123,9 @@ export default
       composeSummarizedVisualization(localMessages.title, localMessages.descriptionIntro, messages.wordcloudHelpText)(
         withAsyncFetch(
           composeQueryResultsSelector(
-            QueryWordsResultsContainer
+            withDrillDown(<QueryWordDrillDownContainer />)(
+              QueryWordsResultsContainer
+            )
           )
         )
       )

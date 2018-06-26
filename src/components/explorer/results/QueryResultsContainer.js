@@ -6,7 +6,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import QueryTopEntitiesPeopleResultsContainer from './QueryTopEntitiesPeopleResultsContainer';
 import QueryTopEntitiesOrgsResultsContainer from './QueryTopEntitiesOrgsResultsContainer';
 import QueryAttentionOverTimeResultsContainer from './QueryAttentionOverTimeResultsContainer';
-import QueryAttentionOverTimeDrillDownContainer from './QueryAttentionOverTimeDrillDownContainer';
+import QueryAttentionOverTimeDrillDownContainer from './drilldowns/QueryAttentionOverTimeDrillDownContainer';
 import QueryWordComparisonResultsContainer from './QueryWordComparisonResultsContainer';
 import QuerySampleStoriesResultsContainer from './QuerySampleStoriesResultsContainer';
 import QueryTotalAttentionResultsContainer from './QueryTotalAttentionResultsContainer';

@@ -2,9 +2,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
-import DataCard from '../../common/DataCard';
-import StorySentencePreview from '../../common/StorySentencePreview';
-import OrderedWordCloud from '../../vis/OrderedWordCloud';
+import DataCard from '../../../common/DataCard';
+import StorySentencePreview from '../../../common/StorySentencePreview';
+import OrderedWordCloud from '../../../vis/OrderedWordCloud';
 
 const localMessages = {
   attention: { id: 'explorer.results.attention.title', defaultMessage: 'Attention' },
