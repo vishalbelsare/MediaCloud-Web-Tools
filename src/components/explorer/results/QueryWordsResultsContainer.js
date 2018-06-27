@@ -24,15 +24,15 @@ class QueryWordsResultsContainer extends React.Component {
   handleDownload = (query, ngramSize) => {
     postToDownloadUrl('/api/explorer/words/wordcount.csv', query, { ngramSize });
   }
-  handleWordClick = (query) => {
-    const { handleSelectedWord, handleClose, handleOpen } = this.props;
+  handleWordClick = (word) => {
+    const { handleSelectedWord, handleDrillDownAction, handleClose, handleOpen } = this.props;
     const drillDown = (
       <WordInContextContainer
-        handleDrillDownAction={handleSelectedWord}
+        handleDrillDownAction={() => handleDrillDownAction(word)}
         handleClose={handleClose}
       />
     );
-    handleSelectedWord(query);
+    handleSelectedWord(word);
     handleOpen(drillDown);
   }
   render() {
