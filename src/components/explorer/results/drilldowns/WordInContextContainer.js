@@ -2,7 +2,10 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
+import MenuItem from 'material-ui/MenuItem';
 import slugify from 'slugify';
+import { Row, Col } from 'react-flexbox-grid/lib';
+import ActionMenu from '../../../common/ActionMenu';
 import { fetchWordSampleSentences } from '../../../../actions/explorerActions';
 import withHelp from '../../../common/hocs/HelpfulContainer';
 import withAsyncFetch from '../../../common/hocs/AsyncContainer';
@@ -10,7 +13,6 @@ import DataCard from '../../../common/DataCard';
 import WordTree from '../../../vis/WordTree';
 import messages from '../../../../resources/messages';
 import { downloadSvg } from '../../../util/svg';
-import { DownloadButton } from '../../../common/IconButton';
 
 const localMessages = {
   title: { id: 'word.inContext.title', defaultMessage: 'Word in Context: {word}' },
@@ -18,6 +20,8 @@ const localMessages = {
   helpText: { id: 'word.inContext.help.text',
     defaultMessage: '<p>It is helpful to look at how a word is used, in addition to the fact that it is used.  While a word cloud can tell you what words are used, this interactive visualization can help you explore the use of a word in context.</p>',
   },
+  close: { id: 'word.inContext.close', defaultMessage: 'Close' },
+  addWordToAllQueries: { id: 'word.inContext.addWordToAllQueries', defaultMessage: 'Add This Word To All Queries' },
 };
 
 class WordInContextContainer extends React.Component {
@@ -40,25 +44,40 @@ class WordInContextContainer extends React.Component {
     downloadSvg(svgDownloadPrefix, svgNode);
   }
   render() {
-    const { selectedWord, fragments, helpButton } = this.props;
+    const { selectedWord, handleDrillDownAction, handleClose, fragments, helpButton } = this.props;
     const { formatMessage } = this.props.intl;
     const uniqueDomId = this.getUniqueDomId();
+
     if (selectedWord) {
       return (
         <DataCard>
-          <div className="actions">
-            <DownloadButton tooltip={formatMessage(messages.downloadSVG)} onClick={this.handleDownloadSvg} />
-          </div>
+          <ActionMenu>
+            <MenuItem
+              className="action-icon-menu-item"
+              primaryText={formatMessage(localMessages.close)}
+              onTouchTap={handleClose}
+            />
+            <MenuItem
+              className="action-icon-menu-item"
+              primaryText={formatMessage(localMessages.addWordToAllQueries)}
+              onTouchTap={handleDrillDownAction}
+            />
+          </ActionMenu>
           <h2>
-            <FormattedMessage {...localMessages.title} values={{ word: selectedWord }} />
+            <FormattedMessage {...localMessages.title} values={{ word: selectedWord.term }} />
             {helpButton}
           </h2>
-          <WordTree
-            domId={uniqueDomId}
-            sentences={fragments}
-            startWord={selectedWord.term}
-            height="400px"
-          />
+          <Row>
+            <Col lg={12}>
+              <WordTree
+                domId={uniqueDomId}
+                sentences={fragments}
+                startWord={selectedWord.term}
+                height="400px"
+                width="700px"
+              />
+            </Col>
+          </Row>
         </DataCard>
       );
     }
@@ -69,10 +88,15 @@ class WordInContextContainer extends React.Component {
 WordInContextContainer.propTypes = {
   // from parent
   selectedWord: PropTypes.object,
+  handleDrillDownAction: PropTypes.func.isRequired,
+  handleClose: PropTypes.func.isRequired,
   // from store
   fragments: PropTypes.array,
-  // from dispatch
   fetchData: PropTypes.func.isRequired,
+  // from dispatch
+  fetchStatus: PropTypes.string.isRequired,
+    // from mergeProps
+  asyncFetch: PropTypes.func.isRequired,
   // from context
   intl: PropTypes.object.isRequired,
   helpButton: PropTypes.node.isRequired,

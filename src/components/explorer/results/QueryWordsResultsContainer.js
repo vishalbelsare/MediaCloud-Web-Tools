@@ -25,9 +25,15 @@ class QueryWordsResultsContainer extends React.Component {
     postToDownloadUrl('/api/explorer/words/wordcount.csv', query, { ngramSize });
   }
   handleWordClick = (query) => {
-    const { handleSelectedWord, handleOpen } = this.props;
+    const { handleSelectedWord, handleClose, handleOpen } = this.props;
+    const drillDown = (
+      <WordInContextContainer
+        handleDrillDownAction={handleSelectedWord}
+        handleClose={handleClose}
+      />
+    );
     handleSelectedWord(query);
-    handleOpen();
+    handleOpen(drillDown);
   }
   render() {
     const { results, queries, tabSelector, selectedTabIndex } = this.props;
@@ -59,6 +65,7 @@ QueryWordsResultsContainer.propTypes = {
   isLoggedIn: PropTypes.bool.isRequired,
   onQueryModificationRequested: PropTypes.func.isRequired,
   handleOpen: PropTypes.func.isRequired,
+  handleClose: PropTypes.func.isRequired,
   // from composition
   intl: PropTypes.object.isRequired,
   selectedTabIndex: PropTypes.number.isRequired,
@@ -134,7 +141,7 @@ export default
       composeSummarizedVisualization(localMessages.title, localMessages.descriptionIntro, messages.wordcloudHelpText)(
         withAsyncFetch(
           composeQueryResultsSelector(
-            withDrillDown(<WordInContextContainer />)(
+            withDrillDown(
               QueryWordsResultsContainer
             )
           )

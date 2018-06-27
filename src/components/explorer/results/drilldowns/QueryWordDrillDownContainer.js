@@ -35,7 +35,7 @@ class QueryWordDrillDownContainer extends React.Component {
 
     if (wordSelected) {
       return (
-        <div className="query-attention-drill-down">
+        <div className="query-drill-down">
           {content}
         </div>
       );
