@@ -18,9 +18,8 @@ export function fetchDemoQueryTopWords(params) {
   return createApiPromise('/api/explorer/demo/words/count', acceptedParams);
 }
 
-export function fetchWordSampleSentences(params) {
-  const acceptedParams = acceptParams(params, ['word', 'q']);
-  return createApiPromise('/api/explorer/word/sample-sentences', acceptedParams);
+export function fetchWordSampleSentences(wordstem) {
+  return createApiPromise(`/api/explorer/words/${wordstem}*/sample-usage`);
 }
 
 export function fetchQueryPerDateTopWords(params) {

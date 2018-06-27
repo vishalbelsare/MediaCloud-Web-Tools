@@ -3,7 +3,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import slugify from 'slugify';
-import { fetchWordSampleSentences } from '../../../../actions/topicActions';
+import { fetchWordSampleSentences } from '../../../../actions/explorerActions';
 import withHelp from '../../../common/hocs/HelpfulContainer';
 import withAsyncFetch from '../../../common/hocs/AsyncContainer';
 import DataCard from '../../../common/DataCard';
@@ -68,9 +68,9 @@ class WordInContextContainer extends React.Component {
 
 WordInContextContainer.propTypes = {
   // from parent
-  selectedWord: PropTypes.string.isRequired,
+  selectedWord: PropTypes.object,
   // from store
-  fragments: PropTypes.array.isRequired,
+  fragments: PropTypes.array,
   // from dispatch
   fetchData: PropTypes.func.isRequired,
   // from context
@@ -81,22 +81,27 @@ WordInContextContainer.propTypes = {
 
 const mapStateToProps = state => ({
   fetchStatus: state.explorer.sampleSentencesByWord.fetchStatus,
-  selectedWord: state.explorer.sampleSentencesByWord.selectedWord,
+  selectedWord: state.explorer.topWords.selectedWord,
   fragments: state.explorer.sampleSentencesByWord.fragments,
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = dispatch => ({
   fetchData: (props) => {
     dispatch(fetchWordSampleSentences(props.term));
   },
-  asyncFetch: () => {
-    dispatch(fetchWordSampleSentences(ownProps.term));
-  },
 });
+
+function mergeProps(stateProps, dispatchProps, ownProps) {
+  return Object.assign({}, stateProps, dispatchProps, ownProps, {
+    asyncFetch: () => {
+      dispatchProps.fetchData(stateProps.selectedWord);
+    },
+  });
+}
 
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
+    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       withHelp(localMessages.helpTitle, [localMessages.helpText, messages.wordTreeHelpText])(
         withAsyncFetch(
           WordInContextContainer

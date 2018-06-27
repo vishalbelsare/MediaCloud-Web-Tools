@@ -50,7 +50,7 @@ def cached_story_split_count(mc_api_key, q, fq):
     return results
 
 
-def sentence_list(mc_api_key, q, fq, rows=10):
+def sentence_list(mc_api_key, q, fq=None, rows=10):
     # can't cache by api key here because we need to use tool mc to get sentences
     return _cached_sentence_list(mc_api_key, q, fq, rows)
 

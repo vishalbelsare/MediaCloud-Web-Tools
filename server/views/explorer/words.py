@@ -3,7 +3,7 @@ from flask import jsonify, request
 import flask_login
 import json
 
-from server import app
+from server import app, TOOL_API_KEY
 from server.views import WORD_COUNT_SAMPLE_SIZE, WORD_COUNT_DOWNLOAD_LENGTH, WORD_COUNT_UI_LENGTH
 from server.util.request import api_error_handler
 import server.util.csv as csv
@@ -13,6 +13,7 @@ import server.views.explorer.apicache as apicache
 
 logger = logging.getLogger(__name__)
 
+WORD_CONTEXT_SIZE = 5   # for sentence fragments, this is the amount of words before & after that we return
 
 @app.route('/api/explorer/words/count', methods=['GET'])
 @flask_login.login_required
@@ -118,3 +119,50 @@ def stream_wordcount_csv(filename, q, fq, ngram_size=1):
         w['ratio'] = float(w['count'])/float(sample_size)
     props = ['term', 'stem', 'count', 'sample_size', 'ratio', 'google_w2v_x', 'google_w2v_y']
     return csv.stream_response(word_counts, props, filename)
+
+
+@app.route('/api/explorer/words/<word>/sample-usage', methods=['GET'])
+@flask_login.login_required
+@api_error_handler
+def explorer_word_usage_sample(word):
+    # gotta respect the manual query if there is one
+    q = word
+    # need to use tool API key here because non-admin users can't pull sentences
+    results = apicache.sentence_list(TOOL_API_KEY, q=q)
+    # TODO: do we need to restrict by solr_q here too?
+    # eg     if search_id not in [None, -1]:
+    #    sample_searches = load_sample_searches()
+    #    current_search = sample_searches[search_id]['queries']
+    #    solr_q, solr_fq = parse_query_with_args_and_sample_search(word, current_search)
+    #else:
+    #    solr_q, solr_fq = parse_query_with_keywords(word)
+    fragments = [_sentence_fragment_around(word, s['sentence']) for s in results if s['sentence'] is not None]
+    fragments = [f for f in fragments if f is not None]
+    return jsonify({'fragments': fragments})
+
+
+def _sentence_fragment_around(keyword, sentence):
+    '''
+    Turn a sentence into a sentence fragment, including just the 5 words before and after the keyword we are looking at.
+    We do this to enforce our rule that full sentences (even without metadata) never leave our servers).
+    Warning: this makes simplistic assumptions about word tokenization
+    ::return:: a sentence fragment around keyword, or None if keyword can't be found
+    '''
+    try:
+        words = sentence.split()  # super naive, but works ok
+        keyword_index = None
+        for index, word in enumerate(words):
+            if keyword_index is not None:
+                continue
+            if word.lower().startswith(keyword.replace("*", "").lower()):
+                keyword_index = index
+        if keyword_index is None:
+            return None
+        min_word_index = max(0, keyword_index - WORD_CONTEXT_SIZE)
+        max_word_index = min(len(words), keyword_index + WORD_CONTEXT_SIZE)
+        fragment_words = words[min_word_index:max_word_index]
+        return " ".join(fragment_words)
+    except ValueError:
+        return None
+
+

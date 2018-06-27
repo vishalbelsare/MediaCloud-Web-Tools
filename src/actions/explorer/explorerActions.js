@@ -5,7 +5,7 @@ import * as api from '../../lib/serverApi/explorer';
 export const UPDATE_TIMESTAMP_FOR_QUERIES = 'UPDATE_TIMESTAMP_FOR_QUERIES';
 export const updateTimestampForQueries = createAction(UPDATE_TIMESTAMP_FOR_QUERIES, queries => queries);
 
-export const FETCH_SAMPLE_SEARCHES = 'FETCH_WORD_SAMPLE_SENTENCES';
+export const FETCH_SAMPLE_SEARCHES = 'FETCH_SAMPLE_SEARCHES';
 export const fetchSampleSearches = createAsyncAction(FETCH_SAMPLE_SEARCHES, api.fetchSampleSearches);
 
 export const FETCH_WORD_SAMPLE_SENTENCES = 'FETCH_WORD_SAMPLE_SENTENCES';
