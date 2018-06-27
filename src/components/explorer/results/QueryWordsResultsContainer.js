@@ -3,10 +3,10 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeSummarizedVisualization from './SummarizedVizualization';
-import QueryWordDrillDownContainer from './drilldowns/QueryWordDrillDownContainer';
+import WordInContextContainer from './drilldowns/WordInContextContainer';
 import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import withDrillDown from '../../common/hocs/DrillDownContainer';
-import { fetchQueryTopWords, fetchDemoQueryTopWords, resetTopWords } from '../../../actions/explorerActions';
+import { fetchQueryTopWords, fetchDemoQueryTopWords, resetTopWords, selectWord } from '../../../actions/explorerActions';
 import { postToDownloadUrl, slugifiedQueryLabel } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
 import composeQueryResultsSelector from './QueryResultsSelector';
@@ -24,8 +24,13 @@ class QueryWordsResultsContainer extends React.Component {
   handleDownload = (query, ngramSize) => {
     postToDownloadUrl('/api/explorer/words/wordcount.csv', query, { ngramSize });
   }
+  handleWordClick = (query) => {
+    const { handleSelectedWord, handleOpen } = this.props;
+    handleSelectedWord(query);
+    handleOpen();
+  }
   render() {
-    const { results, queries, handleOpen, tabSelector, selectedTabIndex } = this.props;
+    const { results, queries, tabSelector, selectedTabIndex } = this.props;
     const { formatMessage } = this.props.intl;
     const selectedQuery = queries[selectedTabIndex];
     return (
@@ -33,7 +38,7 @@ class QueryWordsResultsContainer extends React.Component {
         actionMenuHeaderText={formatMessage(localMessages.menuHeader, { queryName: selectedQuery.label })}
         subHeaderContent={tabSelector}
         words={results[selectedTabIndex].list}
-        onViewModeClick={handleOpen}
+        onViewModeClick={this.handleWordClick}
         border={false}
         domId={WORD_CLOUD_DOM_ID}
         width={585}
@@ -62,6 +67,8 @@ QueryWordsResultsContainer.propTypes = {
   fetchData: PropTypes.func.isRequired,
   results: PropTypes.array.isRequired,
   handleDrillDownAction: PropTypes.func.isRequired,
+  handleSelectedWord: PropTypes.func.isRequired,
+  selectedWord: PropTypes.object,
   // from mergeProps
   asyncFetch: PropTypes.func.isRequired,
   // from state
@@ -71,6 +78,7 @@ QueryWordsResultsContainer.propTypes = {
 const mapStateToProps = state => ({
   fetchStatus: state.explorer.topWords.fetchStatus,
   results: state.explorer.topWords.results,
+  selectedWord: state.explorer.topWords.selectedWord,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
@@ -104,6 +112,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       });
     }
   },
+  handleSelectedWord: (word) => {
+    dispatch(selectWord(word));
+  },
   handleDrillDownAction: (word) => {
     ownProps.onQueryModificationRequested(word.term);
   },
@@ -123,7 +134,7 @@ export default
       composeSummarizedVisualization(localMessages.title, localMessages.descriptionIntro, messages.wordcloudHelpText)(
         withAsyncFetch(
           composeQueryResultsSelector(
-            withDrillDown(<QueryWordDrillDownContainer />)(
+            withDrillDown(<WordInContextContainer />)(
               QueryWordsResultsContainer
             )
           )

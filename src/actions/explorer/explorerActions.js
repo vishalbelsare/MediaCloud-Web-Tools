@@ -5,8 +5,11 @@ import * as api from '../../lib/serverApi/explorer';
 export const UPDATE_TIMESTAMP_FOR_QUERIES = 'UPDATE_TIMESTAMP_FOR_QUERIES';
 export const updateTimestampForQueries = createAction(UPDATE_TIMESTAMP_FOR_QUERIES, queries => queries);
 
-export const FETCH_SAMPLE_SEARCHES = 'FETCH_SAMPLE_SEARCHES';
+export const FETCH_SAMPLE_SEARCHES = 'FETCH_WORD_SAMPLE_SENTENCES';
 export const fetchSampleSearches = createAsyncAction(FETCH_SAMPLE_SEARCHES, api.fetchSampleSearches);
+
+export const FETCH_WORD_SAMPLE_SENTENCES = 'FETCH_WORD_SAMPLE_SENTENCES';
+export const fetchWordSampleSentences = createAsyncAction(FETCH_WORD_SAMPLE_SENTENCES, api.fetchWordSampleSentences);
 
 export const SELECT_SEARCH_BY_ID = 'SELECT_SEARCH_BY_ID';
 export const selectBySearchId = createAction(SELECT_SEARCH_BY_ID, searchId => searchId);
@@ -70,6 +73,10 @@ export const fetchDemoQueryPerDateSampleStories = createAsyncAction(FETCH_QUERY_
 export const FETCH_QUERY_TOP_WORDS = 'FETCH_QUERY_TOP_WORDS';
 export const fetchQueryTopWords = createAsyncAction(FETCH_QUERY_TOP_WORDS, api.fetchQueryTopWords, params => params);
 export const fetchDemoQueryTopWords = createAsyncAction(FETCH_QUERY_TOP_WORDS, api.fetchDemoQueryTopWords, params => params);
+
+export const SELECT_WORD = 'SELECT_WORD';
+export const selectWord = createAction(SELECT_WORD, word => word);
+
 
 export const FETCH_QUERY_PER_DATE_TOP_WORDS = 'FETCH_QUERY_PER_DATE_TOP_WORDS';
 export const fetchQueryPerDateTopWords = createAsyncAction(FETCH_QUERY_PER_DATE_TOP_WORDS, api.fetchQueryPerDateTopWords, params => params);

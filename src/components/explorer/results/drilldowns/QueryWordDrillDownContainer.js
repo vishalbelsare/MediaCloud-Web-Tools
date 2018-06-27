@@ -8,6 +8,13 @@ import { fetchDrillDownInfo } from '../../../../actions/explorerActions';
 // import { queryChangedEnoughToUpdate /* postToDownloadUrl */ } from '../../../lib/explorerUtil';
 
 class QueryWordDrillDownContainer extends React.Component {
+  componentWillReceiveProps(nextProps) {
+    const { lastSearchTime, word, fetchData } = this.props;
+    if ((nextProps.lastSearchTime !== lastSearchTime) ||
+      (nextProps.word !== word)) {
+      fetchData(nextProps.word);
+    }
+  }
   shouldComponentUpdate(nextProps) {
     const { word } = this.props;
     return (nextProps.word !== word);
@@ -42,7 +49,6 @@ QueryWordDrillDownContainer.propTypes = {
   lastSearchTime: PropTypes.number.isRequired,
   dataPoint: PropTypes.object,
   queries: PropTypes.array.isRequired,
-  results: PropTypes.array.isRequired,
   onQueryModificationRequested: PropTypes.func.isRequired,
   // from composition
   intl: PropTypes.object.isRequired,
@@ -58,9 +64,7 @@ QueryWordDrillDownContainer.propTypes = {
 const mapStateToProps = state => ({
   lastSearchTime: state.explorer.lastSearchTime.time,
   fetchStatus: state.explorer.storySplitCount.fetchStatus,
-  dataPoint: state.explorer.storySplitCount.dataPoint,
-  word: state.explorer.topWordsPerDateRange.list,
-  results: state.explorer.storySplitCount.results,
+  word: state.explorer.infoPerWord.list,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
