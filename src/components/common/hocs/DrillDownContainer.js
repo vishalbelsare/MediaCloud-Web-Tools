@@ -13,9 +13,7 @@ function withDrillDown(ChildComponent) {
     dataToSave = null;
     handleOpenDrillDown = drillDownContent => this.setState({ open: true, drillDownContent });
     handleClose = () => {
-      const { handleDrillDownAction } = this.props;
       this.setState({ open: false });
-      handleDrillDownAction(this.dataToSave);
     };
     render() {
       const content = (
