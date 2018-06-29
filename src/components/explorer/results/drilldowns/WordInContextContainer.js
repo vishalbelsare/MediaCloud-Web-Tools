@@ -31,7 +31,7 @@ class WordInContextContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { fetchData } = this.props;
     if (nextProps.selectedWord !== this.props.selectedWord) {
-      fetchData(nextProps);
+      fetchData(nextProps.selectedWord);
     }
   }
   getUniqueDomId = () => 'word-in-context-';

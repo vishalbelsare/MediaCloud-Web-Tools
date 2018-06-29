@@ -50,7 +50,7 @@ class QueryWordsResultsContainer extends React.Component {
         width={585}
         onDownload={ngramSize => this.handleDownload(selectedQuery, ngramSize)}
         svgDownloadPrefix={`${slugifiedQueryLabel(selectedQuery.label)}-ngram-1`}
-        textAndLinkColor={selectedQuery.color}
+        textColor={selectedQuery.color}
         actionsAsLinksUnderneath
         hideGoogleWord2Vec
       />
