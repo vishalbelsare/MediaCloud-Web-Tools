@@ -26,7 +26,7 @@ function withDrillDown(ChildComponent) {
       );
       if (this.state.open && this.state.drillDownContent) {
         return (
-          <span className="drill-down">
+          <span className="query-drill-down">
             {content}
             {this.state.drillDownContent}
           </span>

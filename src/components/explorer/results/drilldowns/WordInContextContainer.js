@@ -50,7 +50,7 @@ class WordInContextContainer extends React.Component {
 
     if (selectedWord) {
       return (
-        <DataCard>
+        <DataCard className="query-word-drill-down">
           <ActionMenu>
             <MenuItem
               className="action-icon-menu-item"

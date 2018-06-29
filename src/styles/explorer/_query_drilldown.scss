@@ -43,3 +43,10 @@
   }
 
 }
+
+.query-drill-down {
+  .selected {
+    fill: $explorer-primary !important;
+  }  
+
+}
