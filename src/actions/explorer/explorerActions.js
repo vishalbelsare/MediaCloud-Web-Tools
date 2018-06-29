@@ -11,6 +11,10 @@ export const fetchSampleSearches = createAsyncAction(FETCH_SAMPLE_SEARCHES, api.
 export const FETCH_WORD_SAMPLE_SENTENCES = 'FETCH_WORD_SAMPLE_SENTENCES';
 export const fetchWordSampleSentences = createAsyncAction(FETCH_WORD_SAMPLE_SENTENCES, api.fetchWordSampleSentences);
 
+export const RESET_WORD_SAMPLE_SENTENCES = 'RESET_WORD_SAMPLE_SENTENCES';
+export const resetWordSampleSentences = createAction(RESET_WORD_SAMPLE_SENTENCES);
+
+
 export const SELECT_SEARCH_BY_ID = 'SELECT_SEARCH_BY_ID';
 export const selectBySearchId = createAction(SELECT_SEARCH_BY_ID, searchId => searchId);
 

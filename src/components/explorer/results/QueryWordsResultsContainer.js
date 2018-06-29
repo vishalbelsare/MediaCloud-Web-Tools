@@ -138,14 +138,14 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeSummarizedVisualization(localMessages.title, localMessages.descriptionIntro, messages.wordcloudHelpText)(
-        withAsyncFetch(
-          composeQueryResultsSelector(
-            withDrillDown(
-              QueryWordsResultsContainer
+      withDrillDown(
+        composeSummarizedVisualization(localMessages.title, localMessages.descriptionIntro, messages.wordcloudHelpText)(
+          withAsyncFetch(
+            composeQueryResultsSelector(
+                QueryWordsResultsContainer
+              )
             )
           )
         )
-      )
     )
   );
