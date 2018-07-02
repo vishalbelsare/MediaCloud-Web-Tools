@@ -65,7 +65,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   handlePreviousStep: () => {
-    dispatch(push(goToCreateTopicStep(0)));
+    dispatch(push('/topics/create/0'));
+    dispatch(goToCreateTopicStep(0));
   },
   handleNextStep: () => {
     dispatch(push('/topics/create/2'));
