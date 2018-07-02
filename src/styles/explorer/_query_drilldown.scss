@@ -1,6 +1,6 @@
 @import '../_constants';
 
-.query-attention-drill-down {
+.drill-down {
   border-bottom: 1px solid $material-grey300;
   padding-bottom: 50px;
 
@@ -38,15 +38,26 @@
     }
   }
 
+  .icon-button-close {
+    float: right;
+  }
+
   .query-attention-drilldown-title {
 
   }
 
-}
-
-.query-drill-down {
   .selected {
     fill: $explorer-primary !important;
   }  
+
+  .word-tree {
+    svg {
+      g {
+        rect {
+          fill: $material-grey300 !important;
+        }
+      }
+    }
+  }
 
 }

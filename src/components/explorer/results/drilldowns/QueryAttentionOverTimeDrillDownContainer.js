@@ -2,10 +2,11 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { fetchQueryPerDateTopWords, fetchDemoQueryPerDateTopWords, fetchQueryPerDateSampleStories, fetchDemoQueryPerDateSampleStories, resetQueriesPerDateTopWords, resetQueriesPerDateSampleStories } from '../../../../actions/explorerActions';
+import { fetchQueryPerDateTopWords, fetchDemoQueryPerDateTopWords, fetchQueryPerDateSampleStories,
+  fetchDemoQueryPerDateSampleStories, resetQueriesPerDateTopWords, resetQueriesPerDateSampleStories,
+  resetSentenceDataPoint } from '../../../../actions/explorerActions';
 import withAsyncFetch from '../../../common/hocs/AsyncContainer';
 import QueryAttentionOverTimeDrillDownDataCard from './QueryAttentionOverTimeDrillDownDataCard';
-// import { queryChangedEnoughToUpdate /* postToDownloadUrl */ } from '../../../lib/explorerUtil';
 import LoadingSpinner from '../../../common/LoadingSpinner';
 
 class QueryAttentionOverTimeDrillDownContainer extends React.Component {
@@ -32,13 +33,13 @@ class QueryAttentionOverTimeDrillDownContainer extends React.Component {
     // postToDownloadUrl('/api/explorer/sentences/count.csv', dataPoint);
   }
   render() {
-    const { words, stories, dataPoint } = this.props;
+    const { words, handleClose, stories, dataPoint } = this.props;
 
     let dateSelected = true;
     let content = <span />;
     // don't bother if datapoint is empty
     if (dataPoint && words && words.length > 0 && stories !== undefined) {
-      content = <QueryAttentionOverTimeDrillDownDataCard info={dataPoint} words={words} stories={stories} />;
+      content = <QueryAttentionOverTimeDrillDownDataCard info={dataPoint} words={words} stories={stories} onClose={handleClose} />;
     } else if (dataPoint) {
       content = <LoadingSpinner />;
     } else {
@@ -47,7 +48,7 @@ class QueryAttentionOverTimeDrillDownContainer extends React.Component {
 
     if (dateSelected) {
       return (
-        <div className="query-attention-drill-down">
+        <div className="drill-down">
           {content}
         </div>
       );
@@ -68,6 +69,7 @@ QueryAttentionOverTimeDrillDownContainer.propTypes = {
   fetchData: PropTypes.func.isRequired,
   words: PropTypes.array,
   stories: PropTypes.array,
+  handleClose: PropTypes.func.isRequired,
   // from mergeProps
   asyncFetch: PropTypes.func.isRequired,
   // from state
@@ -97,6 +99,11 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         dispatch(fetchDemoQueryPerDateSampleStories(clickedQuery));
       }
     }
+  },
+  handleClose: () => {
+    dispatch(resetSentenceDataPoint());
+    dispatch(resetQueriesPerDateSampleStories());
+    dispatch(resetQueriesPerDateTopWords());
   },
 });
 

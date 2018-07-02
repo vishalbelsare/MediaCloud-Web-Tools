@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 
 function withDrillDown(ChildComponent) {
@@ -7,11 +6,7 @@ function withDrillDown(ChildComponent) {
       open: false,
       drillDownContent: null,
     };
-    setDataToSave = (data) => {
-      this.dataToSave = data;
-    };
-    dataToSave = null;
-    handleOpenDrillDown = drillDownContent => this.setState({ open: true, drillDownContent });
+    handleOpen = drillDownContent => this.setState({ open: true, drillDownContent });
     handleClose = () => {
       this.setState({ open: false });
     };
@@ -19,26 +14,23 @@ function withDrillDown(ChildComponent) {
       const content = (
         <ChildComponent
           {...this.props}
-          handleOpen={this.handleOpenDrillDown}
-          handleClose={this.handleClose}
-          data={this.setDataToSave}
+          openDrillDown={this.handleOpen}
+          closeDrillDown={this.handleClose}
         />
       );
       if (this.state.open && this.state.drillDownContent) {
         return (
-          <span className="query-drill-down">
+          <div className="drill-down-wrapper">
             {content}
-            {this.state.drillDownContent}
-          </span>
+            <div className="drill-down">
+              {this.state.drillDownContent}
+            </div>
+          </div>
         );
       }
       return content;
     }
   }
-  DrillDownContainer.propTypes = {
-    handleDrillDownAction: PropTypes.func.isRequired,
-  };
-
   return DrillDownContainer;
 }
 

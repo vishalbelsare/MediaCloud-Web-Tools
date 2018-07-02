@@ -5,6 +5,8 @@ import { Row, Col } from 'react-flexbox-grid/lib';
 import DataCard from '../../../common/DataCard';
 import StorySentencePreview from '../../../common/StorySentencePreview';
 import OrderedWordCloud from '../../../vis/OrderedWordCloud';
+import { CloseButton } from '../../../common/IconButton';
+import messages from '../../../../resources/messages';
 
 const localMessages = {
   attention: { id: 'explorer.results.attention.title', defaultMessage: 'Attention' },
@@ -17,7 +19,8 @@ const localMessages = {
 };
 
 const QueryAttentionOverTimeDrillDownDataCard = (props) => {
-  const { stories, words, info } = props;
+  const { stories, words, info, onClose } = props;
+  const { formatMessage } = props.intl;
   const date1 = info ? info.start_date : '';
   const date2 = info ? info.end_date : '';
   const color = info ? info.color : '';
@@ -28,6 +31,11 @@ const QueryAttentionOverTimeDrillDownDataCard = (props) => {
     <DataCard>
       <Row>
         <Col lg={12}>
+          <CloseButton
+            onClick={onClose}
+            tooltip={formatMessage(messages.close)}
+            backgroundColor="#000000"
+          />
           {dateTitle}
         </Col>
       </Row>
@@ -51,6 +59,7 @@ QueryAttentionOverTimeDrillDownDataCard.propTypes = {
   words: PropTypes.array,
   info: PropTypes.object,
   queries: PropTypes.array,
+  onClose: PropTypes.func.isRequired,
   // from compositional chain
   intl: PropTypes.object.isRequired,
 };

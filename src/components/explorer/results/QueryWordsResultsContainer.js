@@ -25,15 +25,15 @@ class QueryWordsResultsContainer extends React.Component {
     postToDownloadUrl('/api/explorer/words/wordcount.csv', query, { ngramSize });
   }
   handleWordClick = (word) => {
-    const { handleSelectedWord, handleDrillDownAction, handleClose, handleOpen } = this.props;
+    const { handleSelectedWord, handleDrillDownAction, closeDrillDown, openDrillDown } = this.props;
     const drillDown = (
       <WordInContextContainer
         handleDrillDownAction={() => handleDrillDownAction(word)}
-        handleClose={handleClose}
+        handleClose={closeDrillDown}
       />
     );
     handleSelectedWord(word);
-    handleOpen(drillDown);
+    openDrillDown(drillDown);
   }
   render() {
     const { results, queries, tabSelector, selectedTabIndex } = this.props;
@@ -64,8 +64,8 @@ QueryWordsResultsContainer.propTypes = {
   queries: PropTypes.array.isRequired,
   isLoggedIn: PropTypes.bool.isRequired,
   onQueryModificationRequested: PropTypes.func.isRequired,
-  handleOpen: PropTypes.func.isRequired,
-  handleClose: PropTypes.func.isRequired,
+  openDrillDown: PropTypes.func.isRequired,
+  closeDrillDown: PropTypes.func.isRequired,
   // from composition
   intl: PropTypes.object.isRequired,
   selectedTabIndex: PropTypes.number.isRequired,
