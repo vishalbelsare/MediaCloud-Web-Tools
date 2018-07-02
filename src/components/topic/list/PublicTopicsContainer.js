@@ -5,24 +5,19 @@ import { connect } from 'react-redux';
 import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import { fetchPublicTopicsList } from '../../../actions/topicActions';
 import TopicPreviewList from './TopicPreviewList';
-import { TOPIC_SNAPSHOT_STATE_COMPLETED } from '../../../reducers/topics/selected/snapshots';
+// import { TOPIC_SNAPSHOT_STATE_COMPLETED } from '../../../reducers/topics/selected/snapshots';
 
 const localMessages = {
   empty: { id: 'topics.public.none', defaultMessage: 'There are no public topics for you to explore right now.' },
 };
 
 const PublicTopicsContainer = (props) => {
-  const { topics, onSetFavorited, asyncFetch, isLoggedIn } = props;
+  const { topics, onSetFavorited, asyncFetch } = props;
   return (
     <div className="public-topics-list">
       <TopicPreviewList
-        topics={topics.filter(t => t.state === TOPIC_SNAPSHOT_STATE_COMPLETED)}
-        linkGenerator={(t) => {
-          if (isLoggedIn) {
-            return `/topics/${t.topics_id}/summary`;
-          }
-          return `/topics/public/${t.topics_id}/summary`;
-        }}
+        topics={topics}
+        linkGenerator={t => `/topics/${t.topics_id}/summary`}
         onSetFavorited={(id, isFav) => { onSetFavorited(id, isFav); asyncFetch(); }}
         emptyMsg={localMessages.empty}
       />
