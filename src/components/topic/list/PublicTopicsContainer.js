@@ -35,7 +35,7 @@ PublicTopicsContainer.propTypes = {
   onSetFavorited: PropTypes.func,
   // from state
   topics: PropTypes.array,
-  isLoggedIn: PropTypes.bool.isRequired,
+  isLoggedIn: PropTypes.bool,
   // from context
   intl: PropTypes.object.isRequired,
   // from dispatch
@@ -45,7 +45,6 @@ PublicTopicsContainer.propTypes = {
 const mapStateToProps = state => ({
   fetchStatus: state.topics.publicList.fetchStatus,
   topics: state.topics.publicList.topics,
-  isLoggedIn: state.user.isLoggedIn,
 });
 
 const mapDispatchToProps = dispatch => ({
