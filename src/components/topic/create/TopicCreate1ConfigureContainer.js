@@ -76,7 +76,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   finishStep: (step) => {
-    dispatch(push(goToCreateTopicStep(step)));
+    dispatch(push(`/topics/create/${step}`));
+    dispatch(goToCreateTopicStep(step));
   },
   handleMediaChange: (sourceAndCollections) => {
     // take selections from mediaPicker and push them back into topicForm

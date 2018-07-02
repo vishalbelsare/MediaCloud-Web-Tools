@@ -68,7 +68,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch(push(goToCreateTopicStep(0)));
   },
   handleNextStep: () => {
-    dispatch(push(goToCreateTopicStep(2)));
+    dispatch(push('/topics/create/2'));
+    dispatch(goToCreateTopicStep(2));
   },
 });
 
