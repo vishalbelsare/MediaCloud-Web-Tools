@@ -132,7 +132,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   handlePreviousStep: () => {
-    dispatch(goToCreateTopicStep(1));
+    dispatch(push(goToCreateTopicStep(1)));
   },
   handleCreateTopic: (storyCount, user, values) => {
     if (((storyCount > MIN_RECOMMENDED_STORIES) && (storyCount < MAX_RECOMMENDED_STORIES))

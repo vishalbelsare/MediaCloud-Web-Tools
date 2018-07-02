@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 import { Step, Stepper, StepLabel } from 'material-ui/Stepper';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import BackLinkingControlBar from '../BackLinkingControlBar';
@@ -79,7 +80,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   goToStep: (step) => {
-    dispatch(goToCreateTopicStep(step));
+    dispatch(push(goToCreateTopicStep(step)));
   },
   handleUnmount: () => {
     dispatch(goToCreateTopicStep(0));
