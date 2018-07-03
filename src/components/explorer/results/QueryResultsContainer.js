@@ -156,7 +156,7 @@ class QueryResultsContainer extends React.Component {
               tabLabels={[
                 formatMessage(messages.attention),
                 formatMessage(messages.language),
-                formatMessage(messages.peopleAndPlaces),
+                formatMessage(messages.representation),
               ]}
               onViewSelected={index => this.setState({ selectedViewIndex: index })}
             />
