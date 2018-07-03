@@ -70,7 +70,7 @@ class WordInContextDrillDownContainer extends React.Component {
               <MenuItem
                 className="action-icon-menu-item"
                 primaryText={formatMessage(localMessages.addWordToAllQueries)}
-                onTouchTap={handleAddToAllQueries}
+                onTouchTap={() => handleAddToAllQueries(selectedWord.word)}
               />
             </ActionMenu>
             <h2>
@@ -99,7 +99,6 @@ class WordInContextDrillDownContainer extends React.Component {
 WordInContextDrillDownContainer.propTypes = {
   // from parent
   lastSearchTime: PropTypes.number.isRequired,
-  queries: PropTypes.array.isRequired,
   isLoggedIn: PropTypes.bool.isRequired,
   // from store
   fetchStatus: PropTypes.string.isRequired,
