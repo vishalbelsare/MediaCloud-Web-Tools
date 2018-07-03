@@ -24,7 +24,7 @@ const localMessages = {
   addWordToAllQueries: { id: 'word.inContext.addWordToAllQueries', defaultMessage: 'Add This Word To All Queries' },
 };
 
-class WordInContextContainer extends React.Component {
+class WordInContextDrillDownContainer extends React.Component {
   state = {
     imageUri: null,
   }
@@ -85,7 +85,7 @@ class WordInContextContainer extends React.Component {
   }
 }
 
-WordInContextContainer.propTypes = {
+WordInContextDrillDownContainer.propTypes = {
   // from parent
   selectedWord: PropTypes.object,
   handleDrillDownAction: PropTypes.func.isRequired,
@@ -128,7 +128,7 @@ export default
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       withHelp(localMessages.helpTitle, [localMessages.helpText, messages.wordTreeHelpText])(
         withAsyncFetch(
-          WordInContextContainer
+          WordInContextDrillDownContainer
         )
       )
     )

@@ -3,7 +3,7 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeSummarizedVisualization from './SummarizedVizualization';
-import WordInContextContainer from './drilldowns/WordInContextContainer';
+import WordInContextDrillDownContainer from './drilldowns/WordInContextDrillDownContainer';
 import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import withDrillDown from '../../common/hocs/DrillDownContainer';
 import { fetchQueryTopWords, fetchDemoQueryTopWords, resetTopWords, selectWord } from '../../../actions/explorerActions';
@@ -28,7 +28,7 @@ class QueryWordsResultsContainer extends React.Component {
     const { handleSelectedWord, handleDrillDownAction, closeDrillDown, openDrillDown,
       selectedQuery } = this.props;
     const drillDown = (
-      <WordInContextContainer
+      <WordInContextDrillDownContainer
         handleDrillDownAction={() => handleDrillDownAction(wordDataPoint.stem)}
         handleClose={closeDrillDown}
       />
