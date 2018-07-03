@@ -11,11 +11,13 @@ import { postToDownloadUrl, slugifiedQueryLabel } from '../../../lib/explorerUti
 import messages from '../../../resources/messages';
 import composeQueryResultsSelector from './QueryResultsSelector';
 import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
+import { updateFeedback } from '../../../actions/appActions';
 
 const localMessages = {
   title: { id: 'explorer.topWords.title', defaultMessage: 'Top Words' },
   descriptionIntro: { id: 'explorer.topWords.help.title', defaultMessage: '<p>Here are the top words used with each query. Looking at the language used can help you identify how this issue is talked about in the media online.</p>' },
   menuHeader: { id: 'explorer.topWords.menuHeader', defaultMessage: 'Query: {queryName}' },
+  addingToQueries: { id: 'explorer.topWords.addingToQueries', defaultMessage: 'Added {word} to all queries. Running your updated search now.' },
 };
 
 const WORD_CLOUD_DOM_ID = 'query-word-cloud-wrapper';
@@ -25,11 +27,11 @@ class QueryWordsResultsContainer extends React.Component {
     postToDownloadUrl('/api/explorer/words/wordcount.csv', query, { ngramSize });
   }
   handleWordClick = (wordDataPoint) => {
-    const { handleSelectedWord, handleDrillDownAction, closeDrillDown, openDrillDown,
+    const { handleSelectedWord, handleAddToAllQueries, closeDrillDown, openDrillDown,
       selectedQuery } = this.props;
     const drillDown = (
       <WordInContextDrillDownContainer
-        handleDrillDownAction={() => handleDrillDownAction(wordDataPoint.stem)}
+        onAddToAllQueries={() => handleAddToAllQueries(wordDataPoint.stem)}
         handleClose={closeDrillDown}
       />
     );
@@ -75,7 +77,7 @@ QueryWordsResultsContainer.propTypes = {
   // from dispatch
   fetchData: PropTypes.func.isRequired,
   results: PropTypes.array.isRequired,
-  handleDrillDownAction: PropTypes.func.isRequired,
+  handleAddToAllQueries: PropTypes.func.isRequired,
   handleSelectedWord: PropTypes.func.isRequired,
   selectedWord: PropTypes.object,
   // from mergeProps
@@ -134,8 +136,10 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     };
     dispatch(selectWord(clickedQuery));
   },
-  handleDrillDownAction: (word) => {
+  handleAddToAllQueries: (word) => {
     ownProps.onQueryModificationRequested(word);
+    dispatch(updateFeedback({ open: true,
+      message: ownProps.intl.formatMessage(localMessages.addingToQueries, { word }) }));
   },
 });
 

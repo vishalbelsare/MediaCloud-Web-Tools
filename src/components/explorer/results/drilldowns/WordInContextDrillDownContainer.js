@@ -44,7 +44,7 @@ class WordInContextDrillDownContainer extends React.Component {
     downloadSvg(svgDownloadPrefix, svgNode);
   }
   render() {
-    const { selectedWord, handleDrillDownAction, handleClose, fragments, helpButton } = this.props;
+    const { selectedWord, onAddToAllQueries, handleClose, fragments, helpButton } = this.props;
     const { formatMessage } = this.props.intl;
     const uniqueDomId = this.getUniqueDomId();
 
@@ -60,7 +60,7 @@ class WordInContextDrillDownContainer extends React.Component {
             <MenuItem
               className="action-icon-menu-item"
               primaryText={formatMessage(localMessages.addWordToAllQueries)}
-              onTouchTap={handleDrillDownAction}
+              onTouchTap={onAddToAllQueries}
             />
           </ActionMenu>
           <h2>
@@ -88,7 +88,7 @@ class WordInContextDrillDownContainer extends React.Component {
 WordInContextDrillDownContainer.propTypes = {
   // from parent
   selectedWord: PropTypes.object,
-  handleDrillDownAction: PropTypes.func.isRequired,
+  onAddToAllQueries: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
   // from store
   fragments: PropTypes.array,
