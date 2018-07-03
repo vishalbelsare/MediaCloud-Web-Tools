@@ -81,6 +81,8 @@ export const fetchDemoQueryTopWords = createAsyncAction(FETCH_QUERY_TOP_WORDS, a
 export const SELECT_WORD = 'SELECT_WORD';
 export const selectWord = createAction(SELECT_WORD, word => word);
 
+export const RESET_SELECTED_WORD = 'RESET_SELECTED_WORD';
+export const resetSelectedWord = createAction(RESET_SELECTED_WORD);
 
 export const FETCH_QUERY_PER_DATE_TOP_WORDS = 'FETCH_QUERY_PER_DATE_TOP_WORDS';
 export const fetchQueryPerDateTopWords = createAsyncAction(FETCH_QUERY_PER_DATE_TOP_WORDS, api.fetchQueryPerDateTopWords, params => params);

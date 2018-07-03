@@ -3,21 +3,18 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeSummarizedVisualization from './SummarizedVizualization';
-import WordInContextDrillDownContainer from './drilldowns/WordInContextDrillDownContainer';
 import withAsyncFetch from '../../common/hocs/AsyncContainer';
-import withDrillDown from '../../common/hocs/DrillDownContainer';
-import { fetchQueryTopWords, fetchDemoQueryTopWords, resetTopWords, selectWord } from '../../../actions/explorerActions';
+import { fetchQueryTopWords, fetchDemoQueryTopWords, resetTopWords, selectWord }
+from '../../../actions/explorerActions';
 import { postToDownloadUrl, slugifiedQueryLabel } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
 import composeQueryResultsSelector from './QueryResultsSelector';
 import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
-import { updateFeedback } from '../../../actions/appActions';
 
 const localMessages = {
   title: { id: 'explorer.topWords.title', defaultMessage: 'Top Words' },
   descriptionIntro: { id: 'explorer.topWords.help.title', defaultMessage: '<p>Here are the top words used with each query. Looking at the language used can help you identify how this issue is talked about in the media online.</p>' },
   menuHeader: { id: 'explorer.topWords.menuHeader', defaultMessage: 'Query: {queryName}' },
-  addingToQueries: { id: 'explorer.topWords.addingToQueries', defaultMessage: 'Added {word} to all queries. Running your updated search now.' },
 };
 
 const WORD_CLOUD_DOM_ID = 'query-word-cloud-wrapper';
@@ -27,16 +24,8 @@ class QueryWordsResultsContainer extends React.Component {
     postToDownloadUrl('/api/explorer/words/wordcount.csv', query, { ngramSize });
   }
   handleWordClick = (wordDataPoint) => {
-    const { handleSelectedWord, handleAddToAllQueries, closeDrillDown, openDrillDown,
-      selectedQuery } = this.props;
-    const drillDown = (
-      <WordInContextDrillDownContainer
-        onAddToAllQueries={() => handleAddToAllQueries(wordDataPoint.stem)}
-        handleClose={closeDrillDown}
-      />
-    );
+    const { handleSelectedWord, selectedQuery } = this.props;
     handleSelectedWord(selectedQuery, wordDataPoint.stem);
-    openDrillDown(drillDown);
   }
   render() {
     const { results, queries, tabSelector, selectedQueryIndex } = this.props;
@@ -66,9 +55,6 @@ QueryWordsResultsContainer.propTypes = {
   lastSearchTime: PropTypes.number.isRequired,
   queries: PropTypes.array.isRequired,
   isLoggedIn: PropTypes.bool.isRequired,
-  onQueryModificationRequested: PropTypes.func.isRequired,
-  openDrillDown: PropTypes.func.isRequired,
-  closeDrillDown: PropTypes.func.isRequired,
   // from composition
   intl: PropTypes.object.isRequired,
   selectedQueryIndex: PropTypes.number.isRequired,
@@ -77,7 +63,6 @@ QueryWordsResultsContainer.propTypes = {
   // from dispatch
   fetchData: PropTypes.func.isRequired,
   results: PropTypes.array.isRequired,
-  handleAddToAllQueries: PropTypes.func.isRequired,
   handleSelectedWord: PropTypes.func.isRequired,
   selectedWord: PropTypes.object,
   // from mergeProps
@@ -134,12 +119,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       word,
       rows: 1000, // need a big sample size here for good results
     };
+    // dispatch(resetSelectedWord());
     dispatch(selectWord(clickedQuery));
-  },
-  handleAddToAllQueries: (word) => {
-    ownProps.onQueryModificationRequested(word);
-    dispatch(updateFeedback({ open: true,
-      message: ownProps.intl.formatMessage(localMessages.addingToQueries, { word }) }));
   },
 });
 
@@ -154,14 +135,12 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      withDrillDown(
-        composeSummarizedVisualization(localMessages.title, localMessages.descriptionIntro, messages.wordcloudHelpText)(
-          withAsyncFetch(
-            composeQueryResultsSelector(
-                QueryWordsResultsContainer
-              )
-            )
+      composeSummarizedVisualization(localMessages.title, localMessages.descriptionIntro, messages.wordcloudHelpText)(
+        withAsyncFetch(
+          composeQueryResultsSelector(
+            QueryWordsResultsContainer
           )
         )
+      )
     )
   );

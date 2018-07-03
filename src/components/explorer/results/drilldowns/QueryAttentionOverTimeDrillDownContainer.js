@@ -11,7 +11,6 @@ import LoadingSpinner from '../../../common/LoadingSpinner';
 
 class QueryAttentionOverTimeDrillDownContainer extends React.Component {
   state = {
-    isDrillDownVisible: false,
     dateRange: null,
     clickedQuery: null,
   }
@@ -27,10 +26,6 @@ class QueryAttentionOverTimeDrillDownContainer extends React.Component {
     return (nextProps.dataPoint !== dataPoint ||
       nextProps.words !== words ||
       nextProps.stories !== stories);
-  }
-
-  downloadCsv = () => {
-    // postToDownloadUrl('/api/explorer/sentences/count.csv', dataPoint);
   }
   render() {
     const { words, handleClose, stories, dataPoint } = this.props;
@@ -67,24 +62,24 @@ class QueryAttentionOverTimeDrillDownContainer extends React.Component {
 QueryAttentionOverTimeDrillDownContainer.propTypes = {
   // from parent
   lastSearchTime: PropTypes.number.isRequired,
-  dataPoint: PropTypes.object,
   queries: PropTypes.array.isRequired,
-  results: PropTypes.array.isRequired,
+  isLoggedIn: PropTypes.bool.isRequired,
   // from composition
   intl: PropTypes.object.isRequired,
   // from dispatch
   fetchData: PropTypes.func.isRequired,
-  words: PropTypes.array,
-  stories: PropTypes.array,
   handleClose: PropTypes.func.isRequired,
   // from mergeProps
   asyncFetch: PropTypes.func.isRequired,
   // from state
   fetchStatus: PropTypes.string.isRequired,
+  dataPoint: PropTypes.object,
+  words: PropTypes.array,
+  stories: PropTypes.array,
+  results: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = state => ({
-  lastSearchTime: state.explorer.lastSearchTime.time,
   fetchStatus: state.explorer.storySplitCount.fetchStatus,
   dataPoint: state.explorer.storySplitCount.dataPoint,
   words: state.explorer.topWordsPerDateRange.list,
