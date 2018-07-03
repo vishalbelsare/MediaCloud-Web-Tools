@@ -51,6 +51,8 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
       start_date: solrFormat(date0),
       color: origin.series.color,
       dayGap,
+      sources: currentQueryOfInterest.sources.map(s => s.media_id),
+      collections: currentQueryOfInterest.collections.map(c => c.tags_id),
     };
     clickedQuery.end_date = solrFormat(oneDayLater(date1), true);
     this.setState({ clickedQuery });

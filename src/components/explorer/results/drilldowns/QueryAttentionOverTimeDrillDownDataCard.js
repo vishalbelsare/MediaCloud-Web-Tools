@@ -2,9 +2,11 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
-import DataCard from '../../common/DataCard';
-import StorySentencePreview from '../../common/StorySentencePreview';
-import OrderedWordCloud from '../../vis/OrderedWordCloud';
+import DataCard from '../../../common/DataCard';
+import StorySentencePreview from '../../../common/StorySentencePreview';
+import OrderedWordCloud from '../../../vis/OrderedWordCloud';
+import { CloseButton } from '../../../common/IconButton';
+import messages from '../../../../resources/messages';
 
 const localMessages = {
   attention: { id: 'explorer.results.attention.title', defaultMessage: 'Attention' },
@@ -17,7 +19,8 @@ const localMessages = {
 };
 
 const QueryAttentionOverTimeDrillDownDataCard = (props) => {
-  const { stories, words, info } = props;
+  const { stories, words, info, onClose } = props;
+  const { formatMessage } = props.intl;
   const date1 = info ? info.start_date : '';
   const date2 = info ? info.end_date : '';
   const color = info ? info.color : '';
@@ -28,13 +31,18 @@ const QueryAttentionOverTimeDrillDownDataCard = (props) => {
     <DataCard>
       <Row>
         <Col lg={12}>
+          <CloseButton
+            onClick={onClose}
+            tooltip={formatMessage(messages.close)}
+            backgroundColor="#000000"
+          />
           {dateTitle}
         </Col>
       </Row>
       <Row>
         <Col lg={6}>
           <h3 style={{ color }} ><FormattedMessage {...localMessages.sampleStories} /></h3>
-          <StorySentencePreview sentences={stories !== null && stories !== undefined ? Object.values(stories.slice(0, 8)) : []} />
+          <StorySentencePreview sentences={stories.slice(0, 8)} />
         </Col>
         <Col lg={6}>
           <h3 style={{ color }} ><FormattedMessage {...localMessages.topWords} /></h3>
@@ -51,6 +59,7 @@ QueryAttentionOverTimeDrillDownDataCard.propTypes = {
   words: PropTypes.array,
   info: PropTypes.object,
   queries: PropTypes.array,
+  onClose: PropTypes.func.isRequired,
   // from compositional chain
   intl: PropTypes.object.isRequired,
 };
