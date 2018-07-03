@@ -4,7 +4,6 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import LoadingSpinner from '../../common/LoadingSpinner';
-import TopicInfo from './TopicInfo';
 import TopPeopleContainer from './TopPeopleContainer';
 import TopOrgsContainer from './TopOrgsContainer';
 import StoriesSummaryContainer from './StoriesSummaryContainer';
@@ -27,7 +26,7 @@ const localMessages = {
   title: { id: 'topic.summary.summary.title', defaultMessage: 'Topic: {name}' },
   previewTitle: { id: 'topic.summary.public.title', defaultMessage: 'Topic Preview: {name}' },
   previewIntro: { id: 'topic.summary.public.intro', defaultMessage: 'This is a preview of our {name} topic.  It shows just a sample of the data available once you login to the Topic Mapper tool. To explore, click on a link and sign in.' },
-  aboutTab: { id: 'topic.summary.summary.about', defaultMessage: 'About this Topic' },
+  aboutTab: { id: 'topic.summary.summary.about', defaultMessage: 'Topic Stats' },
 };
 
 class TopicSummaryContainer extends React.Component {
@@ -42,7 +41,7 @@ class TopicSummaryContainer extends React.Component {
   }
 
   render() {
-    const { filters, topicId, topicInfo, selectedTimespan, user, seletecFocus, location } = this.props;
+    const { filters, topicId, topicInfo, selectedTimespan, user, location } = this.props;
     const { formatMessage } = this.props.intl;
     let content = <div />;
     let intro = null;
@@ -159,11 +158,6 @@ class TopicSummaryContainer extends React.Component {
                     <TopicStoryMetadataStatsContainer topicId={topicId} filters={filters} timespan={selectedTimespan} />
                   </Col>
                 </Row>
-                <Row>
-                  <Col lg={12}>
-                    <TopicInfo topic={topicInfo} timespan={selectedTimespan} focus={seletecFocus} />
-                  </Col>
-                </Row>
               </Permissioned>
             </span>
           );
@@ -212,7 +206,6 @@ TopicSummaryContainer.propTypes = {
   location: PropTypes.object.isRequired,
   // from state
   selectedTimespan: PropTypes.object,
-  seletecFocus: PropTypes.object,
   filters: PropTypes.object.isRequired,
   topicId: PropTypes.number,
   topicInfo: PropTypes.object,
@@ -224,7 +217,6 @@ const mapStateToProps = state => ({
   topicId: state.topics.selected.id,
   topicInfo: state.topics.selected.info,
   selectedTimespan: state.topics.selected.timespans.selected,
-  seletecFocus: state.topics.selected.focalSets.foci.selected,
   user: state.user,
 });
 
