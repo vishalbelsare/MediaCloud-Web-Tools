@@ -20,20 +20,30 @@ import Permissioned from '../../common/Permissioned';
 import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import TopicStoryMetadataStatsContainer from './TopicStoryMetadataStatsContainer';
 import TopicWordSpaceContainer from './TopicWordSpaceContainer';
+import TabSelector from '../../common/TabSelector';
+import messages from '../../../resources/messages';
 
 const localMessages = {
-  title: { id: 'topic.summary.public.title', defaultMessage: 'Topic: {name}' },
+  title: { id: 'topic.summary.summary.title', defaultMessage: 'Topic: {name}' },
   previewTitle: { id: 'topic.summary.public.title', defaultMessage: 'Topic Preview: {name}' },
   previewIntro: { id: 'topic.summary.public.intro', defaultMessage: 'This is a preview of our {name} topic.  It shows just a sample of the data available once you login to the Topic Mapper tool. To explore, click on a link and sign in.' },
+  aboutTab: { id: 'topic.summary.summary.about', defaultMessage: 'About this Topic' },
 };
 
 class TopicSummaryContainer extends React.Component {
+
+  state = {
+    selectedViewIndex: 0,
+  };
+
   filtersAreSet() {
     const { filters, topicId } = this.props;
     return (topicId && filters.snapshotId && filters.timespanId);
   }
+
   render() {
     const { filters, topicId, topicInfo, selectedTimespan, user, seletecFocus, location } = this.props;
+    const { formatMessage } = this.props.intl;
     let content = <div />;
     let intro = null;
     if (!user.isLoggedIn) {
@@ -51,6 +61,116 @@ class TopicSummaryContainer extends React.Component {
       );
     }
     if (!user.isLoggedIn || this.filtersAreSet()) {
+      let viewContent;
+      switch (this.state.selectedViewIndex) {
+        case 0:
+          // attention
+          viewContent = (
+            <span>
+              <Row>
+                <Col lg={12}>
+                  <SplitStoryCountSummaryContainer topicId={topicId} filters={filters} />
+                </Col>
+              </Row>
+              <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
+                {filteredStoryCountContent}
+                <Row>
+                  <Col lg={12}>
+                    <NytLabelSummaryContainer topicId={topicId} filters={filters} location={location} />
+                  </Col>
+                </Row>
+              </Permissioned>
+            </span>
+          );
+          break;
+        case 1:
+          // language
+          viewContent = (
+            <span>
+              <Row>
+                <Col lg={12}>
+                  <WordsSummaryContainer topicId={topicId} topicName={topicInfo.name} filters={filters} width={720} />
+                </Col>
+                <Col lg={12}>
+                  <TopicWordSpaceContainer topicId={topicId} />
+                </Col>
+              </Row>
+            </span>
+          );
+          break;
+        case 2:
+          // representation
+          viewContent = (
+            <span>
+              <Row>
+                <Col lg={6}>
+                  <TopPeopleContainer topicId={topicId} filters={filters} location={location} />
+                </Col>
+                <Col lg={6}>
+                  <TopOrgsContainer topicId={topicId} filters={filters} location={location} />
+                </Col>
+              </Row>
+              <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
+                <Row>
+                  <Col lg={12}>
+                    <GeoTagSummaryContainer topicId={topicId} filters={filters} />
+                  </Col>
+                </Row>
+              </Permissioned>
+            </span>
+          );
+          break;
+        case 3:
+          // influence
+          viewContent = (
+            <span>
+              <Row>
+                <Col lg={12}>
+                  <StoriesSummaryContainer topicId={topicId} filters={filters} location={location} />
+                </Col>
+              </Row>
+              <Row>
+                <Col lg={12}>
+                  <MediaSummaryContainer topicId={topicId} filters={filters} location={location} />
+                </Col>
+              </Row>
+              <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
+                <Row>
+                  <Col lg={12}>
+                    <DownloadMapContainer topicId={topicId} filters={filters} />
+                  </Col>
+                </Row>
+              </Permissioned>
+            </span>
+          );
+          break;
+        case 4:
+          // about
+          viewContent = (
+            <span>
+              <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
+                <Row>
+                  <Col lg={12}>
+                    <TopicStoryStatsContainer topicId={topicId} filters={filters} timespan={selectedTimespan} />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col lg={12}>
+                    <TopicStoryMetadataStatsContainer topicId={topicId} filters={filters} timespan={selectedTimespan} />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col lg={12}>
+                    <TopicInfo topic={topicInfo} timespan={selectedTimespan} focus={seletecFocus} />
+                  </Col>
+                </Row>
+              </Permissioned>
+            </span>
+          );
+          break;
+        default:
+          break;
+      }
       content = (
         <Grid>
           <Row>
@@ -59,71 +179,18 @@ class TopicSummaryContainer extends React.Component {
             </Col>
           </Row>
           <Row>
-            <Col lg={12}>
-              <TopicStoryStatsContainer topicId={topicId} filters={filters} timespan={selectedTimespan} />
-            </Col>
+            <TabSelector
+              tabLabels={[
+                formatMessage(messages.attention),
+                formatMessage(messages.language),
+                formatMessage(messages.representation),
+                formatMessage(messages.influence),
+                formatMessage(localMessages.aboutTab),
+              ]}
+              onViewSelected={index => this.setState({ selectedViewIndex: index })}
+            />
           </Row>
-          <Row>
-            <Col lg={12}>
-              <SplitStoryCountSummaryContainer topicId={topicId} filters={filters} />
-            </Col>
-          </Row>
-          <Row>
-            <Col lg={12}>
-              <StoriesSummaryContainer topicId={topicId} filters={filters} location={location} />
-            </Col>
-          </Row>
-          <Row>
-            <Col lg={12}>
-              <MediaSummaryContainer topicId={topicId} filters={filters} location={location} />
-            </Col>
-          </Row>
-          <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
-            <Row>
-              <Col lg={12}>
-                <NytLabelSummaryContainer topicId={topicId} filters={filters} location={location} />
-              </Col>
-            </Row>
-          </Permissioned>
-          <Row>
-            <Col lg={12}>
-              <WordsSummaryContainer topicId={topicId} topicName={topicInfo.name} filters={filters} width={720} />
-            </Col>
-          </Row>
-          <Row>
-            <Col lg={12}>
-              <TopicWordSpaceContainer topicId={topicId} />
-            </Col>
-          </Row>
-          <Row>
-            <Col lg={6}>
-              <TopPeopleContainer topicId={topicId} filters={filters} location={location} />
-            </Col>
-            <Col lg={6}>
-              <TopOrgsContainer topicId={topicId} filters={filters} location={location} />
-            </Col>
-          </Row>
-          <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
-            <Row>
-              <Col lg={12}>
-                <GeoTagSummaryContainer topicId={topicId} filters={filters} />
-              </Col>
-            </Row>
-            {filteredStoryCountContent}
-            <Row>
-              <Col lg={12}>
-                <DownloadMapContainer topicId={topicId} filters={filters} />
-              </Col>
-            </Row>
-            <Row>
-              <Col lg={6}>
-                <TopicInfo topic={topicInfo} timespan={selectedTimespan} focus={seletecFocus} />
-              </Col>
-              <Col lg={6}>
-                <TopicStoryMetadataStatsContainer topicId={topicId} filters={filters} timespan={selectedTimespan} />
-              </Col>
-            </Row>
-          </Permissioned>
+          {viewContent}
         </Grid>
       );
     } else {
@@ -135,6 +202,7 @@ class TopicSummaryContainer extends React.Component {
       </div>
     );
   }
+
 }
 
 TopicSummaryContainer.propTypes = {
