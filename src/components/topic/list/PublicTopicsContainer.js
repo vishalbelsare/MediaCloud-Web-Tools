@@ -12,11 +12,17 @@ const localMessages = {
 };
 
 const PublicTopicsContainer = (props) => {
-  const { topics, onSetFavorited, asyncFetch } = props;
+  const { topics, onSetFavorited, asyncFetch, isLoggedIn } = props;
   return (
     <div className="public-topics-list">
       <TopicPreviewList
-        topics={topics}
+        topics={topics.filter(t => t.state === TOPIC_SNAPSHOT_STATE_COMPLETED)}
+        linkGenerator={t => `/topics/${t.topics_id}/summary`}
+          if (isLoggedIn) {  
+            return `/topics/${t.topics_id}/summary`; 
+          }  
+          return `/topics/public/${t.topics_id}/summary`;  
+        }}
         linkGenerator={t => `/topics/${t.topics_id}/summary`}
         onSetFavorited={(id, isFav) => { onSetFavorited(id, isFav); asyncFetch(); }}
         emptyMsg={localMessages.empty}
@@ -30,7 +36,7 @@ PublicTopicsContainer.propTypes = {
   onSetFavorited: PropTypes.func,
   // from state
   topics: PropTypes.array,
-  isLoggedIn: PropTypes.bool,
+  isLoggedIn: PropTypes.bool.isRequired,
   // from context
   intl: PropTypes.object.isRequired,
   // from dispatch

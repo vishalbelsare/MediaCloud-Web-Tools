@@ -138,7 +138,8 @@ function drawViz(wrapperElement, {
       })
       .on('mouseout', () => {
         const event = d3.event;
-        d3.select(event.target).attr('fill', options.textColor);
+        d3.select(event.target).attr('fill', options.textColor)
+          .attr('cursor', 'arrow');
         if (options.showTooltips) {
           tooltipDiv.transition()
             .duration(500)
