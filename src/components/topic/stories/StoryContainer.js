@@ -56,11 +56,6 @@ class StoryContainer extends React.Component {
     this.setState({ open: false });
   };
 
-  handleReadItClick = () => {
-    const { story } = this.props;
-    window.open(story.url, '_blank');
-  }
-
   render() {
     const { story, topicId, storiesId, topicName } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
@@ -88,7 +83,9 @@ class StoryContainer extends React.Component {
                       <EditButton tooltip={formatMessage(localMessages.editStory)} />
                     </Link>
                   </Permissioned>
-                  <ReadItNowButton onClick={this.handleReadItClick} />
+                  <a href={story.url} target="_blank" rel="noopener noreferrer">
+                    <ReadItNowButton />
+                  </a>
                   <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
                     <RemoveButton tooltip={formatMessage(localMessages.removeTitle)} onClick={this.handleRemoveClick} />
                   </Permissioned>

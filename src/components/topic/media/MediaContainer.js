@@ -52,11 +52,6 @@ class MediaContainer extends React.Component {
     this.setState({ open: false });
   };
 
-  handleReadItClick = () => {
-    const { media } = this.props;
-    window.open(media.url, '_blank');
-  }
-
   render() {
     const { media, topicId, mediaId, filters, topicName } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
@@ -95,7 +90,9 @@ class MediaContainer extends React.Component {
             <Col lg={12} md={12} sm={12}>
               <h1>
                 <span className="actions">
-                  <ReadItNowButton onClick={this.handleReadItClick} />
+                  <a href={media.url} target="_blank" rel="noopener noreferrer">
+                    <ReadItNowButton />
+                  </a>
                   <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
                     <RemoveButton tooltip={formatMessage(localMessages.removeTitle)} onClick={this.handleRemoveClick} />
                   </Permissioned>
