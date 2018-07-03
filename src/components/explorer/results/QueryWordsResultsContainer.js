@@ -24,26 +24,27 @@ class QueryWordsResultsContainer extends React.Component {
   handleDownload = (query, ngramSize) => {
     postToDownloadUrl('/api/explorer/words/wordcount.csv', query, { ngramSize });
   }
-  handleWordClick = (word) => {
-    const { handleSelectedWord, handleDrillDownAction, closeDrillDown, openDrillDown } = this.props;
+  handleWordClick = (wordDataPoint) => {
+    const { handleSelectedWord, handleDrillDownAction, closeDrillDown, openDrillDown,
+      selectedQuery } = this.props;
     const drillDown = (
       <WordInContextContainer
-        handleDrillDownAction={() => handleDrillDownAction(word)}
+        handleDrillDownAction={() => handleDrillDownAction(wordDataPoint.stem)}
         handleClose={closeDrillDown}
       />
     );
-    handleSelectedWord(word);
+    handleSelectedWord(selectedQuery, wordDataPoint.stem);
     openDrillDown(drillDown);
   }
   render() {
-    const { results, queries, tabSelector, selectedTabIndex } = this.props;
+    const { results, queries, tabSelector, selectedQueryIndex } = this.props;
     const { formatMessage } = this.props.intl;
-    const selectedQuery = queries[selectedTabIndex];
+    const selectedQuery = queries[selectedQueryIndex];
     return (
       <EditableWordCloudDataCard
         actionMenuHeaderText={formatMessage(localMessages.menuHeader, { queryName: selectedQuery.label })}
         subHeaderContent={tabSelector}
-        words={results[selectedTabIndex].list}
+        words={results[selectedQueryIndex].list}
         onViewModeClick={this.handleWordClick}
         border={false}
         domId={WORD_CLOUD_DOM_ID}
@@ -68,7 +69,8 @@ QueryWordsResultsContainer.propTypes = {
   closeDrillDown: PropTypes.func.isRequired,
   // from composition
   intl: PropTypes.object.isRequired,
-  selectedTabIndex: PropTypes.number.isRequired,
+  selectedQueryIndex: PropTypes.number.isRequired,
+  selectedQuery: PropTypes.object.isRequired,
   tabSelector: PropTypes.object.isRequired,
   // from dispatch
   fetchData: PropTypes.func.isRequired,
@@ -119,11 +121,21 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       });
     }
   },
-  handleSelectedWord: (word) => {
-    dispatch(selectWord(word));
+  handleSelectedWord: (selectedQuery, word) => {
+    // add the word they clicked to the query and save that for drilling down into
+    const clickedQuery = {
+      q: `${selectedQuery.q} AND ${word}`,
+      start_date: selectedQuery.startDate,
+      end_date: selectedQuery.endDate,
+      sources: selectedQuery.sources.map(s => s.id),
+      collections: selectedQuery.collections.map(c => c.id),
+      word,
+      rows: 1000, // need a big sample size here for good results
+    };
+    dispatch(selectWord(clickedQuery));
   },
   handleDrillDownAction: (word) => {
-    ownProps.onQueryModificationRequested(word.term);
+    ownProps.onQueryModificationRequested(word);
   },
 });
 

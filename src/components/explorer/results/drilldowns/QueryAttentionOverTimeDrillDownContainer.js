@@ -39,7 +39,14 @@ class QueryAttentionOverTimeDrillDownContainer extends React.Component {
     let content = <span />;
     // don't bother if datapoint is empty
     if (dataPoint && words && words.length > 0 && stories !== undefined) {
-      content = <QueryAttentionOverTimeDrillDownDataCard info={dataPoint} words={words} stories={stories} onClose={handleClose} />;
+      content = (
+        <QueryAttentionOverTimeDrillDownDataCard
+          info={dataPoint}
+          words={words}
+          stories={stories}
+          onClose={handleClose}
+        />
+      );
     } else if (dataPoint) {
       content = <LoadingSpinner />;
     } else {

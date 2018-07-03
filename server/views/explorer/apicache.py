@@ -8,6 +8,7 @@ from server.util.tags import processed_by_cliff_query_clause
 import server.util.wordembeddings as wordembeddings
 from server.util.stringutil import trimSolrDate
 
+
 def normalized_and_story_count(q, fq, open_q):
     results = {}
     mc_api_key = _api_key()
@@ -50,9 +51,9 @@ def cached_story_split_count(mc_api_key, q, fq):
     return results
 
 
-def sentence_list(mc_api_key, q, fq=None, rows=10):
-    # can't cache by api key here because we need to use tool mc to get sentences
-    return _cached_sentence_list(mc_api_key, q, fq, rows)
+def sentence_list(q, fq=None, rows=1000, include_stories=True):
+    # can't cache by user api key here because we need to use tool mc to get sentences (ie. admin only)
+    return _cached_sentence_list(TOOL_API_KEY, q, fq, rows, include_stories)
 
 
 @cache.cache_on_arguments(function_key_generator=key_generator)

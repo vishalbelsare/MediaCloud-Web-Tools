@@ -42,7 +42,7 @@ const QueryAttentionOverTimeDrillDownDataCard = (props) => {
       <Row>
         <Col lg={6}>
           <h3 style={{ color }} ><FormattedMessage {...localMessages.sampleStories} /></h3>
-          <StorySentencePreview sentences={stories !== null && stories !== undefined ? Object.values(stories.slice(0, 8)) : []} />
+          <StorySentencePreview sentences={stories.slice(0, 8)} />
         </Col>
         <Col lg={6}>
           <h3 style={{ color }} ><FormattedMessage {...localMessages.topWords} /></h3>

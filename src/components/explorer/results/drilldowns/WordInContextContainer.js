@@ -64,7 +64,7 @@ class WordInContextContainer extends React.Component {
             />
           </ActionMenu>
           <h2>
-            <FormattedMessage {...localMessages.title} values={{ word: selectedWord.term }} />
+            <FormattedMessage {...localMessages.title} values={{ word: selectedWord.word }} />
             {helpButton}
           </h2>
           <Row>
@@ -72,7 +72,7 @@ class WordInContextContainer extends React.Component {
               <WordTree
                 domId={uniqueDomId}
                 sentences={fragments}
-                startWord={selectedWord.term}
+                startWord={selectedWord.word}
                 height="400px"
                 width="700px"
               />
@@ -106,12 +106,12 @@ WordInContextContainer.propTypes = {
 const mapStateToProps = state => ({
   fetchStatus: state.explorer.sampleSentencesByWord.fetchStatus,
   selectedWord: state.explorer.topWords.selectedWord,
-  fragments: state.explorer.sampleSentencesByWord.fragments,
+  fragments: state.explorer.sampleSentencesByWord.results,
 });
 
 const mapDispatchToProps = dispatch => ({
-  fetchData: (props) => {
-    dispatch(fetchWordSampleSentences(props.term));
+  fetchData: (params) => {
+    dispatch(fetchWordSampleSentences(params));
   },
 });
 
