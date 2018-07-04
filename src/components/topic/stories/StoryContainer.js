@@ -6,7 +6,7 @@ import Dialog from 'material-ui/Dialog';
 import Link from 'react-router/lib/Link';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import { selectStory, fetchStory } from '../../../actions/topicActions';
+import { selectStory, fetchStory } from '../../../actions/storyActions';
 import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import StoryWordsContainer from './StoryWordsContainer';
 import StoryInlinksContainer from './StoryInlinksContainer';
@@ -14,7 +14,7 @@ import StoryOutlinksContainer from './StoryOutlinksContainer';
 import StoryEntitiesContainer from '../../common/story/StoryEntitiesContainer';
 import StoryNytThemesContainer from '../../common/story/StoryNytThemesContainer';
 import { TAG_SET_GEOGRAPHIC_PLACES, TAG_SET_NYT_THEMES } from '../../../lib/tagUtil';
-import StoryDetails from './StoryDetails';
+import StoryDetails from '../../common/story/StoryDetails';
 import StoryPlaces from './StoryPlaces';
 import messages from '../../../resources/messages';
 import { EditButton, RemoveButton, ReadItNowButton } from '../../common/IconButton';
@@ -151,7 +151,7 @@ class StoryContainer extends React.Component {
           </Row>
           <Row>
             <Col lg={6}>
-              <StoryDetails topicId={topicId} story={story} />
+              <StoryDetails queryId={topicId} story={story} />
             </Col>
           </Row>
           <Row>
@@ -184,18 +184,22 @@ StoryContainer.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => ({
-  fetchStatus: state.topics.selected.story.info.fetchStatus,
+  fetchStatus: state.story.info.fetchStatus,
   filters: state.topics.selected.filters,
   storiesId: parseInt(ownProps.params.storiesId, 10),
   topicId: state.topics.selected.id,
   topicName: state.topics.selected.info.name,
-  story: state.topics.selected.story.info,
+  story: state.story.info,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (storiesId, filters) => {
     dispatch(selectStory(storiesId));
-    dispatch(fetchStory(ownProps.params.topicId, storiesId, filters));
+    const q = {
+      ...filters,
+      id: ownProps.params.topicId,
+    };
+    dispatch(fetchStory(storiesId, q));
   },
 });
 
