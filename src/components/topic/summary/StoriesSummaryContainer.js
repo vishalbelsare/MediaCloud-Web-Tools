@@ -4,9 +4,9 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import MenuItem from 'material-ui/MenuItem';
-import composeAsyncContainer from '../../common/AsyncContainer';
-import composeCsvDownloadNotifyContainer from '../../common/composers/CsvDownloadNotifyContainer';
-import composeDescribedDataCard from '../../common/DescribedDataCard';
+import withAsyncFetch from '../../common/hocs/AsyncContainer';
+import withCsvDownloadNotifyContainer from '../../common/hocs/CsvDownloadNotifyContainer';
+import withDescription from '../../common/hocs/DescribedDataCard';
 import { fetchTopicTopStories, sortTopicTopStories, filterByFocus } from '../../../actions/topicActions';
 import DataCard from '../../common/DataCard';
 import Permissioned from '../../common/Permissioned';
@@ -165,9 +165,9 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeDescribedDataCard(localMessages.descriptionIntro, messages.storiesTableHelpText)(
-        composeAsyncContainer(
-          composeCsvDownloadNotifyContainer(
+      withDescription(localMessages.descriptionIntro, messages.storiesTableHelpText)(
+        withAsyncFetch(
+          withCsvDownloadNotifyContainer(
             StoriesSummaryContainer
           )
         )

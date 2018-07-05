@@ -1,11 +1,14 @@
-import { FETCH_FEATURED_COLLECTIONS_FOR_QUERY, MEDIA_PICKER_TOGGLE_MEDIA_IN_LIST } from '../../../actions/systemActions';
+import { FETCH_FEATURED_COLLECTIONS_FOR_QUERY, MEDIA_PICKER_TOGGLE_MEDIA_IN_LIST, RESET_MEDIAPICKER_COLLECTION_SEARCH } from '../../../actions/systemActions';
 import { createAsyncReducer } from '../../../lib/reduxHelpers';
 
 const featured = createAsyncReducer({
+  initialState: {
+    list: [],
+  },
   action: FETCH_FEATURED_COLLECTIONS_FOR_QUERY,
   handleSuccess: (payload, state, meta) => ({
     args: Object.assign({}, meta.args[0], { selected: false }), // for adding/removing from selected list
-    list: payload.results.map(c => ({
+    list: payload.list.map(c => ({
       ...c,
       name: `${c.label || c.tag}`,
       id: c.tags_id,
@@ -13,13 +16,17 @@ const featured = createAsyncReducer({
       selected: false, // for adding/removing from selected list
     })),
   }),
-  [MEDIA_PICKER_TOGGLE_MEDIA_IN_LIST]: (payload, state) => {
-    const updatedState = [...state.list];
-    const mediaIndex = updatedState.findIndex(q => q.id !== null && q.id === payload.selectedMedia.id);
-    if (mediaIndex >= 0) {
-      updatedState[mediaIndex].selected = payload.setSelected;
-    }
-    return { list: updatedState };
-  },
+  [RESET_MEDIAPICKER_COLLECTION_SEARCH]: () => ({ list: [] }),
+  [MEDIA_PICKER_TOGGLE_MEDIA_IN_LIST]: (payload, state) => ({
+    list: state.list.map((c) => {
+      if (c.id === payload.selectedMedia.id) {
+        return ({
+          ...c,
+          selected: payload.setSelected,
+        });
+      }
+      return c;
+    }),
+  }),
 });
 export default featured;

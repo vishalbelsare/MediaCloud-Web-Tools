@@ -2,8 +2,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import composeAsyncContainer from '../../../../../common/AsyncContainer';
-import composeHelpfulContainer from '../../../../../common/HelpfulContainer';
+import withAsyncFetch from '../../../../../common/hocs/AsyncContainer';
+import withHelp from '../../../../../common/hocs/HelpfulContainer';
 import { fetchCreateFocusKeywordStoryCounts } from '../../../../../../actions/topicActions';
 import DataCard from '../../../../../common/DataCard';
 import BubbleRowChart from '../../../../../vis/BubbleRowChart';
@@ -103,8 +103,8 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeHelpfulContainer(localMessages.helpTitle, localMessages.helpText)(
-        composeAsyncContainer(
+      withHelp(localMessages.helpTitle, localMessages.helpText)(
+        withAsyncFetch(
           KeywordStoryCountPreviewContainer
         )
       )

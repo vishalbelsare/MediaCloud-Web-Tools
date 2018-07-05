@@ -40,6 +40,13 @@ export function filteredLinkTo(to, filters) {
   };
 }
 
+export function combineQueryParams(filterQ, query) {
+  if (filterQ !== null) {
+    return `${filterQ} AND ${query}`;
+  }
+  return query;
+}
+
 export function filtersAsUrlParams(filters) {
   return `snapshotId=${filters.snapshotId}&timespanId=${filters.timespanId || ''}&focusId=${filters.focusId || ''}&q=${filters.q || ''}`;
 }

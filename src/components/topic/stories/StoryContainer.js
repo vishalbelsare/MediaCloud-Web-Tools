@@ -7,7 +7,7 @@ import Link from 'react-router/lib/Link';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { selectStory, fetchStory } from '../../../actions/topicActions';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import StoryWordsContainer from './StoryWordsContainer';
 import StoryInlinksContainer from './StoryInlinksContainer';
 import StoryOutlinksContainer from './StoryOutlinksContainer';
@@ -28,7 +28,7 @@ import AppButton from '../../common/AppButton';
 const MAX_STORY_TITLE_LENGTH = 70;  // story titles longer than this will be trimmed and ellipses added
 
 const localMessages = {
-  mainTitle: { id: 'story.details.mainTitle', defaultMessage: 'Story Details: {title}' },
+  mainTitle: { id: 'story.details.mainTitle', defaultMessage: 'Story: {title}' },
   removeTitle: { id: 'story.details.remove', defaultMessage: 'Remove from Next Snapshot' },
   removeAbout: { id: 'story.details.remove.about', defaultMessage: 'If story is clearly not related to the Topic, or is messing up your analysis, you can remove it from the next Snapshot.  Be careful, because this means it won\'t show up anywhere on the new Snapshot you generate.' },
   unknownLanguage: { id: 'story.details.language.unknown', defaultMessage: 'Unknown' },
@@ -56,15 +56,9 @@ class StoryContainer extends React.Component {
     this.setState({ open: false });
   };
 
-  handleReadItClick = () => {
-    const { story } = this.props;
-    window.open(story.url, '_blank');
-  }
-
   render() {
     const { story, topicId, storiesId, topicName } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
-    const titleHandler = parentTitle => `${formatMessage(messages.story)} | ${parentTitle}`;
     let displayTitle = story.title;
     if (story.title.length > MAX_STORY_TITLE_LENGTH) {
       displayTitle = `${story.title.substr(0, MAX_STORY_TITLE_LENGTH)}...`;
@@ -78,7 +72,7 @@ class StoryContainer extends React.Component {
     ];
     return (
       <div>
-        <Helmet><title>{titleHandler()}</title></Helmet>
+        <Helmet><title>{formatMessage(localMessages.mainTitle, { title: displayTitle })}</title></Helmet>
         <Grid>
           <Row>
             <Col lg={12}>
@@ -89,7 +83,9 @@ class StoryContainer extends React.Component {
                       <EditButton tooltip={formatMessage(localMessages.editStory)} />
                     </Link>
                   </Permissioned>
-                  <ReadItNowButton onClick={this.handleReadItClick} />
+                  <a href={story.url} target="_blank" rel="noopener noreferrer">
+                    <ReadItNowButton />
+                  </a>
                   <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
                     <RemoveButton tooltip={formatMessage(localMessages.removeTitle)} onClick={this.handleRemoveClick} />
                   </Permissioned>
@@ -205,14 +201,14 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
-    asyncFetch: () => dispatchProps.fetchData(ownProps.storiesId, stateProps.filters),
+    asyncFetch: () => dispatchProps.fetchData(stateProps.storiesId, stateProps.filters),
   });
 }
 
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeAsyncContainer(
+      withAsyncFetch(
         StoryContainer
       )
     )

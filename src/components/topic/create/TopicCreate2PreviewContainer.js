@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { injectIntl, FormattedHTMLMessage } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import composeIntlForm from '../../common/IntlForm';
+import withIntlForm from '../../common/hocs/IntlForm';
 import AppButton from '../../common/AppButton';
 import { goToCreateTopicStep } from '../../../actions/topicActions';
 import TopicCreatePreview from './preview/TopicCreatePreview';
@@ -81,7 +81,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 
 export default
   injectIntl(
-    composeIntlForm(
+    withIntlForm(
       connect(mapStateToProps, mapDispatchToProps, mergeProps)(
         TopicCreate2PreviewContainer
       )

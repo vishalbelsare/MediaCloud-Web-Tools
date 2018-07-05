@@ -4,7 +4,7 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import MenuItem from 'material-ui/MenuItem';
 import { fetchQuerySplitStoryCount, fetchDemoQuerySplitStoryCount, resetSentenceCounts, setSentenceDataPoint, resetSentenceDataPoint } from '../../../actions/explorerActions';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import composeSummarizedVisualization from './SummarizedVizualization';
 import composeQueryResultsSelector from './QueryResultsSelector';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
@@ -48,9 +48,11 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
     // date calculations for span/range
     const clickedQuery = {
       q: currentQueryOfInterest.q,
-      start_date: solrFormat(date1),
+      start_date: solrFormat(date0),
       color: origin.series.color,
       dayGap,
+      sources: currentQueryOfInterest.sources.map(s => s.media_id),
+      collections: currentQueryOfInterest.collections.map(c => c.tags_id),
     };
     clickedQuery.end_date = solrFormat(oneDayLater(date1), true);
     this.setState({ clickedQuery });
@@ -206,7 +208,7 @@ export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeSummarizedVisualization(localMessages.lineChartTitle, localMessages.descriptionIntro, [localMessages.descriptionDetail, messages.countsVsPercentageHelp])(
-        composeAsyncContainer(
+        withAsyncFetch(
           composeQueryResultsSelector(
             QueryAttentionOverTimeResultsContainer
           )

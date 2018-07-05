@@ -2,8 +2,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
-import composeDescribedDataCard from '../../../common/DescribedDataCard';
-import composeAsyncContainer from '../../../common/AsyncContainer';
+import withDescription from '../../../common/hocs/DescribedDataCard';
+import withAsyncFetch from '../../../common/hocs/AsyncContainer';
 import StoryTable from '../../../common/StoryTable';  // use this istead of TopicStoryTable because here we don't have extra metadata
 import { fetchStorySampleByQuery } from '../../../../actions/topicActions';
 import DataCard from '../../../common/DataCard';
@@ -95,8 +95,8 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeDescribedDataCard(localMessages.descriptionIntro)(
-        composeAsyncContainer(
+      withDescription(localMessages.descriptionIntro)(
+        withAsyncFetch(
           TopicStorySamplePreview
         )
       )

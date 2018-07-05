@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import composeAsyncContainer from '../../AsyncContainer';
+import withAsyncFetch from '../../hocs/AsyncContainer';
 import { fetchMediaPickerFeaturedCollections } from '../../../../actions/systemActions';
 import CollectionResultsTable from './CollectionResultsTable';
 import * as fetchConstants from '../../../../lib/fetchConstants';
@@ -49,7 +49,7 @@ const mapDispatchToProps = dispatch => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeAsyncContainer(
+      withAsyncFetch(
         FeaturedCollectionsContainer
       )
     )

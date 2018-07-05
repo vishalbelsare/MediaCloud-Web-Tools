@@ -3,14 +3,14 @@ import React from 'react';
 import TextField from 'material-ui/TextField';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import messages from '../../resources/messages';
-import * as fetchConstants from '../../lib/fetchConstants';
-import { SaveButton } from './IconButton';
-import { saveToNotebook } from '../../actions/notebookActions';
-import { getAppName } from '../../config';
-import { updateFeedback } from '../../actions/appActions';
-import ConfirmationDialog from '../common/ConfirmationDialog';
-import { WarningNotice, InfoNotice, ErrorNotice } from '../common/Notice';
+import messages from '../../../resources/messages';
+import * as fetchConstants from '../../../lib/fetchConstants';
+import { SaveButton } from '../IconButton';
+import { saveToNotebook } from '../../../actions/notebookActions';
+import { getAppName } from '../../../config';
+import { updateFeedback } from '../../../actions/appActions';
+import ConfirmationDialog from '../../common/ConfirmationDialog';
+import { WarningNotice, InfoNotice, ErrorNotice } from '../../common/Notice';
 
 const localMessages = {
   saving: { id: 'notebook.save.inProgress', defaultMessage: 'Saving to the server...' },
@@ -28,7 +28,7 @@ const localMessages = {
  * 1) savedFeedback: a div with info about whether this has been saved or not
  * 2) saveToNotebookButton: a button that can be displayed to request this content be saved
  */
-const composeSaveableContainer = (ChildComponent) => {
+const withSaving = (ChildComponent) => {
   class SaveableContainer extends React.Component {
     state = {
       open: false,
@@ -129,4 +129,4 @@ const composeSaveableContainer = (ChildComponent) => {
   );
 };
 
-export default composeSaveableContainer;
+export default withSaving;

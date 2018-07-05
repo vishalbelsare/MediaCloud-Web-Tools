@@ -19,20 +19,26 @@ def safe_filename(name):
 
 def dict2row(keys_to_include, dict_row):
     attributes = []
-    try:
-        for k in keys_to_include:
-            value = dict_row[k] if k in dict_row else ''    # allow download even if col missing for this row
+    for k in keys_to_include:
+        try:
+            value = dict_row[k] if k in dict_row else ''  # allow download even if col missing for this row
             if isinstance(value, (int, long, float)):
                 cleaned_value = str(dict_row[k])
+            elif isinstance(value, list):
+                cleaned_value = u", ".join(value)
             elif value in ['', None]:
                 cleaned_value = u''
             else:
-                cleaned_value = u'"' + value.replace(u'"', u'""') + u'"'
+                cleaned_value = value
+            if '"' in cleaned_value:  # escape quotes for CSV file
+                cleaned_value = cleaned_value.replace(u'"', u'""')
+            cleaned_value = u'"{}"'.format(cleaned_value)
             attributes.append(cleaned_value)
-    except Exception as e:
-        logger.error(u"Couldn't process a CSV row: " + str(e))
-        logger.exception(e)
-        logger.debug(dict_row)
+        except Exception as e:
+            logger.error(u"Couldn't process a value in a CSV row, skipping it: " + str(e))
+            logger.exception(e)
+            logger.debug(dict_row)
+            attributes.append('ERROR')  # let the user know something didn't work out
     return attributes
 
 

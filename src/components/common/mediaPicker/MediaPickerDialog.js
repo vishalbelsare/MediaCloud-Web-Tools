@@ -8,6 +8,7 @@ import MediaPickerResultsContainer from './MediaPickerResultsContainer';
 import { fetchMediaPickerFeaturedCollections, initializePreviouslySelectedMedia, clearSelectedMedia } from '../../../actions/systemActions';
 import AppButton from '../AppButton';
 import { AddQueryButton } from '../IconButton';
+import { PICK_FEATURED } from '../../../lib/explorerUtil';
 import { TAG_SET_MC_ID } from '../../../lib/tagUtil';
 
 const localMessages = {
@@ -94,7 +95,7 @@ class MediaPickerDialog extends React.Component {
                 />
               </div>
               <div className="select-media-content">
-                <MediaPickerResultsContainer timestamp={lookupTimestamp} selectedMediaQueryType={0} selectedMedia={selectedMedia} handleSelection={handleSelection} />
+                <MediaPickerResultsContainer timestamp={lookupTimestamp} selectedMediaQueryType={PICK_FEATURED} selectedMedia={selectedMedia} handleSelection={handleSelection} />
               </div>
             </div>
           </div>

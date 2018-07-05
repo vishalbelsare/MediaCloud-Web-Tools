@@ -3,7 +3,7 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import MenuItem from 'material-ui/MenuItem';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import composeSummarizedVisualization from './SummarizedVizualization';
 import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
@@ -35,9 +35,10 @@ class QueryTotalAttentionResultsContainer extends React.Component {
     view: VIEW_REGULAR, // which view to show (see view constants above)
   }
 
-  shouldComponentUpdate(nextProps) {
+  shouldComponentUpdate(nextProps, nextState) {
     const { results, queries } = this.props;
-    return queryChangedEnoughToUpdate(queries, nextProps.queries, results, nextProps.results);
+    return queryChangedEnoughToUpdate(queries, nextProps.queries, results, nextProps.results) ||
+    (this.state.view !== nextState.view);
   }
 
   setView = (nextView) => {
@@ -147,7 +148,7 @@ export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
       composeSummarizedVisualization(localMessages.title, localMessages.helpIntro, [localMessages.helpDetails, messages.countsVsPercentageHelp])(
-        composeAsyncContainer(
+        withAsyncFetch(
           QueryTotalAttentionResultsContainer
         )
       )

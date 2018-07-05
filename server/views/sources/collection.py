@@ -11,9 +11,11 @@ from server import app, mc, db
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_mediacloud_client, user_name,\
     user_has_auth_role, ROLE_MEDIA_EDIT
 from server.util.request import arguments_required, form_fields_required, api_error_handler
+
 from server.util.tags import TAG_SETS_ID_COLLECTIONS, is_metadata_tag_set, format_name_from_label, media_with_tag
 from server.views.sources import SOURCE_LIST_CSV_EDIT_PROPS
-from server.views.sources.favorites import add_user_favorite_flag_to_collections, add_user_favorite_flag_to_sources
+from server.views.favorites import add_user_favorite_flag_to_collections, add_user_favorite_flag_to_sources
+
 from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
 from server.views.sources.stories_split_by_time import stream_split_stories_csv
 import server.views.sources.apicache as apicache
@@ -144,7 +146,7 @@ def _media_list_edit_worker(media_id):
         latest_scrape_job = scrape_jobs['job_states'][0]
     # active feed count
     feeds = user_mc.feedList(media_id)
-    active_syndicated_feeds = [f for f in feeds if f['feed_status'] == 'active' and f['feed_type'] == 'syndicated']
+    active_syndicated_feeds = [f for f in feeds if f['active'] and f['type'] == 'syndicated']
     active_feed_count = len(active_syndicated_feeds)
     return {
         'media_id': media_id,

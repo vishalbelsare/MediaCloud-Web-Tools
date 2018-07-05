@@ -5,7 +5,7 @@ import { reduxForm, formValueSelector } from 'redux-form';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { Helmet } from 'react-helmet';
-import composeIntlForm from '../../common/IntlForm';
+import withIntlForm from '../../common/hocs/IntlForm';
 import TopicForm, { TOPIC_FORM_MODE_CREATE } from './TopicForm';
 import { goToCreateTopicStep } from '../../../actions/topicActions';
 import messages from '../../../resources/messages';
@@ -98,7 +98,7 @@ const reduxFormConfig = {
 
 export default
   injectIntl(
-    composeIntlForm(
+    withIntlForm(
       reduxForm(reduxFormConfig)(
         connect(mapStateToProps, mapDispatchToProps)(
           TopicCreate1ConfigureContainer

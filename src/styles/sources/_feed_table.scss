@@ -4,13 +4,10 @@
   margin-top: 20px;
   
   tr {
-    &.feed-inactive {
-      background-color: $material-grey500;
-    }
-    &.feed-skipped {
-      background-color: $material-grey500;
-    }
     &.feed-active {
+    }
+    &.feed-disabled {
+      background-color: $material-grey500;
     }
   }
 

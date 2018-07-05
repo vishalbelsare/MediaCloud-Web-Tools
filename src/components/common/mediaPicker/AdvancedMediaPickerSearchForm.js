@@ -3,7 +3,7 @@ import React from 'react';
 import { Field, reduxForm, FormSection } from 'redux-form';
 import { injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
-import composeIntlForm from '../../common/IntlForm';
+import withIntlForm from '../../common/hocs/IntlForm';
 import MetadataPickerContainer from '../../common/MetadataPickerContainer';
 import MediaPickerSearchForm from './MediaPickerSearchForm';
 import AppButton from '../../common/AppButton';
@@ -137,7 +137,7 @@ const reduxFormConfig = {
 
 export default
   injectIntl(
-    composeIntlForm(
+    withIntlForm(
       reduxForm(reduxFormConfig)(
         AdvancedMediaPickerSearchForm
       )

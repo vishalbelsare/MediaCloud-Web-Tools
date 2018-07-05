@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
 import { push } from 'react-router-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import composeIntlForm from '../../common/IntlForm';
+import withIntlForm from '../../common/hocs/IntlForm';
 import LoadingSpinner from '../../common/LoadingSpinner';
 import SourceOrCollectionChip from '../../common/SourceOrCollectionChip';
 import messages from '../../../resources/messages';
@@ -196,7 +196,7 @@ const reduxFormConfig = {
 };
 
 export default
-  composeIntlForm(
+  withIntlForm(
     reduxForm(reduxFormConfig)(
       connect(mapStateToProps, mapDispatchToProps, mergeProps)(
         TopicCreate3ConfirmContainer

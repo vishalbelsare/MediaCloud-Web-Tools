@@ -6,8 +6,9 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import QueryTopEntitiesPeopleResultsContainer from './QueryTopEntitiesPeopleResultsContainer';
 import QueryTopEntitiesOrgsResultsContainer from './QueryTopEntitiesOrgsResultsContainer';
 import QueryAttentionOverTimeResultsContainer from './QueryAttentionOverTimeResultsContainer';
-import QueryAttentionOverTimeDrillDownContainer from './QueryAttentionOverTimeDrillDownContainer';
+import QueryAttentionOverTimeDrillDownContainer from './drilldowns/QueryAttentionOverTimeDrillDownContainer';
 import QueryWordComparisonResultsContainer from './QueryWordComparisonResultsContainer';
+import WordInContextDrillDownContainer from './drilldowns/WordInContextDrillDownContainer';
 import QuerySampleStoriesResultsContainer from './QuerySampleStoriesResultsContainer';
 import QueryTotalAttentionResultsContainer from './QueryTotalAttentionResultsContainer';
 import QueryGeoResultsContainer from './QueryGeoResultsContainer';
@@ -69,6 +70,14 @@ class QueryResultsContainer extends React.Component {
       <Row>
         <Col lg={12} xs={12}>
           <QueryWordsResultsContainer
+            lastSearchTime={lastSearchTime}
+            queries={queries}
+            isLoggedIn={isLoggedIn}
+            onQueryModificationRequested={handleQueryModificationRequested}
+          />
+        </Col>
+        <Col lg={12} xs={12}>
+          <WordInContextDrillDownContainer
             lastSearchTime={lastSearchTime}
             queries={queries}
             isLoggedIn={isLoggedIn}
@@ -147,7 +156,7 @@ class QueryResultsContainer extends React.Component {
               tabLabels={[
                 formatMessage(messages.attention),
                 formatMessage(messages.language),
-                formatMessage(messages.peopleAndPlaces),
+                formatMessage(messages.representation),
               ]}
               onViewSelected={index => this.setState({ selectedViewIndex: index })}
             />

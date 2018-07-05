@@ -164,12 +164,12 @@ export function sourceFeed(mediaId, feedId) {
 }
 
 export function createFeed(mediaId, params) {
-  const acceptedParams = acceptParams(params, ['name', 'url', 'feed_type', 'feed_status']);
+  const acceptedParams = acceptParams(params, ['name', 'url', 'type', 'active']);
   return createPostingApiPromise(`/api/sources/${mediaId}/feeds/create`, acceptedParams);
 }
 
 export function updateFeed(feedId, params) {
-  const acceptedParams = acceptParams(params, ['name', 'url', 'feed_type', 'feed_status']);
+  const acceptedParams = acceptParams(params, ['name', 'url', 'type', 'active']);
   return createPostingApiPromise(`/api/sources/feeds/${feedId}/update`, acceptedParams);
 }
 
@@ -194,16 +194,8 @@ export function collectionUploadSourceListFromTemplate(params) {
   return createPostingApiPromise('/api/collections/upload-sources', acceptedParams);
 }
 
-export function favoriteSource(mediaId, favorite) {
-  return createPostingApiPromise(`/api/sources/${mediaId}/favorite`, { favorite: (favorite) ? 1 : 0 });
-}
-
 export function fetchFavoriteSources() {
   return createApiPromise('/api/favorites/sources');
-}
-
-export function favoriteCollection(id, favorite) {
-  return createPostingApiPromise(`/api/collections/${id}/favorite`, { favorite: (favorite) ? 1 : 0 }, 'put');
 }
 
 export function fetchFavoriteCollections() {

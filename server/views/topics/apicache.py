@@ -3,7 +3,7 @@ from flask import request
 from datetime import datetime
 
 from server import mc, TOOL_API_KEY
-from server.views import WORD_COUNT_SAMPLE_SIZE, WORD_COUNT_UI_LENGTH
+from server.views import WORD_COUNT_SAMPLE_SIZE, WORD_COUNT_UI_NUM_WORDS
 from server.cache import cache, key_generator
 from server.util.tags import STORY_UNDATEABLE_TAG
 import server.util.wordembeddings as wordembeddings
@@ -107,6 +107,7 @@ def topic_story_list(user_mc_key, topics_id, **kwargs):
     merged_args.update(kwargs)    # passed in args override anything pulled form the request.args
     return _cached_topic_story_list(user_mc_key, topics_id, **merged_args)
 
+
 @cache.cache_on_arguments(function_key_generator=key_generator)
 def _cached_topic_story_list(user_mc_key, topics_id, **kwargs):
     '''
@@ -140,10 +141,9 @@ def _cached_media(user_mc_key, media_id):
     return mc_client.media(media_id)
 
 
-def topic_ngram_counts(user_mc_key, topics_id, ngram_size, q, num_words=WORD_COUNT_UI_LENGTH):
-    sample_size = WORD_COUNT_SAMPLE_SIZE
+def topic_ngram_counts(user_mc_key, topics_id, ngram_size, q, num_words=WORD_COUNT_UI_NUM_WORDS, sample_size=WORD_COUNT_SAMPLE_SIZE):
     word_counts = topic_word_counts(user_mediacloud_key(), topics_id,
-                                    q=q, ngram_size=ngram_size, num_words=num_words)
+                                    q=q, ngram_size=ngram_size, num_words=num_words, sample_size=sample_size)
     # add in normalization
     for w in word_counts:
         w['sample_size'] = sample_size
@@ -162,7 +162,7 @@ def topic_word_counts(user_mc_key, topics_id, **kwargs):
         'foci_id': foci_id,
         'q': q,
         'sample_size': WORD_COUNT_SAMPLE_SIZE,
-        'num_words': WORD_COUNT_UI_LENGTH
+        'num_words': WORD_COUNT_UI_NUM_WORDS
     }
     merged_args.update(kwargs)    # passed in args override anything pulled form the request.args
     word_data = _cached_topic_word_counts(user_mc_key, topics_id, **merged_args)

@@ -8,7 +8,7 @@ function composeQueryResultsSelector(ChildComponent) {
   class QueryResultsSelector extends React.Component {
     state = {
       fetchedData: undefined,
-      selectedTabIndex: 0,
+      selectedQueryIndex: 0,
     };
     componentWillReceiveProps(nextProps) {
       const { lastSearchTime, fetchData } = this.props;
@@ -22,7 +22,7 @@ function composeQueryResultsSelector(ChildComponent) {
       return queryChangedEnoughToUpdate(queries, nextProps.queries, results, nextProps.results);
     }
     setView(nextView) {
-      this.setState({ selectedTabIndex: nextView });
+      this.setState({ selectedQueryIndex: nextView });
       this.forceUpdate();
     }
     render() {
@@ -30,7 +30,13 @@ function composeQueryResultsSelector(ChildComponent) {
       const tabSelector = <TabSelector onViewSelected={idx => this.setView(idx)} tabLabels={queries} />;
       return (
         <div className="query-results-selector">
-          <ChildComponent {...this.props} selectedTabIndex={this.state.selectedTabIndex} tabSelector={tabSelector} />
+          <ChildComponent
+            {...this.props}
+            selectedTabIndex={this.state.selectedQueryIndex}  // for backwards compatability
+            selectedQueryIndex={this.state.selectedQueryIndex}
+            selectedQuery={queries[this.state.selectedQueryIndex]}
+            tabSelector={tabSelector}
+          />
         </div>
       );
     }

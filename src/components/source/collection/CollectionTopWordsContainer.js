@@ -3,9 +3,9 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { fetchCollectionTopWords } from '../../../actions/sourceActions';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import PeriodicEditableWordCloudDataCard from '../../common/PeriodicEditableWordCloudDataCard';
-import composeHelpfulContainer from '../../common/HelpfulContainer';
+import withHelp from '../../common/hocs/HelpfulContainer';
 import messages from '../../../resources/messages';
 import { calculateTimePeriods, getCurrentDate, oneMonthBefore } from '../../../lib/dateUtil';
 import { urlToExplorerQuery } from '../../../lib/urlUtil';
@@ -94,8 +94,8 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeHelpfulContainer(localMessages.helpTitle, [localMessages.intro, messages.wordSpaceLayoutHelp])(
-        composeAsyncContainer(
+      withHelp(localMessages.helpTitle, [localMessages.intro, messages.wordSpaceLayoutHelp])(
+        withAsyncFetch(
           CollectionTopWordsContainer
         )
       )

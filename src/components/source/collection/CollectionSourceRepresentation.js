@@ -5,11 +5,11 @@ import * as d3 from 'd3';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import MenuItem from 'material-ui/MenuItem';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import DataCard from '../../common/DataCard';
 import { fetchCollectionSourceRepresentation } from '../../../actions/sourceActions';
 import messages from '../../../resources/messages';
-import composeHelpfulContainer from '../../common/HelpfulContainer';
+import withHelp from '../../common/hocs/HelpfulContainer';
 import { DownloadButton, ExploreButton } from '../../common/IconButton';
 import PackedBubbleChart from '../../vis/PackedBubbleChart';
 import { getBrandDarkColor } from '../../../styles/colors';
@@ -152,8 +152,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText])(
-        composeAsyncContainer(
+      withHelp(localMessages.helpTitle, [localMessages.helpText])(
+        withAsyncFetch(
           CollectionSourceRepresentation
         )
       )

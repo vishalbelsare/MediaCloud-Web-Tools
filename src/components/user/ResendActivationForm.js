@@ -11,7 +11,7 @@ import { LEVEL_ERROR } from '../common/Notice';
 import { addNotice } from '../../actions/appActions';
 import messages from '../../resources/messages';
 import { invalidEmail } from '../../lib/formValidators';
-import composeIntlForm from '../common/IntlForm';
+import withIntlForm from '../common/hocs/IntlForm';
 
 const localMessages = {
   missingEmail: { id: 'user.missingEmail', defaultMessage: 'You need to enter a valid email address.' },
@@ -105,7 +105,7 @@ const reduxFormConfig = {
 
 export default
   injectIntl(
-    composeIntlForm(
+    withIntlForm(
       reduxForm(reduxFormConfig)(
         connect(mapStateToProps, mapDispatchToProps)(
           ResendActivationForm

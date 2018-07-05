@@ -1,6 +1,54 @@
 {
   "releases": [
     {
+      "date": "2018-06-21",
+      "version": "v3.1.5",
+      "notes": [
+        {
+          "apps": ["sources"],
+          "type": "Fix",
+          "note": "Fix editing and adding feeds to a source."
+        }
+      ]
+    },
+    {
+      "date": "2018-06-20",
+      "version": "v3.1.4",
+      "notes": [
+        {
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Viewing total stories as a percentage in Explorer works again."
+        },
+        {
+          "apps": ["topics"],
+          "type": "Fix",
+          "note": "Better page titles in Topic Mapper."
+        }
+      ]
+    },
+    {
+      "date": "2018-06-19",
+      "version": "v3.1.3",
+      "notes": [
+        {
+          "apps": ["topics"],
+          "type": "Fix",
+          "note": "Clicking on a story in Topic Mapper now shows the correct story information."
+        },
+        {
+          "apps": ["topics"],
+          "type": "Fix",
+          "note": "Option to restart a topic that has had an error."
+        },
+        {
+          "apps": ["topics"],
+          "type": "Fix",
+          "note": "Added influence data back to story CSV download in Topic Mapper."
+        }
+      ]
+    },
+    {
       "date": "2018-06-08",
       "version": "v3.1.2",
       "notes": [
