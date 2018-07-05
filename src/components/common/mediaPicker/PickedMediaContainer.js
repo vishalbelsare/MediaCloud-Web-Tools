@@ -12,7 +12,7 @@ const localMessages = {
   pickCollections: { id: 'system.mediaPicker.select.pickCollections', defaultMessage: 'Search All Collections' },
   pickSources: { id: 'system.mediaPicker.select.pickSources', defaultMessage: 'Search Sources' },
   selectedMedia: { id: 'system.mediaPicker.selected.title', defaultMessage: 'Selected Media' },
-  pickFeatured: { id: 'system.mediaPicker.select.pickFeatured', defaultMessage: 'Featured and Favorited' },
+  pickFeatured: { id: 'system.mediaPicker.select.pickFeatured', defaultMessage: 'Featured & Starred' },
 };
 
 class PickedMediaContainer extends React.Component {
