@@ -11,6 +11,8 @@ import withHelp from '../../../common/hocs/HelpfulContainer';
 import withAsyncFetch from '../../../common/hocs/AsyncContainer';
 import DataCard from '../../../common/DataCard';
 import StoryDetails from '../../../common/story/StoryDetails';
+import StoryEntitiesContainer from '../../../common/story/StoryEntitiesContainer';
+import StoryNytThemesContainer from '../../../common/story/StoryNytThemesContainer';
 import messages from '../../../../resources/messages';
 import { downloadSvg } from '../../../util/svg';
 
@@ -83,6 +85,16 @@ class SelectedStoryDrillDownContainer extends React.Component {
                 <StoryDetails story={storyInfo} queryId={storyInfo.queryId} />
               </Col>
             </Row>
+            <Row>
+              <Col lg={12}>
+                <StoryEntitiesContainer storyId={storyId} />
+              </Col>
+            </Row>
+            <Row>
+              <Col lg={12}>
+                <StoryNytThemesContainer storyId={storyId} />
+              </Col>
+            </Row>
             <h2>Published in {storyInfo.media_name}</h2>
           </DataCard>
         </div>
@@ -119,7 +131,9 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   fetchData: (params) => {
-    dispatch(fetchStory(params));
+    if (params) {
+      dispatch(fetchStory(params));
+    }
   },
   handleClose: () => {
     dispatch(resetStory());
