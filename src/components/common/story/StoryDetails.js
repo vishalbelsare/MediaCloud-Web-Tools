@@ -24,7 +24,7 @@ const localMessages = {
 };
 
 const StoryDetails = (props) => {
-  const { story, queryId } = props;
+  const { story, mediaLink } = props;
   const { formatMessage, formatDate } = props.intl;
   return (
     <DataCard>
@@ -40,7 +40,7 @@ const StoryDetails = (props) => {
         </li>
         <li>
           <FormattedHTMLMessage {...localMessages.publisher} />
-          <Link to={`/${queryId}/media/${story.media_id}`}>{story.media_name}</Link>
+          <Link to={mediaLink}>{story.media_name}</Link>
         </li>
         <li>
           <FormattedHTMLMessage
@@ -91,7 +91,7 @@ const StoryDetails = (props) => {
 
 StoryDetails.propTypes = {
   // from parent
-  queryId: PropTypes.number.isRequired,
+  mediaLink: PropTypes.string.isRequired,
   story: PropTypes.object.isRequired,
   // from context
   intl: PropTypes.object.isRequired,

@@ -24,6 +24,7 @@ import Permissioned from '../../common/Permissioned';
 import { PERMISSION_TOPIC_WRITE, PERMISSION_STORY_EDIT } from '../../../lib/auth';
 import StatBar from '../../common/statbar/StatBar';
 import AppButton from '../../common/AppButton';
+import { urlToTopicMapper } from '../../../lib/urlUtil';
 
 const MAX_STORY_TITLE_LENGTH = 70;  // story titles longer than this will be trimmed and ellipses added
 
@@ -151,7 +152,7 @@ class StoryContainer extends React.Component {
           </Row>
           <Row>
             <Col lg={6}>
-              <StoryDetails queryId={topicId} story={story} />
+              <StoryDetails mediaLink={urlToTopicMapper(topicId)} story={story} />
             </Col>
           </Row>
           <Row>
