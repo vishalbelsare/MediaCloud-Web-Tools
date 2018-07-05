@@ -9,7 +9,6 @@ import { errorReportingMiddleware } from './lib/reduxHelpers';
 import getRootReducer from './reducers/root';
 import { isDevMode } from './config';
 
-
 const reduxRouterMiddleware = routerMiddleware(hashHistory);
 
 const middlewares = [

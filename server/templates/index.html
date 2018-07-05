@@ -13,15 +13,8 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
   <title>Media Cloud</title>
   <script type="text/javascript">
-      document.appConfig = {};
-      document.appConfig.cookieDomain = '{{ cookie_domain }}';
-  </script>
-  <script src=https://cdn.ravenjs.com/3.24.0/raven.min.js crossorigin=anonymous></script>
-  <script>
-    Raven.config('https://e19420a2c46a4f97942553dfe8322cc4@sentry.io/1229723', {
-      release: '0-0-0',
-      environment: 'development-test',
-    }).install();
+    document.appConfig = {};
+    document.appConfig.cookieDomain = '{{ cookie_domain }}';
   </script>
   {{ stylesheet_tag("common_css") | safe }}
   {{ stylesheet_tag("app_css") | safe }}

@@ -13,19 +13,16 @@ import hashHistory from 'react-router/lib/hashHistory';
 import { syncHistoryWithStore } from 'react-router-redux';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import injectTapEventPlugin from 'react-tap-event-plugin';
+import Raven from 'raven-js';
 import { loginWithCookie } from './actions/userActions';
 import getStore from './store';
-import { getAppName } from './config';
+import { getAppName, getVersion, isProdMode } from './config';
 import { getBrandColors } from './styles/colors';
 
 const APP_DOM_ELEMENT_ID = 'app';
 const DEFAULT_LOCALE = 'en';
 
-/**
- * Call this from your own appIndex.js with some routes to start up your app.  Do not
- * refer to this file as an entry point directly.
- */
-export default function initializeApp(routes) {
+function reallyInitializeApp(routes) {
   // necessary lines for Material-UI library to work
   injectTapEventPlugin();
 
@@ -75,4 +72,26 @@ export default function initializeApp(routes) {
   // log them in if they have a valid cookie (wait till login attempt complete before rendering app)
   store.dispatch(loginWithCookie())
     .then(() => renderApp());
+}
+
+
+/**
+ * Call this from your own appIndex.js with some routes to start up your app.  Do not
+ * refer to this file as an entry point directly.
+ */
+export default function initializeApp(routes) {
+  // set up logging when you're in production mode
+  if (isProdMode()) {
+    Raven.config('https://e19420a2c46a4f97942553dfe8322cc4@sentry.io/1229723', {
+      release: getVersion(),
+      environment: 'development-test',
+      logger: getAppName(),
+    }).install();
+    // This wraps the app intialization in a Raven context to catch any init errors (as they recommend).
+    Raven.context(() => {
+      reallyInitializeApp(routes);
+    });
+  } else {
+    reallyInitializeApp(routes);
+  }
 }
