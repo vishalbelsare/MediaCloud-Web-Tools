@@ -18,6 +18,11 @@
           "apps": ["explorer", "topics"],
           "type": "Feature",
           "note": "Switch between 1k and 10k sample sizes for word clouds."
+        },
+        {
+          "apps": ["explorer"],
+          "type": "Feature",
+          "note": "Quickly choose from your starred sources & collections while picking media."
         }
       ]
     },
