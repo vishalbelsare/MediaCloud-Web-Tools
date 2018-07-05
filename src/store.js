@@ -24,12 +24,6 @@ function configDevelopmentStore(appName) {
       promiseMiddleware(),
       reduxRouterMiddleware,
       thunkMiddleware,
-      // errorReportingMiddleware,
-      createRavenMiddleware(Raven, {
-        breadcrumbDataFromAction: action => (
-          { STRING: action.str }
-        ),
-      }),
     ),
     window.devToolsExtension ? window.devToolsExtension() : f => f
   ));
@@ -38,7 +32,11 @@ function configDevelopmentStore(appName) {
 function configProductionStore(appName) {
   return createStore(getRootReducer(appName), {}, compose(
     applyMiddleware(...middlewares,
-      createRavenMiddleware(Raven),
+      createRavenMiddleware(Raven, {
+        breadcrumbDataFromAction: action => (
+          { STRING: action.str }
+        ),
+      }),
     ),
   ));
 }
