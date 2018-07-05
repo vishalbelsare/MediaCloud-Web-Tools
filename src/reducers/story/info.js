@@ -29,7 +29,7 @@ const info = createAsyncReducer({
   }),
   [SELECT_STORY]: payload => payload,
   [RESET_STORY]: () => ({
-    id: null,
+    id: null, stories_id: null, publishDateObj: [],
   }),
 });
 

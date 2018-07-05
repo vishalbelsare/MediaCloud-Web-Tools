@@ -15,6 +15,7 @@ export const FETCH_STORY_NYT_THEMES = 'FETCH_STORY_NYT_THEMES';
 export const fetchStoryNytThemes = createAsyncAction(FETCH_STORY_NYT_THEMES, api.storyNytThemes);
 
 export const SELECT_STORY = 'SELECT_STORY';
+export const RESET_STORY = 'RESET_STORY';
 export const FETCH_STORY = 'FETCH_STORY';
 export const FETCH_STORY_WORDS = 'FETCH_STORY_WORDS';
 export const FETCH_STORY_INLINKS = 'FETCH_STORY_INLINKS';
@@ -23,7 +24,7 @@ export const FETCH_STORY_OUTLINKS = 'FETCH_STORY_OUTLINKS';
 
 // pass in stories id
 export const selectStory = createAction(SELECT_STORY, id => id);
-
+export const resetStory = createAction(RESET_STORY);
 // pass in topic id, story id, and filters
 export const fetchStory = createAsyncAction(FETCH_STORY, api.story);
 

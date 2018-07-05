@@ -6,14 +6,13 @@ import MenuItem from 'material-ui/MenuItem';
 import slugify from 'slugify';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import ActionMenu from '../../../common/ActionMenu';
-import { fetchStory, resetSelectedStory } from '../../../../actions/storyActions';
+import { fetchStory, resetStory } from '../../../../actions/storyActions';
 import withHelp from '../../../common/hocs/HelpfulContainer';
 import withAsyncFetch from '../../../common/hocs/AsyncContainer';
 import DataCard from '../../../common/DataCard';
 import StoryDetails from '../../../common/story/StoryDetails';
 import messages from '../../../../resources/messages';
 import { downloadSvg } from '../../../util/svg';
-import { updateFeedback } from '../../../../actions/appActions';
 
 const localMessages = {
   title: { id: 'word.inContext.title', defaultMessage: 'Details for: {title}' },
@@ -38,8 +37,8 @@ class SelectedStoryDrillDownContainer extends React.Component {
     }
   }
   shouldComponentUpdate(nextProps) {
-    const { storyId } = this.props;
-    return (nextProps.storyId !== storyId);
+    const { storyId, lastSearchTime } = this.props;
+    return (nextProps.lastSearchTime !== lastSearchTime || nextProps.storyId !== storyId);
   }
   getUniqueDomId = () => 'story-';
   handleDownloadSvg = () => {
@@ -50,8 +49,11 @@ class SelectedStoryDrillDownContainer extends React.Component {
     const svgDownloadPrefix = `${slugify(storyInfo)}-`;
     downloadSvg(svgDownloadPrefix, svgNode);
   }
+  openNewPage = (url) => {
+    window.open(url, '_blank');
+  }
   render() {
-    const { storyId, storyInfo, handleAddToAllQueries, handleClose, helpButton } = this.props;
+    const { storyId, storyInfo, handleClose, helpButton } = this.props;
     const { formatMessage } = this.props.intl;
 
     let content = null;
@@ -68,20 +70,20 @@ class SelectedStoryDrillDownContainer extends React.Component {
               <MenuItem
                 className="action-icon-menu-item"
                 primaryText={formatMessage(localMessages.readThisStory)}
-                onTouchTap={() => handleAddToAllQueries(storyInfo)}
+                onTouchTap={() => this.openNewPage(storyInfo.url)}
               />
             </ActionMenu>
             <h2>
               <FormattedMessage {...localMessages.title} values={{ title: storyInfo.title }} />
               {helpButton}
             </h2>
-            <p>Published in <a href="source-manager-media-url">{storyInfo.sourceName}</a> on {storyInfo.pubDate}. Written in {storyInfo.storyLanguage}</p>
+            <p>Published in <a href="source-manager-media-url">{storyInfo.media_name}</a> on {storyInfo.publish_date}. Written in {storyInfo.language}</p>
             <Row>
               <Col lg={12}>
-                <StoryDetails story={storyInfo} />
+                <StoryDetails story={storyInfo} queryId={storyInfo.queryId} />
               </Col>
             </Row>
-            <h2>Published in {storyInfo.sourceName}</h2>
+            <h2>Published in {storyInfo.media_name}</h2>
           </DataCard>
         </div>
       );
@@ -100,14 +102,12 @@ SelectedStoryDrillDownContainer.propTypes = {
   storyId: PropTypes.number,
   // from dispatch
   fetchData: PropTypes.func.isRequired,
-  handleAddToAllQueries: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
     // from mergeProps
   asyncFetch: PropTypes.func.isRequired,
   // from context
   intl: PropTypes.object.isRequired,
   helpButton: PropTypes.node.isRequired,
-  onQueryModificationRequested: PropTypes.func.isRequired,
 };
 
 
@@ -117,17 +117,12 @@ const mapStateToProps = state => ({
   storyId: state.story.info.stories_id,
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = dispatch => ({
   fetchData: (params) => {
     dispatch(fetchStory(params));
   },
-  handleAddToAllQueries: (word) => {
-    ownProps.onQueryModificationRequested(word);
-    dispatch(updateFeedback({ open: true,
-      message: ownProps.intl.formatMessage(localMessages.addingToQueries, { word }) }));
-  },
   handleClose: () => {
-    dispatch(resetSelectedStory());
+    dispatch(resetStory());
   },
 });
 

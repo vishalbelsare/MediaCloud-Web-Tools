@@ -9,7 +9,7 @@ import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import StoryTable from '../../common/StoryTable';
 import { fetchQuerySampleStories, fetchDemoQuerySampleStories, resetSampleStories } from '../../../actions/explorerActions';
-import { selectStory } from '../../../actions/storyActions';
+import { selectStory, resetStory } from '../../../actions/storyActions';
 import { postToDownloadUrl } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
 import composeQueryResultsSelector from './QueryResultsSelector';
@@ -90,6 +90,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (queries) => {
     // this should trigger when the user clicks the Search button or changes the URL
     // for n queries, run the dispatch with each parsed query
+    dispatch(resetStory());
     dispatch(resetSampleStories());
     if (ownProps.isLoggedIn) {
       const runTheseQueries = queries || ownProps.queries;
