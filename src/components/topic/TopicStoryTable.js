@@ -51,10 +51,6 @@ class TopicStoryTable extends React.Component {
     return content;
   }
 
-  handleReadItClick = (story) => {
-    window.open(story.url, '_blank');
-  }
-
   render() {
     const { stories, showTweetCounts, onChangeFocusSelection, topicId, maxTitleLength } = this.props;
     const { formatMessage, formatDate } = this.props.intl;
@@ -129,7 +125,11 @@ class TopicStoryTable extends React.Component {
                   <td className="numeric"><SafelyFormattedNumber value={story.outlink_count} /></td>
                   <td className="numeric"><SafelyFormattedNumber value={story.facebook_share_count} /></td>
                   {tweetInfo}
-                  <td><ReadItNowButton onClick={this.handleReadItClick.bind(this, story)} /></td>
+                  <td>
+                    <a href={story.url} target="_blank" rel="noopener noreferrer">
+                      <ReadItNowButton />
+                    </a>
+                  </td>
                   <td>{listOfFoci}</td>
                 </tr>
               );

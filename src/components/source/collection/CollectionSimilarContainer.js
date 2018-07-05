@@ -2,9 +2,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import { fetchSimilarCollections } from '../../../actions/sourceActions';
-import composeHelpfulContainer from '../../common/HelpfulContainer';
+import withHelp from '../../common/hocs/HelpfulContainer';
 import CollectionList from '../../common/CollectionList';
 
 const localMessages = {
@@ -58,8 +58,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText])(
-        composeAsyncContainer(
+      withHelp(localMessages.helpTitle, [localMessages.helpText])(
+        withAsyncFetch(
           CollectionSimilarContainer
         )
       )

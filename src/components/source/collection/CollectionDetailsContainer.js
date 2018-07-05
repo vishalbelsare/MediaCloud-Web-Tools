@@ -24,7 +24,6 @@ const localMessages = {
   collectionIsOrIsnt: { id: 'collection.details.isOrIsnt', defaultMessage: 'This is a {shows, plural,\n =false {dynamic collection; sources can be added and removed from it}\n =true {static collection; the sources that are part of it will not change}\n}.' },
   collectionIsNotStatic: { id: 'collection.details.isStatic', defaultMessage: 'This is a dynamic collection; sources can be added and removed from it' },
   collectionIsStatic: { id: 'collection.details.isNotStatic', defaultMessage: 'This is a static collection; the sources that are part of it will not change.' },
-  collectionShowOn: { id: 'collection.details.showOn', defaultMessage: 'This collection {onMedia, plural,\n =0 {does not show}\n =true {shows}\n} up on media and {onStories, plural,\n =false {does not show}\n =true {shows}\n other {does not show}\n} up on stories.' },
   collectionFavorited: { id: 'collection.favorited', defaultMessage: 'Marked this as a starred collection' },
   collectionUnFavorited: { id: 'collection.unfavorited', defaultMessage: 'Remove this as a starred collection' },
   notPermitted: { id: 'collection.notPermitted', defaultMessage: 'Sorry, this is a private collection.' },
@@ -102,9 +101,7 @@ class CollectionDetailsContainer extends React.Component {
         <Row>
           <Col lg={8}>
             <p><b>{collection.description}</b></p>
-            <p>
-              <li><FormattedMessage {...localMessages.collectionIsOrIsnt} values={{ shows: collection.is_static }} /></li>
-              <li><FormattedMessage {...localMessages.collectionShowOn} values={{ onMedia: collection.show_on_media || 0, onStories: collection.show_on_stories || 0 }} /></li>
+            <p><FormattedMessage {...localMessages.collectionIsOrIsnt} values={{ shows: collection.is_static }} />
             </p>
           </Col>
         </Row>

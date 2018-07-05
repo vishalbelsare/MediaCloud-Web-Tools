@@ -6,7 +6,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import MenuItem from 'material-ui/MenuItem';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import AppButton from '../../../../../common/AppButton';
-import composeIntlForm from '../../../../../common/IntlForm';
+import withIntlForm from '../../../../../common/hocs/IntlForm';
 import messages from '../../../../../../resources/messages';
 import TopCountriesCoveragePreviewContainer from './TopCountriesCoveragePreviewContainer';
 import TopCountriesStoryCountsPreviewContainer from './TopCountriesStoryCountsPreviewContainer';
@@ -114,7 +114,7 @@ const reduxFormConfig = {
 
 export default
   injectIntl(
-    composeIntlForm(
+    withIntlForm(
       reduxForm(reduxFormConfig)(
         connect(mapStateToProps, mapDispatchToProps)(
           EditTopCountriesContainer

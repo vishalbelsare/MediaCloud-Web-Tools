@@ -5,10 +5,11 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import slugify from 'slugify';
 import withSampleSize from '../../common/composers/SampleSize';
-import composeCsvDownloadNotifyContainer from '../../common/composers/CsvDownloadNotifyContainer';
-import composeAsyncContainer from '../../common/AsyncContainer';
-import composeHelpfulContainer from '../../common/HelpfulContainer';
+import withCsvDownloadNotifyContainer from '../../common/composers/CsvDownloadNotifyContainer';
 import { fetchTopicTopWords } from '../../../actions/topicActions';
+import withAsyncFetch from '../../common/hocs/AsyncContainer';
+import withHelp from '../../common/hocs/HelpfulContainer';
+import { fetchWordWords } from '../../../actions/topicActions';
 import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
 import { filteredLinkTo, filtersAsUrlParams, combineQueryParams } from '../../util/location';
 import messages from '../../../resources/messages';
@@ -102,10 +103,10 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.wordCloudTopicWord2VecLayoutHelp])(
+      withHelp(localMessages.helpTitle, [localMessages.helpText, messages.wordCloudTopicWord2VecLayoutHelp])(
         withSampleSize(
-          composeAsyncContainer(
-            composeCsvDownloadNotifyContainer(
+          withAsyncFetch(
+            withCsvDownloadNotifyContainer(
               WordWordsContainer
             )
           )

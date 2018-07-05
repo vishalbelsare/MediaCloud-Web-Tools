@@ -6,8 +6,11 @@ import { TAG_SET_DATE_GUESS_METHOD, TAG_SET_EXTRACTOR_VERSION, TAG_SET_GEOCODER_
 
 // returns undefined if it is not found
 function tagWithTagSetsId(tags, tagSetsId) {
-  const tag = tags.find(t => t.tag_sets_id === tagSetsId);
-  return (tag) ? tag.tag : undefined;
+  if (tags) {
+    const tag = tags.find(t => t.tag_sets_id === tagSetsId);
+    return (tag) ? tag.tag : undefined;
+  }
+  return undefined;
 }
 
 const info = createAsyncReducer({

@@ -41,11 +41,10 @@ def _cached_topic_media_list(user_mc_key, topics_id, **kwargs):
     Internal helper - don't call this; call topic_media_list instead. This needs user_mc_key in the
     function signature to make sure the caching is keyed correctly.
     '''
-    local_mc = None
     if user_mc_key == TOOL_API_KEY:
         local_mc = mc
     else:
-        local_mc = user_admin_mediacloud_client()
+        local_mc = user_mediacloud_client()
     return local_mc.topicMediaList(topics_id, **kwargs)
 
 
@@ -107,6 +106,7 @@ def topic_story_list(user_mc_key, topics_id, **kwargs):
 
     merged_args.update(kwargs)    # passed in args override anything pulled form the request.args
     return _cached_topic_story_list(user_mc_key, topics_id, **merged_args)
+
 
 @cache.cache_on_arguments(function_key_generator=key_generator)
 def _cached_topic_story_list(user_mc_key, topics_id, **kwargs):

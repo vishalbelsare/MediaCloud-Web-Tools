@@ -4,7 +4,7 @@ import { Field, reduxForm } from 'redux-form';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import MenuItem from 'material-ui/MenuItem';
-import composeIntlForm from '../../../common/IntlForm';
+import withIntlForm from '../../../common/hocs/IntlForm';
 import AppButton from '../../../common/AppButton';
 import { emptyString, invalidUrl } from '../../../../lib/formValidators';
 import messages from '../../../../resources/messages';
@@ -12,14 +12,12 @@ import messages from '../../../../resources/messages';
 const localMessages = {
   typeSyndicated: { id: 'source.feed.add.type.syndicated', defaultMessage: 'Syndicated' },
   typeWebPage: { id: 'source.feed.add.type.webpage', defaultMessage: 'Web Page' },
-  statusActive: { id: 'source.feed.add.status.active', defaultMessage: 'Active' },
-  statusInactive: { id: 'source.feed.add.status.inactive', defaultMessage: 'Inactive' },
-  statusSkipped: { id: 'source.feed.add.status.skipped', defaultMessage: 'Skipped' },
+  feedIsActive: { id: 'source.feed.add.active', defaultMessage: 'Feed is Active' },
   urlInvalid: { id: 'source.feed.url.invalid', defaultMessage: 'That isn\'t a valid feed URL. Please enter just the full url of one RSS or Atom feed.' },
 };
 
 const SourceFeedForm = (props) => {
-  const { renderTextField, renderSelectField, buttonLabel, handleSubmit, onSave, pristine, submitting } = props;
+  const { renderTextField, renderSelectField, renderCheckbox, buttonLabel, handleSubmit, onSave, pristine, submitting } = props;
   const { formatMessage } = props.intl;
   return (
     <form className="app-form source-feed-form" name="sourceFeedForm" onSubmit={handleSubmit(onSave.bind(this))}>
@@ -58,7 +56,7 @@ const SourceFeedForm = (props) => {
           </span>
         </Col>
         <Col md={8}>
-          <Field name="feed_type" component={renderSelectField} >
+          <Field name="type" component={renderSelectField} >
             <MenuItem key="syndicated" value="syndicated" primaryText={formatMessage(localMessages.typeSyndicated)} />
             <MenuItem key="web_page" value="web_page" primaryText={formatMessage(localMessages.typeWebPage)} />
           </Field>
@@ -67,15 +65,17 @@ const SourceFeedForm = (props) => {
       <Row>
         <Col md={2}>
           <span className="label unlabeled-field-label">
-            <FormattedMessage {...messages.feedStatus} />
+            <FormattedMessage {...messages.feedIsActive} />
           </span>
         </Col>
         <Col md={8}>
-          <Field name="feed_status" value="active" component={renderSelectField} >
-            <MenuItem value="active" primaryText={formatMessage(localMessages.statusActive)} />
-            <MenuItem value="inactive" primaryText={formatMessage(localMessages.statusInactive)} />
-            <MenuItem value="skipped" primaryText={formatMessage(localMessages.statusSkipped)} />
-          </Field>
+          <Field
+            name="active"
+            component={renderCheckbox}
+            fullWidth
+            label={formatMessage(messages.feedIsActive)}
+            value
+          />
         </Col>
       </Row>
       <AppButton
@@ -94,6 +94,7 @@ SourceFeedForm.propTypes = {
   intl: PropTypes.object.isRequired,
   renderTextField: PropTypes.func.isRequired,
   renderSelectField: PropTypes.func.isRequired,
+  renderCheckbox: PropTypes.func.isRequired,
   initialValues: PropTypes.object,
   handleSubmit: PropTypes.func,
   pristine: PropTypes.bool.isRequired,
@@ -104,11 +105,8 @@ SourceFeedForm.propTypes = {
 
 function validate(values) {
   const errors = {};
-  if (emptyString(values.feed_status)) {
-    errors.feed_status = messages.required;
-  }
-  if (emptyString(values.feed_type)) {
-    errors.feed_type = messages.required;
+  if (emptyString(values.type)) {
+    errors.type = messages.required;
   }
   if (emptyString(values.url)) {
     errors.url = messages.required;
@@ -126,7 +124,7 @@ const reduxFormConfig = {
 
 export default
   injectIntl(
-    composeIntlForm(
+    withIntlForm(
       reduxForm(reduxFormConfig)(
         SourceFeedForm
       )

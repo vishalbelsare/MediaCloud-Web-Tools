@@ -7,7 +7,7 @@ import Link from 'react-router/lib/Link';
 import { push } from 'react-router-redux';
 import { Helmet } from 'react-helmet';
 import { fetchSourceFeeds, scrapeSourceFeeds, fetchSourceDetails } from '../../../actions/sourceActions';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import MediaSourceIcon from '../../common/icons/MediaSourceIcon';
 import SourceFeedTable from '../SourceFeedTable';
 import messages from '../../../resources/messages';
@@ -144,7 +144,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeAsyncContainer(
+      withAsyncFetch(
         SourceFeedContainer
       )
     )

@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { trimToMaxLength } from '../../lib/stringUtil';
 
 class TabSelector extends React.Component {
   state = {
@@ -8,12 +9,17 @@ class TabSelector extends React.Component {
 
   render() {
     const { onViewSelected, tabLabels } = this.props;
+    if (tabLabels.length === 1) {
+      // if only one query don't show option to switch between them
+      return null;
+    }
     return (
       <ul className="tab-selector">
-        {tabLabels.map((label, idx) =>
+        {tabLabels.filter(label => label !== undefined).map((label, idx) =>
           <li
             role="button"
             tabIndex={0}
+            style={{ color: label.color }}
             onKeyPress={evt => evt.preventDefault()}
             key={idx}
             className={`${this.state.selectedViewIndex === idx ? 'selected' : ''}`}
@@ -22,7 +28,7 @@ class TabSelector extends React.Component {
               onViewSelected(idx);
             }}
           >
-            {label}
+            {trimToMaxLength(label.label || label, 20)}
           </li>
         )}
       </ul>

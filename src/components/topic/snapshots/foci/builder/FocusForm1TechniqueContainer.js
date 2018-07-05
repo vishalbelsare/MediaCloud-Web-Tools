@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { reduxForm, formValueSelector } from 'redux-form';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import composeIntlForm from '../../../../common/IntlForm';
+import withIntlForm from '../../../../common/hocs/IntlForm';
 import FocalTechniqueSelector from './FocalTechniqueSelector';
 import AppButton from '../../../../common/AppButton';
 import { goToCreateFocusStep } from '../../../../../actions/topicActions';
@@ -102,7 +102,7 @@ const reduxFormConfig = {
 
 export default
   injectIntl(
-    composeIntlForm(
+    withIntlForm(
       reduxForm(reduxFormConfig)(
         connect(mapStateToProps, mapDispatchToProps, mergeProps)(
           FocusForm1TechniqueContainer

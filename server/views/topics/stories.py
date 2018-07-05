@@ -2,6 +2,7 @@ import logging
 from flask import jsonify, request, Response
 import flask_login
 from multiprocessing import Pool
+from mediacloud.error import MCException
 
 from server import app, cliff, TOOL_API_KEY
 from server.auth import is_user_logged_in
@@ -28,7 +29,8 @@ MEDIA_INFO_POOL_SIZE = 15
 def story(topics_id, stories_id):
     if is_user_logged_in():
         local_mc = user_mediacloud_client()
-        story_topic_info = topic_story_list(user_mediacloud_key(), topics_id, stories_id=stories_id)['stories'][0]
+        story_topic_info = topic_story_list(user_mediacloud_key(), topics_id, stories_id=stories_id)
+        story_topic_info = story_topic_info['stories'][0]
         '''
         all_fb_count = []
         more_fb_count = True
@@ -50,18 +52,23 @@ def story(topics_id, stories_id):
     else:
         return jsonify({'status': 'Error', 'message': 'Invalid attempt'})
 
-    story_info = local_mc.story(stories_id)  # add in other fields from regular call
-    for k in story_info.keys():
-        story_topic_info[k] = story_info[k]
-    for tag in story_info['story_tags']:
-        if tag['tag_sets_id'] == tag_util.GEO_TAG_SET:
-            geonames_id = int(tag['tag'][9:])
-            try:
-                tag['geoname'] = _cached_geoname(geonames_id)
-            except Exception as e:
-                # query to CLIFF failed :-( handle it gracefully
-                logger.exception(e)
-                tag['geoname'] = {}
+    try:
+        story_info = local_mc.story(stories_id)  # add in other fields from regular call
+        for k in story_info.keys():
+            story_topic_info[k] = story_info[k]
+        for tag in story_info['story_tags']:
+            if tag['tag_sets_id'] == tag_util.GEO_TAG_SET:
+                geonames_id = int(tag['tag'][9:])
+                try:
+                    tag['geoname'] = _cached_geoname(geonames_id)
+                except Exception as e:
+                    # query to CLIFF failed :-( handle it gracefully
+                    logger.exception(e)
+                    tag['geoname'] = {}
+    except MCException:
+        logger.warning("Story {} wasn't found in a regular story API call, but is it topic {}".format(
+            stories_id, topics_id
+        ))
     return jsonify(story_topic_info)
 
 
@@ -227,11 +234,13 @@ def stream_story_list_csv(user_key, filename, topics_id, **kwargs):
         params['q'] = params['q'] if 'q' not in [None, '', 'null', 'undefined'] else None
     params['limit'] = 1000  # an arbitrary value to let us page through with big topics
 
-    props = ['stories_id', 'publish_date', 'title', 'url', 'language', 'ap_syndicated',
-             'themes','subtopics',
-             'media_id', 'media_name', 'media_url',
-             'media_pub_country', 'media_pub_state', 'media_language', 'media_about_country',
-             'media_media_type']
+    props = [
+        'stories_id', 'publish_date', 'title', 'url', 'language', 'ap_syndicated',
+        'themes', 'subtopics',
+        'inlink_count', 'facebook_share_count', 'outlink_count', 'media_inlink_count', 'foci',
+        'media_id', 'media_name', 'media_url',
+        # 'media_pub_country', 'media_pub_state', 'media_language', 'media_about_country', 'media_media_type'
+    ]
 
     if fb_data:
         all_fb_count = []
@@ -275,6 +284,8 @@ def _topic_story_list_by_page_as_csv_row(user_key, topics_id, props, **kwargs):
         else:
             more_pages = False
         for s in page['stories']:
+            # first foci down to just the readable names
+            s['foci'] = [u"{}: {}".format(f['focal_set_name'], f['name']) for f in s['foci']]
             cleaned_row = csv.dict2row(props, s)
             row_string = u','.join(cleaned_row) + u'\n'
             yield row_string

@@ -32,7 +32,7 @@ export const sortTopicInfluentialMedia = createAction(SORT_TOPIC_INFLUENTIAL_MED
 // pass in media id
 export const selectMedia = createAction(SELECT_MEDIA, id => id);
 
-// pass in topic id, media id, snapshot id, timespan id
+// pass in topic id, media id, filters
 export const fetchMedia = createAsyncAction(FETCH_MEDIA, api.media);
 
 // pass in topic id, media id, snapshot id, timespan id

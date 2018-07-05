@@ -1,7 +1,7 @@
 import { SELECT_MEDIAPICKER_QUERY_ARGS, RESET_MEDIAPICKER_QUERY_ARGS } from '../../../actions/systemActions';
-import { PICK_COUNTRY } from '../../../lib/explorerUtil';
+import { PICK_FEATURED } from '../../../lib/explorerUtil';
 
-const INITIAL_STATE = { args: { type: PICK_COUNTRY, mediaKeyword: null } };
+const INITIAL_STATE = { args: { type: PICK_FEATURED, mediaKeyword: null } };
 
 function selectMediaQuery(state = INITIAL_STATE, action) {
   const updatedState = null;

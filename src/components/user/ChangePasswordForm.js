@@ -6,7 +6,7 @@ import { FormattedMessage } from 'react-intl';
 import AppButton from '../common/AppButton';
 import messages from '../../resources/messages';
 import { emptyString, passwordTooShort, stringsDoNotMatch } from '../../lib/formValidators';
-import composeIntlForm from '../common/IntlForm';
+import withIntlForm from '../common/hocs/IntlForm';
 
 const localMessages = {
   missingOldPassword: { id: 'user.missingOldPassword', defaultMessage: 'You need to enter your old password.' },
@@ -120,7 +120,7 @@ const reduxFormConfig = {
 };
 
 export default
-  composeIntlForm(
+  withIntlForm(
     reduxForm(reduxFormConfig)(
       ChangePasswordContainer
     )

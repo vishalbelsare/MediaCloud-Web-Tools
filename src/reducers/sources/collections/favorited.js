@@ -1,4 +1,4 @@
-import { FETCH_FAVORITE_COLLECTIONS } from '../../../actions/sourceActions';
+import { FETCH_FAVORITE_COLLECTIONS } from '../../../actions/systemActions';
 import { createAsyncReducer } from '../../../lib/reduxHelpers';
 
 const favorited = createAsyncReducer({

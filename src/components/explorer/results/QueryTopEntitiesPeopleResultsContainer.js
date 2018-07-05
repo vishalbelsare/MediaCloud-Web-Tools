@@ -1,67 +1,73 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { injectIntl, FormattedHTMLMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import MenuItem from 'material-ui/MenuItem';
 import composeSummarizedVisualization from './SummarizedVizualization';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import EntitiesTable from '../../common/EntitiesTable';
 import { resetEntitiesPeople, fetchTopEntitiesPeople, fetchDemoTopEntitiesPeople } from '../../../actions/explorerActions';
-import { queryChangedEnoughToUpdate, postToDownloadUrl } from '../../../lib/explorerUtil';
+import { postToDownloadUrl, COVERAGE_REQUIRED } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
-import QueryResultsSelector from './QueryResultsSelector';
+import composeQueryResultsSelector from './QueryResultsSelector';
 import { TAG_SET_CLIFF_PEOPLE } from '../../../lib/tagUtil';
 
 const localMessages = {
   title: { id: 'explorer.entities.title', defaultMessage: 'Top People' },
   person: { id: 'explorer.entities.person', defaultMessage: 'Person' },
   helpIntro: { id: 'explorer.entities.help.title', defaultMessage: '<p>Looking at <i>who</i> is being talked about can give you a sense of how the media is focusing on the issue you are investigating. This is a list of the people menntioned most often in a sampling of stories. Click on a name to add it to all your queries. Click the menu on the bottom right to download a CSV of all the people mentioned in a sample of stories.</p>' },
+  downloadCsv: { id: 'explorer.entities.downloadCsv', defaultMessage: 'Download { name } top people CSV' },
 };
 
 class QueryTopEntitiesPeopleResultsContainer extends React.Component {
-  state = {
-    selectedQueryIndex: 0,
-  }
-  componentWillReceiveProps(nextProps) {
-    const { lastSearchTime, fetchData } = this.props;
-    if (nextProps.lastSearchTime !== lastSearchTime) {
-      fetchData(nextProps.queries);
-    }
-  }
-  shouldComponentUpdate(nextProps) {
-    const { results, queries } = this.props;
-    return queryChangedEnoughToUpdate(queries, nextProps.queries, results, nextProps.results);
-  }
   downloadCsv = (query) => {
     postToDownloadUrl(`/api/explorer/tags/${TAG_SET_CLIFF_PEOPLE}/top-tags.csv`, query);
   }
   render() {
-    const { results, queries, handleEntitySelection } = this.props;
-    const { formatMessage } = this.props.intl;
+    const { results, queries, handleEntitySelection, tabSelector, selectedTabIndex } = this.props;
+    const { formatMessage, formatNumber } = this.props.intl;
+    let content = null;
+    if (results) {
+      const rawData = results[selectedTabIndex] ? results[selectedTabIndex].results : [];
+      const coverageRatio = results[selectedTabIndex] ? results[selectedTabIndex].coverage_percentage : 0;
+      if (coverageRatio > COVERAGE_REQUIRED) {
+        content = (
+          <div>
+            {rawData &&
+              <EntitiesTable
+                className="explorer-entity"
+                entityColNameMsg={localMessages.person}
+                entities={rawData}
+                onClick={e => handleEntitySelection(e, queries[0].searchId)}
+                maxTitleLength={50}
+              />
+            }
+          </div>
+        );
+      } else {
+        content = (
+          <p>
+            <FormattedHTMLMessage
+              {...messages.notEnoughCoverage}
+              values={{ pct: formatNumber(coverageRatio, { style: 'percent', maximumFractionDigits: 2 }) }}
+            />
+          </p>
+        );
+      }
+    }
     return (
       <div>
-        <QueryResultsSelector
-          options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
-          onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
-        />
-        {results[this.state.selectedQueryIndex] &&
-          <EntitiesTable
-            className="explorer-entity"
-            entityColNameMsg={localMessages.person}
-            entities={results[this.state.selectedQueryIndex].results}
-            onClick={e => handleEntitySelection(e, queries[0].searchId)}
-            maxTitleLength={50}
-          />
-        }
+        { tabSelector }
+        { content }
         <div className="actions">
           <ActionMenu actionTextMsg={messages.downloadOptions}>
             {queries.map((q, idx) =>
               <MenuItem
                 key={idx}
                 className="action-icon-menu-item"
-                primaryText={formatMessage(messages.downloadDataCsv, { name: q.label })}
+                primaryText={formatMessage(localMessages.downloadCsv, { name: q.label })}
                 rightIcon={<DownloadButton />}
                 onTouchTap={() => this.downloadCsv(q)}
               />
@@ -87,6 +93,8 @@ QueryTopEntitiesPeopleResultsContainer.propTypes = {
   // from state
   fetchStatus: PropTypes.string.isRequired,
   handleEntitySelection: PropTypes.func.isRequired,
+  selectedTabIndex: PropTypes.number.isRequired,
+  tabSelector: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -146,8 +154,10 @@ export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeSummarizedVisualization(localMessages.title, localMessages.helpIntro, [messages.entityHelpDetails])(
-        composeAsyncContainer(
-          QueryTopEntitiesPeopleResultsContainer
+        withAsyncFetch(
+          composeQueryResultsSelector(
+            QueryTopEntitiesPeopleResultsContainer
+          )
         )
       )
     )

@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import DataCard from '../DataCard';
-import composeHelpfulContainer from '../HelpfulContainer';
+import withHelp from '../hocs/HelpfulContainer';
 
 class Stat extends React.Component {
 
@@ -61,7 +61,7 @@ Stat.propTypes = {
 
 export default
   injectIntl(
-    composeHelpfulContainer()(
+    withHelp()(
       Stat
     )
   );

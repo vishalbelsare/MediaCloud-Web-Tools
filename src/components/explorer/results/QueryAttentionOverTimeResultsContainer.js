@@ -4,13 +4,14 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import MenuItem from 'material-ui/MenuItem';
 import { fetchQuerySplitStoryCount, fetchDemoQuerySplitStoryCount, resetSentenceCounts, setSentenceDataPoint, resetSentenceDataPoint } from '../../../actions/explorerActions';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import composeSummarizedVisualization from './SummarizedVizualization';
+import composeQueryResultsSelector from './QueryResultsSelector';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
 import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import { oneDayLater, solrFormat } from '../../../lib/dateUtil';
-import { queryChangedEnoughToUpdate, postToDownloadUrl } from '../../../lib/explorerUtil';
+import { postToDownloadUrl } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
 import { FETCH_INVALID } from '../../../lib/fetchConstants';
 
@@ -21,6 +22,7 @@ const localMessages = {
   descriptionDetail: { id: 'explorer.attention.lineChart.detail', defaultMessage: '<p>This chart includes one line for each query in your search. Each line charts the number of stories that matched your query per day in the sources and collections you have specified.</p><p>Roll over the line chart to see the stories per day in that period of time. Click the download button in the top right to download the raw counts in a CSV spreadsheet. Click the three lines in the top right of the chart to export the chart as an image file.</p>' },
   withKeywords: { id: 'explorer.attention.mode.withkeywords', defaultMessage: 'View Story Count (default)' },
   withoutKeywords: { id: 'explorer.attention.mode.withoutkeywords', defaultMessage: 'View Story Percentage' },
+  downloadCsv: { id: 'explorer.attention.downloadCsv', defaultMessage: 'Download { name } stories over time CSV' },
 };
 
 const VIEW_NORMALIZED = 'VIEW_NORMALIZED';
@@ -32,17 +34,6 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
     dateRange: null,
     clickedQuery: null,
     view: VIEW_REGULAR, // which view to show (see view constants above)
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const { lastSearchTime, fetchData } = this.props;
-    if (nextProps.lastSearchTime !== lastSearchTime) {
-      fetchData(nextProps.queries);
-    }
-  }
-  shouldComponentUpdate(nextProps) {
-    const { results, queries } = this.props;
-    return queryChangedEnoughToUpdate(queries, nextProps.queries, results, nextProps.results);
   }
 
   setView = (nextView) => {
@@ -57,9 +48,11 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
     // date calculations for span/range
     const clickedQuery = {
       q: currentQueryOfInterest.q,
-      start_date: solrFormat(date1),
+      start_date: solrFormat(date0),
       color: origin.series.color,
       dayGap,
+      sources: currentQueryOfInterest.sources.map(s => s.media_id),
+      collections: currentQueryOfInterest.collections.map(c => c.tags_id),
     };
     clickedQuery.end_date = solrFormat(oneDayLater(date1), true);
     this.setState({ clickedQuery });
@@ -114,7 +107,7 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
               <MenuItem
                 key={idx}
                 className="action-icon-menu-item"
-                primaryText={formatMessage(messages.downloadDataCsv, { name: q.label })}
+                primaryText={formatMessage(localMessages.downloadCsv, { name: q.label })}
                 rightIcon={<DownloadButton />}
                 onTouchTap={() => this.downloadCsv(q)}
               />
@@ -156,6 +149,8 @@ QueryAttentionOverTimeResultsContainer.propTypes = {
   // from state
   fetchStatus: PropTypes.string.isRequired,
   selectDataPoint: PropTypes.func.isRequired,
+  tabSelector: PropTypes.object,
+  selectedTabIndex: PropTypes.number,
 };
 
 const mapStateToProps = state => ({
@@ -213,8 +208,10 @@ export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeSummarizedVisualization(localMessages.lineChartTitle, localMessages.descriptionIntro, [localMessages.descriptionDetail, messages.countsVsPercentageHelp])(
-        composeAsyncContainer(
-          QueryAttentionOverTimeResultsContainer
+        withAsyncFetch(
+          composeQueryResultsSelector(
+            QueryAttentionOverTimeResultsContainer
+          )
         )
       )
     )

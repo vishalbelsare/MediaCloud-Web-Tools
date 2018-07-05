@@ -28,7 +28,7 @@ def api_explorer_geotag_count():
         current_search = SAMPLE_SEARCHES[search_id]['queries']
         solr_q, solr_fq = parse_query_with_args_and_sample_search(request.args, current_search)
     else:
-        solr_q, solr_fq= parse_query_with_keywords(request.args)
+        solr_q, solr_fq = parse_query_with_keywords(request.args)
     data = apicache.top_tags_with_coverage(solr_q, solr_fq, tags.GEO_TAG_SET)
     data['results'] = _filter_for_countries(data['results'])
     return jsonify(data)

@@ -3,11 +3,12 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import composeAsyncContainer from '../../common/AsyncContainer';
-import composeDescribedDataCard from '../../common/DescribedDataCard';
 import withSampleSize from '../../common/composers/SampleSize';
-import composeCsvDownloadNotifyContainer from '../../common/composers/CsvDownloadNotifyContainer';
+import withCsvDownloadNotifyContainer from '../../common/composers/CsvDownloadNotifyContainer';
 import { filteredLinkTo, filtersAsUrlParams } from '../../util/location';
+import withAsyncFetch from '../../common/hocs/AsyncContainer';
+import withDescription from '../../common/hocs/DescribedDataCard';
+import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
 import { fetchTopicTopWords } from '../../../actions/topicActions';
 import messages from '../../../resources/messages';
 import { generateParamStr } from '../../../lib/apiUtil';
@@ -93,7 +94,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     handleWordCloudClick: (word) => {
-      const params = generateParamStr({ ...stateProps.filters, stem: word.stem, term: word.term });
+      // imoprtant to pick term with the OR clause for other languages that we don't stem well
+      const params = generateParamStr({ ...stateProps.filters, stem: word.stem, term: word.term || word.stem });
       const url = `/topics/${ownProps.topicId}/words/${word.stem}*?${params}`;
       dispatchProps.pushToUrl(url);
     },
@@ -104,10 +106,10 @@ export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       withSampleSize(
-        composeDescribedDataCard(localMessages.descriptionIntro,
+        withDescription(localMessages.descriptionIntro,
           [messages.wordcloudHelpText, messages.wordCloudTopicWord2VecLayoutHelp])(
-          composeAsyncContainer(
-            composeCsvDownloadNotifyContainer(
+          withAsyncFetch(
+            withCsvDownloadNotifyContainer(
               WordsSummaryContainer
             )
           )

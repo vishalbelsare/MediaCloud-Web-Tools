@@ -4,7 +4,7 @@ import { Field, reduxForm } from 'redux-form';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import MenuItem from 'material-ui/MenuItem';
-import composeIntlForm from '../../../../common/IntlForm';
+import withIntlForm from '../../../../common/hocs/IntlForm';
 import FocalSetForm from './FocalSetForm';
 import { emptyString, nullOrUndefined } from '../../../../../lib/formValidators';
 import { FOCAL_TECHNIQUE_BOOLEAN_QUERY } from '../../../../../lib/focalTechniques';
@@ -151,7 +151,7 @@ const reduxFormConfig = {
 
 export default
   injectIntl(
-    composeIntlForm(
+    withIntlForm(
       reduxForm(reduxFormConfig)(
         FocusDescriptionForm
       )

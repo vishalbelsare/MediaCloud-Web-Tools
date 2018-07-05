@@ -36,11 +36,11 @@ const localMessages = {
   modeGoogleW2V: { id: 'wordcloud.editable.mode.googleW2V', defaultMessage: 'View GoogleNews Word2Vec 2D Layout' },
   noGoogleW2VData: { id: 'wordcloud.editable.mode.googleW2V.noData', defaultMessage: 'Sorry, but the Google News word2vec data is missing.' },
   invalidView: { id: 'wordcloud.editable.mode.invalid', defaultMessage: 'Sorry, but an invalid view is selected' },
-  downloadWordCSV: { id: 'wordcount.editable.download.wordCsv', defaultMessage: 'Download Word Frequency CSV' },
-  downloadBigramCSV: { id: 'wordcount.editable.download.brigramCsv', defaultMessage: 'Download Bigram Frequency CSV' },
-  downloadTrigramCSV: { id: 'wordcount.editable.download.trigramCsv', defaultMessage: 'Download Trigram Frequency CSV' },
-  sampleSize1k: { id: 'wordcloud.editable.samplesize.onek', defaultMessage: 'Use a sample of 1,000 stories (quick, default)' },
-  sampleSize10k: { id: 'wordcloud.editable.samplesize.tenk', defaultMessage: 'Use a sample of 10,000 stories (slower, more accurate)' },
+  downloadWordCSV: { id: 'wordcount.editable.download.wordCsv', defaultMessage: 'Download Sampled Word Frequency CSV' },
+  downloadBigramCSV: { id: 'wordcount.editable.download.brigramCsv', defaultMessage: 'Download Sampled Bigram Frequency CSV' },
+  downloadTrigramCSV: { id: 'wordcount.editable.download.trigramCsv', defaultMessage: 'Download Sampled Trigram Frequency CSV' },
+  sampleSize1k: { id: 'wordcloud.editable.samplesize.onek', defaultMessage: 'Sample 1,000 stories (quick, default)' },
+  sampleSize10k: { id: 'wordcloud.editable.samplesize.tenk', defaultMessage: 'Sample 10,000 stories (slower, slightly more accurate)' },
   learnMore: { id: 'wordcloud.editable.samplesize.learnMore', defaultMessage: 'Learn More' },
 };
 
@@ -289,10 +289,11 @@ class EditableWordCloudDataCard extends React.Component {
 
   render() {
     const { words, explore, onViewModeClick, width, height, maxFontSize, minFontSize, domId, actionsAsLinksUnderneath,
-      subHeaderContent, textAndLinkColor, border } = this.props;
+      subHeaderContent, textAndLinkColor, textColor, linkColor, border } = this.props;
     let className = 'editable-word-cloud-datacard';
     let editingClickHandler = onViewModeClick;
-    const textColor = textAndLinkColor || getBrandDarkColor();
+    const tColor = textAndLinkColor || textColor || getBrandDarkColor();
+    const lColor = textAndLinkColor || linkColor || getBrandDarkColor();
     let wordsArray = words.map(w => ({ ...w, display: true }));
     let editingWarning;
     const uniqueDomId = `${domId}-${(this.state.ordered ? 'ordered' : 'unordered')}`; // add mode to it so ordered or not works
@@ -318,8 +319,8 @@ class EditableWordCloudDataCard extends React.Component {
         cloudContent = (
           <OrderedWordCloud
             words={wordsArray}
-            textColor={textColor}
-            linkColor={textColor}
+            textColor={tColor}
+            linkColor={lColor}
             width={width}
             height={height}
             maxFontSize={maxFontSize}
@@ -333,8 +334,8 @@ class EditableWordCloudDataCard extends React.Component {
         cloudContent = (
           <WordCloud
             words={wordsArray}
-            textColor={textColor}
-            linkColor={textColor}
+            textColor={tColor}
+            linkColor={lColor}
             width={width}
             height={height}
             maxFontSize={maxFontSize}
@@ -404,6 +405,8 @@ EditableWordCloudDataCard.propTypes = {
   minFontSize: PropTypes.number,
   border: PropTypes.bool,
   textAndLinkColor: PropTypes.string,     // render the words in this color (instead of the brand dark color)
+  textColor: PropTypes.string,
+  linkColor: PropTypes.string,
   title: PropTypes.string,     // rendered as an H2 inside the DataCard
   words: PropTypes.array.isRequired,
   downloadUrl: PropTypes.string,          // used as the base for downloads, ngram_size appended for bigram/trigram download

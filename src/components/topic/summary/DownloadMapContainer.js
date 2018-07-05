@@ -2,8 +2,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import composeAsyncContainer from '../../common/AsyncContainer';
-import composeDescribedDataCard from '../../common/DescribedDataCard';
+import withAsyncFetch from '../../common/hocs/AsyncContainer';
+import withDescription from '../../common/hocs/DescribedDataCard';
 import DataCard from '../../common/DataCard';
 import LinkWithFilters from '../LinkWithFilters';
 import { fetchTopicMapFiles } from '../../../actions/topicActions';
@@ -20,6 +20,7 @@ const localMessages = {
   wordMap: { id: 'topic.summary.mapDownload.wordMap.header', defaultMessage: 'Word Map' },
   linkMap: { id: 'topic.summary.mapDownload.linkMap.header', defaultMessage: 'Link Map' },
   linkMapDownload: { id: 'topic.summary.mapDownload.linkMap.download', defaultMessage: 'Generate a .gexf link map.' },
+  unsupported: { id: 'topic.summary.mapDownload.unsupported', defaultMessage: 'Sorry, but we can\'t generate link maps or word maps when you are using a query filter.  Remove your "{q}" query filter if you want to generate these maps.' },
 };
 
 class DownloadMapContainer extends React.Component {
@@ -31,44 +32,55 @@ class DownloadMapContainer extends React.Component {
   }
   render() {
     const { topicId, filters, wordMapStatus } = this.props;
-    let wordMapContent = null;
-    switch (wordMapStatus) {
-      case 'generating':
-        wordMapContent = <FormattedMessage {...localMessages.generating} />;
-        break;
-      case 'rendered':
-        wordMapContent = (
-          <ul>
-            <li>
-              <a href={`/api/topics/${topicId}/map-files/wordMap.gexf?timespanId=${filters.timespanId}`}>
-                <FormattedMessage {...localMessages.downloadGexf} />
-              </a>
-            </li>
-            <li>
-              <a href={`/api/topics/${topicId}/map-files/wordMap.json?timespanId=${filters.timespanId}`}>
-                <FormattedMessage {...localMessages.downloadJson} />
-              </a>
-            </li>
-            <li>
-              <a href={`/api/topics/${topicId}/map-files/wordMap.txt?timespanId=${filters.timespanId}`}>
-                <FormattedMessage {...localMessages.downloadText} />
-              </a>
-            </li>
-          </ul>
-        );
-        break;
-      default:
+    let content;
+    if (filters.q) {
+      // maps generated with a q filter are not what people expect them to be, so don't support it
+      content = (<FormattedMessage {...localMessages.unsupported} values={{ q: filters.q }} />);
+    } else {
+      let wordMapContent;
+      switch (wordMapStatus) {
+        case 'generating':
+          wordMapContent = <FormattedMessage {...localMessages.generating} />;
+          break;
+        case 'rendered':
+          wordMapContent = (
+            <ul>
+              <li>
+                <a href={`/api/topics/${topicId}/map-files/wordMap.gexf?timespanId=${filters.timespanId}`}>
+                  <FormattedMessage {...localMessages.downloadGexf} />
+                </a>
+              </li>
+              <li>
+                <a href={`/api/topics/${topicId}/map-files/wordMap.json?timespanId=${filters.timespanId}`}>
+                  <FormattedMessage {...localMessages.downloadJson} />
+                </a>
+              </li>
+              <li>
+                <a href={`/api/topics/${topicId}/map-files/wordMap.txt?timespanId=${filters.timespanId}`}>
+                  <FormattedMessage {...localMessages.downloadText} />
+                </a>
+              </li>
+            </ul>
+          );
+          break;
+        default:
 
+      }
+      content = (
+        <div>
+          <h3><FormattedMessage {...localMessages.linkMap} />:</h3>
+          <p><LinkWithFilters to={`/topics/${topicId}/link-map`} ><FormattedMessage {...localMessages.linkMapDownload} /></LinkWithFilters></p>
+          <h3><FormattedMessage {...localMessages.wordMap} />:</h3>
+          {wordMapContent}
+        </div>
+      );
     }
     return (
       <DataCard>
         <h2>
           <FormattedMessage {...localMessages.title} />
         </h2>
-        <h3><FormattedMessage {...localMessages.linkMap} />:</h3>
-        <p><LinkWithFilters to={`/topics/${topicId}/link-map`} ><FormattedMessage {...localMessages.linkMapDownload} /></LinkWithFilters></p>
-        <h3><FormattedMessage {...localMessages.wordMap} />:</h3>
-        {wordMapContent}
+        {content}
       </DataCard>
     );
   }
@@ -107,8 +119,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeDescribedDataCard(localMessages.helpIntro, localMessages.helpText)(
-        composeAsyncContainer(
+      withDescription(localMessages.helpIntro, localMessages.helpText)(
+        withAsyncFetch(
           DownloadMapContainer
         )
       )

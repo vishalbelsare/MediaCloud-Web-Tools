@@ -3,12 +3,14 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import composeAsyncContainer from '../../common/AsyncContainer';
-import composeHelpfulContainer from '../../common/HelpfulContainer';
 import withSampleSize from '../../common/composers/SampleSize';
-import composeCsvDownloadNotifyContainer from '../../common/composers/CsvDownloadNotifyContainer';
+import withCsvDownloadNotifyContainer from '../../common/hocs/CsvDownloadNotifyContainer';
 import { filteredLinkTo, filtersAsUrlParams, combineQueryParams } from '../../util/location';
 import { fetchTopicTopWords } from '../../../actions/topicActions';
+import withAsyncFetch from '../../common/hocs/AsyncContainer';
+import withHelp from '../../common/hocs/HelpfulContainer';
+import { fetchMediaWords } from '../../../actions/topicActions';
+import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
 import messages from '../../../resources/messages';
 import { generateParamStr } from '../../../lib/apiUtil';
 import { VIEW_1K, mergeFilters } from '../../../lib/topicFilterUtil';
@@ -107,10 +109,10 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.wordCloudTopicWord2VecLayoutHelp])(
+      withHelp(localMessages.helpTitle, [localMessages.helpText, messages.wordCloudTopicWord2VecLayoutHelp])(
         withSampleSize(
-          composeAsyncContainer(
-            composeCsvDownloadNotifyContainer(
+          withAsyncFetch(
+            withCsvDownloadNotifyContainer(
               MediaWordsContainer
             )
           )

@@ -7,28 +7,28 @@ import Link from 'react-router/lib/Link';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { selectStory, fetchStory } from '../../../actions/topicActions';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import StoryWordsContainer from './StoryWordsContainer';
 import StoryInlinksContainer from './StoryInlinksContainer';
 import StoryOutlinksContainer from './StoryOutlinksContainer';
 import StoryEntitiesContainer from '../../common/story/StoryEntitiesContainer';
 import StoryNytThemesContainer from '../../common/story/StoryNytThemesContainer';
+import { TAG_SET_GEOGRAPHIC_PLACES, TAG_SET_NYT_THEMES } from '../../../lib/tagUtil';
+import StoryDetails from './StoryDetails';
+import StoryPlaces from './StoryPlaces';
 import messages from '../../../resources/messages';
 import { EditButton, RemoveButton, ReadItNowButton } from '../../common/IconButton';
 import ComingSoon from '../../common/ComingSoon';
 import StoryIcon from '../../common/icons/StoryIcon';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_TOPIC_WRITE, PERMISSION_STORY_EDIT } from '../../../lib/auth';
-import { TAG_SET_GEOGRAPHIC_PLACES, TAG_SET_NYT_THEMES } from '../../../lib/tagUtil';
 import StatBar from '../../common/statbar/StatBar';
 import AppButton from '../../common/AppButton';
-import StoryDetails from './StoryDetails';
-import StoryPlaces from './StoryPlaces';
 
 const MAX_STORY_TITLE_LENGTH = 70;  // story titles longer than this will be trimmed and ellipses added
 
 const localMessages = {
-  mainTitle: { id: 'story.details.mainTitle', defaultMessage: 'Story Details: {title}' },
+  mainTitle: { id: 'story.details.mainTitle', defaultMessage: 'Story: {title}' },
   removeTitle: { id: 'story.details.remove', defaultMessage: 'Remove from Next Snapshot' },
   removeAbout: { id: 'story.details.remove.about', defaultMessage: 'If story is clearly not related to the Topic, or is messing up your analysis, you can remove it from the next Snapshot.  Be careful, because this means it won\'t show up anywhere on the new Snapshot you generate.' },
   unknownLanguage: { id: 'story.details.language.unknown', defaultMessage: 'Unknown' },
@@ -44,7 +44,7 @@ class StoryContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.storiesId !== this.props.storiesId) {
       const { fetchData } = this.props;
-      fetchData(nextProps.storiesId);
+      fetchData(nextProps.storiesId, nextProps.filters);
     }
   }
 
@@ -56,15 +56,9 @@ class StoryContainer extends React.Component {
     this.setState({ open: false });
   };
 
-  handleReadItClick = () => {
-    const { story } = this.props;
-    window.open(story.url, '_blank');
-  }
-
   render() {
     const { story, topicId, storiesId, topicName } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
-    const titleHandler = parentTitle => `${formatMessage(messages.story)} | ${parentTitle}`;
     let displayTitle = story.title;
     if (story.title.length > MAX_STORY_TITLE_LENGTH) {
       displayTitle = `${story.title.substr(0, MAX_STORY_TITLE_LENGTH)}...`;
@@ -78,7 +72,7 @@ class StoryContainer extends React.Component {
     ];
     return (
       <div>
-        <Helmet><title>{titleHandler()}</title></Helmet>
+        <Helmet><title>{formatMessage(localMessages.mainTitle, { title: displayTitle })}</title></Helmet>
         <Grid>
           <Row>
             <Col lg={12}>
@@ -89,7 +83,9 @@ class StoryContainer extends React.Component {
                       <EditButton tooltip={formatMessage(localMessages.editStory)} />
                     </Link>
                   </Permissioned>
-                  <ReadItNowButton onClick={this.handleReadItClick} />
+                  <a href={story.url} target="_blank" rel="noopener noreferrer">
+                    <ReadItNowButton />
+                  </a>
                   <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
                     <RemoveButton tooltip={formatMessage(localMessages.removeTitle)} onClick={this.handleRemoveClick} />
                   </Permissioned>
@@ -142,14 +138,14 @@ class StoryContainer extends React.Component {
           <Row>
             <Col lg={6}>
               <StoryPlaces
-                tags={story.story_tags.filter(t => t.tag_sets_id === TAG_SET_GEOGRAPHIC_PLACES)}
+                tags={story.story_tags ? story.story_tags.filter(t => t.tag_sets_id === TAG_SET_GEOGRAPHIC_PLACES) : []}
                 geocoderVersion={story.geocoderVersion}
               />
             </Col>
             <Col lg={6}>
               <StoryNytThemesContainer
                 storyId={storiesId}
-                tags={story.story_tags.filter(t => t.tag_sets_id === TAG_SET_NYT_THEMES)}
+                tags={story.story_tags ? story.story_tags.filter(t => t.tag_sets_id === TAG_SET_NYT_THEMES) : []}
               />
             </Col>
           </Row>
@@ -184,10 +180,12 @@ StoryContainer.propTypes = {
   topicName: PropTypes.string.isRequired,
   topicId: PropTypes.number.isRequired,
   fetchStatus: PropTypes.string.isRequired,
+  filters: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({
   fetchStatus: state.topics.selected.story.info.fetchStatus,
+  filters: state.topics.selected.filters,
   storiesId: parseInt(ownProps.params.storiesId, 10),
   topicId: state.topics.selected.id,
   topicName: state.topics.selected.info.name,
@@ -195,23 +193,23 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  asyncFetch: () => {
-    dispatch(selectStory(ownProps.params.storiesId));
-    dispatch(fetchStory(ownProps.params.topicId, ownProps.params.storiesId));
-  },
-  fetchData: (storiesId) => {
+  fetchData: (storiesId, filters) => {
     dispatch(selectStory(storiesId));
-    dispatch(fetchStory(ownProps.params.topicId, storiesId));
+    dispatch(fetchStory(ownProps.params.topicId, storiesId, filters));
   },
 });
 
+function mergeProps(stateProps, dispatchProps, ownProps) {
+  return Object.assign({}, stateProps, dispatchProps, ownProps, {
+    asyncFetch: () => dispatchProps.fetchData(stateProps.storiesId, stateProps.filters),
+  });
+}
+
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
-      composeAsyncContainer(
-        injectIntl(
-          StoryContainer
-        )
+    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+      withAsyncFetch(
+        StoryContainer
       )
     )
   );

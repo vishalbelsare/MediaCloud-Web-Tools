@@ -100,7 +100,8 @@ def topic_word_stories_csv(topics_id, word):
 @flask_login.login_required
 @api_error_handler
 def topic_word_associated_words(topics_id, word):
-    response = apicache.topic_word_counts(user_mediacloud_key(), topics_id, q=word)[:100]
+    query = apicache.add_to_user_query(word)
+    response = apicache.topic_word_counts(user_mediacloud_key(), topics_id, q=query)[:100]
     return jsonify(response)
 
 

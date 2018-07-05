@@ -11,7 +11,7 @@ import AppButton from '../common/AppButton';
 import * as fetchConstants from '../../lib/fetchConstants';
 import messages from '../../resources/messages';
 import { emptyString, invalidEmail } from '../../lib/formValidators';
-import composeIntlForm from '../common/IntlForm';
+import withIntlForm from '../common/hocs/IntlForm';
 import { addNotice } from '../../actions/appActions';
 import { LEVEL_ERROR } from '../common/Notice';
 
@@ -143,7 +143,7 @@ const reduxFormConfig = {
 };
 
 export default
-  composeIntlForm(
+  withIntlForm(
     reduxForm(reduxFormConfig)(
       connect(mapStateToProps, mapDispatchToProps)(
         LoginFormComponent

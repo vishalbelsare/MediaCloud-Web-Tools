@@ -14,7 +14,8 @@ from server.util.config import ConfigException
 from server.auth import user_admin_mediacloud_client, user_mediacloud_key, user_name
 from server.util.request import json_error_response, form_fields_required, api_error_handler
 from server.views.sources.collection import allowed_file
-from server.views.sources import COLLECTIONS_TEMPLATE_PROPS_EDIT, COLLECTIONS_TEMPLATE_METADATA_PROPS
+from server.views.sources import SOURCE_LIST_CSV_EDIT_PROPS
+from server.util.csv import SOURCE_LIST_CSV_METADATA_PROPS
 from server.util.tags import VALID_METADATA_IDS, METADATA_PUB_COUNTRY_NAME, \
     format_name_from_label, tags_in_tag_set, media_with_tag
 
@@ -80,7 +81,12 @@ def upload_file():
     uploaded_file.save(filepath)
     time_file_saved = time.time()
     # parse all the source data out of the file
-    sources_to_update, sources_to_create = _parse_sources_from_csv_upload(filepath)
+    try: 
+        sources_to_update, sources_to_create = _parse_sources_from_csv_upload(filepath)
+    except Exception as e:
+        logger.error("Couldn't process a CSV row: " + str(e))
+        return jsonify({'status': 'Error', 'message': str(e)})
+    
     all_results = []
     all_errors = []
     if len(sources_to_create) > 300:
@@ -111,11 +117,13 @@ def upload_file():
         logger.debug("upload_file: {}".format(time_end - time_start))
         logger.debug("  save file: {}".format(time_file_saved - time_start))
         logger.debug("  processing: {}".format(time_end - time_file_saved))
-        return jsonify({'results': all_results})
+        return jsonify({'results': all_results, 'status': "Success"})
 
 
 def _parse_sources_from_csv_upload(filepath):
-    acceptable_column_names = COLLECTIONS_TEMPLATE_PROPS_EDIT
+    acceptable_column_names = list(SOURCE_LIST_CSV_EDIT_PROPS)
+    acceptable_column_names.remove('stories_per_day')
+    acceptable_column_names.remove('first_story')
     with open(filepath, 'rU') as f:
         reader = pycsv.DictReader(f)
         reader.fieldnames = acceptable_column_names
@@ -138,6 +146,9 @@ def _parse_sources_from_csv_upload(filepath):
                                 newline_decoded['url'][:8] not in [u'https://', 'https://']:
                     newline_decoded['url'] = u'http://{}'.format(newline_decoded['url'])
 
+                # sources must have a name
+                if 'name' not in newline_decoded:
+                    raise Exception("Missing name for a source id " + str(newline_decoded['media_id']) + " " + str(newline_decoded['url']))
                 if updatedSrc:
                     newline_decoded.update(empties)
                     sources_to_update.append(newline_decoded)
@@ -145,7 +156,7 @@ def _parse_sources_from_csv_upload(filepath):
                     sources_to_create.append(newline_decoded)
             except Exception as e:
                     logger.error("Couldn't process a CSV row: " + str(e))
-                    raise Exception("couldn't process a CSV row: " + str(e))
+                    raise Exception("Couldn't process a CSV row: " + str(e))
 
         return sources_to_update, sources_to_create
 
@@ -156,7 +167,7 @@ def _update_source_worker(source_info):
     media_id = source_info['media_id']
     # logger.debug("Updating media {}".format(media_id))
     source_no_metadata_no_id = {k: v for k, v in source_info.items() if k != 'media_id'
-                         and k not in COLLECTIONS_TEMPLATE_METADATA_PROPS}
+                                and k not in SOURCE_LIST_CSV_METADATA_PROPS}
     response = user_mc.mediaUpdate(media_id, source_no_metadata_no_id)
     return response
 
@@ -189,7 +200,7 @@ def _create_or_update_sources(source_list_from_csv, create_new):
         sources_to_create_no_metadata = []
         for src in sources_to_create:
             sources_to_create_no_metadata.append(
-                {k: v for k, v in src.items() if k not in COLLECTIONS_TEMPLATE_METADATA_PROPS})
+                {k: v for k, v in src.items() if k not in SOURCE_LIST_CSV_METADATA_PROPS})
         # parallelize media creation to make it faster
         chunk_size = 5  # @ 10, each call takes over a minute; @ 5 each takes around ~40 secs
         media_to_create_batches = [sources_to_create_no_metadata[x:x + chunk_size]

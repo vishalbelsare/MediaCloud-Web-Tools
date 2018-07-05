@@ -3,7 +3,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import { selectComparativeWordField, updateQuery } from '../../../actions/explorerActions';
 import { queryChangedEnoughToUpdate } from '../../../lib/explorerUtil';
 import { getBrandDarkColor } from '../../../styles/colors';
@@ -15,7 +15,8 @@ const localMessages = {
   title: { id: 'explorer.comparativeWords.title', defaultMessage: 'Compare Top Words' },
   intro: { id: 'explorer.comparativeWords.intro', defaultMessage: ' These words are the most used in each query. They are sized according to total count across all words in ...' },
   centerTitle: { id: 'explorer.comparativeWords.center', defaultMessage: 'Word used in both' },
-  sideTitle: { id: 'explorer.comparativeWords.right', defaultMessage: 'Words unique to {name}' },
+  sideTitle: { id: 'explorer.comparativeWords.right', defaultMessage: 'Words unique to {name} in the top 100 words in the sampled stories' },
+  downloadCsv: { id: 'explorer.entities.downloadCsv', defaultMessage: 'Download { name } word count comparison CSV' },
 
 };
 const LEFT = 0;
@@ -68,6 +69,7 @@ class QueryWordComparisonResultsContainer extends React.Component {
     }
   }
 
+  /* not currently utilized */
   downloadCsv = (query) => {
     let url = null;
     if (parseInt(query.searchId, 10) >= 0) {
@@ -191,7 +193,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeAsyncContainer(
+      withAsyncFetch(
         QueryWordComparisonResultsContainer
       )
     )

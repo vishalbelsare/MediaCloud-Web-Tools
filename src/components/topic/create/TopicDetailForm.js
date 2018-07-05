@@ -5,7 +5,7 @@ import { Field } from 'redux-form';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import { Card, CardHeader, CardText } from 'material-ui/Card';
 import MenuItem from 'material-ui/MenuItem';
-import composeIntlForm from '../../common/IntlForm';
+import withIntlForm from '../../common/hocs/IntlForm';
 import { TOPIC_FORM_MODE_EDIT } from './TopicForm';
 import { WarningNotice } from '../../common/Notice';
 import Permissioned from '../../common/Permissioned';
@@ -210,6 +210,6 @@ TopicDetailForm.propTypes = {
 };
 
 export default
-  composeIntlForm(
+  withIntlForm(
     TopicDetailForm
   );

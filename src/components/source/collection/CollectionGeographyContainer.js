@@ -2,21 +2,21 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import GeoChart from '../../vis/GeoChart';
 import DataCard from '../../common/DataCard';
 import { fetchCollectionGeo } from '../../../actions/sourceActions';
 import messages from '../../../resources/messages';
-import composeHelpfulContainer from '../../common/HelpfulContainer';
+import withHelp from '../../common/hocs/HelpfulContainer';
 import { DownloadButton } from '../../common/IconButton';
 import { getBrandLightColor } from '../../../styles/colors';
 import { getCurrentDate, oneMonthBefore } from '../../../lib/dateUtil';
 import { urlToExplorerQuery } from '../../../lib/urlUtil';
 
 const localMessages = {
-  title: { id: 'collection.summary.geo.title', defaultMessage: 'Geographic Attention' },
+  title: { id: 'collection.summary.geo.title', defaultMessage: 'Geographic Attention over the last month' },
   intro: { id: 'collection.summary.geo.info',
-    defaultMessage: '<p>Here is a heatmap of countries mentioned in this collection (based on a sample of stories). Darker countried are mentioned more. Click a country to load an Explorer search showing you how the sources in this collection cover it.</p>' },
+    defaultMessage: '<p>Here is a heatmap of countries mentioned in this collection. Darker countried are mentioned more. Click a country to load an Explorer search showing you how the sources in this collection cover it.</p>' },
   helpTitle: { id: 'collection.summary.geo.help.title', defaultMessage: 'About Geographic Attention' },
 };
 
@@ -83,8 +83,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeHelpfulContainer(localMessages.helpTitle, [localMessages.intro, messages.heatMapHelpText])(
-        composeAsyncContainer(
+      withHelp(localMessages.helpTitle, [localMessages.intro, messages.heatMapHelpText])(
+        withAsyncFetch(
           CollectionGeographyContainer
         )
       )

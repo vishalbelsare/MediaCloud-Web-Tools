@@ -4,13 +4,13 @@ import { injectIntl, FormattedHTMLMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import MenuItem from 'material-ui/MenuItem';
 import composeSummarizedVisualization from './SummarizedVizualization';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import { resetThemes, fetchTopThemes, fetchDemoTopThemes } from '../../../actions/explorerActions';
-import { queryChangedEnoughToUpdate, postToDownloadUrl, downloadExplorerSvg, COVERAGE_REQUIRED } from '../../../lib/explorerUtil';
+import { postToDownloadUrl, downloadExplorerSvg, COVERAGE_REQUIRED } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
-import QueryResultsSelector from './QueryResultsSelector';
+import composeQueryResultsSelector from './QueryResultsSelector';
 import { TAG_SET_NYT_THEMES } from '../../../lib/tagUtil';
 import mapD3Top10Colors from '../../../lib/colorUtil';
 import BubbleRowChart from '../../vis/BubbleRowChart';
@@ -21,33 +21,22 @@ const localMessages = {
   title: { id: 'explorer.themes.title', defaultMessage: 'Top Themes' },
   helpIntro: { id: 'explorer.themes.help.intro', defaultMessage: '<p>News coverage can be grouped into themes to identify the differing narratives.  This chart shows you how many stories match a fixed list of themes we detect in stories.</p>' },
   helpDetail: { id: 'explorer.themes.help.detail', defaultMessage: '<p>The larger the color circled, the more prominent it is in the stories that matched your query. The grey circle represents all the stories matching your query. The colored circle in the center represents the number of stories found that match each particular theme.</p>' },
+  downloadCsv: { id: 'explorer.themes.downloadCsv', defaultMessage: 'Download { name } NYT themes CSV' },
+  downloadSvg: { id: 'explorer.themes.downloadSvg', defaultMessage: 'Download { name } NYT themes SVG' },
 };
 
 class QueryThemesResultsContainer extends React.Component {
-  state = {
-    selectedQueryIndex: 0,
-  }
-  componentWillReceiveProps(nextProps) {
-    const { lastSearchTime, fetchData } = this.props;
-    if (nextProps.lastSearchTime !== lastSearchTime) {
-      fetchData(nextProps.queries);
-    }
-  }
-  shouldComponentUpdate(nextProps) {
-    const { results, queries } = this.props;
-    return queryChangedEnoughToUpdate(queries, nextProps.queries, results, nextProps.results);
-  }
   downloadCsv = (query) => {
     postToDownloadUrl(`/api/explorer/tags/${TAG_SET_NYT_THEMES}/top-tags.csv`, query);
   }
   render() {
-    const { results, queries, handleThemeClicked } = this.props;
+    const { results, queries, handleThemeClicked, selectedTabIndex, tabSelector } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
     let rawData = [];
     let content = null;
     if (results) {
-      rawData = results[this.state.selectedQueryIndex] ? results[this.state.selectedQueryIndex].results : [];
-      const coverageRatio = results[this.state.selectedQueryIndex] ? results[this.state.selectedQueryIndex].coverage_percentage : 0;
+      rawData = results[selectedTabIndex] ? results[selectedTabIndex].results : [];
+      const coverageRatio = results[selectedTabIndex] ? results[selectedTabIndex].coverage_percentage : 0;
       if (coverageRatio > COVERAGE_REQUIRED) {
         const data = rawData.slice(0, 4).map((info, idx) => ({
           value: info.pct, // info.count,
@@ -58,10 +47,6 @@ class QueryThemesResultsContainer extends React.Component {
         }));
         content = (
           <div>
-            <QueryResultsSelector
-              options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
-              onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
-            />
             <BubbleRowChart
               data={data}
               maxBubbleRadius={60}
@@ -72,27 +57,6 @@ class QueryThemesResultsContainer extends React.Component {
               asPercentage
               minCutoffValue={0.05}
             />
-            <div className="actions">
-              <ActionMenu actionTextMsg={messages.downloadOptions}>
-                {queries.map((q, idx) =>
-                  <span key={`q${idx}-items`}>
-                    <MenuItem
-                      key={idx}
-                      className="action-icon-menu-item"
-                      primaryText={formatMessage(messages.downloadDataCsv, { name: q.label })}
-                      rightIcon={<DownloadButton />}
-                      onTouchTap={() => this.downloadCsv(q)}
-                    />
-                    <MenuItem
-                      className="action-icon-menu-item"
-                      primaryText={formatMessage(messages.downloadDataSvg, { name: q.label })}
-                      rightIcon={<DownloadButton />}
-                      onTouchTap={() => downloadExplorerSvg(q.label, 'sampled-nyt_labels', BUBBLE_CHART_DOM_ID)}
-                    />
-                  </span>
-                )}
-              </ActionMenu>
-            </div>
           </div>
         );
       } else {
@@ -106,7 +70,33 @@ class QueryThemesResultsContainer extends React.Component {
         );
       }
     }
-    return (content);
+    return (
+      <div>
+        { tabSelector }
+        { content }
+        <div className="actions">
+          <ActionMenu actionTextMsg={messages.downloadOptions}>
+            {queries.map((q, idx) =>
+              <span key={`q${idx}-items`}>
+                <MenuItem
+                  key={idx}
+                  className="action-icon-menu-item"
+                  primaryText={formatMessage(localMessages.downloadCsv, { name: q.label })}
+                  rightIcon={<DownloadButton />}
+                  onTouchTap={() => this.downloadCsv(q)}
+                />
+                <MenuItem
+                  className="action-icon-menu-item"
+                  primaryText={formatMessage(localMessages.downloadSvg, { name: q.label })}
+                  rightIcon={<DownloadButton />}
+                  onTouchTap={() => downloadExplorerSvg(q.label, 'sampled-nyt_themes', BUBBLE_CHART_DOM_ID)}
+                />
+              </span>
+            )}
+          </ActionMenu>
+        </div>
+      </div>
+    );
   }
 }
 
@@ -125,6 +115,8 @@ QueryThemesResultsContainer.propTypes = {
   // from state
   fetchStatus: PropTypes.string.isRequired,
   handleThemeClicked: PropTypes.func.isRequired,
+  selectedTabIndex: PropTypes.number.isRequired,
+  tabSelector: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -184,8 +176,10 @@ export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeSummarizedVisualization(localMessages.title, localMessages.helpIntro, [localMessages.helpDetail, messages.nytThemeHelpDetails])(
-        composeAsyncContainer(
-          QueryThemesResultsContainer
+        withAsyncFetch(
+          composeQueryResultsSelector(
+            QueryThemesResultsContainer
+          )
         )
       )
     )

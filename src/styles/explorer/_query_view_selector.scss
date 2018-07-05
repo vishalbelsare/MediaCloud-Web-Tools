@@ -8,3 +8,27 @@ ul.tab-selector {
     }
   }
 }
+
+.summarized-viz {
+  ul.tab-selector {
+    background-color: $material-grey100;
+    border-bottom: 1px solid #e0e0e0;
+    white-space: nowrap;
+    overflow-x: scroll;
+    li:first-child {
+      border-left: 1px solid #e0e0e0;
+    }
+    li {
+      border-bottom: 0px;
+      font-weight: 300;
+      text-transform: none;
+      border-top: 1px solid #e0e0e0;
+      border-right: 1px solid #e0e0e0;
+    }
+    li.selected {
+      font-weight: 700;
+      background-color: #e0e0e0;
+      border-bottom: 0px;
+    }
+  }
+}

@@ -5,7 +5,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { fetchSourceSuggestions } from '../../../../actions/sourceActions';
-import composeAsyncContainer from '../../../common/AsyncContainer';
+import withAsyncFetch from '../../../common/hocs/AsyncContainer';
 import SourceSuggestion from './SourceSuggestion';
 
 const localMessages = {
@@ -58,7 +58,7 @@ const mapDispatchToProps = dispatch => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeAsyncContainer(
+      withAsyncFetch(
         allSuggestionsContainer
       )
     )

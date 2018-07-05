@@ -6,7 +6,7 @@ import Link from 'react-router/lib/Link';
 import { Grid } from 'react-flexbox-grid/lib';
 import { Helmet } from 'react-helmet';
 import { selectCollection, fetchCollectionDetails } from '../../../actions/sourceActions';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import SourceControlBar from '../controlbar/SourceControlBar';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
@@ -121,7 +121,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeAsyncContainer(
+      withAsyncFetch(
         SelectCollectionContainer
       )
     )

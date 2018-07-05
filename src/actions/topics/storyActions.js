@@ -19,7 +19,7 @@ export const UPDATE_STORY = 'UPDATE_STORY';
 // pass in stories id
 export const selectStory = createAction(SELECT_STORY, id => id);
 
-// pass in topic id and story id
+// pass in topic id, story id, and filters
 export const fetchStory = createAsyncAction(FETCH_STORY, api.story);
 
 // pass in topic id and story id

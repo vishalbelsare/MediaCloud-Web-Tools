@@ -16,6 +16,7 @@ import NextIcon from 'material-ui/svg-icons/av/skip-next';
 import PreviousIcon from 'material-ui/svg-icons/av/skip-previous';
 import NotificationsIcon from 'material-ui/svg-icons/social/notifications';
 import NotificationsActiveIcon from 'material-ui/svg-icons/social/notifications-active';
+import slugify from 'slugify';
 import messages from '../../resources/messages';
 import ExploreIcon from './icons/ExploreIcon';
 import DownloadIcon from './icons/DownloadIcon';
@@ -99,7 +100,7 @@ function composeIconButton(Icon, defaultTooltipMessage, useBackgroundColor = tru
         content = button;
       }
       return (
-        <div className="icon-button">
+        <div className={`icon-button icon-button-${slugify(displayTooltip).toLowerCase()}`}>
           {content}
         </div>
       );

@@ -6,8 +6,8 @@ import MenuItem from 'material-ui/MenuItem';
 import { schemeCategory10 } from 'd3';
 import { push } from 'react-router-redux';
 import { fetchTopicNytLabelCounts, filterByQuery } from '../../../actions/topicActions';
-import composeAsyncContainer from '../../common/AsyncContainer';
-import composeDescribedDataCard from '../../common/DescribedDataCard';
+import withAsyncFetch from '../../common/hocs/AsyncContainer';
+import withDescription from '../../common/hocs/DescribedDataCard';
 import BubbleRowChart from '../../vis/BubbleRowChart';
 import { downloadSvg } from '../../util/svg';
 import DataCard from '../../common/DataCard';
@@ -204,8 +204,8 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeDescribedDataCard(localMessages.descriptionIntro, messages.nytThemeHelpDetails)(
-        composeAsyncContainer(
+      withDescription(localMessages.descriptionIntro, messages.nytThemeHelpDetails)(
+        withAsyncFetch(
           NytLabelSummaryContainer
         )
       )

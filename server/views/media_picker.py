@@ -91,7 +91,7 @@ def api_mediapicker_collection_search():
 @api_error_handler
 def api_explorer_featured_collections():
     featured_collections = _cached_featured_collection_list(FEATURED_COLLECTION_LIST)
-    return jsonify({'results': featured_collections})
+    return jsonify({'list': featured_collections})
 
 
 @cache.cache_on_arguments(function_key_generator=key_generator)

@@ -3,8 +3,8 @@ import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 // import ErrorIcon from 'material-ui/svg-icons/alert/error';
 import { reduxForm, FieldArray, Field, propTypes } from 'redux-form';
-import composeHelpfulContainer from '../HelpfulContainer';
-import composeIntlForm from '../../common/IntlForm';
+import withHelp from '../hocs/HelpfulContainer';
+import withIntlForm from '../../common/hocs/IntlForm';
 import SourceOrCollectionWidget from '../../common/SourceOrCollectionWidget';
 import { urlToSource, urlToCollection } from '../../../lib/urlUtil';
 
@@ -102,8 +102,8 @@ SourceCollectionsFieldList.propTypes = {
 
 export default
   injectIntl(
-    composeHelpfulContainer(localMessages.helpTitleMsg, localMessages.helpContentMsg)(
-      composeIntlForm(
+    withHelp(localMessages.helpTitleMsg, localMessages.helpContentMsg)(
+      withIntlForm(
         reduxForm({ propTypes })(
           SourceCollectionsFieldList
         )

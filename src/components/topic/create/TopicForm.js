@@ -4,7 +4,7 @@ import { reduxForm } from 'redux-form';
 import { FormattedMessage } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import AppButton from '../../common/AppButton';
-import composeIntlForm from '../../common/IntlForm';
+import withIntlForm from '../../common/hocs/IntlForm';
 import TopicDetailForm from './TopicDetailForm';
 import MediaPickerDialog from '../../common/mediaPicker/MediaPickerDialog';
 import SourceCollectionsMediaForm from '../../common/form/SourceCollectionsMediaForm';
@@ -180,7 +180,7 @@ const reduxFormConfig = {
 };
 
 export default
-  composeIntlForm(
+  withIntlForm(
     reduxForm(reduxFormConfig)(
       TopicForm
     )

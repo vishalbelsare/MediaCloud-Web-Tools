@@ -7,7 +7,7 @@ import FlatButton from 'material-ui/FlatButton';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { selectMedia, fetchMedia } from '../../../actions/topicActions';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import MediaInlinkContainer from './MediaInlinkContainer';
 import MediaOutlinkContainer from './MediaOutlinkContainer';
 import MediaStoriesContainer from './MediaStoriesContainer';
@@ -40,7 +40,7 @@ class MediaContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.mediaId !== this.props.mediaId) {
       const { fetchData } = this.props;
-      fetchData(nextProps.mediaId);
+      fetchData(nextProps.topicId, nextProps.mediaId, nextProps.filters);
     }
   }
 
@@ -51,11 +51,6 @@ class MediaContainer extends React.Component {
   handleRemoveDialogClose = () => {
     this.setState({ open: false });
   };
-
-  handleReadItClick = () => {
-    const { media } = this.props;
-    window.open(media.url, '_blank');
-  }
 
   render() {
     const { media, topicId, mediaId, filters, topicName } = this.props;
@@ -95,7 +90,9 @@ class MediaContainer extends React.Component {
             <Col lg={12} md={12} sm={12}>
               <h1>
                 <span className="actions">
-                  <ReadItNowButton onClick={this.handleReadItClick} />
+                  <a href={media.url} target="_blank" rel="noopener noreferrer">
+                    <ReadItNowButton />
+                  </a>
                   <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
                     <RemoveButton tooltip={formatMessage(localMessages.removeTitle)} onClick={this.handleRemoveClick} />
                   </Permissioned>
@@ -192,21 +189,26 @@ const mapStateToProps = (state, ownProps) => ({
   media: state.topics.selected.mediaSource.info,
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
-  asyncFetch: () => {
-    dispatch(selectMedia(ownProps.params.mediaId));    // save it to the state
-    dispatch(fetchMedia(ownProps.params.topicId, ownProps.params.mediaId)); // fetch the info we need
-  },
-  fetchData: (mediaId) => {
+const mapDispatchToProps = dispatch => ({
+  fetchData: (topicId, mediaId, filters) => {
     dispatch(selectMedia(mediaId));    // save it to the state
-    dispatch(fetchMedia(mediaId)); // fetch the info we need
+    dispatch(fetchMedia(topicId, mediaId, filters)); // fetch the info we need
   },
 });
 
+function mergeProps(stateProps, dispatchProps, ownProps) {
+  return Object.assign({}, stateProps, dispatchProps, ownProps, {
+    asyncFetch: () => {
+      dispatchProps.fetchData(stateProps.topicId, ownProps.params.mediaId, stateProps.filters);
+    },
+
+  });
+}
+
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
-      composeAsyncContainer(
+    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+      withAsyncFetch(
         MediaContainer
       )
     )

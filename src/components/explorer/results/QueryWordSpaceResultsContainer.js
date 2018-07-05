@@ -6,43 +6,35 @@ import MenuItem from 'material-ui/MenuItem';
 import ActionMenu from '../../common/ActionMenu';
 import composeSummarizedVisualization from './SummarizedVizualization';
 import { DownloadButton } from '../../common/IconButton';
-import { queryChangedEnoughToUpdate, postToDownloadUrl, downloadExplorerSvg } from '../../../lib/explorerUtil';
+import { postToDownloadUrl, downloadExplorerSvg } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
-import QueryResultsSelector from './QueryResultsSelector';
 import WordSpace from '../../vis/WordSpace';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import withAsyncFetch from '../../common/hocs/AsyncContainer';
+import composeQueryResultsSelector from './QueryResultsSelector';
 
 const localMessages = {
   title: { id: 'explorer.topWords.title', defaultMessage: 'Word Space' },
   descriptionIntro: { id: 'explorer.topWords.help.title', defaultMessage: '<p>Understanding which words are used together can help you find sub-conversations within the reporting about your issue.  We created this chart to show information about how the top 50 words are used. The bigger and darker a word is, the more it is used. Words are laid out based on how they are used in general news reporting (not based on the stories matching your query). Rollover a word to highlight words used in similar phrases in general news reporting.</p>' },
   noGoogleW2VData: { id: 'wordcloud.editable.mode.googleW2V.noData', defaultMessage: 'Sorry, but the Google News word2vec data is missing.' },
+  downloadCsv: { id: 'explorer.googleW2V.downloadCsv', defaultMessage: 'Download { name } word space CSV' },
+  downloadSvg: { id: 'explorer.googleW2V.downloadSvg', defaultMessage: 'Download { name } word space SVG' },
 };
 
 const WORD_SPACE_DOM_ID = 'query-word-space-wrapper';
 
 class QueryWordSpaceResultsContainer extends React.Component {
-  state = {
-    selectedQueryIndex: 0,
-  }
-  shouldComponentUpdate(nextProps) {
-    const { results, queries } = this.props;
-    return queryChangedEnoughToUpdate(queries, nextProps.queries, results, nextProps.results);
-  }
   handleDownloadCsv = (query) => {
     postToDownloadUrl('/api/explorer/words/wordcount.csv', query);
   }
   render() {
-    const { results, queries } = this.props;
+    const { results, queries, selectedTabIndex, tabSelector } = this.props;
     const { formatMessage } = this.props.intl;
-    const domId = `${WORD_SPACE_DOM_ID}-${this.state.selectedQueryIndex}`;
+    const domId = `${WORD_SPACE_DOM_ID}-${selectedTabIndex}`;
     return (
       <div>
-        <QueryResultsSelector
-          options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
-          onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
-        />
+        {tabSelector}
         <WordSpace
-          words={results[this.state.selectedQueryIndex].list.slice(0, 50)}
+          words={results[selectedTabIndex].list.slice(0, 50)}
           domId={domId}
           xProperty="google_w2v_x"
           yProperty="google_w2v_y"
@@ -55,13 +47,13 @@ class QueryWordSpaceResultsContainer extends React.Component {
               <span key={`wordspace-actions-${idx}`}>
                 <MenuItem
                   className="action-icon-menu-item"
-                  primaryText={formatMessage(messages.downloadDataCsv, { name: q.label })}
+                  primaryText={formatMessage(localMessages.downloadCsv, { name: q.label })}
                   rightIcon={<DownloadButton />}
                   onTouchTap={() => this.handleDownloadCsv(q)}
                 />
                 <MenuItem
                   className="action-icon-menu-item"
-                  primaryText={formatMessage(messages.downloadDataSvg, { name: q.label })}
+                  primaryText={formatMessage(localMessages.downloadSvg, { name: q.label })}
                   rightIcon={<DownloadButton />}
                   onTouchTap={() => {
                     const svgChild = document.getElementById(domId);
@@ -85,6 +77,8 @@ QueryWordSpaceResultsContainer.propTypes = {
   onQueryModificationRequested: PropTypes.func.isRequired,
   // from composition
   intl: PropTypes.object.isRequired,
+  selectedTabIndex: PropTypes.number.isRequired,
+  tabSelector: PropTypes.object.isRequired,
   // from dispatch
   handleWordCloudClick: PropTypes.func.isRequired,
   asyncFetch: PropTypes.func.isRequired,
@@ -105,14 +99,19 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   asyncFetch: () => {
     // pass through because the WordsResults container fetches all the data for us!
   },
+  fetchData: () => {
+    // pass through because the WordsResults container fetches all the data for us!
+  },
 });
 
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
       composeSummarizedVisualization(localMessages.title, localMessages.descriptionIntro, messages.wordSpaceLayoutHelp)(
-        composeAsyncContainer(
-          QueryWordSpaceResultsContainer
+        withAsyncFetch(
+          composeQueryResultsSelector(
+            QueryWordSpaceResultsContainer
+          )
         )
       )
     )

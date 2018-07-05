@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { replace, push } from 'react-router-redux';
 import { fetchTopicTimespansList, filterByTimespan, toggleTimespanControls, setTimespanVisiblePeriod }
   from '../../../../actions/topicActions';
-import composeAsyncContainer from '../../../common/AsyncContainer';
+import withAsyncFetch from '../../../common/hocs/AsyncContainer';
 import { filteredLocation } from '../../../util/location';
 import TimespanSelector from './TimespanSelector';
 
@@ -151,7 +151,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 
 export default
   connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-    composeAsyncContainer(
+    withAsyncFetch(
       TimespanSelectorContainer
     )
   );

@@ -10,10 +10,13 @@ export const DEFAULT_COLLECTION = 58722749;
 
 export const DEFAULT_COLLECTION_OBJECT_ARRAY = [{ id: DEFAULT_COLLECTION, tags_id: DEFAULT_COLLECTION, label: 'U.S. Top Online News 2017' }];
 
-export const PICK_COLLECTION = 0;
-export const PICK_SOURCE = 1;
-export const PICK_COUNTRY = 2;
-export const PICK_ADVANCED = 3;
+export const PICK_FEATURED = 0;
+export const PICK_COUNTRY = 1;
+export const PICK_COLLECTION = 2;
+export const PICK_SOURCE = 3;
+
+// export const PICK_ADVANCED = 3;
+
 
 export const COVERAGE_REQUIRED = 0.8;
 
