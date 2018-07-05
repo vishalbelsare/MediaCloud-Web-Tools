@@ -6,7 +6,7 @@ import composeSummarizedVisualization from './SummarizedVizualization';
 import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import { fetchQueryTopWords, fetchDemoQueryTopWords, resetTopWords, selectWord }
 from '../../../actions/explorerActions';
-import { postToDownloadUrl, slugifiedQueryLabel } from '../../../lib/explorerUtil';
+import { postToDownloadUrl, slugifiedQueryLabel, queryChangedEnoughToUpdate } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
 import composeQueryResultsSelector from './QueryResultsSelector';
 import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
@@ -45,14 +45,14 @@ class QueryWordsResultsContainer extends React.Component {
       <EditableWordCloudDataCard
         actionMenuHeaderText={formatMessage(localMessages.menuHeader, { queryName: selectedQuery.label })}
         onViewSampleSizeClick={sampleSize => fetchData(queries, sampleSize)}
-        initSampleSize={results[this.state.selectedQueryIndex].sample_size}
+        initSampleSize={results[selectedQueryIndex].sample_size}
         subHeaderContent={tabSelector}
         words={results[selectedQueryIndex].list}
         onViewModeClick={this.handleWordClick}
         border={false}
         domId={WORD_CLOUD_DOM_ID}
         width={585}
-        onDownload={ngramSize => this.handleDownload(selectedQuery, ngramSize, results[this.state.selectedQueryIndex].sample_size)}
+        onDownload={ngramSize => this.handleDownload(selectedQuery, ngramSize, results[selectedQueryIndex].sample_size)}
         svgDownloadPrefix={`${slugifiedQueryLabel(selectedQuery.label)}-ngram-1`}
         textColor={selectedQuery.color}
         actionsAsLinksUnderneath

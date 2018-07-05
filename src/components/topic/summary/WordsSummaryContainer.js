@@ -4,7 +4,7 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import withSampleSize from '../../common/composers/SampleSize';
-import withCsvDownloadNotifyContainer from '../../common/composers/CsvDownloadNotifyContainer';
+import withCsvDownloadNotifyContainer from '../../common/hocs/CsvDownloadNotifyContainer';
 import { filteredLinkTo, filtersAsUrlParams } from '../../util/location';
 import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import withDescription from '../../common/hocs/DescribedDataCard';
@@ -12,7 +12,6 @@ import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
 import { fetchTopicTopWords } from '../../../actions/topicActions';
 import messages from '../../../resources/messages';
 import { generateParamStr } from '../../../lib/apiUtil';
-import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
 import { topicDownloadFilename } from '../../util/topicUtil';
 
 const WORD_CLOUD_DOM_ID = 'topic-summary-media-word-cloud';

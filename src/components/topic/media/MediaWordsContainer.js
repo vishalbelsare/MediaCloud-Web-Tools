@@ -9,12 +9,10 @@ import { filteredLinkTo, filtersAsUrlParams, combineQueryParams } from '../../ut
 import { fetchTopicTopWords } from '../../../actions/topicActions';
 import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import withHelp from '../../common/hocs/HelpfulContainer';
-import { fetchMediaWords } from '../../../actions/topicActions';
 import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
 import messages from '../../../resources/messages';
 import { generateParamStr } from '../../../lib/apiUtil';
 import { VIEW_1K, mergeFilters } from '../../../lib/topicFilterUtil';
-import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
 import { topicDownloadFilename } from '../../util/topicUtil';
 
 const localMessages = {
