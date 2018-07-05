@@ -27,6 +27,7 @@ logger = logging.getLogger(__name__)
 def story_info(stories_id):
     user_mc = user_mediacloud_client()
     story = user_mc.story(stories_id)
+    story["media"] = user_mc.media(story["media_id"])
     return jsonify({'info': story})
 
 

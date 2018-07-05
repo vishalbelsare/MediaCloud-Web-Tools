@@ -20,32 +20,35 @@ const localMessages = {
  **/
 const SourceMetadataStatBar = (props) => {
   const { columnWidth, source } = props;
-  return (
-    <div className="source-metadata-stat-bar">
-      <StatBar
-        columnWidth={columnWidth || 3}
-        stats={[
-          { message: localMessages.pubCountry, data: source.pubCountryTag ? source.pubCountryTag.label : '?' },
-          { message: localMessages.pubState, data: source.pubStateTag ? source.pubStateTag.label : '?' },
-          { message: localMessages.primaryLanguage,
-            data: source.primaryLangaugeTag ? source.primaryLangaugeTag.label : '?',
-            helpTitleMsg: localMessages.primaryLanguage,
-            helpContentMsg: localMessages.languageHelpContent,
-          },
-          { message: localMessages.countryOfFocus,
-            data: source.countryOfFocusTag ? source.countryOfFocusTag.label : '?',
-            helpTitleMsg: messages.entityHelpTitle,
-            helpContentMsg: [localMessages.geoHelpDetailedContent, messages.entityHelpContent],
-          },
-          { message: localMessages.mediaType,
-            data: source.mediaTypeTag ? source.mediaTypeTag.label : '?',
-            helpTitleMsg: messages.mediaTypeHelpTitle,
-            helpContentMsg: messages.mediaTypeHelpContent,
-          },
-        ]}
-      />
-    </div>
-  );
+  if (source && source.metadata) {
+    return (
+      <div className="source-metadata-stat-bar">
+        <StatBar
+          columnWidth={columnWidth || 3}
+          stats={[
+            { message: localMessages.pubCountry, data: source.metadata.pub_country ? source.metadata.pub_country.label : '?' },
+            { message: localMessages.pubState, data: source.metadata.pub_state ? source.metadata.pub_state.label : '?' },
+            { message: localMessages.primaryLanguage,
+              data: source.language ? source.metadata.language.label : '?',
+              helpTitleMsg: localMessages.primaryLanguage,
+              helpContentMsg: localMessages.languageHelpContent,
+            },
+            { message: localMessages.countryOfFocus,
+              data: source.metadata.about_country ? source.metadata.about_country.label : '?',
+              helpTitleMsg: messages.entityHelpTitle,
+              helpContentMsg: [localMessages.geoHelpDetailedContent, messages.entityHelpContent],
+            },
+            { message: localMessages.mediaType,
+              data: source.metadata.media_type ? source.metadata.media_type.label : '?',
+              helpTitleMsg: messages.mediaTypeHelpTitle,
+              helpContentMsg: messages.mediaTypeHelpContent,
+            },
+          ]}
+        />
+      </div>
+    );
+  }
+  return <div />;
 };
 
 SourceMetadataStatBar.propTypes = {

@@ -10,11 +10,12 @@ import { fetchStory, resetStory } from '../../../../actions/storyActions';
 import withHelp from '../../../common/hocs/HelpfulContainer';
 import withAsyncFetch from '../../../common/hocs/AsyncContainer';
 import DataCard from '../../../common/DataCard';
-import StoryDetails from '../../../common/story/StoryDetails';
 import StoryEntitiesContainer from '../../../common/story/StoryEntitiesContainer';
 import StoryNytThemesContainer from '../../../common/story/StoryNytThemesContainer';
+import SourceMetadataStatBar from '../../../common/SourceMetadataStatBar';
 import messages from '../../../../resources/messages';
 import { downloadSvg } from '../../../util/svg';
+import { urlToSource } from '../../../../lib/urlUtil';
 
 const localMessages = {
   title: { id: 'word.inContext.title', defaultMessage: 'Details for: {title}' },
@@ -24,7 +25,8 @@ const localMessages = {
   },
   close: { id: 'drilldown.story.inContext.close', defaultMessage: 'Close' },
   readThisStory: { id: 'drilldown.story.readThisStory', defaultMessage: 'Read This Story' },
-  addingToQueries: { id: 'explorer.topWords.addingToQueries', defaultMessage: 'Running your updated search now.' },
+  fullDescription: { id: 'explorer.story.fullDescription', defaultMessage: 'Published in {media} on {publishDate} in {language}' },
+  published: { id: 'explorer.story.published', defaultMessage: 'Published in {media}' },
 };
 
 class SelectedStoryDrillDownContainer extends React.Component {
@@ -56,7 +58,7 @@ class SelectedStoryDrillDownContainer extends React.Component {
   }
   render() {
     const { storyId, storyInfo, handleClose, helpButton } = this.props;
-    const { formatMessage } = this.props.intl;
+    const { formatMessage, formatDate } = this.props.intl;
 
     let content = null;
     if (storyId) {
@@ -79,23 +81,21 @@ class SelectedStoryDrillDownContainer extends React.Component {
               <FormattedMessage {...localMessages.title} values={{ title: storyInfo.title }} />
               {helpButton}
             </h2>
-            <p>Published in <a href="source-manager-media-url">{storyInfo.media_name}</a> on {storyInfo.publish_date}. Written in {storyInfo.language}</p>
+            <a href={urlToSource(storyInfo.media_id)}><FormattedMessage {...localMessages.fullDescription} values={{ media: storyInfo.media_name, publishDate: formatDate(storyInfo.publish_date), language: storyInfo.language }} /></a>
             <Row>
-              <Col lg={12}>
-                <StoryDetails story={storyInfo} queryId={storyInfo.queryId} />
-              </Col>
-            </Row>
-            <Row>
-              <Col lg={12}>
+              <Col lg={9}>
                 <StoryEntitiesContainer storyId={storyId} />
               </Col>
-            </Row>
-            <Row>
-              <Col lg={12}>
+              <Col lg={3}>
                 <StoryNytThemesContainer storyId={storyId} />
               </Col>
             </Row>
-            <h2>Published in {storyInfo.media_name}</h2>
+            <h2><FormattedMessage {...localMessages.published} values={{ media: storyInfo.media_name }} /></h2>
+            <Row>
+              <Col lg={12}>
+                <SourceMetadataStatBar source={storyInfo.media} />
+              </Col>
+            </Row>
           </DataCard>
         </div>
       );
