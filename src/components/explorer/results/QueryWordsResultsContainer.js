@@ -25,7 +25,7 @@ class QueryWordsResultsContainer extends React.Component {
   }
   handleWordClick = (wordDataPoint) => {
     const { handleSelectedWord, selectedQuery } = this.props;
-    handleSelectedWord(selectedQuery, wordDataPoint.stem);
+    handleSelectedWord(selectedQuery, wordDataPoint.term);
   }
   render() {
     const { results, queries, tabSelector, selectedQueryIndex } = this.props;
