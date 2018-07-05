@@ -16,11 +16,13 @@ import { getBrandDarkColor } from '../../styles/colors';
 import { downloadSvg } from '../util/svg';
 import ActionMenu from './ActionMenu';
 import { WarningNotice } from '../common/Notice';
+import { VIEW_1K, VIEW_10K } from '../../lib/topicFilterUtil';
 
 const VIEW_CLOUD = 'VIEW_CLOUD';
 const VIEW_ORDERED = 'VIEW_ORDERED';
 const VIEW_GOOGLE_W2V = 'VIEW_GOOGLE_W2V';
 const VIEW_TOPIC_W2V = 'VIEW_TOPIC_W2V';
+
 
 const WORD_SPACE_WORD_LIMIT = 50;
 
@@ -37,6 +39,9 @@ const localMessages = {
   downloadWordCSV: { id: 'wordcount.editable.download.wordCsv', defaultMessage: 'Download Sampled Word Frequency CSV' },
   downloadBigramCSV: { id: 'wordcount.editable.download.brigramCsv', defaultMessage: 'Download Sampled Bigram Frequency CSV' },
   downloadTrigramCSV: { id: 'wordcount.editable.download.trigramCsv', defaultMessage: 'Download Sampled Trigram Frequency CSV' },
+  sampleSize1k: { id: 'wordcloud.editable.samplesize.onek', defaultMessage: 'Sample 1,000 stories (quick, default)' },
+  sampleSize10k: { id: 'wordcloud.editable.samplesize.tenk', defaultMessage: 'Sample 10,000 stories (slower, slightly more accurate)' },
+  learnMore: { id: 'wordcloud.editable.samplesize.learnMore', defaultMessage: 'Learn More' },
 };
 
 class EditableWordCloudDataCard extends React.Component {
@@ -61,6 +66,10 @@ class EditableWordCloudDataCard extends React.Component {
     this.setState({ view: nextView });
   }
 
+  goToBlog = () => {
+    window.location = '';
+  }
+
   isShowingAllWords = () => (this.state.modifiableWords.length === this.state.displayOnlyWords.length);
 
   toggleEditing = () => {
@@ -81,6 +90,7 @@ class EditableWordCloudDataCard extends React.Component {
 
   downloadCsv = (ngramSize) => {
     const { downloadUrl, onDownload } = this.props;
+    const sampleSize = this.props.initSampleSize;
     if (onDownload) {
       onDownload(ngramSize);
     } else {
@@ -93,12 +103,19 @@ class EditableWordCloudDataCard extends React.Component {
           url = `${url}?ngram_size=${ngramSize}`;
         }
       }
+      if (sampleSize) {
+        if (url.indexOf('?') !== -1) {
+          url = `${url}&sample_size=${sampleSize}`;
+        } else {
+          url = `${url}?sample_size=${sampleSize}`;
+        }
+      }
       window.location = url;
     }
   };
 
   buildActionMenu = (uniqueDomId) => {
-    const { includeTopicWord2Vec, hideGoogleWord2Vec, actionMenuHeaderText, actionsAsLinksUnderneath, svgDownloadPrefix } = this.props;
+    const { includeTopicWord2Vec, hideGoogleWord2Vec, actionMenuHeaderText, actionsAsLinksUnderneath, svgDownloadPrefix, onViewSampleSizeClick, initSampleSize } = this.props;
     const { formatMessage } = this.props.intl;
     let topicWord2VecMenuItem;
     if (includeTopicWord2Vec === true) {
@@ -123,6 +140,28 @@ class EditableWordCloudDataCard extends React.Component {
       );
     }
     const actionMenuSubHeaderContent = actionMenuHeaderText ? <Subheader>{actionMenuHeaderText}</Subheader> : null;
+    const sampleSizeOptions = (
+      <span>
+        <MenuItem
+          className="action-icon-menu-item"
+          primaryText={formatMessage(localMessages.sampleSize1k)}
+          disabled={initSampleSize === VIEW_1K}
+          onClick={() => onViewSampleSizeClick(VIEW_1K)}
+        />
+        <MenuItem
+          className="action-icon-menu-item"
+          primaryText={formatMessage(localMessages.sampleSize10k)}
+          disabled={initSampleSize === VIEW_10K}
+          onClick={() => onViewSampleSizeClick(VIEW_10K)}
+        />
+        <Divider />
+        <MenuItem
+          className="action-icon-menu-item"
+          primaryText={formatMessage(localMessages.learnMore)}
+          onClick={this.goToBlog}
+        />
+      </span>
+    );
     const viewOptions = (
       <span>
         <MenuItem
@@ -196,6 +235,10 @@ class EditableWordCloudDataCard extends React.Component {
     if (actionsAsLinksUnderneath) {
       actionMenuContent = (
         <div className="action-menu-set">
+          <ActionMenu actionTextMsg={messages.viewSampleOptions}>
+            {actionMenuSubHeaderContent}
+            {sampleSizeOptions}
+          </ActionMenu>
           <ActionMenu actionTextMsg={messages.viewOptions}>
             {actionMenuSubHeaderContent}
             {viewOptions}
@@ -213,6 +256,8 @@ class EditableWordCloudDataCard extends React.Component {
           {viewOptions}
           <Divider />
           {downloadOptions}
+          <Divider />
+          {sampleSizeOptions}
         </ActionMenu>
       );
     }
@@ -375,6 +420,8 @@ EditableWordCloudDataCard.propTypes = {
   includeTopicWord2Vec: PropTypes.bool,   // show an option to draw a word2vec map basde on w2v_x / w2v_y from topic-specific model
   hideGoogleWord2Vec: PropTypes.bool,        // show an option to draw a word2vec map basde on w2v_x / w2v_y from GoogleNews model
   onViewModeClick: PropTypes.func.isRequired,
+  onViewSampleSizeClick: PropTypes.func,
+  initSampleSize: PropTypes.string,
   actionsAsLinksUnderneath: PropTypes.bool, // show the actions as links under the viz (ie. in a SummarizedVisualization card)
   domId: PropTypes.string.isRequired,     // unique dom id needed to support CSV downloading
   // from compositional chain

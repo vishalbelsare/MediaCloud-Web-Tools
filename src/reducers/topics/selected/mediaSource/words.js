@@ -1,14 +1,12 @@
-import { FETCH_MEDIA_WORDS } from '../../../../actions/topicActions';
+import { FETCH_TOPIC_TOP_WORDS } from '../../../../actions/topicActions';
 import { createAsyncReducer } from '../../../../lib/reduxHelpers';
 
 const words = createAsyncReducer({
   initialState: {
-    list: [],
+    list: [],   // the thing you queried for
+    totals: [], // options topic/focus-level totals to compare to
   },
-  action: FETCH_MEDIA_WORDS,
-  handleSuccess: payload => ({
-    list: payload,
-  }),
+  action: FETCH_TOPIC_TOP_WORDS,
 });
 
 export default words;
