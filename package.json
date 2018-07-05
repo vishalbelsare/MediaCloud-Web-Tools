@@ -5,7 +5,7 @@
   "scripts": {
     "sources-dev": "NODE_ENV=dev node_modules/.bin/webpack-dev-server --port 2992 --content-base build/public --hot --inline --history-api-fallback --config config/webpack.sources.config.babel.js",
     "sources-release": "NODE_ENV=production webpack --progress -p --config config/webpack.sources.config.babel.js",
-    "topics-dev": "NODE_ENV=dev node_modules/.bin/webpack-dev-server --port 2992 --content-base build/public --hot --inline --history-api-fallback --config config/webpack.topics.config.babel.js",
+    "topics-dev": "node_modules/.bin/webpack-dev-server --port 2992 --content-base build/public --hot --inline --history-api-fallback --config config/webpack.topics.config.babel.js",
     "topics-release": "NODE_ENV=production webpack --progress -p --config config/webpack.topics.config.babel.js",
     "tools-dev": "NODE_ENV=dev node_modules/.bin/webpack-dev-server --port 2992 --content-base build/public --hot --inline --history-api-fallback --config config/webpack.tools.config.babel.js",
     "tools-release": "NODE_ENV=production webpack --progress -p --config config/webpack.tools.config.babel.js",
@@ -63,7 +63,10 @@
     "redux-logger": "3.0.6",
     "redux-simple-promise": "2.0.2",
     "redux-thunk": "2.2.0",
-    "slugify": "^1.2.9"
+    "slugify": "^1.2.9",
+    "vega-embed": "^3.17.0",
+    "vega-lib": "^4.0.0",
+    "vega-lite": "^2.6.0"
   },
   "devDependencies": {
     "babel-core": "6.25.0",
@@ -92,6 +95,7 @@
     "html-webpack-plugin": "^2.29.0",
     "if-env": "1.0.0",
     "image-webpack-loader": "3.3.1",
+    "json-loader": "^0.5.7",
     "manifest-revision-webpack-plugin": "0.4.0",
     "nightmare": "2.10.0",
     "node-sass": "4.5.3",

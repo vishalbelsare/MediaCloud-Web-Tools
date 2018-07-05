@@ -30,6 +30,10 @@ export default new Config().extend('config/webpack.base.config.babel.js').merge(
         exclude: /node_modules/,
         include: path.join(__dirname, '../src'),
       },
+      {
+        test: /\.json$/,
+        loader: "json-loader",
+      },
     ],
   },
 
