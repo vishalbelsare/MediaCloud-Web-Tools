@@ -82,7 +82,7 @@ class TopicStoryCountPreview extends React.Component {
         data={data}
         padding={30}
         domId={BUBBLE_CHART_DOM_ID}
-        width={700}
+        width={750}
       />);
     }
     return (
