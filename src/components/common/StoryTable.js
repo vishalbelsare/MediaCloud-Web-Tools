@@ -11,7 +11,7 @@ const localMessages = {
 };
 
 const StoryTable = (props) => {
-  const { stories, maxTitleLength } = props;
+  const { stories, maxTitleLength, onChangeFocusSelection } = props;
   const { formatMessage, formatDate } = props.intl;
   return (
     <div className="story-table">
@@ -41,7 +41,7 @@ const StoryTable = (props) => {
             return (
               <tr key={`${story.stories_id}${idx}`} className={(idx % 2 === 0) ? 'even' : 'odd'}>
                 <td>
-                  <a href={story.url} rel="noopener noreferrer" target="_blank">{title}</a>
+                  <a className="drilldown-trigger" tabIndex="0" role="button" onClick={() => onChangeFocusSelection(story)}>{title}</a>
                 </td>
                 <td>
                   <a href={story.media_url} rel="noopener noreferrer" target="_blank">

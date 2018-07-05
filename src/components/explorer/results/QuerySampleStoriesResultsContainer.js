@@ -9,6 +9,7 @@ import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import StoryTable from '../../common/StoryTable';
 import { fetchQuerySampleStories, fetchDemoQuerySampleStories, resetSampleStories } from '../../../actions/explorerActions';
+import { selectStory } from '../../../actions/storyActions';
 import { postToDownloadUrl } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
 import composeQueryResultsSelector from './QueryResultsSelector';
@@ -23,11 +24,15 @@ const localMessages = {
 };
 
 class QuerySampleStoriesResultsContainer extends React.Component {
+  onStorySelection = (selectedStory) => {
+    const { handleStorySelection, selectedQuery } = this.props;
+    handleStorySelection(selectedQuery, selectedStory);
+  }
   downloadCsv = (query) => {
     postToDownloadUrl('/api/explorer/stories/samples.csv', query);
   }
   render() {
-    const { results, queries, handleStorySelection, selectedTabIndex, tabSelector } = this.props;
+    const { results, queries, selectedTabIndex, tabSelector } = this.props;
     const { formatMessage } = this.props.intl;
     return (
       <div>
@@ -35,7 +40,7 @@ class QuerySampleStoriesResultsContainer extends React.Component {
         <StoryTable
           className="story-table"
           stories={results[selectedTabIndex] ? results[selectedTabIndex].slice(0, 10) : []}
-          onChangeFocusSelection={handleStorySelection}
+          onChangeFocusSelection={this.onStorySelection}
           maxTitleLength={50}
         />
         <div className="actions">
@@ -71,6 +76,7 @@ QuerySampleStoriesResultsContainer.propTypes = {
   fetchStatus: PropTypes.string.isRequired,
   handleStorySelection: PropTypes.func.isRequired,
   selectedTabIndex: PropTypes.number.isRequired,
+  selectedQuery: PropTypes.object.isRequired,
   tabSelector: PropTypes.object.isRequired,
 };
 
@@ -104,14 +110,28 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         const demoInfo = {
           index, // should be same as q.index btw
           search_id: q.searchId, // may or may not have these
-          query_id: q.id, // TODO if undefined, what to do?
+          query_id: q.id,
           q: q.q, // only if no query id, means demo user added a keyword
         };
         return dispatch(fetchDemoQuerySampleStories(demoInfo)); // id
       });
     }
   },
-  handleStorySelection: () => 'true',
+  handleStorySelection: (selectedQuery, story) => {
+    // we likely don't need the rest of this since we already have the story and don't need an additional query
+/*
+    const clickedQuery = {
+      ...story,       q: `${selectedQuery.q} AND stories_id:(${story.stories_id})`,
+      start_date: selectedQuery.startDate,
+      end_date: selectedQuery.endDate,
+      sources: selectedQuery.sources.map(s => s.id),
+      collections: selectedQuery.collections.map(c => c.id),
+      rows: 1000, // need a big sample size here for good results
+    };
+    // dispatch(resetSelectedWord());
+*/
+    dispatch(selectStory(story));
+  },
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
