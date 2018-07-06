@@ -23,6 +23,11 @@
           "apps": ["explorer"],
           "type": "Feature",
           "note": "Quickly choose from your starred sources & collections while picking media."
+        },
+        {
+          "apps": ["topics"],
+          "type": "Fix",
+          "note": "Links to source articles in Topic Mapper show up better."
         }
       ]
     },
