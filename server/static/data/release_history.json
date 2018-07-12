@@ -1,6 +1,19 @@
 {
   "releases": [
     {
+      "date": "2018-07-12",
+      "version": "v3.2.1",
+      "notes": [
+        {
+          "apps": [
+            "explorer"
+          ],
+          "type": "Fix",
+          "note": "You can toggle between tabs in the Explorer Top Words results again."
+        }
+      ]
+    },
+    {
       "date": "2018-07-05",
       "version": "v3.2.0",
       "notes": [
