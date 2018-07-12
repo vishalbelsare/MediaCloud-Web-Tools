@@ -11,7 +11,7 @@ import EntitiesTable from '../../common/EntitiesTable';
 import { resetEntitiesPeople, fetchTopEntitiesPeople, fetchDemoTopEntitiesPeople } from '../../../actions/explorerActions';
 import { postToDownloadUrl, COVERAGE_REQUIRED } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
-import composeQueryResultsSelector from './QueryResultsSelector';
+import withQueryResults from './QueryResultsSelector';
 import { TAG_SET_CLIFF_PEOPLE } from '../../../lib/tagUtil';
 
 const localMessages = {
@@ -155,7 +155,7 @@ export default
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeSummarizedVisualization(localMessages.title, localMessages.helpIntro, [messages.entityHelpDetails])(
         withAsyncFetch(
-          composeQueryResultsSelector(
+          withQueryResults(
             QueryTopEntitiesPeopleResultsContainer
           )
         )

@@ -11,7 +11,7 @@ import EntitiesTable from '../../common/EntitiesTable';
 import { resetEntitiesOrgs, fetchTopEntitiesOrgs, fetchDemoTopEntitiesOrgs } from '../../../actions/explorerActions';
 import { postToDownloadUrl, COVERAGE_REQUIRED } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
-import composeQueryResultsSelector from './QueryResultsSelector';
+import withQueryResults from './QueryResultsSelector';
 import { TAG_SET_CLIFF_ORGS } from '../../../lib/tagUtil';
 
 // const NUM_TO_SHOW = 20;
@@ -157,7 +157,7 @@ export default
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeSummarizedVisualization(localMessages.title, localMessages.helpIntro, [messages.entityHelpDetails])(
         withAsyncFetch(
-          composeQueryResultsSelector(
+          withQueryResults(
             QueryTopEntitiesOrgsResultsContainer
           )
         )

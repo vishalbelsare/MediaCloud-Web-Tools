@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import MenuItem from 'material-ui/MenuItem';
 import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import composeSummarizedVisualization from './SummarizedVizualization';
-import composeQueryResultsSelector from './QueryResultsSelector';
+import withQueryResults from './QueryResultsSelector';
 import GeoChart from '../../vis/GeoChart';
 import { fetchDemoQueryGeo, fetchQueryGeo, resetGeo } from '../../../actions/explorerActions';
 import { DownloadButton } from '../../common/IconButton';
@@ -154,7 +154,7 @@ export default
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeSummarizedVisualization(localMessages.title, localMessages.help, [messages.heatMapHelpText])(
         withAsyncFetch(
-          composeQueryResultsSelector(
+          withQueryResults(
             QueryGeoResultsContainer
           )
         )
