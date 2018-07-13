@@ -2,6 +2,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
+import { push } from 'react-router-redux';
 import { Step, Stepper, StepLabel } from 'material-ui/Stepper';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import BackLinkingControlBar from '../BackLinkingControlBar';
@@ -24,6 +26,15 @@ class TopicBuilderWizard extends React.Component {
     goToStep(startStep || 0);
   }
 
+  componentWillReceiveProps(nextProps) {
+    const { location, goToStep } = this.props;
+    if (nextProps.location.pathname !== location.pathname) {
+      const url = nextProps.location.pathname;
+      const lastPathPart = url.slice(url.lastIndexOf('/') + 1, url.length);
+      const stepNumber = parseInt(lastPathPart, 10);
+      goToStep(stepNumber);
+    }
+  }
   componentWillUnmount = () => {
     const { handleUnmount } = this.props;
     handleUnmount();
@@ -79,6 +90,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   goToStep: (step) => {
+    dispatch(push(`/topics/create/${step}`));
     dispatch(goToCreateTopicStep(step));
   },
   handleUnmount: () => {
@@ -95,8 +107,10 @@ const reduxFormConfig = {
 export default
   injectIntl(
     reduxForm(reduxFormConfig)(
-      connect(mapStateToProps, mapDispatchToProps)(
-        TopicBuilderWizard
+      withRouter(
+        connect(mapStateToProps, mapDispatchToProps)(
+          TopicBuilderWizard
+        )
       )
     )
   );
