@@ -1,15 +1,23 @@
 {
   "releases": [
     {
-      "date": "2018-07-12",
+      "date": "2018-07-13",
       "version": "v3.2.1",
       "notes": [
         {
-          "apps": [
-            "explorer"
-          ],
+          "apps": [ "explorer" ],
           "type": "Fix",
           "note": "You can toggle between tabs in the Explorer Top Words results again."
+        },
+        {
+          "apps": [ "topics" ],
+          "type": "Fix",
+          "note": "The Topic Mapper homepage works again for logged-out users."
+        },
+        {
+          "apps": [ "topics" ],
+          "type": "Fix",
+          "note": "You can use the back button while created a new Topic."
         }
       ]
     },
