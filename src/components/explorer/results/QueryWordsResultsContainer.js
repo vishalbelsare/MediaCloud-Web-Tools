@@ -6,9 +6,9 @@ import composeSummarizedVisualization from './SummarizedVizualization';
 import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import { fetchQueryTopWords, fetchDemoQueryTopWords, resetTopWords, selectWord }
 from '../../../actions/explorerActions';
-import { postToDownloadUrl, slugifiedQueryLabel, queryChangedEnoughToUpdate } from '../../../lib/explorerUtil';
+import { postToDownloadUrl, slugifiedQueryLabel } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
-import composeQueryResultsSelector from './QueryResultsSelector';
+import withQueryResults from './QueryResultsSelector';
 import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
 
 const localMessages = {
@@ -20,16 +20,6 @@ const localMessages = {
 const WORD_CLOUD_DOM_ID = 'query-word-cloud-wrapper';
 
 class QueryWordsResultsContainer extends React.Component {
-  componentWillReceiveProps(nextProps) {
-    const { lastSearchTime, fetchData } = this.props;
-    if (nextProps.lastSearchTime !== lastSearchTime) {
-      fetchData(nextProps.queries);
-    }
-  }
-  shouldComponentUpdate(nextProps) {
-    const { results, queries } = this.props;
-    return queryChangedEnoughToUpdate(queries, nextProps.queries, results, nextProps.results);
-  }
   handleDownload = (query, ngramSize, sampleSize) => {
     postToDownloadUrl('/api/explorer/words/wordcount.csv', query, { ngramSize, sample_size: sampleSize });
   }
@@ -151,7 +141,7 @@ export default
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeSummarizedVisualization(localMessages.title, localMessages.descriptionIntro, messages.wordcloudHelpText)(
         withAsyncFetch(
-          composeQueryResultsSelector(
+          withQueryResults(
             QueryWordsResultsContainer
           )
         )

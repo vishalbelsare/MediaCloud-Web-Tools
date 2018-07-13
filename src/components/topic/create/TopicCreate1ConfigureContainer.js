@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 import { reduxForm, formValueSelector } from 'redux-form';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
@@ -77,6 +78,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   finishStep: (step) => {
+    dispatch(push(`/topics/create/${step}`));
     dispatch(goToCreateTopicStep(step));
   },
   handleMediaChange: (sourceAndCollections) => {

@@ -148,7 +148,10 @@ function drawViz(wrapperElement, {
       })
       .on('click', (d) => {
         const event = d3.event;
+        d3.selectAll('text').classed('selected', false);
         if ((onWordClick !== null) && (onWordClick !== undefined)) {
+          d3.select(event.target).classed('selected', true);
+          d3.select(event.target).attr('fill', options.linkColor);
           onWordClick(d, d3.select(event.target));
         }
         return null;
