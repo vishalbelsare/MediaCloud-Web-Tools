@@ -17,7 +17,7 @@ const localMessages = {
 };
 
 const SourceFeedForm = (props) => {
-  const { renderTextField, renderSelectField, buttonLabel, handleSubmit, onSave, pristine, submitting } = props;
+  const { renderTextField, renderSelectField, renderCheckbox, buttonLabel, handleSubmit, onSave, pristine, submitting } = props;
   const { formatMessage } = props.intl;
   return (
     <form className="app-form source-feed-form" name="sourceFeedForm" onSubmit={handleSubmit(onSave.bind(this))}>
@@ -74,7 +74,7 @@ const SourceFeedForm = (props) => {
             component={renderCheckbox}
             fullWidth
             label={formatMessage(messages.feedIsActive)}
-            value=true
+            value
           />
         </Col>
       </Row>
@@ -94,6 +94,7 @@ SourceFeedForm.propTypes = {
   intl: PropTypes.object.isRequired,
   renderTextField: PropTypes.func.isRequired,
   renderSelectField: PropTypes.func.isRequired,
+  renderCheckbox: PropTypes.func.isRequired,
   initialValues: PropTypes.object,
   handleSubmit: PropTypes.func,
   pristine: PropTypes.bool.isRequired,
