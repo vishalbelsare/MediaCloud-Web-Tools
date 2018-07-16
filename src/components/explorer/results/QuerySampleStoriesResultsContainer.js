@@ -118,19 +118,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       });
     }
   },
-  handleStorySelection: (selectedQuery, story) => {
-    // we likely don't need the rest of this since we already have the story and don't need an additional query
-/*
-    const clickedQuery = {
-      ...story,       q: `${selectedQuery.q} AND stories_id:(${story.stories_id})`,
-      start_date: selectedQuery.startDate,
-      end_date: selectedQuery.endDate,
-      sources: selectedQuery.sources.map(s => s.id),
-      collections: selectedQuery.collections.map(c => c.id),
-      rows: 1000, // need a big sample size here for good results
-    };
-    // dispatch(resetSelectedWord());
-*/
+  handleStorySelection: (query, story) => {
     dispatch(selectStory(story));
   },
 });

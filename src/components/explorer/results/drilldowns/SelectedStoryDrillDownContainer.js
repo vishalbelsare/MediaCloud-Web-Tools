@@ -16,6 +16,7 @@ import SourceMetadataStatBar from '../../../common/SourceMetadataStatBar';
 import messages from '../../../../resources/messages';
 import { downloadSvg } from '../../../util/svg';
 import { urlToSource } from '../../../../lib/urlUtil';
+import { TAG_SET_NYT_THEMES } from '../../../../lib/tagUtil';
 
 const localMessages = {
   title: { id: 'word.inContext.title', defaultMessage: 'Details for: {title}' },
@@ -87,13 +88,13 @@ class SelectedStoryDrillDownContainer extends React.Component {
                 <StoryEntitiesContainer storyId={storyId} />
               </Col>
               <Col lg={3}>
-                <StoryNytThemesContainer storyId={storyId} />
+                <StoryNytThemesContainer storyId={storyId} tags={storyInfo.story_tags ? storyInfo.story_tags.filter(t => t.tag_sets_id === TAG_SET_NYT_THEMES) : []} />
               </Col>
             </Row>
             <h2><FormattedMessage {...localMessages.published} values={{ media: storyInfo.media_name }} /></h2>
             <Row>
               <Col lg={12}>
-                <SourceMetadataStatBar source={storyInfo.media} />
+                <SourceMetadataStatBar source={storyInfo.media ? storyInfo.media : storyInfo.media_id} />
               </Col>
             </Row>
           </DataCard>
