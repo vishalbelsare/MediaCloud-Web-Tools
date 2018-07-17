@@ -41,7 +41,7 @@ const StoryTable = (props) => {
             return (
               <tr key={`${story.stories_id}${idx}`} className={(idx % 2 === 0) ? 'even' : 'odd'}>
                 <td>
-                  <a className="drilldown-trigger" tabIndex="0" role="button" onClick={() => onChangeFocusSelection(story)}>{title}</a>
+                  <a className="drilldown-trigger" tabIndex="0" role="button" onClick={(...args) => onChangeFocusSelection(story, args[0].currentTarget)}>{title}</a>
                 </td>
                 <td>
                   <a href={story.media_url} rel="noopener noreferrer" target="_blank">

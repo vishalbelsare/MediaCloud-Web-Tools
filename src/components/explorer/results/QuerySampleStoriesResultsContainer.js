@@ -24,8 +24,15 @@ const localMessages = {
 };
 
 class QuerySampleStoriesResultsContainer extends React.Component {
-  onStorySelection = (selectedStory) => {
+  onStorySelection = (selectedStory, target) => {
     const { handleStorySelection, selectedQuery } = this.props;
+    const allEvenElements = Array.from(document.getElementsByClassName('even'));
+    const allOddElements = Array.from(document.getElementsByClassName('odd'));
+    const arr = allEvenElements.concat(allOddElements);
+    arr.forEach((ele) => {
+      ele.classList.remove('selected');
+    });
+    target.parentElement.parentElement.classList.add('selected');
     handleStorySelection(selectedQuery, selectedStory);
   }
   downloadCsv = (query) => {
@@ -40,7 +47,7 @@ class QuerySampleStoriesResultsContainer extends React.Component {
         <StoryTable
           className="story-table"
           stories={results[selectedTabIndex] ? results[selectedTabIndex].slice(0, 10) : []}
-          onChangeFocusSelection={this.onStorySelection}
+          onChangeFocusSelection={(story, target) => this.onStorySelection(story, target)}
           maxTitleLength={50}
         />
         <div className="actions">
