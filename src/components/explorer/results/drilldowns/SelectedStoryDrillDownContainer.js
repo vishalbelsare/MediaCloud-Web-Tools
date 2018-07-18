@@ -7,9 +7,8 @@ import MenuItem from 'material-ui/MenuItem';
 import slugify from 'slugify';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import ActionMenu from '../../../common/ActionMenu';
-import { fetchStory, resetStory } from '../../../../actions/storyActions';
+import { resetStory } from '../../../../actions/storyActions';
 import withHelp from '../../../common/hocs/HelpfulContainer';
-import withAsyncFetch from '../../../common/hocs/AsyncContainer';
 import DataCard from '../../../common/DataCard';
 import StoryEntitiesContainer from '../../../common/story/StoryEntitiesContainer';
 import StoryNytThemesContainer from '../../../common/story/StoryNytThemesContainer';
@@ -34,13 +33,6 @@ const localMessages = {
 class SelectedStoryDrillDownContainer extends React.Component {
   state = {
     imageUri: null,
-  }
-  componentWillReceiveProps(nextProps) {
-    const { lastSearchTime, fetchData, selectedStory } = this.props;
-    if ((nextProps.lastSearchTime !== lastSearchTime ||
-      nextProps.selectedStory !== selectedStory) && nextProps.selectedStory) {
-      fetchData(nextProps.selectedStory);
-    }
   }
   shouldComponentUpdate(nextProps) {
     const { selectedStory, lastSearchTime } = this.props;
@@ -115,10 +107,7 @@ SelectedStoryDrillDownContainer.propTypes = {
   storyInfo: PropTypes.object,
   selectedStory: PropTypes.number,
   // from dispatch
-  fetchData: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
-    // from mergeProps
-  asyncFetch: PropTypes.func.isRequired,
   // from context
   intl: PropTypes.object.isRequired,
   helpButton: PropTypes.node.isRequired,
@@ -132,31 +121,17 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  fetchData: (params) => {
-    if (params) {
-      dispatch(fetchStory(params));
-    }
-  },
   handleClose: () => {
     dispatch(resetStory());
   },
 });
 
-function mergeProps(stateProps, dispatchProps, ownProps) {
-  return Object.assign({}, stateProps, dispatchProps, ownProps, {
-    asyncFetch: () => {
-      dispatchProps.fetchData(stateProps.storyInfo);
-    },
-  });
-}
 
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       withHelp(localMessages.helpTitle, [localMessages.helpText, messages.wordTreeHelpText])(
-        withAsyncFetch(
-          SelectedStoryDrillDownContainer
-        )
+        SelectedStoryDrillDownContainer
       )
     )
   );
