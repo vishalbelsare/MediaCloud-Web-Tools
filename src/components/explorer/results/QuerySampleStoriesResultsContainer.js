@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import MenuItem from 'material-ui/MenuItem';
 import composeSummarizedVisualization from './SummarizedVizualization';
 import withAsyncFetch from '../../common/hocs/AsyncContainer';
@@ -24,31 +25,28 @@ const localMessages = {
 };
 
 class QuerySampleStoriesResultsContainer extends React.Component {
-  onStorySelection = (selectedStory, target) => {
+  onStorySelection = (selectedStory) => {
     const { handleStorySelection, selectedQuery } = this.props;
-    const allEvenElements = Array.from(document.getElementsByClassName('even'));
-    const allOddElements = Array.from(document.getElementsByClassName('odd'));
-    const arr = allEvenElements.concat(allOddElements);
-    arr.forEach((ele) => {
-      ele.classList.remove('selected');
-    });
-    target.parentElement.parentElement.classList.add('selected');
     handleStorySelection(selectedQuery, selectedStory);
   }
+
   downloadCsv = (query) => {
     postToDownloadUrl('/api/explorer/stories/samples.csv', query);
   }
+
   render() {
-    const { results, queries, selectedTabIndex, tabSelector } = this.props;
+    const { results, queries, selectedTabIndex, tabSelector, internalItemSelected } = this.props;
     const { formatMessage } = this.props.intl;
+// why isn't this re-rendering if selectedStory has changed?
     return (
       <div>
         {tabSelector}
         <StoryTable
           className="story-table"
           stories={results[selectedTabIndex] ? results[selectedTabIndex].slice(0, 10) : []}
-          onChangeFocusSelection={(story, target) => this.onStorySelection(story, target)}
+          onChangeFocusSelection={story => this.onStorySelection(story)}
           maxTitleLength={50}
+          selectedStory={internalItemSelected}
         />
         <div className="actions">
           <ActionMenu actionTextMsg={messages.downloadOptions}>
@@ -72,6 +70,7 @@ QuerySampleStoriesResultsContainer.propTypes = {
   lastSearchTime: PropTypes.number.isRequired,
   queries: PropTypes.array.isRequired,
   isLoggedIn: PropTypes.bool.isRequired,
+  location: PropTypes.object.isRequired,
   // from composition
   intl: PropTypes.object.isRequired,
   // from dispatch
@@ -85,12 +84,14 @@ QuerySampleStoriesResultsContainer.propTypes = {
   selectedTabIndex: PropTypes.number.isRequired,
   selectedQuery: PropTypes.object.isRequired,
   tabSelector: PropTypes.object.isRequired,
+  internalItemSelected: PropTypes.number,
 };
 
 const mapStateToProps = state => ({
   lastSearchTime: state.explorer.lastSearchTime.time,
   fetchStatus: state.explorer.stories.fetchStatus,
   results: state.explorer.stories.results,
+  internalItemSelected: state.story.info.stories_id,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
@@ -135,6 +136,10 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
     asyncFetch: () => {
       dispatchProps.fetchData(ownProps.queries);
     },
+    shouldUpdate: (nextProps) => { // QueryResultsSelector needs to ask the child for internal repainting
+      const { internalItemSelected } = stateProps;
+      return nextProps.internalItemSelected !== internalItemSelected;
+    },
   });
 }
 
@@ -143,8 +148,10 @@ export default
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeSummarizedVisualization(localMessages.title, localMessages.helpIntro, localMessages.helpDetails)(
         withAsyncFetch(
-          composeQueryResultsSelector(
-            QuerySampleStoriesResultsContainer
+          withRouter(
+            composeQueryResultsSelector(
+              QuerySampleStoriesResultsContainer
+            )
           )
         )
       )

@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
+// import { withRouter } from 'react-router';
 import MenuItem from 'material-ui/MenuItem';
 import slugify from 'slugify';
 import { Row, Col } from 'react-flexbox-grid/lib';
@@ -35,15 +36,15 @@ class SelectedStoryDrillDownContainer extends React.Component {
     imageUri: null,
   }
   componentWillReceiveProps(nextProps) {
-    const { lastSearchTime, fetchData, storyId } = this.props;
+    const { lastSearchTime, fetchData, selectedStory } = this.props;
     if ((nextProps.lastSearchTime !== lastSearchTime ||
-      nextProps.storyId !== storyId) && nextProps.storyId) {
-      fetchData(nextProps.storyId);
+      nextProps.selectedStory !== selectedStory) && nextProps.selectedStory) {
+      fetchData(nextProps.selectedStory);
     }
   }
   shouldComponentUpdate(nextProps) {
-    const { storyId, lastSearchTime } = this.props;
-    return (nextProps.lastSearchTime !== lastSearchTime || nextProps.storyId !== storyId);
+    const { selectedStory, lastSearchTime } = this.props;
+    return (nextProps.lastSearchTime !== lastSearchTime || nextProps.selectedStory !== selectedStory);
   }
   getUniqueDomId = () => 'story-';
   handleDownloadSvg = () => {
@@ -58,11 +59,11 @@ class SelectedStoryDrillDownContainer extends React.Component {
     window.open(url, '_blank');
   }
   render() {
-    const { storyId, storyInfo, handleClose, helpButton } = this.props;
+    const { selectedStory, storyInfo, handleClose, helpButton } = this.props;
     const { formatMessage, formatDate } = this.props.intl;
 
     let content = null;
-    if (storyId) {
+    if (selectedStory) {
       content = (
         <div className="drill-down">
           <DataCard className="query-story-drill-down">
@@ -85,10 +86,10 @@ class SelectedStoryDrillDownContainer extends React.Component {
             <a href={urlToSource(storyInfo.media_id)}><FormattedMessage {...localMessages.fullDescription} values={{ media: storyInfo.media_name, publishDate: formatDate(storyInfo.publish_date), language: storyInfo.language }} /></a>
             <Row>
               <Col lg={9}>
-                <StoryEntitiesContainer storyId={storyId} />
+                <StoryEntitiesContainer storyId={selectedStory} />
               </Col>
               <Col lg={3}>
-                <StoryNytThemesContainer storyId={storyId} tags={storyInfo.story_tags ? storyInfo.story_tags.filter(t => t.tag_sets_id === TAG_SET_NYT_THEMES) : []} />
+                <StoryNytThemesContainer storyId={selectedStory} tags={storyInfo.story_tags ? storyInfo.story_tags.filter(t => t.tag_sets_id === TAG_SET_NYT_THEMES) : []} />
               </Col>
             </Row>
             <h2><FormattedMessage {...localMessages.published} values={{ media: storyInfo.media_name }} /></h2>
@@ -112,7 +113,7 @@ SelectedStoryDrillDownContainer.propTypes = {
   // from store
   fetchStatus: PropTypes.string.isRequired,
   storyInfo: PropTypes.object,
-  storyId: PropTypes.number,
+  selectedStory: PropTypes.number,
   // from dispatch
   fetchData: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
@@ -127,7 +128,7 @@ SelectedStoryDrillDownContainer.propTypes = {
 const mapStateToProps = state => ({
   fetchStatus: state.explorer.stories.fetchStatus,
   storyInfo: state.story.info,
-  storyId: state.story.info.stories_id,
+  selectedStory: state.story.info.stories_id,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -144,7 +145,7 @@ const mapDispatchToProps = dispatch => ({
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     asyncFetch: () => {
-      dispatchProps.fetchData(stateProps.selectedStory);
+      dispatchProps.fetchData(stateProps.storyInfo);
     },
   });
 }
