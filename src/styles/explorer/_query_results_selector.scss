@@ -12,6 +12,16 @@ tr.selected {
   }
 }
 
+.ordered-word-cloud {
+  svg {
+    g {
+      text.selected {
+        fill: $explorer-primary !important;
+      }
+    }
+  }
+}
+
 ul.query-results-selector {
 
   margin: 0px;

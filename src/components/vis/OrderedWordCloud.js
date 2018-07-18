@@ -54,7 +54,7 @@ function listCloudLayout(wordNodes, width, extent, sizeRange) {
 
 function drawViz(wrapperElement, {
   words, width, height, minFontSize, maxFontSize, textColor, onWordClick, linkColor, showTooltips,
-  alreadyNormalized, fullExtent, domId, intl,
+  alreadyNormalized, fullExtent, domId, intl, selectedTerm,
 }) {
   const { formatMessage, formatNumber } = intl;
   const options = {
@@ -68,6 +68,7 @@ function drawViz(wrapperElement, {
     padding: 0,
     alreadyNormalized: alreadyNormalized || false,
     fullExtent,
+    selectedTerm,
   };
   const data = [...words];  // so we can modify them for visualization
   // add in tf normalization
@@ -115,6 +116,7 @@ function drawViz(wrapperElement, {
         .classed('word', true)
         .classed('hide', d => d.display === false)
         .classed('show', d => d.display !== false)
+        .classed('selected', d => d.term === selectedTerm)
       .attr('font-size', d => fontSizeComputer(d, options.fullExtent, sizeRange))
       .text(d => d.term)
       .attr('font-weight', 'bold')
@@ -148,7 +150,9 @@ function drawViz(wrapperElement, {
       })
       .on('click', (d) => {
         const event = d3.event;
+        // d3.selectAll('text').classed('selected', false);
         if ((onWordClick !== null) && (onWordClick !== undefined)) {
+          // d3.select(event.target).classed('selected', true);
           onWordClick(d, d3.select(event.target));
         }
         return null;
@@ -209,6 +213,7 @@ OrderedWordCloud.propTypes = {
   alreadyNormalized: PropTypes.bool,
   fullExtent: PropTypes.array,
   domId: PropTypes.string,
+  selectedTerm: PropTypes.string,
 };
 
 export default injectIntl(OrderedWordCloud);
