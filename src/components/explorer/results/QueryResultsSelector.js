@@ -58,7 +58,11 @@ function composeQueryResultsSelector(ChildComponent) {
     fetchData: PropTypes.func.isRequired,
     // from children
     shouldUpdate: PropTypes.func,
-    internalItemSelected: PropTypes.number,
+    internalItemSelected: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.object,
+      PropTypes.number,
+    ]),
   };
 
   return injectIntl(
