@@ -3,13 +3,16 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
+import withSampleSize from '../../common/composers/SampleSize';
+import withCsvDownloadNotifyContainer from '../../common/hocs/CsvDownloadNotifyContainer';
+import { fetchTopicTopWords } from '../../../actions/topicActions';
 import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import withHelp from '../../common/hocs/HelpfulContainer';
-import { fetchStoryWords } from '../../../actions/topicActions';
 import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
-import { filteredLinkTo } from '../../util/location';
+import { filteredLinkTo, filtersAsUrlParams, combineQueryParams } from '../../util/location';
 import messages from '../../../resources/messages';
 import { generateParamStr } from '../../../lib/apiUtil';
+import { VIEW_1K, mergeFilters } from '../../../lib/topicFilterUtil';
 import { topicDownloadFilename } from '../../util/topicUtil';
 
 const localMessages = {
@@ -31,19 +34,20 @@ class StoryWordsContainer extends React.Component {
   }
 
   render() {
-    const { storiesId, topicId, words, helpButton, handleWordCloudClick, filters, topicName } = this.props;
+    const { storiesId, topicInfo, handleWordCloudClick, filters, initSampleSize, onViewSampleSizeClick } = this.props;
     const { formatMessage } = this.props.intl;
-    const urlDownload = `/api/topics/${topicId}/stories/${storiesId}/words.csv`;
+    const urlDownload = `/api/topics/${topicInfo.topics_id}/words.csv?${filtersAsUrlParams({ ...filters, q: combineQueryParams(filters.q, `stories_id:${storiesId}`) })}`;
     return (
       <EditableWordCloudDataCard
-        words={words}
-        explore={filteredLinkTo(`/topics/${topicId}/words`, filters)}
+        words={this.props.words}
+        explore={filteredLinkTo(`/topics/${topicInfo.topics_id}/words`, filters)}
+        initSampleSize={initSampleSize}
         downloadUrl={urlDownload}
         onViewModeClick={handleWordCloudClick}
+        onViewSampleSizeClick={onViewSampleSizeClick}
         title={formatMessage(messages.topWords)}
-        helpButton={helpButton}
         domId={WORD_CLOUD_DOM_ID}
-        svgDownloadPrefix={`${topicDownloadFilename(topicName, filters)}-story-${storiesId}-words`}
+        svgDownloadPrefix={`${topicDownloadFilename(topicInfo.name, filters)}-story-${storiesId}--words`}
         includeTopicWord2Vec
       />
     );
@@ -54,9 +58,10 @@ StoryWordsContainer.propTypes = {
   // from compositional chain
   intl: PropTypes.object.isRequired,
   helpButton: PropTypes.node.isRequired,
+  onViewSampleSizeClick: PropTypes.func.isRequired,
+  initSampleSize: PropTypes.string.isRequired,
   // from parent
   storiesId: PropTypes.number.isRequired,
-  topicId: PropTypes.number.isRequired,
   topicName: PropTypes.string.isRequired,
   filters: PropTypes.object,
   // from dispatch
@@ -66,17 +71,22 @@ StoryWordsContainer.propTypes = {
   fetchStatus: PropTypes.string.isRequired,
   words: PropTypes.array.isRequired,
   handleWordCloudClick: PropTypes.func,
+  topicInfo: PropTypes.object,
+
 };
 
 const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.story.words.fetchStatus,
+  topicInfo: state.topics.selected.info,
   words: state.topics.selected.story.words.list,
   filters: state.topics.selected.filters,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (props) => {
-    dispatch(fetchStoryWords(ownProps.topicId, ownProps.storiesId, props.filters));
+    const currentProps = props || ownProps;
+    const filterObj = mergeFilters(currentProps, `stories_id:${ownProps.storiesId}`);
+    dispatch(fetchTopicTopWords(ownProps.topicId, filterObj));
   },
   pushToUrl: url => dispatch(push(url)),
 });
@@ -84,7 +94,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     asyncFetch: () => {
-      dispatchProps.fetchData(stateProps); // fetch the info we need
+      dispatchProps.fetchData({ ...stateProps, sample_size: VIEW_1K }); // fetch the info we need
     },
     handleWordCloudClick: (word) => {
       const params = generateParamStr({ ...stateProps.filters, stem: word.stem, term: word.term });
@@ -98,8 +108,12 @@ export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       withHelp(localMessages.helpTitle, [localMessages.helpText, messages.wordcloudHelpText, messages.wordCloudTopicWord2VecLayoutHelp])(
-        withAsyncFetch(
-          StoryWordsContainer
+        withSampleSize(
+          withAsyncFetch(
+            withCsvDownloadNotifyContainer(
+              StoryWordsContainer
+            )
+          )
         )
       )
     )

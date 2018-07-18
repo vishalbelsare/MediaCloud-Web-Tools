@@ -1,4 +1,5 @@
 import { resolve, reject } from 'redux-simple-promise';
+import Raven from 'raven-js';
 import { LOGIN_WITH_PASSWORD, LOGIN_WITH_COOKIE, RESET_API_KEY } from '../actions/userActions';
 import * as fetchConstants from '../lib/fetchConstants';
 
@@ -7,6 +8,16 @@ const INITIAL_STATE = {
   isLoggedIn: false,
   key: null,
 };
+
+function setRavenUserContext(userInfo) {
+  if (userInfo) {
+    Raven.setUserContext({ email: userInfo.email });
+  }
+}
+
+function resetRavenUserContext() {
+  Raven.setUserContext();
+}
 
 export default function user(state = INITIAL_STATE, action) {
   switch (action.type) {
@@ -18,6 +29,7 @@ export default function user(state = INITIAL_STATE, action) {
         ...action.payload,
       });
     case resolve(LOGIN_WITH_PASSWORD):
+      setRavenUserContext(action.payload);
       const passwordLoginWorked = (action.payload.status !== 500);
       return Object.assign({}, state, {
         fetchStatus: fetchConstants.FETCH_SUCCEEDED,
@@ -25,6 +37,7 @@ export default function user(state = INITIAL_STATE, action) {
         ...action.payload,
       });
     case reject(LOGIN_WITH_PASSWORD):
+      resetRavenUserContext();
       return Object.assign({}, state, {
         fetchStatus: fetchConstants.FETCH_FAILED,
         isLoggedIn: false,
@@ -37,6 +50,7 @@ export default function user(state = INITIAL_STATE, action) {
         ...action.payload,
       });
     case resolve(LOGIN_WITH_COOKIE):
+      setRavenUserContext(action.payload);
       const keyLoginWorked = (action.payload.status !== 401);
       return Object.assign({}, state, {
         fetchStatus: fetchConstants.FETCH_SUCCEEDED,
@@ -44,11 +58,13 @@ export default function user(state = INITIAL_STATE, action) {
         ...action.payload,
       });
     case reject(LOGIN_WITH_COOKIE):
+      resetRavenUserContext();
       return Object.assign({}, state, {
         fetchStatus: fetchConstants.FETCH_FAILED,
         isLoggedIn: false,
         key: null,
       });
+
     case resolve(RESET_API_KEY):
       return Object.assign({}, state, {
         key: action.payload.profile.api_key,

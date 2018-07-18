@@ -8,7 +8,7 @@ import { fetchQueryTopWords, fetchDemoQueryTopWords, resetTopWords, selectWord }
 from '../../../actions/explorerActions';
 import { postToDownloadUrl, slugifiedQueryLabel } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
-import composeQueryResultsSelector from './QueryResultsSelector';
+import withQueryResults from './QueryResultsSelector';
 import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
 
 const localMessages = {
@@ -20,27 +20,29 @@ const localMessages = {
 const WORD_CLOUD_DOM_ID = 'query-word-cloud-wrapper';
 
 class QueryWordsResultsContainer extends React.Component {
-  handleDownload = (query, ngramSize) => {
-    postToDownloadUrl('/api/explorer/words/wordcount.csv', query, { ngramSize });
+  handleDownload = (query, ngramSize, sampleSize) => {
+    postToDownloadUrl('/api/explorer/words/wordcount.csv', query, { ngramSize, sample_size: sampleSize });
   }
   handleWordClick = (wordDataPoint) => {
     const { handleSelectedWord, selectedQuery } = this.props;
-    handleSelectedWord(selectedQuery, wordDataPoint.stem);
+    handleSelectedWord(selectedQuery, wordDataPoint.term);
   }
   render() {
-    const { results, queries, tabSelector, selectedQueryIndex, internalItemSelected } = this.props;
+    const { results, queries, tabSelector, selectedQueryIndex, fetchData, internalItemSelected } = this.props;
     const { formatMessage } = this.props.intl;
     const selectedQuery = queries[selectedQueryIndex];
     return (
       <EditableWordCloudDataCard
         actionMenuHeaderText={formatMessage(localMessages.menuHeader, { queryName: selectedQuery.label })}
+        onViewSampleSizeClick={sampleSize => fetchData(queries, sampleSize)}
+        initSampleSize={results[selectedQueryIndex].sample_size}
         subHeaderContent={tabSelector}
         words={results[selectedQueryIndex].list}
         onViewModeClick={this.handleWordClick}
         border={false}
         domId={WORD_CLOUD_DOM_ID}
         width={585}
-        onDownload={ngramSize => this.handleDownload(selectedQuery, ngramSize)}
+        onDownload={ngramSize => this.handleDownload(selectedQuery, ngramSize, results[selectedQueryIndex].sample_size)}
         svgDownloadPrefix={`${slugifiedQueryLabel(selectedQuery.label)}-ngram-1`}
         textColor={selectedQuery.color}
         actionsAsLinksUnderneath
@@ -79,7 +81,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  fetchData: (queries) => {
+  fetchData: (queries, sampleSize) => {
     // this should trigger when the user clicks the Search button or changes the URL
     // for n queries, run the dispatch with each parsed query
     dispatch(resetTopWords());
@@ -93,6 +95,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
           index: q.index,
           sources: q.sources.map(s => s.id),
           collections: q.collections.map(c => c.id),
+          sample_size: sampleSize,
         };
         return dispatch(fetchQueryTopWords(infoToQuery));
       });
@@ -104,6 +107,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
           search_id: q.searchId, // may or may not have these
           query_id: q.id,
           q: q.q, // only if no query id, means demo user added a keyword
+          sample_size: sampleSize,
         };
         return dispatch(fetchDemoQueryTopWords(demoInfo)); // id
       });
@@ -142,7 +146,7 @@ export default
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeSummarizedVisualization(localMessages.title, localMessages.descriptionIntro, messages.wordcloudHelpText)(
         withAsyncFetch(
-          composeQueryResultsSelector(
+          withQueryResults(
             QueryWordsResultsContainer
           )
         )

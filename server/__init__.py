@@ -104,9 +104,10 @@ def create_app():
     my_app.config['MAX_CONTENT_LENGTH'] = 1 * 1024 * 1024  # 1MB
     my_app.config['UPLOAD_FOLDER'] = tempfile.gettempdir()
     # Set up sentry logging
+    my_app.config['SENTRY_USER_ATTRS'] = ['email']
     try:
         sentry_dsn = config.get('SENTRY_DSN')
-        Sentry(my_app, dsn=sentry_dsn)
+        Sentry(my_app, dsn=sentry_dsn, name=server_app)
     except ConfigException as e:
         logger.warn(e)
     # set up webpack
@@ -157,6 +158,8 @@ def create_app():
     my_app.session_interface = RedisSessionInterface(redis.StrictRedis.from_url(config.get('SESSION_REDIS_URL')))
     return my_app
 
+
+server_app = config.get('SERVER_APP')
 app = create_app()
 app.secret_key = config.get('SECRET_KEY')
 
@@ -181,7 +184,6 @@ import server.views.media_picker
 import server.views.sources.search
 import server.views.notebook.management
 import server.views.metadata
-server_app = config.get('SERVER_APP')
 if (server_app == SERVER_APP_SOURCES) or is_dev_mode():
     import server.views.sources.collection
     import server.views.sources.collectionedit

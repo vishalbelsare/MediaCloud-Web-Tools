@@ -14,8 +14,8 @@ const localMessages = {
   title: { id: 'system.mediaPicker.collections.title', defaultMessage: 'Collections matching "{name}"' },
   hintText: { id: 'system.mediaPicker.collections.hint', defaultMessage: 'Search for collections by name' },
   noResults: { id: 'system.mediaPicker.collections.noResults', defaultMessage: 'No results. Try searching for issues like online news, health, blogs, conservative to see if we have collections made up of those types of sources.' },
-  featured: { id: 'system.mediaPicker.collections.featured', defaultMessage: 'featured' },
-  favorited: { id: 'system.mediaPicker.collections.favorite', defaultMessage: 'favorited' },
+  featured: { id: 'system.mediaPicker.collections.featured', defaultMessage: 'Featured Collections' },
+  favorited: { id: 'system.mediaPicker.collections.favorite', defaultMessage: 'Starred' },
 };
 
 const VIEW_FAVORITES = 0;
@@ -64,7 +64,7 @@ class TabSearchResultsContainer extends React.Component {
       tabContent = (
         <div className="media-picker-tabbed-content-wrapper">
           <CollectionResultsTable
-            title={formatMessage(localMessages.title, { name: 'Featured' })}
+            title={formatMessage(localMessages.featured)}
             collections={queryResults.featured}
             handleToggleAndSelectMedia={handleToggleAndSelectMedia}
           />

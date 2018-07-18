@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { trimToMaxLength } from '../../lib/stringUtil';
 
+const MAX_TAB_LABEL_LENGTH = 21;
+
 class TabSelector extends React.Component {
   state = {
     selectedViewIndex: 0,
@@ -28,7 +30,7 @@ class TabSelector extends React.Component {
               onViewSelected(idx);
             }}
           >
-            {trimToMaxLength(label.label || label, 20)}
+            {trimToMaxLength(label.label || label, MAX_TAB_LABEL_LENGTH)}
           </li>
         )}
       </ul>

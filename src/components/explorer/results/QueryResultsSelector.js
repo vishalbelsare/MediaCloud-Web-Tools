@@ -4,7 +4,7 @@ import { injectIntl } from 'react-intl';
 import TabSelector from '../../common/TabSelector';
 import { queryChangedEnoughToUpdate } from '../../../lib/explorerUtil';
 
-function composeQueryResultsSelector(ChildComponent) {
+function withQueryResults(ChildComponent) {
   class QueryResultsSelector extends React.Component {
     state = {
       fetchedData: undefined,
@@ -70,4 +70,4 @@ function composeQueryResultsSelector(ChildComponent) {
   );
 }
 
-export default composeQueryResultsSelector;
+export default withQueryResults;

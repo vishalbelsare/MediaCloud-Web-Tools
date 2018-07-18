@@ -4,7 +4,7 @@ import flask_login
 import json
 
 from server import app
-from server.views import WORD_COUNT_SAMPLE_SIZE, WORD_COUNT_DOWNLOAD_LENGTH, WORD_COUNT_UI_LENGTH
+from server.views import WORD_COUNT_SAMPLE_SIZE, WORD_COUNT_DOWNLOAD_NUM_WORDS, WORD_COUNT_UI_NUM_WORDS
 from server.util.request import api_error_handler
 import server.util.csv as csv
 from server.views.explorer import parse_as_sample, parse_query_with_args_and_sample_search, parse_query_with_keywords, \
@@ -18,26 +18,27 @@ logger = logging.getLogger(__name__)
 @flask_login.login_required
 @api_error_handler
 def api_explorer_words():
-    return get_word_count()
+    return _get_word_count()
 
 
 @app.route('/api/explorer/demo/words/count', methods=['GET'])
 @api_error_handler
 def api_explorer_demo_words():
-    return get_word_count()
+    return _get_word_count()
 
 
-def get_word_count():
+def _get_word_count():
     search_id = int(request.args['search_id']) if 'search_id' in request.args else None
+    sample_size = int(request.args['sample_size']) if 'sample_size' in request.args else WORD_COUNT_SAMPLE_SIZE
     if search_id not in [None, -1]:
         sample_searches = load_sample_searches()
         current_search = sample_searches[search_id]['queries']
         solr_q, solr_fq = parse_query_with_args_and_sample_search(request.args, current_search)
     else:
         solr_q, solr_fq = parse_query_with_keywords(request.args)
-    word_data = query_wordcount(solr_q, solr_fq)
+    word_data = query_wordcount(solr_q, solr_fq, sample_size=sample_size)
     # return combined data
-    return jsonify({"list": word_data})
+    return jsonify({"list": word_data, "sample_size": str(sample_size)})
 
 
 # if this is a sample search, we will have a search id and a query index
@@ -47,14 +48,15 @@ def get_word_count():
 def explorer_wordcount_csv():
     data = request.form
     ngram_size = data['ngramSize'] if 'ngramSize' in data else 1    # defaul to words if ngram not specified
-    filename = u'sampled-ngrams-frequency-{}'.format(ngram_size)
+    sample_size = data['sample_size'] if 'sample_size' in data else WORD_COUNT_SAMPLE_SIZE
+    filename = u'sampled-{}-ngrams-{}'.format(sample_size, ngram_size)
     if 'searchId' in data:
         solr_q, solr_fq = parse_as_sample(data['searchId'], data['index'])
     else:
         query_object = json.loads(data['q'])
         solr_q, solr_fq = parse_query_with_keywords(query_object)
         filename = file_name_for_download(query_object['label'], filename)
-    return stream_wordcount_csv(filename, solr_q, solr_fq, ngram_size)
+    return stream_wordcount_csv(filename, solr_q, solr_fq, ngram_size, sample_size)
 
 
 @app.route('/api/explorer/words/compare/count', methods=['GET'])
@@ -96,7 +98,7 @@ def api_explorer_demo_compare_words():
     return jsonify({"list": results})
 
 
-def query_wordcount(q, fq, ngram_size=1, num_words=WORD_COUNT_UI_LENGTH, sample_size=WORD_COUNT_SAMPLE_SIZE):
+def query_wordcount(q, fq, ngram_size=1, num_words=WORD_COUNT_UI_NUM_WORDS, sample_size=WORD_COUNT_SAMPLE_SIZE):
     word_data = apicache.word_count(q, fq, ngram_size, num_words, sample_size)
     # add in word2vec results
     words = [w['term'] for w in word_data]
@@ -108,10 +110,9 @@ def query_wordcount(q, fq, ngram_size=1, num_words=WORD_COUNT_UI_LENGTH, sample_
     return word_data
 
 
-def stream_wordcount_csv(filename, q, fq, ngram_size=1):
+def stream_wordcount_csv(filename, q, fq, ngram_size=1, sample_size=WORD_COUNT_SAMPLE_SIZE):
     # use bigger values for CSV download
-    num_words = WORD_COUNT_DOWNLOAD_LENGTH
-    sample_size = WORD_COUNT_SAMPLE_SIZE
+    num_words = WORD_COUNT_DOWNLOAD_NUM_WORDS
     word_counts = query_wordcount(q, fq, ngram_size, num_words, sample_size)
     for w in word_counts:
         w['sample_size'] = sample_size

@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 import { injectIntl, FormattedHTMLMessage } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import withIntlForm from '../../common/hocs/IntlForm';
@@ -64,9 +65,11 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   handlePreviousStep: () => {
+    dispatch(push('/topics/create/0'));
     dispatch(goToCreateTopicStep(0));
   },
   handleNextStep: () => {
+    dispatch(push('/topics/create/2'));
     dispatch(goToCreateTopicStep(2));
   },
 });

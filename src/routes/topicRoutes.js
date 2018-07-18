@@ -43,7 +43,9 @@ const topicRoutes = (
     <Redirect from="/topics/public/home" to="/home" />
     <Route path="/home" component={TopicsHomepage} />
 
-    <Route path="/topics/create" component={CreateTopicContainer} onEnter={requireAuth} />
+    <Route path="/topics/create" component={CreateTopicContainer} onEnter={requireAuth}>
+      <Route path="/topics/create/:step" component={CreateTopicContainer} onEnter={requireAuth} />
+    </Route>
 
     <Route path="/topics/status" component={TopicStatusDashboardContainer} onEnter={requireAuth} />
 
