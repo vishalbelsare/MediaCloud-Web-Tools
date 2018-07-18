@@ -129,7 +129,7 @@ const mapDispatchToProps = dispatch => ({
 
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+    connect(mapStateToProps, mapDispatchToProps)(
       withHelp(localMessages.helpTitle, [localMessages.helpText, messages.wordTreeHelpText])(
         SelectedStoryDrillDownContainer
       )
