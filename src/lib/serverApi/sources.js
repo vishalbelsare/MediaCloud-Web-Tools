@@ -125,26 +125,6 @@ export function addSourceToCollection(params) {
   return acceptedParams;
 }
 
-export function metadataValuesForCountry(id) {
-  return createApiPromise(`api/metadata/${id}/values`);
-}
-
-export function metadataValuesForState(id) {
-  return createApiPromise(`api/metadata/${id}/values`);
-}
-
-export function metadataValuesForPrimaryLanguage(id) {
-  return createApiPromise(`api/metadata/${id}/values`);
-}
-
-export function metadataValuesForCountryOfFocus(id) {
-  return createApiPromise(`api/metadata/${id}/values`);
-}
-
-export function metadataValuesForMediaType(id) {
-  return createApiPromise(`api/metadata/${id}/values`);
-}
-
 export function createSource(params) {
   const acceptedParams = acceptParams(params, ['name', 'url', 'editor_notes', 'public_notes', 'monitored', 'publicationCountry', 'publicationState', 'mediaType', 'collections[]']);
   return createPostingApiPromise('/api/sources/create', acceptedParams);
