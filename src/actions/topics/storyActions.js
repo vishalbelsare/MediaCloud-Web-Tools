@@ -3,6 +3,7 @@ import { createAsyncAction } from '../../lib/reduxHelpers';
 import * as api from '../../lib/serverApi/topics';
 
 export const FETCH_TOPIC_STORY_COUNTS = 'FETCH_TOPIC_STORY_COUNTS';
+export const FETCH_TOPIC_STORY_INFO = 'FETCH_TOPIC_STORY_INFO';
 export const FETCH_STORY_WORDS = 'FETCH_STORY_WORDS';
 export const FETCH_STORY_INLINKS = 'FETCH_STORY_INLINKS';
 export const FETCH_STORY_OUTLINKS = 'FETCH_STORY_OUTLINKS';
@@ -17,6 +18,10 @@ export const UPDATE_STORY = 'UPDATE_STORY';
 
 // pass in topic id and story id
 export const updateStory = createAsyncAction(UPDATE_STORY, api.storyUpdate, params => params);
+
+// pass in topic id and story id
+export const fetchTopicStoryInfo = createAsyncAction(FETCH_TOPIC_STORY_INFO, api.topicStoryInfo);
+
 
 // pass in topic id and story id
 export const fetchStoryWords = createAsyncAction(FETCH_STORY_WORDS, api.storyWords);

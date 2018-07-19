@@ -9,12 +9,12 @@ export function fetchSavedSearches() {
 }
 
 export function fetchQueryTopWords(params) {
-  const acceptedParams = acceptParams(params, ['index', 'q', 'start_date', 'end_date', 'sources', 'collections']);
+  const acceptedParams = acceptParams(params, ['index', 'q', 'start_date', 'end_date', 'sources', 'collections', 'sample_size']);
   return createApiPromise('/api/explorer/words/count', acceptedParams);
 }
 
 export function fetchDemoQueryTopWords(params) {
-  const acceptedParams = acceptParams(params, ['index', 'search_id', 'query_id', 'q']);
+  const acceptedParams = acceptParams(params, ['index', 'search_id', 'query_id', 'q', 'sample_size']);
   return createApiPromise('/api/explorer/demo/words/count', acceptedParams);
 }
 

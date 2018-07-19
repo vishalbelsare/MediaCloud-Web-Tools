@@ -10,7 +10,7 @@ import ActionMenu from '../../common/ActionMenu';
 import { resetThemes, fetchTopThemes, fetchDemoTopThemes } from '../../../actions/explorerActions';
 import { postToDownloadUrl, downloadExplorerSvg, COVERAGE_REQUIRED } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
-import composeQueryResultsSelector from './QueryResultsSelector';
+import withQueryResults from './QueryResultsSelector';
 import { TAG_SET_NYT_THEMES } from '../../../lib/tagUtil';
 import mapD3Top10Colors from '../../../lib/colorUtil';
 import BubbleRowChart from '../../vis/BubbleRowChart';
@@ -177,7 +177,7 @@ export default
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeSummarizedVisualization(localMessages.title, localMessages.helpIntro, [localMessages.helpDetail, messages.nytThemeHelpDetails])(
         withAsyncFetch(
-          composeQueryResultsSelector(
+          withQueryResults(
             QueryThemesResultsContainer
           )
         )

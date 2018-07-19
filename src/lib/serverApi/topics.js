@@ -31,7 +31,7 @@ export function topicTopMedia(topicId, params) {
 }
 
 export function topicTopWords(topicId, params) {
-  const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId', 'q', 'withTotals']);
+  const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId', 'q', 'withTotals', 'sample_size']);
   return createApiPromise(`/api/topics/${topicId}/words`, acceptedParams);
 }
 
@@ -54,7 +54,7 @@ export function topicStoryCounts(topicId, params) {
   return createApiPromise(`/api/topics/${topicId}/stories/counts`, acceptedParams);
 }
 
-export function story(topicId, storiesId, params) {
+export function topicStoryInfo(topicId, storiesId, params) {
   const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId', 'q']);
   return createApiPromise(`/api/topics/${topicId}/stories/${storiesId}`, acceptedParams);
 }
@@ -102,11 +102,6 @@ export function mediaInlinks(topicId, mediaId, params) {
 export function mediaOutlinks(topicId, mediaId, params) {
   const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId', 'q', 'sort', 'limit']);
   return createApiPromise(`/api/topics/${topicId}/media/${mediaId}/outlinks`, acceptedParams);
-}
-
-export function mediaWords(topicId, mediaId, params) {
-  const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId', 'q']);
-  return createApiPromise(`/api/topics/${topicId}/media/${mediaId}/words`, acceptedParams);
 }
 
 export function topicFocalSetsList(topicId, snapshotId) {
@@ -225,6 +220,11 @@ export function fetchStorySampleByQuery(params) {
 export function fetchWordsByQuery(params) {
   const acceptedParams = acceptParams(params, ['q', 'start_date', 'end_date', 'sources[]', 'collections[]']);
   return createPostingApiPromise('/api/topics/create/preview/words/count', acceptedParams);
+}
+
+export function fetchTopicTopWords(topicId, params) {
+  const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId', 'q', 'sample_size']);
+  return createApiPromise(`/api/topics/${topicId}/words`, acceptedParams);
 }
 
 export function updateTopic(topicId, params) {

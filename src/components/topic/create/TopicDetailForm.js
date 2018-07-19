@@ -154,7 +154,7 @@ const TopicDetailForm = (props) => {
                       component={renderTextField}
                       type="inline"
                       fullWidth
-                      value="100000"
+                      initialValues="100000"
                       floatingLabelText={formatMessage(localMessages.maxStories)}
                       label={formatMessage(localMessages.maxStories)}
                       hintText={100000}

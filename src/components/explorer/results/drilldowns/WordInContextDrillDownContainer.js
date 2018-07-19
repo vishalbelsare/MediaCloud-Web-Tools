@@ -48,7 +48,7 @@ class WordInContextDrillDownContainer extends React.Component {
     // a little crazy, but it works (we have to just walk the DOM rendered by the library we are using)
     const domId = this.getUniqueDomId();
     const svgNode = document.getElementById(domId).children[0].children[0].children[0].children[0];
-    const svgDownloadPrefix = `${slugify(selectedWord)}-in-context`;
+    const svgDownloadPrefix = `${slugify(selectedWord.word)}-in-context`;
     downloadSvg(svgDownloadPrefix, svgNode);
   }
   render() {
@@ -70,7 +70,16 @@ class WordInContextDrillDownContainer extends React.Component {
               <MenuItem
                 className="action-icon-menu-item"
                 primaryText={formatMessage(localMessages.addWordToAllQueries)}
-                onTouchTap={() => handleAddToAllQueries(selectedWord.word)}
+                onTouchTap={() => {
+                  const wordToAdd = selectedWord.word;
+                  handleClose();
+                  handleAddToAllQueries(wordToAdd);
+                }}
+              />
+              <MenuItem
+                className="action-icon-menu-item"
+                primaryText={formatMessage(messages.downloadSVG)}
+                onTouchTap={this.handleDownloadSvg}
               />
             </ActionMenu>
             <h2>

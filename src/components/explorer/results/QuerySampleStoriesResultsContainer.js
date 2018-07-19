@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import MenuItem from 'material-ui/MenuItem';
 import composeSummarizedVisualization from './SummarizedVizualization';
 import withAsyncFetch from '../../common/hocs/AsyncContainer';
@@ -13,7 +12,7 @@ import { fetchQuerySampleStories, fetchDemoQuerySampleStories, resetSampleStorie
 import { selectStory, resetStory } from '../../../actions/storyActions';
 import { postToDownloadUrl } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
-import composeQueryResultsSelector from './QueryResultsSelector';
+import withQueryResults from './QueryResultsSelector';
 
 const localMessages = {
   title: { id: 'explorer.stories.title', defaultMessage: 'Sample Stories' },
@@ -148,10 +147,8 @@ export default
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeSummarizedVisualization(localMessages.title, localMessages.helpIntro, localMessages.helpDetails)(
         withAsyncFetch(
-          withRouter(
-            composeQueryResultsSelector(
-              QuerySampleStoriesResultsContainer
-            )
+          withQueryResults(
+            QuerySampleStoriesResultsContainer
           )
         )
       )
