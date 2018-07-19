@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import composeSummarizedVisualization from './SummarizedVizualization';
+import withSummary from '../../common/hocs/SummarizedVizualization';
 import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import { fetchQueryTopWords, fetchDemoQueryTopWords, resetTopWords, selectWord }
 from '../../../actions/explorerActions';
@@ -139,7 +139,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeSummarizedVisualization(localMessages.title, localMessages.descriptionIntro, messages.wordcloudHelpText)(
+      withSummary(localMessages.title, localMessages.descriptionIntro, messages.wordcloudHelpText)(
         withAsyncFetch(
           withQueryResults(
             QueryWordsResultsContainer

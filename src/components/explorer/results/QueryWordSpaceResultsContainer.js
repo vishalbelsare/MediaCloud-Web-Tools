@@ -4,7 +4,7 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import MenuItem from 'material-ui/MenuItem';
 import ActionMenu from '../../common/ActionMenu';
-import composeSummarizedVisualization from './SummarizedVizualization';
+import withSummary from '../../common/hocs/SummarizedVizualization';
 import { DownloadButton } from '../../common/IconButton';
 import { postToDownloadUrl, downloadExplorerSvg } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
@@ -107,7 +107,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeSummarizedVisualization(localMessages.title, localMessages.descriptionIntro, messages.wordSpaceLayoutHelp)(
+      withSummary(localMessages.title, localMessages.descriptionIntro, messages.wordSpaceLayoutHelp)(
         withAsyncFetch(
           withQueryResults(
             QueryWordSpaceResultsContainer

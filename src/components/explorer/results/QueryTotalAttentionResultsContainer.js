@@ -4,7 +4,7 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import MenuItem from 'material-ui/MenuItem';
 import withAsyncFetch from '../../common/hocs/AsyncContainer';
-import composeSummarizedVisualization from './SummarizedVizualization';
+import withSummary from '../../common/hocs/SummarizedVizualization';
 import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import BubbleRowChart from '../../vis/BubbleRowChart';
@@ -147,7 +147,7 @@ const mapDispatchToProps = () => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeSummarizedVisualization(localMessages.title, localMessages.helpIntro, [localMessages.helpDetails, messages.countsVsPercentageHelp])(
+      withSummary(localMessages.title, localMessages.helpIntro, [localMessages.helpDetails, messages.countsVsPercentageHelp])(
         withAsyncFetch(
           QueryTotalAttentionResultsContainer
         )

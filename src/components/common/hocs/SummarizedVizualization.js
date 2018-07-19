@@ -4,11 +4,11 @@ import { FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
 
 const localMessage = {
-  showDetails: { id: 'describedDataCard.description.show', defaultMessage: 'learn more' },
-  hideDescription: { id: 'describedDataCard.description.hide', defaultMessage: 'hide details' },
+  showDetails: { id: 'summarizedContainer.description.show', defaultMessage: 'learn more' },
+  hideDescription: { id: 'summarizedContainer.description.hide', defaultMessage: 'hide details' },
 };
 
-function composeSummarizedVisualization(titleMesage, introMessage, detailedMesasge) {
+function withSummary(titleMesage, introMessage, detailedMesasge) {
   return (ChildComponent) => {
     class SummarizedVisualization extends React.Component {
       state = {
@@ -85,4 +85,4 @@ function composeSummarizedVisualization(titleMesage, introMessage, detailedMesas
   };
 }
 
-export default composeSummarizedVisualization;
+export default withSummary;

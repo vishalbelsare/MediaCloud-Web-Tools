@@ -3,7 +3,7 @@ import React from 'react';
 import { injectIntl, FormattedHTMLMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import MenuItem from 'material-ui/MenuItem';
-import composeSummarizedVisualization from './SummarizedVizualization';
+import withSummary from '../../common/hocs/SummarizedVizualization';
 import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
@@ -155,7 +155,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeSummarizedVisualization(localMessages.title, localMessages.helpIntro, [messages.entityHelpDetails])(
+      withSummary(localMessages.title, localMessages.helpIntro, [messages.entityHelpDetails])(
         withAsyncFetch(
           withQueryResults(
             QueryTopEntitiesOrgsResultsContainer
