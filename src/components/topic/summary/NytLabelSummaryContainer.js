@@ -2,19 +2,18 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import MenuItem from 'material-ui/MenuItem';
 import { schemeCategory10 } from 'd3';
 import { push } from 'react-router-redux';
+import MenuItem from 'material-ui/MenuItem';
+import ActionMenu from '../../common/ActionMenu';
 import { fetchTopicNytLabelCounts, filterByQuery } from '../../../actions/topicActions';
 import withAsyncFetch from '../../common/hocs/AsyncContainer';
-import withDescription from '../../common/hocs/DescribedDataCard';
+import withSummary from '../../common/hocs/SummarizedVizualization';
 import BubbleRowChart from '../../vis/BubbleRowChart';
 import { downloadSvg } from '../../util/svg';
-import DataCard from '../../common/DataCard';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import messages from '../../../resources/messages';
-import ActionMenu from '../../common/ActionMenu';
 import { DownloadButton } from '../../common/IconButton';
 import { filtersAsUrlParams, filteredLocation } from '../../util/location';
 import { WarningNotice } from '../../common/Notice';
@@ -26,8 +25,8 @@ const COVERAGE_REQUIRED = 0.8;  // need > this many of the stories tagged to sho
 const BUBBLES_TO_SHOW = 5;
 
 const localMessages = {
-  title: { id: 'topic.summary.nytLabels.title', defaultMessage: 'Top {number} Themes' },
-  descriptionIntro: { id: 'topic.summary.nytLabels.help.title', defaultMessage: 'The top themes that stories within this Topic are about, as determined by our machine learning models trained on news media.' },
+  title: { id: 'topic.summary.nytLabels.title', defaultMessage: 'Top 5 Themes' },
+  descriptionIntro: { id: 'topic.summary.nytLabels.help.title', defaultMessage: '<p>The top themes that stories within this Topic are about, as determined by our machine learning models trained on news media.</p>' },
   notEnoughData: { id: 'topic.summary.nytLabels.notEnoughData',
     defaultMessage: 'Sorry, but only {pct} of the stories have been processed to add themes.  We can\'t gaurantee the accuracy of partial results, so we can\'t show a report of the top themes right now.  If you are really curious, you can download the CSV using the link in the top-right of this box, but don\'t trust those numbers as fully accurate. Email us if you want us to process this topic to add themes.',
   },
@@ -61,7 +60,7 @@ class NytLabelSummaryContainer extends React.Component {
     }
   }
   render() {
-    const { data, coverage } = this.props;
+    const { data, coverage, topicId } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
     const coverageRatio = coverage.total !== undefined && coverage.total > 0 ? coverage.count / coverage.total : 0;
     let content;
@@ -91,28 +90,7 @@ class NytLabelSummaryContainer extends React.Component {
         );
       }
       content = (
-        <div>
-          <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
-            <div className="actions">
-              <ActionMenu>
-                <MenuItem
-                  className="action-icon-menu-item"
-                  primaryText={formatMessage(messages.downloadCSV)}
-                  rightIcon={<DownloadButton />}
-                  onTouchTap={this.downloadCsv}
-                />
-                <MenuItem
-                  className="action-icon-menu-item"
-                  primaryText={formatMessage(messages.downloadSVG)}
-                  rightIcon={<DownloadButton />}
-                  onTouchTap={() => downloadSvg(BUBBLE_CHART_DOM_ID)}
-                />
-              </ActionMenu>
-            </div>
-          </Permissioned>
-          <h2>
-            <FormattedMessage {...localMessages.title} values={{ number: BUBBLES_TO_SHOW }} />
-          </h2>
+        <React.Fragment>
           {warning}
           <BubbleRowChart
             maxBubbleRadius={60}
@@ -124,33 +102,39 @@ class NytLabelSummaryContainer extends React.Component {
             onBubbleClick={this.handleBubbleClick}
             minCutoffValue={0.05}
           />
-        </div>
+          <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
+            <div className="actions">
+              <ActionMenu actionTextMsg={messages.downloadOptions}>
+                <MenuItem
+                  className="action-icon-menu-item"
+                  primaryText={formatMessage(messages.downloadCSV)}
+                  rightIcon={<DownloadButton />}
+                  onClick={this.downloadCsv}
+                />
+                <MenuItem
+                  className="action-icon-menu-item"
+                  primaryText={formatMessage(messages.downloadSVG)}
+                  rightIcon={<DownloadButton />}
+                  onClick={() => downloadSvg(`themes-${topicId}`, BUBBLE_CHART_DOM_ID)}
+                />
+              </ActionMenu>
+            </div>
+          </Permissioned>
+        </React.Fragment>
       );
     } else {
       content = (
-        <div>
-          <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
-            <div className="actions">
-              <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
-            </div>
-          </Permissioned>
-          <h2>
-            <FormattedMessage {...localMessages.title} values={{ number: BUBBLES_TO_SHOW }} />
-          </h2>
+        <React.Fragment>
           <p>
             <FormattedMessage
               {...localMessages.notEnoughData}
               values={{ pct: formatNumber(coverageRatio, { style: 'percent', maximumFractionDigits: 2 }) }}
             />
           </p>
-        </div>
+        </React.Fragment>
       );
     }
-    return (
-      <DataCard>
-        {content}
-      </DataCard>
-    );
+    return content;
   }
 }
 
@@ -204,7 +188,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      withDescription(localMessages.descriptionIntro, messages.nytThemeHelpDetails)(
+      withSummary(localMessages.title, localMessages.descriptionIntro, messages.nytThemeHelpDetails)(
         withAsyncFetch(
           NytLabelSummaryContainer
         )

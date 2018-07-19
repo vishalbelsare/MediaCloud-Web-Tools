@@ -166,26 +166,32 @@ class TopicSummaryContainer extends React.Component {
           break;
       }
       content = (
-        <Grid>
-          <Row>
-            <Col lg={12}>
-              {intro}
-            </Col>
-          </Row>
-          <Row>
-            <TabSelector
-              tabLabels={[
-                formatMessage(messages.attention),
-                formatMessage(messages.language),
-                formatMessage(messages.representation),
-                formatMessage(messages.influence),
-                formatMessage(localMessages.aboutTab),
-              ]}
-              onViewSelected={index => this.setState({ selectedViewIndex: index })}
-            />
-          </Row>
-          {viewContent}
-        </Grid>
+        <React.Fragment>
+          <Grid>
+            <Row>
+              <Col lg={12}>
+                {intro}
+              </Col>
+            </Row>
+            <Row>
+              <TabSelector
+                tabLabels={[
+                  formatMessage(messages.attention),
+                  formatMessage(messages.language),
+                  formatMessage(messages.representation),
+                  formatMessage(messages.influence),
+                  formatMessage(localMessages.aboutTab),
+                ]}
+                onViewSelected={index => this.setState({ selectedViewIndex: index })}
+              />
+            </Row>
+          </Grid>
+          <div className="tabbed-content-wrapper">
+            <Grid>
+              {viewContent}
+            </Grid>
+          </div>
+        </React.Fragment>
       );
     } else {
       content = <LoadingSpinner />;
