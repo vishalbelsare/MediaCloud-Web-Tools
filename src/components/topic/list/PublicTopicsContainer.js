@@ -45,6 +45,7 @@ PublicTopicsContainer.propTypes = {
 const mapStateToProps = state => ({
   fetchStatus: state.topics.publicList.fetchStatus,
   topics: state.topics.publicList.topics,
+  isLoggedIn: state.user.isLoggedIn,
 });
 
 const mapDispatchToProps = dispatch => ({
