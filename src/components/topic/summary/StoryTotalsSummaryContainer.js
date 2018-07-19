@@ -11,6 +11,7 @@ import Permissioned from '../../common/Permissioned';
 import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import BubbleRowChart from '../../vis/BubbleRowChart';
 import { DownloadButton } from '../../common/IconButton';
+import { topicDownloadFilename } from '../../util/topicUtil';
 import { getBrandDarkColor } from '../../../styles/colors';
 import messages from '../../../resources/messages';
 import { downloadSvg } from '../../util/svg';
@@ -37,7 +38,7 @@ class StoryTotalsSummaryContainer extends React.Component {
     }
   }
   render() {
-    const { counts, topicId } = this.props;
+    const { counts, topicName, filters } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
     let content = null;
     if (counts !== null) {
@@ -70,7 +71,7 @@ class StoryTotalsSummaryContainer extends React.Component {
                 className="action-icon-menu-item"
                 primaryText={formatMessage(messages.downloadSVG)}
                 rightIcon={<DownloadButton />}
-                onClick={() => downloadSvg(`filtered-story-counts-${topicId}`, BUBBLE_CHART_DOM_ID)}
+                onClick={() => downloadSvg(`${topicDownloadFilename(topicName, filters)}-filtered-story-count`, BUBBLE_CHART_DOM_ID)}
               />
             </ActionMenu>
           </div>
@@ -85,6 +86,7 @@ StoryTotalsSummaryContainer.propTypes = {
   intl: PropTypes.object.isRequired,
   // from parent
   topicId: PropTypes.number.isRequired,
+  topicName: PropTypes.string.isRequired,
   filters: PropTypes.object.isRequired,
   // from dispatch
   asyncFetch: PropTypes.func.isRequired,

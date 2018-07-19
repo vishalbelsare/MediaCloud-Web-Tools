@@ -54,7 +54,7 @@ class TopicSummaryContainer extends React.Component {
       filteredStoryCountContent = (
         <Row>
           <Col lg={12}>
-            <StoryTotalsSummaryContainer topicId={topicId} filters={filters} />
+            <StoryTotalsSummaryContainer topicId={topicId} topicName={topicInfo.name} filters={filters} />
           </Col>
         </Row>
       );
@@ -75,7 +75,7 @@ class TopicSummaryContainer extends React.Component {
                 {filteredStoryCountContent}
                 <Row>
                   <Col lg={12}>
-                    <NytLabelSummaryContainer topicId={topicId} filters={filters} location={location} />
+                    <NytLabelSummaryContainer topicId={topicId} filters={filters} topicName={topicInfo.name} location={location} />
                   </Col>
                 </Row>
               </Permissioned>
@@ -91,7 +91,7 @@ class TopicSummaryContainer extends React.Component {
                   <WordsSummaryContainer topicId={topicId} topicName={topicInfo.name} filters={filters} width={720} />
                 </Col>
                 <Col lg={12}>
-                  <TopicWordSpaceContainer topicId={topicId} />
+                  <TopicWordSpaceContainer topicId={topicId} topicName={topicInfo.name} filters={filters} />
                 </Col>
               </Row>
             </span>

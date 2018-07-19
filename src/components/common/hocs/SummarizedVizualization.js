@@ -90,7 +90,7 @@ function withSummary(titleMessage, introMessage, detailedMessage) {
     SummarizedVisualization.propTypes = {
       intl: PropTypes.object.isRequired,
       // from child:
-      handleExplore: PropTypes.func.isRequired,
+      handleExplore: PropTypes.func,
     };
 
     return injectIntl(SummarizedVisualization);

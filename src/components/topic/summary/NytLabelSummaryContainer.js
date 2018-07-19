@@ -13,6 +13,7 @@ import BubbleRowChart from '../../vis/BubbleRowChart';
 import { downloadSvg } from '../../util/svg';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
+import { topicDownloadFilename } from '../../util/topicUtil';
 import messages from '../../../resources/messages';
 import { DownloadButton } from '../../common/IconButton';
 import { filtersAsUrlParams, filteredLocation } from '../../util/location';
@@ -60,7 +61,7 @@ class NytLabelSummaryContainer extends React.Component {
     }
   }
   render() {
-    const { data, coverage, topicId } = this.props;
+    const { data, coverage, topicName, filters } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
     const coverageRatio = coverage.total !== undefined && coverage.total > 0 ? coverage.count / coverage.total : 0;
     let content;
@@ -115,7 +116,7 @@ class NytLabelSummaryContainer extends React.Component {
                   className="action-icon-menu-item"
                   primaryText={formatMessage(messages.downloadSVG)}
                   rightIcon={<DownloadButton />}
-                  onClick={() => downloadSvg(`themes-${topicId}`, BUBBLE_CHART_DOM_ID)}
+                  onClick={() => downloadSvg(`${topicDownloadFilename(topicName, filters)}-themes`, BUBBLE_CHART_DOM_ID)}
                 />
               </ActionMenu>
             </div>
@@ -141,13 +142,14 @@ class NytLabelSummaryContainer extends React.Component {
 NytLabelSummaryContainer.propTypes = {
   // from parent
   location: PropTypes.object.isRequired,
+  filters: PropTypes.object.isRequired,
+  topicId: PropTypes.number.isRequired,
+  topicName: PropTypes.number.isRequired,
   // from composition chain
   intl: PropTypes.object.isRequired,
   // from state
   fetchStatus: PropTypes.string.isRequired,
-  filters: PropTypes.object.isRequired,
   coverage: PropTypes.object.isRequired,
-  topicId: PropTypes.number.isRequired,
   data: PropTypes.array,
   // from dispatch
   fetchData: PropTypes.func.isRequired,
@@ -158,13 +160,14 @@ const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.nytlabels.fetchStatus,
   data: state.topics.selected.nytlabels.entities,
   coverage: state.topics.selected.nytlabels.coverage,
-  filters: state.topics.selected.filters,
-  topicId: state.topics.selected.id,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (props) => {
     dispatch(fetchTopicNytLabelCounts(props.topicId, props.filters));
+  },
+  asyncFetch: () => {
+    dispatch(fetchTopicNytLabelCounts(ownProps.topicId, ownProps.filters));
   },
   updateQueryFilter: (newQueryFilter) => {
     const newFilters = {
@@ -177,17 +180,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
 });
 
-function mergeProps(stateProps, dispatchProps, ownProps) {
-  return Object.assign({}, stateProps, dispatchProps, ownProps, {
-    asyncFetch: () => {
-      dispatchProps.fetchData(stateProps);
-    },
-  });
-}
-
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+    connect(mapStateToProps, mapDispatchToProps)(
       withSummary(localMessages.title, localMessages.descriptionIntro, messages.nytThemeHelpDetails)(
         withAsyncFetch(
           NytLabelSummaryContainer
