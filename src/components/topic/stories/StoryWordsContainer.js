@@ -76,14 +76,9 @@ StoryWordsContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-<<<<<<< HEAD
-  fetchStatus: state.story.words.fetchStatus,
-  words: state.story.words.list,
-=======
   fetchStatus: state.topics.selected.story.words.fetchStatus,
   topicInfo: state.topics.selected.info,
   words: state.topics.selected.story.words.list,
->>>>>>> 0d62cf6ce63edb2a0dd313cde4ac7c1aeeb193d5
   filters: state.topics.selected.filters,
 });
 
