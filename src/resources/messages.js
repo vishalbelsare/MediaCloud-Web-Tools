@@ -59,7 +59,7 @@ const messages = {
   sourceScrapeFailed: { id: 'source.deatils.feeds.failed', defaultMessage: 'Sorry, for some reason we couldn\'t start the scraping job' },
   sourceScrapeStatus: { id: 'source.deatils.feeds.scrapeStatus', defaultMessage: 'Feed Scrape Status' },
 
-  favoritedCollectionsTitle: { id: 'favorited.collections.title', defaultMessage: 'Starred Collections' },
+  favoritedCollectionsTitle: { id: 'favorited.collections.title', defaultMessage: 'My Starred Collections' },
   favoritedSourcesTitle: { id: 'favorited.souces.title', defaultMessage: 'Starred Sources' },
   exploreFavorites: { id: 'favorited.explore', defaultMessage: 'View Starred Sources And Collections' },
 
@@ -166,6 +166,7 @@ const messages = {
   downloadCSV: { id: 'downloadCSV', defaultMessage: 'Download a CSV' },
   downloadOptions: { id: 'downloadOptions', defaultMessage: 'Download Options...' },
   viewOptions: { id: 'viewOptions', defaultMessage: 'View Options...' },
+  viewSampleOptions: { id: 'viewSampleOptions', defaultMessage: 'Change Sample Sizes...' },
   favorite: { id: 'favorite', defaultMessage: 'Star' },
   unfavorite: { id: 'unfavorite', defaultMessage: 'Un-star' },
   explore: { id: 'explore', defaultMessage: 'Explore' },

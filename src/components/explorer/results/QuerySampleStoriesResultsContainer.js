@@ -11,7 +11,7 @@ import StoryTable from '../../common/StoryTable';
 import { fetchQuerySampleStories, fetchDemoQuerySampleStories, resetSampleStories } from '../../../actions/explorerActions';
 import { postToDownloadUrl } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
-import composeQueryResultsSelector from './QueryResultsSelector';
+import withQueryResults from './QueryResultsSelector';
 
 const localMessages = {
   title: { id: 'explorer.stories.title', defaultMessage: 'Sample Stories' },
@@ -127,7 +127,7 @@ export default
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeSummarizedVisualization(localMessages.title, localMessages.helpIntro, localMessages.helpDetails)(
         withAsyncFetch(
-          composeQueryResultsSelector(
+          withQueryResults(
             QuerySampleStoriesResultsContainer
           )
         )

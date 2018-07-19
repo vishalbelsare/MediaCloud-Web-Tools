@@ -4,7 +4,7 @@ from flask import jsonify, request
 import flask_login
 
 from server import app, TOOL_API_KEY
-from server.views import WORD_COUNT_DOWNLOAD_LENGTH
+from server.views import WORD_COUNT_DOWNLOAD_NUM_WORDS
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, is_user_logged_in
 from server.util import csv
 from server.views.topics import validated_sort, TOPIC_MEDIA_CSV_PROPS
@@ -135,22 +135,15 @@ def _media_info_worker(media_topic_data):
 def _stream_media_list_csv(user_mc_key, filename, topics_id, **kwargs):
     # Helper method to stream a list of media back to the client as a csv.  Any args you pass in will be
     # simply be passed on to a call to topicMediaList.
-    add_metadata = False  # off for now because this is SUPER slow
     all_media = []
     more_media = True
     params = kwargs
     params['limit'] = 1000  # an arbitrary value to let us page through with big pages
     try:
-        cols_to_export = TOPIC_MEDIA_CSV_PROPS
-        if not add_metadata:
-            cols_to_export = cols_to_export[:-4]    # remove the metadata cols
 
         while more_media:
             page = apicache.topic_media_list(user_mediacloud_key(), topics_id, **params)
             media_list = page['media']
-
-            if add_metadata:
-                media_list = [_media_info_worker(m) for m in media_list]
 
             all_media = all_media + media_list
 
@@ -160,7 +153,7 @@ def _stream_media_list_csv(user_mc_key, filename, topics_id, **kwargs):
             else:
                 more_media = False
 
-        return csv.download_media_csv(all_media, filename, cols_to_export)
+        return csv.download_media_csv(all_media, filename, TOPIC_MEDIA_CSV_PROPS)
     except Exception as exception:
         return json.dumps({'error': str(exception)}, separators=(',', ':')), 400
 
@@ -180,6 +173,6 @@ def media_words_csv(topics_id, media_id):
     query = apicache.add_to_user_query('media_id:'+media_id)
     ngram_size = request.args['ngram_size'] if 'ngram_size' in request.args else 1  # default to word count
     word_counts = apicache.topic_ngram_counts(user_mediacloud_key(), topics_id, ngram_size=ngram_size, q=query,
-                                     num_words=WORD_COUNT_DOWNLOAD_LENGTH)
+                                              num_words=WORD_COUNT_DOWNLOAD_NUM_WORDS)
     return csv.stream_response(word_counts, apicache.WORD_COUNT_DOWNLOAD_COLUMNS,
                                'topic-{}-media-{}-sampled-ngrams-{}-word'.format(topics_id, media_id, ngram_size))

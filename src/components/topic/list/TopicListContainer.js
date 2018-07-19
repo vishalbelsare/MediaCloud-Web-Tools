@@ -67,9 +67,7 @@ class TopicListContainer extends React.Component {
         </Row>
 
         <div className="tabbed-content-wrapper">
-          <Row>
-            {viewContent}
-          </Row>
+          {viewContent}
         </div>
 
       </div>

@@ -10,7 +10,7 @@ import { postToDownloadUrl, downloadExplorerSvg } from '../../../lib/explorerUti
 import messages from '../../../resources/messages';
 import WordSpace from '../../vis/WordSpace';
 import withAsyncFetch from '../../common/hocs/AsyncContainer';
-import composeQueryResultsSelector from './QueryResultsSelector';
+import withQueryResults from './QueryResultsSelector';
 
 const localMessages = {
   title: { id: 'explorer.topWords.title', defaultMessage: 'Word Space' },
@@ -109,7 +109,7 @@ export default
     connect(mapStateToProps, mapDispatchToProps)(
       composeSummarizedVisualization(localMessages.title, localMessages.descriptionIntro, messages.wordSpaceLayoutHelp)(
         withAsyncFetch(
-          composeQueryResultsSelector(
+          withQueryResults(
             QueryWordSpaceResultsContainer
           )
         )

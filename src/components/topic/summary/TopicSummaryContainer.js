@@ -203,7 +203,7 @@ TopicSummaryContainer.propTypes = {
   // from context
   intl: PropTypes.object.isRequired,
   params: PropTypes.object,
-  location: PropTypes.object.isRequired,
+  location: PropTypes.object,
   // from state
   selectedTimespan: PropTypes.object,
   filters: PropTypes.object.isRequired,

@@ -50,7 +50,7 @@ class KeywordStoryCountPreviewContainer extends React.Component {
       content = (<BubbleRowChart
         data={data}
         domId={BUBBLE_CHART_DOM_ID}
-        width={440}
+        width={400}
         padding={30}
       />);
     }
