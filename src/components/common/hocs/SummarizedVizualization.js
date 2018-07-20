@@ -10,7 +10,7 @@ const localMessage = {
   hideDescription: { id: 'summarizedContainer.description.hide', defaultMessage: 'hide details' },
 };
 
-function withSummary(titleMessage, introMessage, detailedMessage) {
+function withSummary(titleMessage, introMessage, detailedMessage, wide) {
   return (ChildComponent) => {
     class SummarizedVisualization extends React.Component {
       state = {
@@ -56,7 +56,7 @@ function withSummary(titleMessage, introMessage, detailedMessage) {
         }
 
         return (
-          <div className="summarized-viz">
+          <div className={`summarized-viz ${wide ? 'wide' : ''}`}>
             <Row>
               <Col lg={4}>
                 <div className="summary">
@@ -74,8 +74,8 @@ function withSummary(titleMessage, introMessage, detailedMessage) {
                   {detailsContent}
                 </div>
               </Col>
-              <Col lg={1} />
-              <Col lg={7}>
+              {!wide && <Col lg={1} />}
+              <Col lg={wide ? 8 : 7}>
                 <div className="content">
                   <ChildComponent {...this.props} showingDetails={this.state.showingDetails} handleExtraContent={this.handleExtraContent} />
                 </div>

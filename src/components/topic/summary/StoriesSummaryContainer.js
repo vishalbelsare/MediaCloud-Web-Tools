@@ -1,16 +1,14 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import MenuItem from 'material-ui/MenuItem';
 import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import withCsvDownloadNotifyContainer from '../../common/hocs/CsvDownloadNotifyContainer';
-import withDescription from '../../common/hocs/DescribedDataCard';
+import withSummary from '../../common/hocs/SummarizedVizualization';
 import { fetchTopicTopStories, sortTopicTopStories, filterByFocus } from '../../../actions/topicActions';
-import DataCard from '../../common/DataCard';
 import Permissioned from '../../common/Permissioned';
-import LinkWithFilters from '../LinkWithFilters';
 import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import { ExploreButton, DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
@@ -21,7 +19,7 @@ import { HELP_STORIES_CSV_COLUMNS } from '../../../lib/helpConstants';
 
 const localMessages = {
   title: { id: 'topic.summary.stories.title', defaultMessage: 'Top Stories' },
-  descriptionIntro: { id: 'topic.summary.stories.help.title', defaultMessage: 'The top stories within this topic can suggest the main ways it is talked about.  Sort by different measures to get a better picture of a story\'s influence.' },
+  descriptionIntro: { id: 'topic.summary.stories.help.title', defaultMessage: '<p>The top stories within this topic can suggest the main ways it is talked about.  Sort by different measures to get a better picture of a story\'s influence.</p>' },
   downloadNoFBData: { id: 'topic.summary.stories.download.noFB', defaultMessage: 'Download Csv' },
   downloadWithFBData: { id: 'topic.summary.stories.download.withFB', defaultMessage: 'Download CSV w/Facebook collection date (takes longer)' },
 };
@@ -57,11 +55,20 @@ class StoriesSummaryContainer extends React.Component {
     const exploreUrl = `/topics/${topicId}/stories`;
     const isLoggedIn = hasPermissions(getUserRoles(user), PERMISSION_LOGGED_IN);
     return (
-      <DataCard className="topic-summary-top-stories">
+      <React.Fragment>
+        <TopicStoryTable
+          stories={stories}
+          showTweetCounts={showTweetCounts}
+          topicId={topicId}
+          onChangeSort={isLoggedIn ? this.onChangeSort : null}
+          onChangeFocusSelection={handleFocusSelected}
+          sortedBy={sort}
+          maxTitleLength={50}
+        />
         <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
           <div className="actions">
             <ExploreButton linkTo={filteredLinkTo(exploreUrl, filters)} />
-            <ActionMenu>
+            <ActionMenu actionTextMsg={messages.downloadOptions}>
               <MenuItem
                 className="action-icon-menu-item"
                 id="topic-summary-top-stories-download"
@@ -79,21 +86,7 @@ class StoriesSummaryContainer extends React.Component {
             </ActionMenu>
           </div>
         </Permissioned>
-        <h2>
-          <LinkWithFilters to={`/topics/${topicId}/stories`}>
-            <FormattedMessage {...localMessages.title} />
-          </LinkWithFilters>
-        </h2>
-        <TopicStoryTable
-          stories={stories}
-          showTweetCounts={showTweetCounts}
-          topicId={topicId}
-          onChangeSort={isLoggedIn ? this.onChangeSort : null}
-          onChangeFocusSelection={handleFocusSelected}
-          sortedBy={sort}
-          maxTitleLength={50}
-        />
-      </DataCard>
+      </React.Fragment>
     );
   }
 }
@@ -110,6 +103,7 @@ StoriesSummaryContainer.propTypes = {
   fetchData: PropTypes.func.isRequired,
   handleFocusSelected: PropTypes.func.isRequired,
   sortData: PropTypes.func.isRequired,
+  handleExplore: PropTypes.func.isRequired,
   // from state
   fetchStatus: PropTypes.string.isRequired,
   sort: PropTypes.string.isRequired,
@@ -148,6 +142,10 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   sortData: (sort) => {
     dispatch(sortTopicTopStories(sort));
   },
+  handleExplore: () => {
+    const exploreUrl = filteredLinkTo(`/topics/${ownProps.topicId}/stories`, ownProps.filters);
+    dispatch(push(exploreUrl));
+  },
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
@@ -165,7 +163,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      withDescription(localMessages.descriptionIntro, messages.storiesTableHelpText)(
+      withSummary(localMessages.title, localMessages.descriptionIntro, messages.storiesTableHelpText, true)(
         withAsyncFetch(
           withCsvDownloadNotifyContainer(
             StoriesSummaryContainer

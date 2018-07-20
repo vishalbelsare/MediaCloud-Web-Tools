@@ -12,7 +12,6 @@ import withQueryResults from './QueryResultsSelector';
 import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
 
 const localMessages = {
-  title: { id: 'explorer.topWords.title', defaultMessage: 'Top Words' },
   descriptionIntro: { id: 'explorer.topWords.help.title', defaultMessage: '<p>Here are the top words used with each query. Looking at the language used can help you identify how this issue is talked about in the media online.</p>' },
   menuHeader: { id: 'explorer.topWords.menuHeader', defaultMessage: 'Query: {queryName}' },
 };
@@ -139,7 +138,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      withSummary(localMessages.title, localMessages.descriptionIntro, messages.wordcloudHelpText)(
+      withSummary(messages.topWords, localMessages.descriptionIntro, messages.wordcloudHelpText)(
         withAsyncFetch(
           withQueryResults(
             QueryWordsResultsContainer

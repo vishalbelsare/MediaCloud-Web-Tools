@@ -63,66 +63,9 @@ class TopicSummaryContainer extends React.Component {
       let viewContent;
       switch (this.state.selectedViewIndex) {
         case 0:
-          // attention
-          viewContent = (
-            <span>
-              <Row>
-                <Col lg={12}>
-                  <SplitStoryCountSummaryContainer topicId={topicId} filters={filters} />
-                </Col>
-              </Row>
-              <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
-                {filteredStoryCountContent}
-                <Row>
-                  <Col lg={12}>
-                    <NytLabelSummaryContainer topicId={topicId} filters={filters} topicName={topicInfo.name} location={location} />
-                  </Col>
-                </Row>
-              </Permissioned>
-            </span>
-          );
-          break;
-        case 1:
-          // language
-          viewContent = (
-            <span>
-              <Row>
-                <Col lg={12}>
-                  <WordsSummaryContainer topicId={topicId} topicName={topicInfo.name} filters={filters} width={720} />
-                </Col>
-                <Col lg={12}>
-                  <TopicWordSpaceContainer topicId={topicId} topicName={topicInfo.name} filters={filters} />
-                </Col>
-              </Row>
-            </span>
-          );
-          break;
-        case 2:
-          // representation
-          viewContent = (
-            <span>
-              <Row>
-                <Col lg={6}>
-                  <TopPeopleContainer topicId={topicId} filters={filters} location={location} />
-                </Col>
-                <Col lg={6}>
-                  <TopOrgsContainer topicId={topicId} filters={filters} location={location} />
-                </Col>
-              </Row>
-              <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
-                <Row>
-                  <Col lg={12}>
-                    <GeoTagSummaryContainer topicId={topicId} filters={filters} />
-                  </Col>
-                </Row>
-              </Permissioned>
-            </span>
-          );
-          break;
-        case 3:
           // influence
           viewContent = (
-            <span>
+            <React.Fragment>
               <Row>
                 <Col lg={12}>
                   <StoriesSummaryContainer topicId={topicId} filters={filters} location={location} />
@@ -140,13 +83,72 @@ class TopicSummaryContainer extends React.Component {
                   </Col>
                 </Row>
               </Permissioned>
-            </span>
+            </React.Fragment>
+          );
+          break;
+        case 1:
+          // attention
+          viewContent = (
+            <React.Fragment>
+              <Row>
+                <Col lg={12}>
+                  <SplitStoryCountSummaryContainer topicId={topicId} filters={filters} />
+                </Col>
+              </Row>
+              <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
+                {filteredStoryCountContent}
+                <Row>
+                  <Col lg={12}>
+                    <NytLabelSummaryContainer topicId={topicId} filters={filters} topicName={topicInfo.name} location={location} />
+                  </Col>
+                </Row>
+              </Permissioned>
+            </React.Fragment>
+          );
+          break;
+        case 2:
+          // language
+          viewContent = (
+            <React.Fragment>
+              <Row>
+                <Col lg={12}>
+                  <WordsSummaryContainer topicId={topicId} topicName={topicInfo.name} filters={filters} width={720} />
+                </Col>
+                <Col lg={12}>
+                  <TopicWordSpaceContainer topicId={topicId} topicName={topicInfo.name} filters={filters} />
+                </Col>
+              </Row>
+            </React.Fragment>
+          );
+          break;
+        case 3:
+          // representation
+          viewContent = (
+            <React.Fragment>
+              <Row>
+                <Col lg={12}>
+                  <TopPeopleContainer topicId={topicId} filters={filters} location={location} />
+                </Col>
+              </Row>
+              <Row>
+                <Col lg={12}>
+                  <TopOrgsContainer topicId={topicId} filters={filters} location={location} />
+                </Col>
+              </Row>
+              <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
+                <Row>
+                  <Col lg={12}>
+                    <GeoTagSummaryContainer topicId={topicId} filters={filters} />
+                  </Col>
+                </Row>
+              </Permissioned>
+            </React.Fragment>
           );
           break;
         case 4:
           // about
           viewContent = (
-            <span>
+            <React.Fragment>
               <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
                 <Row>
                   <Col lg={12}>
@@ -159,7 +161,7 @@ class TopicSummaryContainer extends React.Component {
                   </Col>
                 </Row>
               </Permissioned>
-            </span>
+            </React.Fragment>
           );
           break;
         default:
@@ -176,10 +178,10 @@ class TopicSummaryContainer extends React.Component {
             <Row>
               <TabSelector
                 tabLabels={[
+                  formatMessage(messages.influence),
                   formatMessage(messages.attention),
                   formatMessage(messages.language),
                   formatMessage(messages.representation),
-                  formatMessage(messages.influence),
                   formatMessage(localMessages.aboutTab),
                 ]}
                 onViewSelected={index => this.setState({ selectedViewIndex: index })}

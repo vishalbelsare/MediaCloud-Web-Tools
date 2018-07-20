@@ -14,7 +14,7 @@ import Permissioned from '../../common/Permissioned';
 import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import { DownloadButton } from '../../common/IconButton';
 import { getBrandDarkColor } from '../../../styles/colors';
-import { filtersAsUrlParams } from '../../util/location';
+import { filteredLinkTo, filtersAsUrlParams } from '../../util/location';
 
 const localMessages = {
   title: { id: 'topic.summary.splitStoryCount.title', defaultMessage: 'Attention Over Time' },
@@ -90,7 +90,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     dispatch(fetchTopicSplitStoryCounts(props.topicId, props.filters));
   },
   handleExplore: () => {
-    const exploreUrl = `/topics/${ownProps.topicId}/attention?${filtersAsUrlParams(ownProps.filters)}`;
+    const exploreUrl = filteredLinkTo(`/topics/${ownProps.topicId}/attention`, ownProps.filters);
     dispatch(push(exploreUrl));
   },
 });
