@@ -58,7 +58,7 @@ function withSummary(titleMessage, introMessage, detailedMessage, wide) {
         return (
           <div className={`summarized-viz ${wide ? 'wide' : ''}`}>
             <Row>
-              <Col lg={4}>
+              <Col lg={wide ? 3 : 4}>
                 <div className="summary">
                   { titleMessage && <h2><FormattedHTMLMessage {...titleMessage} /></h2> }
                   { handleExplore && (
@@ -75,7 +75,7 @@ function withSummary(titleMessage, introMessage, detailedMessage, wide) {
                 </div>
               </Col>
               {!wide && <Col lg={1} />}
-              <Col lg={wide ? 8 : 7}>
+              <Col lg={wide ? 9 : 7}>
                 <div className="content">
                   <ChildComponent {...this.props} showingDetails={this.state.showingDetails} handleExtraContent={this.handleExtraContent} />
                 </div>
