@@ -31,11 +31,12 @@ class QueryGeoResultsContainer extends React.Component {
     let content;
     const coverageRatio = results[selectedTabIndex] ? results[selectedTabIndex].coverage_percentage : 0;
     if (coverageRatio > COVERAGE_REQUIRED) {
+      const data = results[selectedTabIndex].results.map(item => ({ ...item, value: item.pct }));
       content = (
         <div>
           {results[selectedTabIndex] &&
             <GeoChart
-              data={results[selectedTabIndex].results}
+              data={data}
               countryMaxColorScale={queries[selectedTabIndex].color}
               hideLegend
               onCountryClick={handleCountryClick}
