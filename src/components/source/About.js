@@ -3,10 +3,10 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import SourceManagerFaq from './faq/SourceManagerFaq';
+import SourcesMarketingFeatureList from './homepage/SourcesMarketingFeatureList';
 
 const localMessages = {
-  aboutTitle: { id: 'about.title', defaultMessage: 'Source Manager' },
+  aboutTitle: { id: 'about.title', defaultMessage: 'About Source Manager' },
   aboutText: { id: 'about.text', defaultMessage: 'Browse the media sources and collections in our database, and suggest more to add.' },
 };
 
@@ -20,12 +20,11 @@ const About = (props) => {
         <Row>
           <Col lg={12}>
             <h1><FormattedMessage {...localMessages.aboutTitle} /></h1>
-            <p className="intro"><FormattedMessage {...localMessages.aboutText} /></p>
           </Col>
         </Row>
         <Row>
           <Col lg={12}>
-            <SourceManagerFaq />
+            <SourcesMarketingFeatureList />
           </Col>
         </Row>
       </div>

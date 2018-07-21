@@ -3,6 +3,7 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
+import TopicsMarketingFeatureList from './homepage/TopicsMarketingFeatureList';
 
 const localMessages = {
   aboutTitle: { id: 'about.title', defaultMessage: 'About Topic Mapper' },
@@ -21,8 +22,8 @@ const About = (props) => {
         </Col>
       </Row>
       <Row>
-        <Col lg={6} md={6} sm={6}>
-          <p><FormattedMessage {...localMessages.aboutText} /></p>
+        <Col lg={12}>
+          <TopicsMarketingFeatureList />
         </Col>
       </Row>
     </Grid>
