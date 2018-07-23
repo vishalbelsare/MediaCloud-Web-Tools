@@ -1,6 +1,17 @@
 {
   "releases": [
     {
+      "date": "2018-07-23",
+      "version": "v3.2.2",
+      "notes": [
+        {
+          "apps": [ "topics" ],
+          "type": "Fix",
+          "note": "Fix bug that was showing super long lists of stories in Topic Mapper."
+        }
+      ]
+    },
+    {
       "date": "2018-07-13",
       "version": "v3.2.1",
       "notes": [

@@ -64,7 +64,7 @@ def topic_story_count(user_mc_key, topics_id, **kwargs):
     return _cached_topic_story_count(user_mc_key, topics_id, **merged_args)
 
 
-#@cache.cache_on_arguments(function_key_generator=key_generator)
+@cache.cache_on_arguments(function_key_generator=key_generator)
 def _cached_topic_story_count(user_mc_key, topics_id, **kwargs):
     '''
     Internal helper - don't call this; call topic_story_count instead. This needs user_mc_key in the
@@ -105,7 +105,10 @@ def topic_story_list(user_mc_key, topics_id, **kwargs):
     }
 
     merged_args.update(kwargs)    # passed in args override anything pulled form the request.args
-    return _cached_topic_story_list(user_mc_key, topics_id, **merged_args)
+    results = _cached_topic_story_list(user_mc_key, topics_id, **merged_args)
+    if merged_args['limit']:    # TODO: remove this (force limit as workaround to back-end bug)
+        results['stories'] = results['stories'][:int(merged_args['limit'])]
+    return results
 
 
 @cache.cache_on_arguments(function_key_generator=key_generator)
