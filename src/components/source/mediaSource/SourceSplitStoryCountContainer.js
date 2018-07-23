@@ -34,7 +34,9 @@ class SourceSplitStoryCountContainer extends React.Component {
     storyCollection: VIEW_REGULARLY_COLLECTED,
   }
   onIncludeSpidered = (d) => {
+    const { fetchData } = this.props;
     this.setState({ storyCollection: d });  // reset this to trigger a re-render
+    fetchData(d === VIEW_ALL_STORIES);
   }
   handleDataPointClick = (startDate, endDate) => {
     const { sourceId, sourceName } = this.props;
@@ -109,6 +111,7 @@ SourceSplitStoryCountContainer.propTypes = {
   sourceName: PropTypes.string.isRequired,
   filename: PropTypes.string,
   // from dispatch
+  fetchData: PropTypes.func,
   asyncFetch: PropTypes.func.isRequired,
   // from composition
   intl: PropTypes.object.isRequired,
@@ -123,6 +126,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
+  fetchData: (includeSpidered) => {
+    dispatch(fetchSourceSplitStoryCount(ownProps.sourceId, { include_spidered: includeSpidered }));
+  },
   asyncFetch: () => {
     dispatch(fetchSourceSplitStoryCount(ownProps.sourceId));
   },

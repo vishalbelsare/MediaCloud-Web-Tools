@@ -161,7 +161,7 @@ def source_split_stories_csv(media_id):
 @flask_login.login_required
 @api_error_handler
 def api_media_source_split_stories(media_id):
-    getAllStories = " AND NOT tags_id_stories:{}".format(8875452) if 'spidered' in request.args else ''
+    getAllStories = " AND NOT tags_id_stories:{}".format(8875452) if 'include_spidered' not in request.args else ''
 
     q ='media_id:' + str(media_id) + getAllStories
     health = _cached_media_source_health(user_mediacloud_key(), media_id)
