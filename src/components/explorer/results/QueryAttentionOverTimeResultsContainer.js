@@ -23,14 +23,10 @@ const localMessages = {
   withKeywords: { id: 'explorer.attention.mode.withkeywords', defaultMessage: 'View Story Count (default)' },
   withoutKeywords: { id: 'explorer.attention.mode.withoutkeywords', defaultMessage: 'View Story Percentage' },
   downloadCsv: { id: 'explorer.attention.downloadCsv', defaultMessage: 'Download { name } stories over time CSV' },
-  regularlyCollectedStories: { id: 'explorer.attention.series.regular', defaultMessage: 'Regularly Collected Stories (default)' },
-  allStories: { id: 'explorer.attention.series.allstories', defaultMessage: 'All Stories' },
 };
 
 const VIEW_NORMALIZED = 'VIEW_NORMALIZED';
 const VIEW_REGULAR = 'VIEW_REGULAR';
-const VIEW_ALL_STORIES = 'VIEW_ALLSTORIES';
-const VIEW_REGULARLY_COLLECTED = 'VIEW_REGULARLYCOLLECTED';
 
 class QueryAttentionOverTimeResultsContainer extends React.Component {
   state = {
@@ -38,7 +34,6 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
     dateRange: null,
     clickedQuery: null,
     view: VIEW_REGULAR, // which view to show (see view constants above)
-    storyCollection: VIEW_REGULARLY_COLLECTED,
   }
 
   setView = (nextView) => {
@@ -130,18 +125,6 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
               primaryText={formatMessage(localMessages.withoutKeywords)}
               disabled={this.state.view === VIEW_NORMALIZED}
               onClick={() => this.setView(VIEW_NORMALIZED)}
-            />
-            <MenuItem
-              className="action-icon-menu-item"
-              primaryText={formatMessage(localMessages.regularlyCollectedStories)}
-              disabled={this.state.storyCollection === VIEW_REGULARLY_COLLECTED}
-              onClick={() => this.setView(VIEW_REGULARLY_COLLECTED)}
-            />
-            <MenuItem
-              className="action-icon-menu-item"
-              primaryText={formatMessage(localMessages.allStories)}
-              disabled={this.state.storyCollection === VIEW_ALL_STORIES}
-              onClick={() => this.setView(VIEW_ALL_STORIES)}
             />
           </ActionMenu>
         </div>
