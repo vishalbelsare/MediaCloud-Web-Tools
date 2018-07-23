@@ -11,6 +11,7 @@ import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
 import messages from '../../../resources/messages';
 import withHelp from '../../common/hocs/HelpfulContainer';
 import ActionMenu from '../../common/ActionMenu';
+import { DownloadButton } from '../../common/IconButton';
 import { urlToExplorerQuery } from '../../../lib/urlUtil';
 
 const localMessages = {
@@ -49,8 +50,14 @@ class SourceSplitStoryCountContainer extends React.Component {
     const { formatMessage } = this.props.intl;
     return (
       <DataCard>
-        <div className="actions">
-          <ActionMenu actionTextMsg={messages.viewOptions}>
+        <div className="action-menu-set">
+          <ActionMenu>
+            <MenuItem
+              className="action-icon-menu-item"
+              primaryText={formatMessage(messages.downloadCSV)}
+              rightIcon={<DownloadButton />}
+              onTouchTap={this.downloadCsv}
+            />
             <MenuItem
               className="action-icon-menu-item"
               primaryText={formatMessage(localMessages.regularlyCollectedStories)}
