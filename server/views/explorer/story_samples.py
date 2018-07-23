@@ -22,7 +22,10 @@ logger = logging.getLogger(__name__)
 def api_explorer_story_sample():
     solr_q, solr_fq = parse_query_with_keywords(request.args)
     story_sample_result = apicache.random_story_list(solr_q, solr_fq, 50)
-    return jsonify(story_sample_result)  
+
+    for story in story_sample_result:
+        story["media"] = apicache._mc_client().media(story["media_id"])
+    return jsonify(story_sample_result)
 
 
 @app.route('/api/explorer/demo/stories/sample', methods=['GET'])
@@ -37,7 +40,9 @@ def api_explorer_demo_story_sample():
         solr_q, solr_fq = parse_query_with_keywords(request.args)
 
     story_sample_result = apicache.random_story_list(solr_q, solr_fq, 50)
-    return jsonify(story_sample_result)  
+    for story in story_sample_result:
+        story["media"] = apicache._mc_client().media(story["media_id"])
+    return jsonify(story_sample_result)
 
 
 @app.route('/api/explorer/stories/samples.csv', methods=['POST'])
