@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import SourcesMarketingFeatureList from './homepage/SourcesMarketingFeatureList';
+import messages from '../../resources/messages';
 
 const localMessages = {
   aboutTitle: { id: 'about.title', defaultMessage: 'About Source Manager' },
@@ -12,11 +13,10 @@ const localMessages = {
 
 const About = (props) => {
   const title = props.intl.formatMessage(localMessages.aboutTitle);
-  const titleHandler = parentTitle => `${title} | ${parentTitle}`;
   return (
-    <Grid>
-      <Helmet><title>{titleHandler()}</title></Helmet>
-      <div className="about-page">
+    <div className="about">
+      <Grid>
+        <Helmet><title>{title}</title></Helmet>
         <Row>
           <Col lg={12}>
             <h1><FormattedMessage {...localMessages.aboutTitle} /></h1>
@@ -24,11 +24,16 @@ const About = (props) => {
         </Row>
         <Row>
           <Col lg={12}>
+            <p className="subtitle"><FormattedMessage {...messages.sourcesToolDescription} /></p>
+          </Col>
+        </Row>
+        <Row>
+          <Col lg={12}>
             <SourcesMarketingFeatureList />
           </Col>
         </Row>
-      </div>
-    </Grid>
+      </Grid>
+    </div>
   );
 };
 
