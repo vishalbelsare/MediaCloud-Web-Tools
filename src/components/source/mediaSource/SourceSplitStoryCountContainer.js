@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
+import MenuItem from 'material-ui/MenuItem';
 import { getBrandDarkColor } from '../../../styles/colors';
 import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import { fetchSourceSplitStoryCount } from '../../../actions/sourceActions';
@@ -9,7 +10,7 @@ import DataCard from '../../common/DataCard';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
 import messages from '../../../resources/messages';
 import withHelp from '../../common/hocs/HelpfulContainer';
-import { DownloadButton } from '../../common/IconButton';
+import ActionMenu from '../../common/ActionMenu';
 import { urlToExplorerQuery } from '../../../lib/urlUtil';
 
 const localMessages = {
@@ -18,9 +19,19 @@ const localMessages = {
   helpText: { id: 'source.summary.splitCount.help.text',
     defaultMessage: '<p>This chart shows you the number of stories we have collected from this source over time. Click on the line to see a summary of the content in this source for that date. The grey vertical lines indicate weeks where we didn\'t get as many stories as we\'d expect to.</p>',
   },
+  regularlyCollectedStories: { id: 'explorer.attention.series.regular', defaultMessage: 'Regularly Collected Stories (default)' },
+  allStories: { id: 'explorer.attention.series.allstories', defaultMessage: 'All Stories' },
+
 };
 
+const VIEW_ALL_STORIES = 'VIEW_ALL_STORIES';
+const VIEW_REGULARLY_COLLECTED = 'VIEW_REGULARLY_COLLECTED';
+
+
 class SourceSplitStoryCountContainer extends React.Component {
+  state = {
+    storyCollection: VIEW_REGULARLY_COLLECTED,
+  }
   downloadCsv = () => {
     const { sourceId } = this.props;
     const url = `/api/sources/${sourceId}/story-split/count.csv`;
@@ -39,7 +50,20 @@ class SourceSplitStoryCountContainer extends React.Component {
     return (
       <DataCard>
         <div className="actions">
-          <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
+          <ActionMenu actionTextMsg={messages.viewOptions}>
+            <MenuItem
+              className="action-icon-menu-item"
+              primaryText={formatMessage(localMessages.regularlyCollectedStories)}
+              disabled={this.state.storyCollection === VIEW_REGULARLY_COLLECTED}
+              onClick={() => this.setView(VIEW_REGULARLY_COLLECTED)}
+            />
+            <MenuItem
+              className="action-icon-menu-item"
+              primaryText={formatMessage(localMessages.allStories)}
+              disabled={this.state.storyCollection === VIEW_ALL_STORIES}
+              onClick={() => this.setView(VIEW_ALL_STORIES)}
+            />
+          </ActionMenu>
         </div>
         <h2>
           <FormattedMessage {...localMessages.title} />
