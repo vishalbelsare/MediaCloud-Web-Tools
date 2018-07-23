@@ -33,10 +33,8 @@ class SourceSplitStoryCountContainer extends React.Component {
   state = {
     storyCollection: VIEW_REGULARLY_COLLECTED,
   }
-  downloadCsv = () => {
-    const { sourceId } = this.props;
-    const url = `/api/sources/${sourceId}/story-split/count.csv`;
-    window.location = url;
+  onIncludeSpidered = (d) => {
+    this.setState({ storyCollection: d });  // reset this to trigger a re-render
   }
   handleDataPointClick = (startDate, endDate) => {
     const { sourceId, sourceName } = this.props;
@@ -44,6 +42,11 @@ class SourceSplitStoryCountContainer extends React.Component {
     const endDateStr = `${endDate.getFullYear()}-${endDate.getMonth() + 1}-${endDate.getDate()}`;
     const url = urlToExplorerQuery(sourceName, '*', [sourceId], [], startDateStr, endDateStr);
     window.open(url, '_blank');
+  }
+  downloadCsv = () => {
+    const { sourceId } = this.props;
+    const url = `/api/sources/${sourceId}/story-split/count.csv`;
+    window.location = url;
   }
   render() {
     const { total, counts, health, filename, helpButton, sourceName } = this.props;
@@ -62,13 +65,13 @@ class SourceSplitStoryCountContainer extends React.Component {
               className="action-icon-menu-item"
               primaryText={formatMessage(localMessages.regularlyCollectedStories)}
               disabled={this.state.storyCollection === VIEW_REGULARLY_COLLECTED}
-              onClick={() => this.setView(VIEW_REGULARLY_COLLECTED)}
+              onClick={() => this.onIncludeSpidered(VIEW_REGULARLY_COLLECTED)}
             />
             <MenuItem
               className="action-icon-menu-item"
               primaryText={formatMessage(localMessages.allStories)}
               disabled={this.state.storyCollection === VIEW_ALL_STORIES}
-              onClick={() => this.setView(VIEW_ALL_STORIES)}
+              onClick={() => this.onIncludeSpidered(VIEW_ALL_STORIES)}
             />
           </ActionMenu>
         </div>
