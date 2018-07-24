@@ -1,7 +1,6 @@
 from flask import jsonify
 import flask_login
 from operator import itemgetter
-from itertools import groupby
 import requests
 import logging
 
@@ -70,12 +69,15 @@ def entities_from_mc_or_cliff(user_mediacloud_key, stories_id):
             'frequency': person['count']
         })
     # places don't have frequency set correctly, so we need to sum them
-    place_names = [place['name'] for place in cliff_results ['results']['places']['mentions']]
-    locations = [{
-        'type': 'LOCATION',
-        'name': key,
-        'frequency': len(list(group))
-    } for key, group in groupby(place_names)]
+    locations = []
+    place_names = set([place['name'] for place in cliff_results['results']['places']['mentions']])
+    for place in place_names:
+        loc = {
+            'type': 'LOCATION',
+            'name': place,
+            'frequency': len([p for p in cliff_results['results']['places']['mentions'] if p['name'] == place])
+        }
+        locations.append(loc)
     entities += locations
     # sort smartly
     unique_entities = sorted(entities, key=itemgetter('frequency'), reverse=True)
