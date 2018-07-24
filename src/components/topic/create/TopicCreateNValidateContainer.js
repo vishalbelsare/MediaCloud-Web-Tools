@@ -7,20 +7,19 @@ import withIntlForm from '../../common/hocs/IntlForm';
 import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import AppButton from '../../common/AppButton';
 import StoryRow from './StoryRow';
-import { goToCreateTopicStep } from '../../../actions/topicActions';
-// fetchStorySampleByQuery
+import { goToCreateTopicStep, fetchStorySampleByQuery } from '../../../actions/topicActions';
 import messages from '../../../resources/messages';
 
 const NUM_TO_SHOW = 30;
 
 const localMessages = {
-  title: { id: 'topic.create.validate.title', defaultMessage: 'Step 3: Validate Your Topic' },
+  title: { id: 'topic.create.validate.title', defaultMessage: 'Change Topic Seed Query: Validate 30 Sample Stories' },
   about: { id: 'topic.create.validate.about',
-    defaultMessage: '<b>We strongly encourage you to validate your seed query. Below are 30 randomly selected headlines from your seed query. Review the stories and select the ones that match what you are looking for.' },
+    defaultMessage: 'Please review this random sample to make sure these stories are relevant.' },
 };
 
 const TopicCreateNValidateContainer = (props) => {
-  const { handleNextStep, handlePreviousStep } = props;
+  const { handleNextStep, handlePreviousStep, stories } = props;
   const { formatMessage } = props.intl;
 
   return (
@@ -39,27 +38,15 @@ const TopicCreateNValidateContainer = (props) => {
               <Col lg={8} className="topic-create-story-title-col">
                 <b>Sample story</b>
               </Col>
-              <Col lg={1} />
-              <Col lg={3} className="topic-create-match-col">
-                <b>Is this story a match?</b>
+              <Col lg={4} className="topic-create-match-col">
+                <b>Is this a useful story?</b>
               </Col>
             </Row>
-            <div>
-              <StoryRow />
+            <div className="topic-create-sample-story-container">
+              {stories.map(story =>
+                <StoryRow key={story.stories_id} story={story} />
+              )}
             </div>
-            {
-              // <div className="topic-create-sample-story-container">
-              //   {sampleStories.map((story, idx) =>
-              //     <MatchingStory
-              //       key={story.stories_id}
-              //       topicId={topicId}
-              //       story={story}
-              //       prob={sampleProbs[idx]}
-              //       label={sampleLabels[idx]}
-              //     />
-              //   )}
-              // </div>
-            }
           </div>
         </Col>
       </Row>
@@ -77,13 +64,15 @@ const TopicCreateNValidateContainer = (props) => {
 TopicCreateNValidateContainer.propTypes = {
   // from parent
   location: PropTypes.object.isRequired,
-  query: PropTypes.object.isRequired,
   // form composition
   intl: PropTypes.object.isRequired,
   // from state
   currentStep: PropTypes.number,
   handlePreviousStep: PropTypes.func.isRequired,
   handleNextStep: PropTypes.func.isRequired,
+  fetchStatus: PropTypes.string.isRequired,
+  total: PropTypes.number.isRequired,
+  stories: PropTypes.array.isRequired,
   // from dispatch
   finishStep: PropTypes.func.isRequired,
   asyncFetch: PropTypes.func.isRequired,
@@ -94,9 +83,9 @@ TopicCreateNValidateContainer.propTypes = {
 
 const mapStateToProps = state => ({
   currentStep: state.topics.create.preview.workflow.currentStep,
-  formData: state.form.topicForm.values, // dependent on step 1 (configure)
+  formData: state.form.topicForm.values,
   fetchStatus: state.topics.create.preview.matchingStories.fetchStatus,
-  sort: state.topics.create.preview.matchingStories.total,
+  total: state.topics.create.preview.matchingStories.total,
   stories: state.topics.create.preview.matchingStories.list,
 });
 
@@ -122,9 +111,7 @@ const mapDispatchToProps = dispatch => ({
       infoForQuery['collections[]'] = query.sourcesAndCollections.map(s => s.tags_id);
       infoForQuery['sources[]'] = query.sourcesAndCollections.map(s => s.media_id);
     }
-    // test that we got the query before trying to dispatch...
-    console.log(infoForQuery);
-    // dispatch(fetchStorySampleByQuery(infoForQuery));
+    dispatch(fetchStorySampleByQuery(infoForQuery));
   },
 });
 
@@ -134,7 +121,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
       dispatchProps.handleNextStep();
     },
     asyncFetch: () => {
-      dispatchProps.fetchData(ownProps.query);
+      dispatchProps.fetchData(stateProps.formData);
     },
   });
 }

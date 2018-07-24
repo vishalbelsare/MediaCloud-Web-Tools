@@ -49,9 +49,9 @@ class TopicBuilderWizard extends React.Component {
               <StepLabel style={stepLabelStyle}><FormattedMessage {...localMessages.step0Name} /></StepLabel>
             </Step>
             {
-            // <Step>
-            //   <StepLabel style={stepLabelStyle}><FormattedMessage {...localMessages.step1Name} /></StepLabel>
-            // </Step>
+              // <Step>
+              //   <StepLabel style={stepLabelStyle}><FormattedMessage {...localMessages.step1Name} /></StepLabel>
+              // </Step>
             }
             <Step>
               <StepLabel style={stepLabelStyle}><FormattedMessage {...localMessages.stepNName} /></StepLabel>
