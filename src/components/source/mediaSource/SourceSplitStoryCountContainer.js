@@ -15,12 +15,12 @@ import { DownloadButton } from '../../common/IconButton';
 import { urlToExplorerQuery } from '../../../lib/urlUtil';
 
 const localMessages = {
-  title: { id: 'source.summary.splitCount.title', defaultMessage: 'Stories from this Media Source (over the last year)' },
+  title: { id: 'source.summary.splitCount.title', defaultMessage: 'All Stories over the last year' },
   helpTitle: { id: 'source.summary.splitCount.help.title', defaultMessage: 'About Stories Over Time' },
   helpText: { id: 'source.summary.splitCount.help.text',
-    defaultMessage: '<p>This chart shows you the number of stories we have collected from this source over time. Click on the line to see a summary of the content in this source for that date. The grey vertical lines indicate weeks where we didn\'t get as many stories as we\'d expect to.</p>',
+    defaultMessage: '<p>This chart shows you the number of stories we have collected from this source over time. Some stories are collected regularly from RSS feeds associated with the media source, while others are discovered via tracing through links in other stories (ie. spidering). Click on the line to see a summary of the content in this source for that date. The grey vertical lines indicate weeks where we didn\'t get as many stories as we\'d expect to.</p>',
   },
-  regularlyCollectedStories: { id: 'explorer.attention.series.regular', defaultMessage: 'Regularly Collected Stories (default)' },
+  regularlyCollectedStories: { id: 'explorer.attention.series.regular', defaultMessage: 'Regularly Collected Stories over the last year (default)' },
   allStories: { id: 'explorer.attention.series.allstories', defaultMessage: 'All Stories' },
 
 };
@@ -52,7 +52,7 @@ class SourceSplitStoryCountContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { allStories, partialStories, health, filename, helpButton, sourceName } = this.props;
+    const { allStories, partialStories, filename, helpButton, sourceName } = this.props;
     const { formatMessage } = this.props.intl;
     let stories = allStories;
     if (this.state.storyCollection === VIEW_REGULARLY_COLLECTED) {
@@ -95,7 +95,7 @@ class SourceSplitStoryCountContainer extends React.Component {
             data: stories.list.map(c => [c.date, c.count]),
             showInLegend: false,
           }]}
-          health={health}
+          health={stories.health}
           height={250}
           filename={filename}
           onDataPointClick={this.handleDataPointClick}
