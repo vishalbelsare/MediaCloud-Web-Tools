@@ -4,6 +4,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import messages from '../../resources/messages';
 import { storyPubDateToTimestamp } from '../../lib/dateUtil';
 import { googleFavIconUrl, storyDomainName } from '../../lib/urlUtil';
+import { trimToMaxLength } from '../../lib/stringUtil';
 
 const localMessages = {
   undateable: { id: 'story.publishDate.undateable', defaultMessage: 'Undateable' },
@@ -27,7 +28,7 @@ const StoryTable = (props) => {
             const domain = storyDomainName(story);
             let dateToShow = null;  // need to handle undateable stories
             let dateStyle = '';
-            const title = maxTitleLength !== undefined ? `${story.title.substr(0, maxTitleLength)}...` : story.title;
+            const title = maxTitleLength !== undefined ? `${trimToMaxLength(story.title, maxTitleLength)}` : story.title;
             const isSelected = selectedStory === story.stories_id ? ' selected' : ' ';
             if (story.publish_date === 'undateable') {
               dateToShow = formatMessage(localMessages.undateable);

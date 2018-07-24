@@ -20,7 +20,7 @@ const localMessages = {
   helpDetails: { id: 'explorer.stories.help.text',
     defaultMessage: '<p>We can provide basic information about stories like the media source, date of publication, and URL.  However, due to copyright restrictions we cannot provide you with the original full text of the stories. Download the CSV results to see all the metadata we have about the stories.</p>',
   },
-  downloadCsv: { id: 'explorer.stories.downloadCsv', defaultMessage: 'Download { name } sampled stories CSV' },
+  downloadCsv: { id: 'explorer.stories.downloadCsv', defaultMessage: 'Download all { name } stories as a CSV' },
 };
 
 class QuerySampleStoriesResultsContainer extends React.Component {
@@ -44,7 +44,7 @@ class QuerySampleStoriesResultsContainer extends React.Component {
           className="story-table"
           stories={results[selectedTabIndex] ? results[selectedTabIndex].slice(0, 10) : []}
           onChangeFocusSelection={story => this.onStorySelection(story)}
-          maxTitleLength={50}
+          maxTitleLength={90}
           selectedStory={internalItemSelected}
         />
         <div className="actions">
