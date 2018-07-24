@@ -97,7 +97,6 @@ class CollectionSplitStoryCountContainer extends React.Component {
             formattedTotal: formatNumber(stories.total),
             collectionName,
           })}
-          health={stories.health}
           height={250}
           filename={filename}
           onDataPointClick={this.handleDataPointClick}
@@ -125,8 +124,8 @@ CollectionSplitStoryCountContainer.propTypes = {
 
 const mapStateToProps = state => ({
   fetchStatus: state.sources.collections.selected.collectionSplitStoryCount.fetchStatus,
-  allStories: state.sources.sources.selected.splitStoryCount.all_stories,
-  partialStories: state.sources.sources.selected.splitStoryCount.partial_stories,
+  allStories: state.sources.collections.selected.collectionSplitStoryCount.all_stories,
+  partialStories: state.sources.collections.selected.collectionSplitStoryCount.partial_stories,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

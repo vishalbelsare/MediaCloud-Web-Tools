@@ -13,13 +13,10 @@ const collectionSplitStoryCount = createAsyncReducer({
     all_stories: {
       total: payload.results.all_stories.total_story_count,
       list: cleanDateCounts(payload.results.all_stories.list),
-      // health: cleanCoverageGaps((payload.results.all_stories.health) ? payload.results.all_stories.health.coverage_gaps_list : null),
     },
     partial_stories: {
       total: payload.results.partial_stories.total_story_count,
       list: cleanDateCounts(payload.results.partial_stories.list),
-      // health: cleanCoverageGaps((payload.results.partial_stories.health) ? payload.results.partial_stories.health.coverage_gaps_list : null),
-
     },
   }),
 });
