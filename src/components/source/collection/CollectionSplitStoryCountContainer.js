@@ -19,7 +19,7 @@ const localMessages = {
   title: { id: 'sentenceCount.title', defaultMessage: 'Last Year of Coverage' },
   helpTitle: { id: 'collection.summary.splitCount.help.title', defaultMessage: 'About Stories Over Time' },
   helpText: { id: 'collection.summary.splitCount.help.text',
-    defaultMessage: '<p>This chart shows you the number of stories we have collected from the sources in this collection over the last year.</p>',
+    defaultMessage: '<p>This chart shows you the number of stories we have collected from the sources in this collection over the last year. Some stories are collected regularly from RSS feeds associated with the media source, while others are discovered via tracing through links in other stories (ie. spidering).</p>',
   },
   introText: { id: 'chart.storiesOverTime.totalCount',
     defaultMessage: 'We have collected {total, plural, =0 {No stories} one {One story} other {{formattedTotal} stories}} from sources in the "{collectionName}" collection in the last year.',
