@@ -13,6 +13,7 @@ import withHelp from '../../common/hocs/HelpfulContainer';
 import ActionMenu from '../../common/ActionMenu';
 import { DownloadButton } from '../../common/IconButton';
 import { urlToExplorerQuery } from '../../../lib/urlUtil';
+import { VIEW_REGULARLY_COLLECTED, VIEW_ALL_STORIES } from '../../../lib/mediaUtil';
 
 const localMessages = {
   title: { id: 'source.summary.splitCount.title', defaultMessage: 'All Stories over the last year' },
@@ -22,19 +23,11 @@ const localMessages = {
   },
   regularlyCollectedStories: { id: 'explorer.attention.series.regular', defaultMessage: 'Regularly Collected Stories over the last year (default)' },
   allStories: { id: 'explorer.attention.series.allstories', defaultMessage: 'All Stories' },
-
 };
-
-const VIEW_ALL_STORIES = 'VIEW_ALL_STORIES';
-const VIEW_REGULARLY_COLLECTED = 'VIEW_REGULARLY_COLLECTED';
-
 
 class SourceSplitStoryCountContainer extends React.Component {
   state = {
     storyCollection: VIEW_REGULARLY_COLLECTED,
-  }
-  componentWillUnmount() {
-    this.setState({ storyCollection: 'weird' });
   }
   onIncludeSpidered = (d) => {
     this.setState({ storyCollection: d });  // reset this to trigger a re-render
@@ -108,10 +101,8 @@ class SourceSplitStoryCountContainer extends React.Component {
 SourceSplitStoryCountContainer.propTypes = {
   // from state
   fetchStatus: PropTypes.string.isRequired,
-  health: PropTypes.array,
   allStories: PropTypes.object,
   partialStories: PropTypes.object,
-  splitStoryCount: PropTypes.object,
   // from parent
   sourceId: PropTypes.number.isRequired,
   sourceName: PropTypes.string.isRequired,
@@ -125,11 +116,8 @@ SourceSplitStoryCountContainer.propTypes = {
 
 const mapStateToProps = state => ({
   fetchStatus: state.sources.sources.selected.splitStoryCount.fetchStatus,
-  splitStoryCount: state.sources.sources.selected.splitStoryCount,
   allStories: state.sources.sources.selected.splitStoryCount.all_stories,
   partialStories: state.sources.sources.selected.splitStoryCount.partial_stories,
-  // counts: state.sources.sources.selected.splitStoryCount,
-  health: state.sources.sources.selected.splitStoryCount.health,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
