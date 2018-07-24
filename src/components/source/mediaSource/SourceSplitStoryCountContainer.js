@@ -33,10 +33,11 @@ class SourceSplitStoryCountContainer extends React.Component {
   state = {
     storyCollection: VIEW_REGULARLY_COLLECTED,
   }
+  componentWillUnmount() {
+    this.setState({ storyCollection: 'weird' });
+  }
   onIncludeSpidered = (d) => {
-    const { fetchData } = this.props;
     this.setState({ storyCollection: d });  // reset this to trigger a re-render
-    fetchData(d === VIEW_ALL_STORIES);
   }
   handleDataPointClick = (startDate, endDate) => {
     const { sourceId, sourceName } = this.props;
@@ -51,8 +52,12 @@ class SourceSplitStoryCountContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { total, counts, health, filename, helpButton, sourceName } = this.props;
+    const { allStories, partialStories, health, filename, helpButton, sourceName } = this.props;
     const { formatMessage } = this.props.intl;
+    let stories = allStories;
+    if (this.state.storyCollection === VIEW_REGULARLY_COLLECTED) {
+      stories = partialStories;
+    }
     return (
       <DataCard>
         <div className="action-menu-set">
@@ -82,12 +87,12 @@ class SourceSplitStoryCountContainer extends React.Component {
           {helpButton}
         </h2>
         <AttentionOverTimeChart
-          total={total}
+          total={stories.total}
           series={[{
             id: 0,
             name: sourceName,
             color: getBrandDarkColor(),
-            data: counts.map(c => [c.date, c.count]),
+            data: stories.list.map(c => [c.date, c.count]),
             showInLegend: false,
           }]}
           health={health}
@@ -104,14 +109,14 @@ SourceSplitStoryCountContainer.propTypes = {
   // from state
   fetchStatus: PropTypes.string.isRequired,
   health: PropTypes.array,
-  total: PropTypes.number,
-  counts: PropTypes.array,
+  allStories: PropTypes.object,
+  partialStories: PropTypes.object,
+  splitStoryCount: PropTypes.object,
   // from parent
   sourceId: PropTypes.number.isRequired,
   sourceName: PropTypes.string.isRequired,
   filename: PropTypes.string,
   // from dispatch
-  fetchData: PropTypes.func,
   asyncFetch: PropTypes.func.isRequired,
   // from composition
   intl: PropTypes.object.isRequired,
@@ -120,17 +125,16 @@ SourceSplitStoryCountContainer.propTypes = {
 
 const mapStateToProps = state => ({
   fetchStatus: state.sources.sources.selected.splitStoryCount.fetchStatus,
-  total: state.sources.sources.selected.splitStoryCount.total,
-  counts: state.sources.sources.selected.splitStoryCount.list,
+  splitStoryCount: state.sources.sources.selected.splitStoryCount,
+  allStories: state.sources.sources.selected.splitStoryCount.all_stories,
+  partialStories: state.sources.sources.selected.splitStoryCount.partial_stories,
+  // counts: state.sources.sources.selected.splitStoryCount,
   health: state.sources.sources.selected.splitStoryCount.health,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  fetchData: (includeSpidered) => {
-    dispatch(fetchSourceSplitStoryCount(ownProps.sourceId, { include_spidered: includeSpidered }));
-  },
   asyncFetch: () => {
-    dispatch(fetchSourceSplitStoryCount(ownProps.sourceId));
+    dispatch(fetchSourceSplitStoryCount(ownProps.sourceId, { separate_spidered: true }));
   },
 });
 

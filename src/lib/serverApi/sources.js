@@ -63,7 +63,7 @@ export function collectionDetails(id, params) {
 }
 
 export function sourceSplitStoryCount(id, params) {
-  const acceptedParams = acceptParams(params, ['include_spidered']);
+  const acceptedParams = acceptParams(params, ['separate_spidered']);
   return createApiPromise(`api/sources/${id}/story-split/count`, acceptedParams);
 }
 
@@ -72,7 +72,7 @@ export function collectionSplitStoryCount(id) {
 }
 
 export function collectionSourceSplitStoryCounts(id, params) {
-  const acceptedParams = acceptParams(params, ['include_spidered']);
+  const acceptedParams = acceptParams(params, ['separate_spidered']);
   return createApiPromise(`api/collections/${id}/sources/story-split/count`, acceptedParams);
 }
 
