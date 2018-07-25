@@ -67,6 +67,7 @@ class MediaSummaryContainer extends React.Component {
           onChangeSort={isLoggedIn ? this.onChangeSort : null}
           sortedBy={sort}
           topicId={topicId}
+          showMetadata
         />
       </DataCard>
     );
