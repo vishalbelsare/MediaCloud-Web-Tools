@@ -32,11 +32,11 @@ def topic_media_list(user_mc_key, topics_id, **kwargs):
         'link_id': request.args.get('linkId'),
     }
     merged_args.update(kwargs)    # passed in args override anything pulled form the request.args
-    return _cached_topic_media_list(user_mc_key, topics_id, **merged_args)
+    return _cached_topic_media_list_with_metadata(user_mc_key, topics_id, **merged_args)
 
 
 @cache.cache_on_arguments(function_key_generator=key_generator)
-def _cached_topic_media_list(user_mc_key, topics_id, **kwargs):
+def _cached_topic_media_list_with_metadata(user_mc_key, topics_id, **kwargs):
     '''
     Internal helper - don't call this; call topic_media_list instead. This needs user_mc_key in the
     function signature to make sure the caching is keyed correctly.
