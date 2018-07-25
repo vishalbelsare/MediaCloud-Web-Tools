@@ -16,7 +16,8 @@ import { urlToExplorerQuery } from '../../../lib/urlUtil';
 import { VIEW_REGULARLY_COLLECTED, VIEW_ALL_STORIES } from '../../../lib/mediaUtil';
 
 const localMessages = {
-  title: { id: 'sentenceCount.title', defaultMessage: 'Last Year of Coverage' },
+  partialTitle: { id: 'sentenceCount.title', defaultMessage: 'Last Year of Coverage (regularly collected stories)' },
+  allTitle: { id: 'sentenceCount.title', defaultMessage: 'Last Year of Coverage (all stories)' },
   helpTitle: { id: 'collection.summary.splitCount.help.title', defaultMessage: 'About Stories Over Time' },
   helpText: { id: 'collection.summary.splitCount.help.text',
     defaultMessage: '<p>This chart shows you the number of stories we have collected from the sources in this collection over the last year. Some stories are collected regularly from RSS feeds associated with the media source, while others are discovered via tracing through links in other stories (ie. spidering).</p>',
@@ -51,9 +52,11 @@ class CollectionSplitStoryCountContainer extends React.Component {
   render() {
     const { allStories, partialStories, intl, filename, helpButton, collectionName } = this.props;
     const { formatMessage, formatNumber } = intl;
-    let stories = allStories;
-    if (this.state.storyCollection === VIEW_REGULARLY_COLLECTED) {
-      stories = partialStories;
+    let stories = partialStories;
+    let title = localMessages.partialTitle;
+    if (this.state.storyCollection === VIEW_ALL_STORIES) {
+      stories = allStories;
+      title = localMessages.allTitle;
     }
     return (
       <DataCard>
@@ -80,7 +83,7 @@ class CollectionSplitStoryCountContainer extends React.Component {
           </ActionMenu>
         </div>
         <h2>
-          <FormattedMessage {...localMessages.title} />
+          <FormattedMessage {...title} />
           {helpButton}
         </h2>
         <AttentionOverTimeChart
