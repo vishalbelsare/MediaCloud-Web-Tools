@@ -27,12 +27,8 @@ const About = (props) => {
             <p className="subtitle"><FormattedMessage {...messages.sourcesToolDescription} /></p>
           </Col>
         </Row>
-        <Row>
-          <Col lg={12}>
-            <SourcesMarketingFeatureList />
-          </Col>
-        </Row>
       </Grid>
+      <SourcesMarketingFeatureList />
     </div>
   );
 };

@@ -26,11 +26,9 @@ const About = (props) => {
               <p className="subtitle"><FormattedMessage {...messages.explorerToolDescription} /></p>
             </Col>
           </Row>
-          <Col lg={12}>
-            <ExplorerMarketingFeatureList />
-          </Col>
         </Row>
       </Grid>
+      <ExplorerMarketingFeatureList />
     </div>
   );
 };
