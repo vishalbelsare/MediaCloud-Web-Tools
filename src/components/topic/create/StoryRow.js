@@ -16,11 +16,27 @@ class StoryRow extends React.Component {
   };
 
   handleMatch = () => {
-    this.setState({ selection: 'match' });
+    if (this.state.selection !== 'match') {
+      this.setState({ selection: 'match' });
+      this.props.updateStoryCount(1);
+    } else {
+      // allow user to undo selection
+      this.setState({ selection: 'none' });
+      this.props.updateStoryCount(-1);
+    }
   }
 
   handleNotAMatch = () => {
-    this.setState({ selection: 'not-match' });
+    if (this.state.selection !== 'not-match') {
+      if (this.state.selection === 'match') {
+        // undo match selection
+        this.props.updateStoryCount(-1);
+      }
+      this.setState({ selection: 'not-match' });
+    } else {
+      // allow user to undo selection
+      this.setState({ selection: 'none' });
+    }
   }
 
   render() {
@@ -70,12 +86,9 @@ class StoryRow extends React.Component {
 
 StoryRow.propTypes = {
   // from parent
-  // initialValues: PropTypes.object,
   story: PropTypes.object.isRequired,
+  updateStoryCount: PropTypes.func,
   // from state
-  // formData: PropTypes.object,
-  // currentKeywords: PropTypes.string,
-  // currentFocalTechnique: PropTypes.string,
   // from compositional helper
   intl: PropTypes.object.isRequired,
 };
