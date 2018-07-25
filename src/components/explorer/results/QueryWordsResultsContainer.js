@@ -28,7 +28,7 @@ class QueryWordsResultsContainer extends React.Component {
     handleSelectedWord(selectedQuery, wordDataPoint.term);
   }
   render() {
-    const { results, queries, tabSelector, selectedQueryIndex, fetchData } = this.props;
+    const { results, queries, tabSelector, selectedQueryIndex, fetchData, internalItemSelected } = this.props;
     const { formatMessage } = this.props.intl;
     const selectedQuery = queries[selectedQueryIndex];
     return (
@@ -47,6 +47,7 @@ class QueryWordsResultsContainer extends React.Component {
         textColor={selectedQuery.color}
         actionsAsLinksUnderneath
         hideGoogleWord2Vec
+        selectedTerm={internalItemSelected ? internalItemSelected.word : ''}
       />
     );
   }
@@ -66,7 +67,7 @@ QueryWordsResultsContainer.propTypes = {
   fetchData: PropTypes.func.isRequired,
   results: PropTypes.array.isRequired,
   handleSelectedWord: PropTypes.func.isRequired,
-  selectedWord: PropTypes.object,
+  internalItemSelected: PropTypes.object,
   // from mergeProps
   asyncFetch: PropTypes.func.isRequired,
   // from state
@@ -76,7 +77,7 @@ QueryWordsResultsContainer.propTypes = {
 const mapStateToProps = state => ({
   fetchStatus: state.explorer.topWords.fetchStatus,
   results: state.explorer.topWords.results,
-  selectedWord: state.explorer.topWords.selectedWord,
+  internalItemSelected: state.explorer.topWords.selectedWord,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
@@ -132,6 +133,10 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     asyncFetch: () => {
       dispatchProps.fetchData(ownProps.queries);
+    },
+    shouldUpdate: (nextProps) => { // QueryResultsSelector needs to ask the child for internal repainting
+      const { internalItemSelected } = stateProps;
+      return nextProps.internalItemSelected !== internalItemSelected;
     },
   });
 }

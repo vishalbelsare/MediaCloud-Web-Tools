@@ -9,6 +9,7 @@ import QueryAttentionOverTimeResultsContainer from './QueryAttentionOverTimeResu
 import QueryAttentionOverTimeDrillDownContainer from './drilldowns/QueryAttentionOverTimeDrillDownContainer';
 import QueryWordComparisonResultsContainer from './QueryWordComparisonResultsContainer';
 import WordInContextDrillDownContainer from './drilldowns/WordInContextDrillDownContainer';
+import SelectedStoryDrillDownContainer from './drilldowns/SelectedStoryDrillDownContainer';
 import QuerySampleStoriesResultsContainer from './QuerySampleStoriesResultsContainer';
 import QueryTotalAttentionResultsContainer from './QueryTotalAttentionResultsContainer';
 import QueryGeoResultsContainer from './QueryGeoResultsContainer';
@@ -59,6 +60,13 @@ class QueryResultsContainer extends React.Component {
         </Col>
         <Col lg={12} xs={12}>
           <QuerySampleStoriesResultsContainer
+            lastSearchTime={lastSearchTime}
+            queries={queries}
+            isLoggedIn={isLoggedIn}
+          />
+        </Col>
+        <Col lg={12} xs={12}>
+          <SelectedStoryDrillDownContainer
             lastSearchTime={lastSearchTime}
             queries={queries}
             isLoggedIn={isLoggedIn}

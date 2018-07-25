@@ -18,8 +18,11 @@ function withQueryResults(ChildComponent) {
       }
     }
     shouldComponentUpdate(nextProps) {
-      const { results, queries } = this.props;
-      return queryChangedEnoughToUpdate(queries, nextProps.queries, results, nextProps.results);
+      const { results, queries, shouldUpdate } = this.props;
+      // ask the child if internal repainting is needed
+      const defaultShouldUpdate = queryChangedEnoughToUpdate(queries, nextProps.queries, results, nextProps.results);
+      const childShouldUpdate = (shouldUpdate && shouldUpdate(nextProps));
+      return childShouldUpdate || defaultShouldUpdate;
     }
     setView(nextView) {
       this.setState({ selectedQueryIndex: nextView });
@@ -53,6 +56,13 @@ function withQueryResults(ChildComponent) {
     lastSearchTime: PropTypes.number,
     // dispatch
     fetchData: PropTypes.func.isRequired,
+    // from children
+    shouldUpdate: PropTypes.func,
+    internalItemSelected: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.object,
+      PropTypes.number,
+    ]),
   };
 
   return injectIntl(

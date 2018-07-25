@@ -39,7 +39,7 @@ class StoryNytThemesContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { themes, helpButton, tags } = this.props;
+    const { themes, helpButton, tags, hideFullListOption } = this.props;
     const { formatMessage } = this.props.intl;
     let tagContent;
     if (tags && (tags.length > 0)) {
@@ -98,7 +98,7 @@ class StoryNytThemesContainer extends React.Component {
       );
     }
     return (
-      <DataCard>
+      <DataCard className="story-themes-container">
         <div className="actions">
           <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
         </div>
@@ -110,7 +110,7 @@ class StoryNytThemesContainer extends React.Component {
         <Row>
           <Col lg={12}>
             {tagContent}
-            {fullListContent}
+            {!hideFullListOption && fullListContent}
           </Col>
         </Row>
       </DataCard>
@@ -125,6 +125,7 @@ StoryNytThemesContainer.propTypes = {
   // from parent
   storyId: PropTypes.number.isRequired,
   tags: PropTypes.array.isRequired,
+  hideFullListOption: PropTypes.bool,
   // from mergeProps
   asyncFetch: PropTypes.func.isRequired,
   // from dispatch
