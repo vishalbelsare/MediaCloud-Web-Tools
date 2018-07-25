@@ -34,7 +34,7 @@ def story_info(stories_id):
 @flask_login.login_required
 @api_error_handler
 def story_entities(stories_id):
-    entities = entities_from_mc_or_cliff(user_mediacloud_key(), stories_id)
+    entities = entities_from_mc_or_cliff(stories_id)
     return jsonify({'list': entities})
 
 
@@ -43,12 +43,12 @@ def story_entities(stories_id):
 @api_error_handler
 def story_entities_csv(stories_id):
     # in the download include all entity types
-    entities = entities_from_mc_or_cliff(user_mediacloud_key(), stories_id)
+    entities = entities_from_mc_or_cliff(stories_id)
     props = ['type', 'name', 'frequency']
     return csv.stream_response(entities, props, 'story-'+str(stories_id)+'-entities')
 
 
-def entities_from_mc_or_cliff(user_mediacloud_key, stories_id):
+def entities_from_mc_or_cliff(stories_id):
     entities = []
     # get entities from MediaCloud, or from CLIFF if not in MC
     cliff_results = cached_story_raw_cliff_results(stories_id)[0]['cliff']

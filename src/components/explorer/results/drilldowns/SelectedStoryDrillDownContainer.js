@@ -2,9 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-// import { withRouter } from 'react-router';
 import MenuItem from 'material-ui/MenuItem';
-import slugify from 'slugify';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import ActionMenu from '../../../common/ActionMenu';
 import { resetStory } from '../../../../actions/storyActions';
@@ -12,11 +10,11 @@ import withHelp from '../../../common/hocs/HelpfulContainer';
 import DataCard from '../../../common/DataCard';
 import StoryEntitiesContainer from '../../../common/story/StoryEntitiesContainer';
 import StoryNytThemesContainer from '../../../common/story/StoryNytThemesContainer';
-import SourceMetadataStatBar from '../../../common/SourceMetadataStatBar';
 import messages from '../../../../resources/messages';
-import { downloadSvg } from '../../../util/svg';
 import { urlToSource } from '../../../../lib/urlUtil';
 import { TAG_SET_NYT_THEMES } from '../../../../lib/tagUtil';
+import { trimToMaxLength } from '../../../../lib/stringUtil';
+import StatBar from '../../../common/statbar/StatBar';
 
 const localMessages = {
   title: { id: 'word.inContext.title', defaultMessage: 'Details for: {title}' },
@@ -31,21 +29,9 @@ const localMessages = {
 };
 
 class SelectedStoryDrillDownContainer extends React.Component {
-  state = {
-    imageUri: null,
-  }
   shouldComponentUpdate(nextProps) {
     const { selectedStory, lastSearchTime } = this.props;
     return (nextProps.lastSearchTime !== lastSearchTime || nextProps.selectedStory !== selectedStory);
-  }
-  getUniqueDomId = () => 'story-';
-  handleDownloadSvg = () => {
-    const { storyInfo } = this.props;
-    // a little crazy, but it works (we have to just walk the DOM rendered by the library we are using)
-    const domId = this.getUniqueDomId();
-    const svgNode = document.getElementById(domId).children[0].children[0].children[0].children[0];
-    const svgDownloadPrefix = `${slugify(storyInfo)}-`;
-    downloadSvg(svgDownloadPrefix, svgNode);
   }
   openNewPage = (url) => {
     window.open(url, '_blank');
@@ -59,35 +45,68 @@ class SelectedStoryDrillDownContainer extends React.Component {
       content = (
         <div className="drill-down">
           <DataCard className="query-story-drill-down">
-            <ActionMenu>
-              <MenuItem
-                className="action-icon-menu-item"
-                primaryText={formatMessage(localMessages.close)}
-                onTouchTap={handleClose}
-              />
-              <MenuItem
-                className="action-icon-menu-item"
-                primaryText={formatMessage(localMessages.readThisStory)}
-                onTouchTap={() => this.openNewPage(storyInfo.url)}
-              />
-            </ActionMenu>
-            <h2>
-              <FormattedMessage {...localMessages.title} values={{ title: storyInfo.title }} />
-              {helpButton}
-            </h2>
-            <a href={urlToSource(storyInfo.media_id)}><FormattedMessage {...localMessages.fullDescription} values={{ media: storyInfo.media_name, publishDate: formatDate(storyInfo.publish_date), language: storyInfo.language }} /></a>
+            <Row>
+              <Col lg={12}>
+                <ActionMenu>
+                  <MenuItem
+                    className="action-icon-menu-item"
+                    primaryText={formatMessage(localMessages.close)}
+                    onTouchTap={handleClose}
+                  />
+                  <MenuItem
+                    className="action-icon-menu-item"
+                    primaryText={formatMessage(localMessages.readThisStory)}
+                    onTouchTap={() => this.openNewPage(storyInfo.url)}
+                  />
+                </ActionMenu>
+                <h2>
+                  <FormattedMessage {...localMessages.title} values={{ title: trimToMaxLength(storyInfo.title, 80) }} />
+                  {helpButton}
+                </h2>
+              </Col>
+            </Row>
+            <Row>
+              <Col lg={12}>
+                <StatBar
+                  columnWidth={2}
+                  stats={[
+                    { message: messages.sourceName,
+                      data: (
+                        <a href={urlToSource(storyInfo.media_id)} target="_blank" rel="noopener noreferrer">
+                          {storyInfo.media_name}
+                        </a>
+                      ),
+                    },
+                    { message: messages.storyDate,
+                      data: formatDate(storyInfo.publish_date),
+                    },
+                    { message: messages.language,
+                      data: storyInfo.language ? storyInfo.language : '?',
+                    },
+                    { message: messages.mediaType,
+                      data: storyInfo.media.metadata.media_type ? storyInfo.media.metadata.media_type.label : '?',
+                      helpTitleMsg: messages.mediaTypeHelpTitle,
+                      helpContentMsg: messages.mediaTypeHelpContent,
+                    },
+                    { message: messages.pubCountry,
+                      data: storyInfo.media.metadata.pub_country ? storyInfo.media.metadata.pub_country.label : '?',
+                    },
+                    { message: messages.pubState,
+                      data: storyInfo.media.metadata.pub_state ? storyInfo.media.metadata.pub_state.label : '?' },
+                  ]}
+                />
+              </Col>
+            </Row>
             <Row>
               <Col lg={9}>
                 <StoryEntitiesContainer storyId={selectedStory} />
               </Col>
               <Col lg={3}>
-                <StoryNytThemesContainer storyId={selectedStory} tags={storyInfo.story_tags ? storyInfo.story_tags.filter(t => t.tag_sets_id === TAG_SET_NYT_THEMES) : []} />
-              </Col>
-            </Row>
-            <h2><FormattedMessage {...localMessages.published} values={{ media: storyInfo.media_name }} /></h2>
-            <Row>
-              <Col lg={12}>
-                <SourceMetadataStatBar source={storyInfo.media ? storyInfo.media : storyInfo.media_id} />
+                <StoryNytThemesContainer
+                  storyId={selectedStory}
+                  tags={storyInfo.story_tags ? storyInfo.story_tags.filter(t => t.tag_sets_id === TAG_SET_NYT_THEMES) : []}
+                  hideFullListOption
+                />
               </Col>
             </Row>
           </DataCard>

@@ -15,9 +15,6 @@ const localMessages = {
   title: { id: 'story.entities.title', defaultMessage: 'Named Entities' },
   helpTitle: { id: 'story.entities.help.title', defaultMessage: 'About Story Named Entities' },
   helpIntro: { id: 'story.entities.help.text', defaultMessage: '<p>We run all our english stories through <a target="_blank" href="https://nlp.stanford.edu/ner/">Stanford\'s natural language pipeline</a> to extract named entities. This does a reasonably good job of identifying all the <b>people, places, and organizations</b> mentioned in this story. We don\'t disambiguate them to determine unique entities, nor can you search by these entities (for now).</p>' },
-  entityOrganizations: { id: 'story.entities.organizations', defaultMessage: 'Organizations' },
-  entityPeople: { id: 'story.entities.people', defaultMessage: 'People' },
-  entityLocations: { id: 'story.entities.locations', defaultMessage: 'Locations' },
   notProcessed: { id: 'story.entities.notProcessed', defaultMessage: 'This story has not been processed by our named entity engine.' },
 };
 
@@ -41,15 +38,15 @@ class StoryEntitiesContainer extends React.Component {
       entitiesContent = (
         <Row>
           <Col lg={4}>
-            <h3><FormattedMessage {...localMessages.entityOrganizations} /></h3>
+            <h3><FormattedMessage {...messages.entityOrganizations} /></h3>
             <NamedEntitiesTable entities={entities.filter(e => e.type === 'ORGANIZATION')} />
           </Col>
           <Col lg={4}>
-            <h3><FormattedMessage {...localMessages.entityPeople} /></h3>
+            <h3><FormattedMessage {...messages.entityPeople} /></h3>
             <NamedEntitiesTable entities={entities.filter(e => e.type === 'PERSON')} />
           </Col>
           <Col lg={4}>
-            <h3><FormattedMessage {...localMessages.entityLocations} /></h3>
+            <h3><FormattedMessage {...messages.entityLocations} /></h3>
             <NamedEntitiesTable entities={entities.filter(e => e.type === 'LOCATION')} />
           </Col>
         </Row>
@@ -62,7 +59,7 @@ class StoryEntitiesContainer extends React.Component {
       );
     }
     return (
-      <DataCard>
+      <DataCard className="story-entities-container">
         <div className="actions">
           <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
         </div>

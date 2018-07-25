@@ -6,6 +6,23 @@
 
   .datacard {
     background-color: $material-grey300;
+
+    &.story-entities-container,
+    &.story-themes-container,
+    &.stat {
+      border: 1px solid $material-grey400;
+      padding: 20px;
+      margin-top: 25px;
+      margin-right: 0px;
+      em {
+        font-size: 20px;
+      }
+    }
+
+    &.stat {
+      margin-top: 0px;
+    }
+
   }
 
   .story-sentence-preview-item {
