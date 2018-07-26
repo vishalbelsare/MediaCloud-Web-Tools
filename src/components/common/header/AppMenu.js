@@ -2,12 +2,10 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import FlatButton from 'material-ui/FlatButton';
-// import MenuItem from 'material-ui/MenuItem';
 import Popover from 'material-ui/Popover';
-import { ArrowDropDownButton, ArrowDropUpButton } from '../../common/IconButton';
+import { ArrowDropDownButton, ArrowDropUpButton } from '../IconButton';
 
 class AppMenu extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = { open: false, iconDown: true };
@@ -21,11 +19,11 @@ class AppMenu extends React.Component {
   };
 
   toggleMenu = (event) => {
-    this.setState({
-      open: !this.state.open,
+    this.setState(prevState => ({
+      open: !prevState.open,
       anchorEl: event.currentTarget,
-      iconDown: !this.state.iconDown,
-    });
+      iconDown: !prevState.iconDown,
+    }));
   };
 
   close = () => this.setState({ open: false, iconDown: true });
@@ -34,6 +32,7 @@ class AppMenu extends React.Component {
   flatten = list => list.reduce(
     (a, b) => a.concat(Array.isArray(b) ? this.flatten(b) : b), []
   );
+
   render() {
     const { titleMsg, showMenu, onTitleClick, menuComponent } = this.props;
     const { formatMessage } = this.props.intl;
@@ -97,6 +96,6 @@ AppMenu.propTypes = {
 };
 
 export default
-  injectIntl(
-    AppMenu
-  );
+injectIntl(
+  AppMenu
+);

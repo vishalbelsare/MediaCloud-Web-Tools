@@ -12,7 +12,6 @@ const localMessages = {
 };
 
 class RecentNewsMenu extends React.Component {
-
   state = {
     open: false,
     anchorEl: null,
@@ -21,10 +20,10 @@ class RecentNewsMenu extends React.Component {
   handleToggle = (event) => {
     // This prevents ghost click.
     event.preventDefault();
-    this.setState({
-      open: !this.state.open,
+    this.setState(prevState => ({
+      open: !prevState.open,
       anchorEl: event.currentTarget,
-    });
+    }));
   }
 
   handleRequestClose = () => {
@@ -37,7 +36,7 @@ class RecentNewsMenu extends React.Component {
     const { newsItems, subTitle } = this.props;
     return (
       <div className="recent-news-menu">
-        <NotificationsButton onClick={this.handleToggle} color={'#FFFFFF'} />
+        <NotificationsButton onClick={this.handleToggle} color="#FFFFFF" />
         <Popover
           open={this.state.open}
           anchorEl={this.state.anchorEl}
@@ -58,7 +57,6 @@ class RecentNewsMenu extends React.Component {
       </div>
     );
   }
-
 }
 
 RecentNewsMenu.propTypes = {
@@ -68,6 +66,6 @@ RecentNewsMenu.propTypes = {
 };
 
 export default
-  injectIntl(
-    RecentNewsMenu
-  );
+injectIntl(
+  RecentNewsMenu
+);

@@ -2,8 +2,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { reduxForm, FieldArray, Field, propTypes } from 'redux-form';
-import withIntlForm from '../../common/hocs/IntlForm';
-import SourceOrCollectionWidget from '../../common/SourceOrCollectionWidget';
+import withIntlForm from '../hocs/IntlForm';
+import SourceOrCollectionWidget from '../SourceOrCollectionWidget';
 
 const renderCollectionSelector = ({ allowRemoval, fields }) => (
   <div>
@@ -28,6 +28,7 @@ const renderCollectionSelector = ({ allowRemoval, fields }) => (
     ))}
   </div>
 );
+
 renderCollectionSelector.propTypes = {
   fields: PropTypes.object,
   meta: PropTypes.object,
@@ -64,11 +65,10 @@ SourceCollectionsMediaForm.propTypes = {
 };
 
 export default
-  injectIntl(
-    withIntlForm(
-      reduxForm({ propTypes })(
-        SourceCollectionsMediaForm
-      )
+injectIntl(
+  withIntlForm(
+    reduxForm({ propTypes })(
+      SourceCollectionsMediaForm
     )
-  );
-
+  )
+);

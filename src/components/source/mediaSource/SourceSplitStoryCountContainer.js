@@ -31,7 +31,7 @@ class SourceSplitStoryCountContainer extends React.Component {
     storyCollection: VIEW_REGULARLY_COLLECTED,
   }
   onIncludeSpidered = (d) => {
-    this.setState({ storyCollection: d });  // reset this to trigger a re-render
+    this.setState({ storyCollection: d }); // reset this to trigger a re-render
   }
   handleDataPointClick = (startDate, endDate) => {
     const { sourceId, sourceName } = this.props;

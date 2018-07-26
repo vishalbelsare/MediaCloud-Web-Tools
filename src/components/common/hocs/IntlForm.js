@@ -36,22 +36,23 @@ function withIntlForm(Component) {
       return (
         <TextField
           className="form-field-text"
-          errorText={touched &&
-            ((error ? this.intlIfObject(error) : null)
+          errorText={touched
+            && ((error ? this.intlIfObject(error) : null)
               || (warning ? this.intlIfObject(warning) : null))}
           {...input}
           {...intlCustom}
         />
       );
     };
+
     renderTextFieldWithFocus = ({ input, saveRef, meta: { touched, error, warning }, ...custom }) => {
       const intlCustom = this.intlCustomProps(custom);
 
       return (
         <TextField
           className="form-field-text"
-          errorText={touched &&
-            ((error ? this.intlIfObject(error) : null)
+          errorText={touched
+            && ((error ? this.intlIfObject(error) : null)
               || (warning ? this.intlIfObject(warning) : null))}
           ref={saveRef}
           {...input}
@@ -136,7 +137,6 @@ function withIntlForm(Component) {
         <Component {...this.props} {...helpers} />
       );
     }
-
   }
 
   IntlFormForm.propTypes = {

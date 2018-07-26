@@ -26,35 +26,37 @@ const MetadataPickerContainer = (props) => {
       if (showDescription) {
         content = (
           <Field
-            fullWidth name={name}
+            fullWidth
+            name={name}
             component={renderSelectField}
             disabled={disabled}
             floatingLabelText={floatingLabelText || label}
           >
-            <MenuItem className="header-primary-menu" value={null} primaryText={''} />
-            {tags.map(t =>
+            <MenuItem className="header-primary-menu" value={null} primaryText="" />
+            {tags.map(t => (
               <MenuItem
                 className="header-primary-menu"
                 key={t.tags_id}
                 value={t.tags_id}
-                primaryText={
+                primaryText={(
                   <div className="header-primary-label">{t.label}
                     <br /><span className="header-primary-description">{t.description}</span>
                   </div>
-                }
+                )}
               />
-            )}
+            ))}
           </Field>
         );
       } else {
         content = (
           <Field
-            fullWidth name={name}
+            fullWidth
+            name={name}
             component={renderSelectField}
             disabled={disabled}
             floatingLabelText={floatingLabelText || label}
           >
-            <MenuItem value={null} primaryText={''} />
+            <MenuItem value={null} primaryText="" />
             {tags.map(t => <MenuItem key={t.tags_id} value={t.tags_id} primaryText={t.label} />)}
           </Field>
         );
@@ -63,13 +65,15 @@ const MetadataPickerContainer = (props) => {
     case MODE_AUTOCOMPLETE:
       // need to figure out autocomplete text to prepopulate here
       // commented out because the initialvalues are interfering with the display of the selected values
-      /* let initialText = '';
+      /*
+      let initialText = '';
       if ((initialValues) && (initialValues[name]) && (tags.length > 0)) {
         const matchingItem = tags.find(t => t.tags_id === initialValues[name]);
         if (matchingItem) {
           initialText = matchingItem.label;
         }
-      }*/
+      }
+      */
       content = (
         <Field
           className="metadata-picker"
@@ -155,10 +159,10 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 }
 
 export default
-  connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-    withIntlForm(
-      withAsyncFetch(
-        MetadataPickerContainer
-      )
+connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+  withIntlForm(
+    withAsyncFetch(
+      MetadataPickerContainer
     )
-  );
+  )
+);

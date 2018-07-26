@@ -29,6 +29,7 @@ class QueryThemesResultsContainer extends React.Component {
   downloadCsv = (query) => {
     postToDownloadUrl(`/api/explorer/tags/${TAG_SET_NYT_THEMES}/top-tags.csv`, query);
   }
+
   render() {
     const { results, queries, handleThemeClicked, selectedTabIndex, tabSelector } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
@@ -76,7 +77,7 @@ class QueryThemesResultsContainer extends React.Component {
         { content }
         <div className="actions">
           <ActionMenu actionTextMsg={messages.downloadOptions}>
-            {queries.map((q, idx) =>
+            {queries.map((q, idx) => (
               <span key={`q${idx}-items`}>
                 <MenuItem
                   key={idx}
@@ -92,7 +93,7 @@ class QueryThemesResultsContainer extends React.Component {
                   onTouchTap={() => downloadExplorerSvg(q.label, 'sampled-nyt_themes', BUBBLE_CHART_DOM_ID)}
                 />
               </span>
-            )}
+            ))}
           </ActionMenu>
         </div>
       </div>
@@ -173,14 +174,14 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 }
 
 export default
-  injectIntl(
-    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeSummarizedVisualization(localMessages.title, localMessages.helpIntro, [localMessages.helpDetail, messages.nytThemeHelpDetails])(
-        withAsyncFetch(
-          withQueryResults(
-            QueryThemesResultsContainer
-          )
+injectIntl(
+  connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+    composeSummarizedVisualization(localMessages.title, localMessages.helpIntro, [localMessages.helpDetail, messages.nytThemeHelpDetails])(
+      withAsyncFetch(
+        withQueryResults(
+          QueryThemesResultsContainer
         )
       )
     )
-  );
+  )
+);

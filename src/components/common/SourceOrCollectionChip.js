@@ -19,7 +19,7 @@ const SourceOrCollectionChip = (props) => {
   const objectId = object.id || (isCollection ? object.tags_id : object.media_id);
   if (autoLink) {
     defaultOnClick = () => (
-     isCollection ? window.open(urlToCollection(objectId), '_blank') : window.open(urlToSource(objectId), '_blank')
+      isCollection ? window.open(urlToCollection(objectId), '_blank') : window.open(urlToSource(objectId), '_blank')
     );
   }
   const typeClass = isCollection ? 'chip-collection' : 'chip-media-source';
@@ -30,7 +30,7 @@ const SourceOrCollectionChip = (props) => {
       key={`chip${objectId}`}
       onRequestDelete={onDelete}
       onTouchTap={autoLink ? defaultOnClick : onClick}
-      backgroundColor={'rgb(255,255,255)'}
+      backgroundColor="rgb(255,255,255)"
       style={{ border: '1px solid rgb(204,204,204)' }}
     >
       <Avatar size={32}>{icon}</Avatar>

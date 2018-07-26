@@ -21,7 +21,7 @@ const localMessages = {
   },
 };
 
-const COVERAGE_REQUIRED = 0.7;  // need > this many of the stories tagged to show the results
+const COVERAGE_REQUIRED = 0.7; // need > this many of the stories tagged to show the results
 
 class GeoTagSummaryContainer extends React.Component {
   componentWillReceiveProps(nextProps) {

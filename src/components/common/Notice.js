@@ -18,6 +18,7 @@ function composeNotice(level) {
     state = {
       showDetails: false,
     };
+
     render() {
       const { children, details } = this.props;
       const { formatMessage } = this.props.intl;
@@ -34,7 +35,7 @@ function composeNotice(level) {
               href={`#${formatMessage(localMessages.details)}`}
               onClick={(evt) => {
                 evt.preventDefault();
-                this.setState({ showDetails: !this.state.showDetails });
+                this.setState(prevState => ({ showDetails: !prevState.showDetails }));
               }}
             >
               <FormattedMessage {...localMessages.details} />
@@ -45,7 +46,7 @@ function composeNotice(level) {
       }
       return (
         <div className={`notice ${level}-notice`}>
-          <FontIcon className="material-icons" color={'#000000'}>{fontIconName}</FontIcon>
+          <FontIcon className="material-icons" color="#000000">{fontIconName}</FontIcon>
           {children}
           {detailsContent}
         </div>

@@ -102,26 +102,27 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = (dispatch, ownProps) => ({
   onSubmitLoginForm: (values) => {
     dispatch(loginWithPassword(values.email, values.password))
-    .then((response) => {
-      if (response.key) {
-        // redirect to destination if there is one
-        const loc = ownProps.location;
-        let redirect;
-        if (ownProps.redirect) {
-          redirect = ownProps.redirect;
-        } else {
-          redirect = (loc && loc.state && loc.state.nextPathname) ? loc.state.nextPathname : '';
+      .then((response) => {
+        if (response.key) {
+          // redirect to destination if there is one
+          const loc = ownProps.location;
+          let redirectTo;
+          if (ownProps.redirect) {
+            const { redirect } = ownProps.redirect;
+            redirectTo = redirect;
+          } else {
+            redirectTo = (loc && loc.state && loc.state.nextPathname) ? loc.state.nextPathname : '';
+          }
+          if (redirectTo) {
+            dispatch(push(redirectTo));
+          }
+        } else if ((response.message) && (response.message.includes('is not active'))) {
+          // user has signed up, but not activated their account
+          dispatch(addNotice({ htmlMessage: ownProps.intl.formatMessage(localMessages.needsToActivate), level: LEVEL_ERROR }));
+        } else if (response.status) {
+          dispatch(addNotice({ message: localMessages.loginFailed, level: LEVEL_ERROR }));
         }
-        if (redirect) {
-          dispatch(push(redirect));
-        }
-      } else if ((response.message) && (response.message.includes('is not active'))) {
-        // user has signed up, but not activated their account
-        dispatch(addNotice({ htmlMessage: ownProps.intl.formatMessage(localMessages.needsToActivate), level: LEVEL_ERROR }));
-      } else if (response.status) {
-        dispatch(addNotice({ message: localMessages.loginFailed, level: LEVEL_ERROR }));
-      }
-    });
+      });
   },
 });
 
@@ -143,10 +144,10 @@ const reduxFormConfig = {
 };
 
 export default
-  withIntlForm(
-    reduxForm(reduxFormConfig)(
-      connect(mapStateToProps, mapDispatchToProps)(
-        LoginFormComponent
-      )
+withIntlForm(
+  reduxForm(reduxFormConfig)(
+    connect(mapStateToProps, mapDispatchToProps)(
+      LoginFormComponent
     )
-  );
+  )
+);

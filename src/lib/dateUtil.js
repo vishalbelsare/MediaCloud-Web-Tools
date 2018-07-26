@@ -155,10 +155,10 @@ export function cleanDateCounts(countsMap) {
 // Turn a gap list into a list of objects with from/to/color attributes, suitable for use as plot bands in HighCharts
 export function cleanCoverageGaps(gapList) {
   let plotBands = [];
-  if (gapList) {  // if the source has no health data, gapList could be undefined
+  if (gapList) { // if the source has no health data, gapList could be undefined
     plotBands = gapList.map((gap) => {
       const weekStart = gapDateToMomemt(gap.stat_week).valueOf();
-      const weekEnd = weekStart + (604800 * 1000);    // + one week
+      const weekEnd = weekStart + (604800 * 1000); // + one week
       return {
         from: weekStart,
         to: weekEnd,
@@ -183,7 +183,7 @@ export function getDateRange(timePeriod) {
     .hours(0)
     .minutes(0)
     .seconds(0)
-    .milliseconds(0);  // make it a day so caching works better
+    .milliseconds(0); // make it a day so caching works better
   const targetYear = today.clone().subtract(1, 'year');
   const targetMonth = today.clone().subtract(1, 'month');
   const targetWeek = today.clone().subtract(1, 'week');

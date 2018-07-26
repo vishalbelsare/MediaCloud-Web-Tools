@@ -6,7 +6,7 @@ import { push } from 'react-router-redux';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
 import messages from '../../../resources/messages';
-import AppMenu from '../../common/header/AppMenu';
+import AppMenu from './AppMenu';
 import { urlToTopicMapper } from '../../../lib/urlUtil';
 import { getAppName } from '../../../config';
 import { getUserRoles, hasPermissions, PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
@@ -83,8 +83,8 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default
-  injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
-      TopicsAppMenu
-    )
-  );
+injectIntl(
+  connect(mapStateToProps, mapDispatchToProps)(
+    TopicsAppMenu
+  )
+);

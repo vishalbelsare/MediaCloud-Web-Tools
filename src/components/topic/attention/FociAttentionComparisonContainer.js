@@ -63,11 +63,11 @@ class FociAttentionComparisonContainer extends React.Component {
       ];
     }
     // stich together line chart data
-    const overallData = dataAsSeries(overallCounts);      // now add a series for the whole thing
+    const overallData = dataAsSeries(overallCounts); // now add a series for the whole thing
     let series = [];
     if (foci !== undefined) {
       series = [
-        ...foci.map((focus, idx) => {    // add series for all the foci
+        ...foci.map((focus, idx) => { // add series for all the foci
           const data = dataAsSeries(focus.counts);
           return {
             id: idx,

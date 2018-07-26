@@ -25,6 +25,7 @@ class QueryGeoResultsContainer extends React.Component {
   downloadCsv = (query) => {
     postToDownloadUrl('/api/explorer/geography/geography.csv', query);
   }
+
   render() {
     const { results, intl, queries, handleCountryClick, selectedTabIndex, tabSelector } = this.props;
     const { formatMessage, formatNumber } = intl;
@@ -34,7 +35,7 @@ class QueryGeoResultsContainer extends React.Component {
       const data = results[selectedTabIndex].results.map(item => ({ ...item, value: item.pct }));
       content = (
         <div>
-          {results[selectedTabIndex] &&
+          {results[selectedTabIndex] && (
             <GeoChart
               data={data}
               countryMaxColorScale={queries[selectedTabIndex].color}
@@ -42,7 +43,7 @@ class QueryGeoResultsContainer extends React.Component {
               onCountryClick={handleCountryClick}
               backgroundColor="#f5f5f5"
             />
-          }
+          )}
         </div>
       );
     } else {
@@ -61,7 +62,7 @@ class QueryGeoResultsContainer extends React.Component {
         { content }
         <div className="actions">
           <ActionMenu actionTextMsg={messages.downloadOptions}>
-            {queries.map((q, idx) =>
+            {queries.map((q, idx) => (
               <MenuItem
                 key={idx}
                 className="action-icon-menu-item"
@@ -69,13 +70,12 @@ class QueryGeoResultsContainer extends React.Component {
                 rightIcon={<DownloadButton />}
                 onTouchTap={() => this.downloadCsv(q)}
               />
-            )}
+            ))}
           </ActionMenu>
         </div>
       </div>
     );
   }
-
 }
 
 QueryGeoResultsContainer.propTypes = {
@@ -151,14 +151,14 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 }
 
 export default
-  injectIntl(
-    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeSummarizedVisualization(localMessages.title, localMessages.help, [messages.heatMapHelpText])(
-        withAsyncFetch(
-          withQueryResults(
-            QueryGeoResultsContainer
-          )
+injectIntl(
+  connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+    composeSummarizedVisualization(localMessages.title, localMessages.help, [messages.heatMapHelpText])(
+      withAsyncFetch(
+        withQueryResults(
+          QueryGeoResultsContainer
         )
       )
     )
-  );
+  )
+);

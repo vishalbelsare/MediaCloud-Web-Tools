@@ -64,9 +64,8 @@ CollectionSearchResultsContainer.propTypes = {
 };
 
 export default
-  injectIntl(
-    connect()(
-      CollectionSearchResultsContainer
-    )
-  );
-
+injectIntl(
+  connect()(
+    CollectionSearchResultsContainer
+  )
+);

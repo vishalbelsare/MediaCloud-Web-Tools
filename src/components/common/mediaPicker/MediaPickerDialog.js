@@ -22,7 +22,6 @@ const localMessages = {
 };
 
 class MediaPickerDialog extends React.Component {
-
   state = {
     open: false,
   };
@@ -33,6 +32,7 @@ class MediaPickerDialog extends React.Component {
       handleInitialSelectionOfMedia(initMedia); // go fill the store's selectedMedia list
     }
   }
+
   componentWillReceiveProps(nextProps) {
     // select the media so we fill the reducer with the previously selected media
     const { initMedia, handleInitialSelectionOfMedia } = this.props;
@@ -42,10 +42,12 @@ class MediaPickerDialog extends React.Component {
       }
     }
   }
+
   componentWillUnmount() {
     const { reset } = this.props;
     reset();
   }
+
   handleModifyClick = (evt) => {
     const { setQueryFormChildDialogOpen } = this.props;
     if (evt) {
@@ -115,7 +117,6 @@ class MediaPickerDialog extends React.Component {
       </div>
     );
   }
-
 }
 
 MediaPickerDialog.propTypes = {
@@ -155,9 +156,8 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default
-  injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
-      MediaPickerDialog
-    )
-  );
-
+injectIntl(
+  connect(mapStateToProps, mapDispatchToProps)(
+    MediaPickerDialog
+  )
+);

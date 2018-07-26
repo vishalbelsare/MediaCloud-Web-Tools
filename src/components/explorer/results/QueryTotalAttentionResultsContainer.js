@@ -37,8 +37,8 @@ class QueryTotalAttentionResultsContainer extends React.Component {
 
   shouldComponentUpdate(nextProps, nextState) {
     const { results, queries } = this.props;
-    return queryChangedEnoughToUpdate(queries, nextProps.queries, results, nextProps.results) ||
-    (this.state.view !== nextState.view);
+    return queryChangedEnoughToUpdate(queries, nextProps.queries, results, nextProps.results)
+    || (this.state.view !== nextState.view);
   }
 
   setView = (nextView) => {
@@ -88,7 +88,7 @@ class QueryTotalAttentionResultsContainer extends React.Component {
           />
           <div className="actions">
             <ActionMenu actionTextMsg={messages.downloadOptions}>
-              {safeResults.map((q, idx) =>
+              {safeResults.map((q, idx) => (
                 <MenuItem
                   key={idx}
                   className="action-icon-menu-item"
@@ -96,7 +96,7 @@ class QueryTotalAttentionResultsContainer extends React.Component {
                   rightIcon={<DownloadButton />}
                   onTouchTap={() => this.downloadCsv(q)}
                 />
-              )}
+              ))}
             </ActionMenu>
             <ActionMenu actionTextMsg={messages.viewOptions}>
               <MenuItem
@@ -145,12 +145,12 @@ const mapDispatchToProps = () => ({
 });
 
 export default
-  injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
-      composeSummarizedVisualization(localMessages.title, localMessages.helpIntro, [localMessages.helpDetails, messages.countsVsPercentageHelp])(
-        withAsyncFetch(
-          QueryTotalAttentionResultsContainer
-        )
+injectIntl(
+  connect(mapStateToProps, mapDispatchToProps)(
+    composeSummarizedVisualization(localMessages.title, localMessages.helpIntro, [localMessages.helpDetails, messages.countsVsPercentageHelp])(
+      withAsyncFetch(
+        QueryTotalAttentionResultsContainer
       )
     )
-  );
+  )
+);

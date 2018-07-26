@@ -5,7 +5,6 @@ import FlatButton from 'material-ui/FlatButton';
 import { injectIntl } from 'react-intl';
 
 class ConfirmationDialog extends React.Component {
-
   handleOk = () => {
     const { onOk } = this.props;
     onOk();

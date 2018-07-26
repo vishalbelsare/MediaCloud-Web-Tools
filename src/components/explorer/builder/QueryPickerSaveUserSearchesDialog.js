@@ -16,7 +16,7 @@ const localMessages = {
 class QueryPickerSaveUserSearchesDialog extends React.Component {
   state = {
     saveSearchDialogOpen: false,
-    searchName: this.props.searchNickname,  // the actual label they type into the change-label popup dialog
+    searchName: this.props.searchNickname, // the actual label they type into the change-label popup dialog
   };
 
   onSaveRequest = () => {
@@ -112,7 +112,4 @@ QueryPickerSaveUserSearchesDialog.propTypes = {
 };
 
 
-export default
-  injectIntl(
-QueryPickerSaveUserSearchesDialog
-);
+export default injectIntl(QueryPickerSaveUserSearchesDialog);

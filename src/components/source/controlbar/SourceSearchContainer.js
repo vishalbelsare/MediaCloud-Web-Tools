@@ -83,7 +83,7 @@ class SourceSearchContainer extends React.Component {
       disableStaticCollections } = this.props;
     const { formatMessage } = this.props.intl;
     let results = [];
-    // if (!fetchesSucceeded) return [];  // can't wait for both, because collections results are too slow :-(
+    // if (!fetchesSucceeded) return []; // can't wait for both, because collections results are too slow :-(
     if (searchSources || searchSources === undefined) { // sources always return first, so so them first so list isn't jumpy
       results = results.concat(sourceResults.slice(0, this.getMaxSourcesToShow()));
     }

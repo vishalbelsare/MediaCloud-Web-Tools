@@ -100,8 +100,8 @@ const mapStateToProps = state => ({
 });
 
 export default
-  injectIntl(
-    connect(mapStateToProps)(
-      ToolsHomeContainer
-    )
-  );
+injectIntl(
+  connect(mapStateToProps)(
+    ToolsHomeContainer
+  )
+);

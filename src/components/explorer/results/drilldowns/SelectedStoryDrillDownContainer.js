@@ -33,9 +33,11 @@ class SelectedStoryDrillDownContainer extends React.Component {
     const { selectedStory, lastSearchTime } = this.props;
     return (nextProps.lastSearchTime !== lastSearchTime || nextProps.selectedStory !== selectedStory);
   }
+
   openNewPage = (url) => {
     window.open(url, '_blank');
   }
+
   render() {
     const { selectedStory, storyInfo, handleClose, helpButton } = this.props;
     const { formatMessage, formatDate } = this.props.intl;
@@ -147,11 +149,10 @@ const mapDispatchToProps = dispatch => ({
 
 
 export default
-  injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
-      withHelp(localMessages.helpTitle, [localMessages.helpText, messages.wordTreeHelpText])(
-        SelectedStoryDrillDownContainer
-      )
+injectIntl(
+  connect(mapStateToProps, mapDispatchToProps)(
+    withHelp(localMessages.helpTitle, [localMessages.helpText, messages.wordTreeHelpText])(
+      SelectedStoryDrillDownContainer
     )
-  );
-
+  )
+);

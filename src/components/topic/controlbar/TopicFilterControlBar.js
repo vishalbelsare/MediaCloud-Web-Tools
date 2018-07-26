@@ -189,7 +189,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     dispatch(filterByFocus(selectedFocusId));
   },
   handleQuerySelected: (query) => {
-    const queryToApply = ((query === null) || (query.length === 0)) ? null : query;  // treat empty query as removal of query string, using null because '' != *
+    const queryToApply = ((query === null) || (query.length === 0)) ? null : query; // treat empty query as removal of query string, using null because '' != *
     const newLocation = filteredLocation(ownProps.location, { q: queryToApply });
     dispatch(push(newLocation));
     dispatch(filterByQuery(queryToApply));

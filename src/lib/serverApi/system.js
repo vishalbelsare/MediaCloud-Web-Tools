@@ -52,4 +52,3 @@ export function metadataValuesForPrimaryLanguage(id) {
 export function metadataValuesForCountryOfFocus(id) {
   return createApiPromise(`api/metadata/${id}/values`);
 }
-

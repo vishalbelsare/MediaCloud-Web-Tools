@@ -13,17 +13,21 @@ class CopyAllComponent extends React.Component {
   state = {
     open: false,
   };
+
   handleOpen = () => {
     this.setState({ open: true });
   };
+  
   handleClose = () => {
     const { onOk } = this.props;
     this.setState({ open: false });
     onOk();
   };
+  
   handleCancel = () => {
     this.setState({ open: false });
   };
+  
   render() {
     const { label, title, msg } = this.props;
     const { formatMessage } = this.props.intl;
@@ -51,7 +55,16 @@ class CopyAllComponent extends React.Component {
     const dialogTitle = title ? formatMessage(localMessages.title) : '';
     return (
       <span className="copy-all">
-        <label htmlFor="q">{label}</label><a role="button" title={formatMessage(localMessages.title)} tabIndex="0" onClick={this.handleOpen}>&nbsp;&#x00BB;</a>
+        <label htmlFor="q">{label}</label>
+        <a
+          role="button"
+          title={formatMessage(localMessages.title)}
+          tabIndex="0"
+          onClick={this.handleOpen}
+          onKeyPress={this.handleOpen}
+        >
+          &nbsp;&#x00BB;
+        </a>
         <Dialog
           title={dialogTitle}
           actions={dialogActions}

@@ -46,13 +46,16 @@ function composeIconButton(Icon, defaultTooltipMessage, useBackgroundColor = tru
   class AppIconButton extends React.Component {
     state = {
       backgroundColor: getBrandDarkColor(),
-    };
+    }
+
     handleMouseEnter = () => {
       this.setState({ backgroundColor: getBrandDarkerColor() });
     }
+
     handleMouseLeave = () => {
       this.setState({ backgroundColor: getBrandDarkColor() });
     }
+
     handleClick = (event) => {
       const { onClick } = this.props;
       event.preventDefault();
@@ -60,6 +63,7 @@ function composeIconButton(Icon, defaultTooltipMessage, useBackgroundColor = tru
         onClick(event);
       }
     }
+
     render() {
       const { linkTo, onClick, color, tooltip, iconStyle, backgroundColor } = this.props;
       const { formatMessage } = this.props.intl;
@@ -106,6 +110,7 @@ function composeIconButton(Icon, defaultTooltipMessage, useBackgroundColor = tru
       );
     }
   }
+
   AppIconButton.propTypes = {
     onClick: PropTypes.func,
     linkTo: PropTypes.oneOfType([
@@ -116,8 +121,9 @@ function composeIconButton(Icon, defaultTooltipMessage, useBackgroundColor = tru
     tooltip: PropTypes.string,
     intl: PropTypes.object.isRequired,
     color: PropTypes.string,
-    backgroundColor: PropTypes.string,  // overrides everything else
+    backgroundColor: PropTypes.string, // overrides everything else
   };
+
   return injectIntl(AppIconButton);
 }
 

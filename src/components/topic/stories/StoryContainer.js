@@ -27,7 +27,7 @@ import StatBar from '../../common/statbar/StatBar';
 import AppButton from '../../common/AppButton';
 import { urlToTopicMapper } from '../../../lib/urlUtil';
 
-const MAX_STORY_TITLE_LENGTH = 70;  // story titles longer than this will be trimmed and ellipses added
+const MAX_STORY_TITLE_LENGTH = 70; // story titles longer than this will be trimmed and ellipses added
 
 const localMessages = {
   mainTitle: { id: 'story.details.mainTitle', defaultMessage: 'Story: {title}' },

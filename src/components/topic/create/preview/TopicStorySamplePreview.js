@@ -4,7 +4,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import withDescription from '../../../common/hocs/DescribedDataCard';
 import withAsyncFetch from '../../../common/hocs/AsyncContainer';
-import StoryTable from '../../../common/StoryTable';  // use this istead of TopicStoryTable because here we don't have extra metadata
+import StoryTable from '../../../common/StoryTable'; // use this istead of TopicStoryTable because here we don't have extra metadata
 import { fetchStorySampleByQuery } from '../../../../actions/topicActions';
 import DataCard from '../../../common/DataCard';
 

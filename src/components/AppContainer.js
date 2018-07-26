@@ -5,8 +5,8 @@ import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import Snackbar from 'material-ui/Snackbar';
 // polyfill for Safari :-(
-import intl from 'intl';  // eslint-disable-line
-import intlEn from 'intl/locale-data/jsonp/en.js';  // eslint-disable-line
+import intl from 'intl'; // eslint-disable-line
+import intlEn from 'intl/locale-data/jsonp/en.js'; // eslint-disable-line
 import { Row } from 'react-flexbox-grid/lib';
 import NavToolbar from './common/header/NavToolbar';
 import messages from '../resources/messages';
@@ -53,20 +53,21 @@ const AppContainer = (props) => {
         {content}
       </div>
       <footer>
-        <p><small>
-          {'Created by the '}
-          <a href="https://civic.mit.edu/">
-            <FormattedMessage {...messages.c4cmName} />
-          </a>
-          {' and the '}
-          <a href="https://cyber.law.harvard.edu">
-            <FormattedMessage {...messages.berkmanName} />
-          </a>.
-          <br />
-          <FormattedHTMLMessage {...localMessages.supportOptions} />
-          <br />
-          v{getVersion()}
-        </small>
+        <p>
+          <small>
+            {'Created by the '}
+            <a href="https://civic.mit.edu/">
+              <FormattedMessage {...messages.c4cmName} />
+            </a>
+            {' and the '}
+            <a href="https://cyber.law.harvard.edu">
+              <FormattedMessage {...messages.berkmanName} />
+            </a>.
+            <br />
+            <FormattedHTMLMessage {...localMessages.supportOptions} />
+            <br />
+            v{getVersion()}
+          </small>
         </p>
       </footer>
       <Snackbar
@@ -112,8 +113,8 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default
-  injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
-      AppContainer
-    )
-  );
+injectIntl(
+  connect(mapStateToProps, mapDispatchToProps)(
+    AppContainer
+  )
+);

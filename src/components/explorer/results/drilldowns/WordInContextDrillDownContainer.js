@@ -27,22 +27,21 @@ const localMessages = {
 };
 
 class WordInContextDrillDownContainer extends React.Component {
-  state = {
-    imageUri: null,
-  }
   componentWillReceiveProps(nextProps) {
     const { lastSearchTime, fetchData, selectedWord } = this.props;
-    if ((nextProps.lastSearchTime !== lastSearchTime ||
-      nextProps.selectedWord !== selectedWord) && nextProps.selectedWord) {
+    if ((nextProps.lastSearchTime !== lastSearchTime
+      || nextProps.selectedWord !== selectedWord) && nextProps.selectedWord) {
       fetchData(nextProps.selectedWord);
     }
   }
+
   shouldComponentUpdate(nextProps) {
     const { selectedWord, fragments } = this.props;
-    return (nextProps.selectedWord !== selectedWord) ||
-      (nextProps.fragments !== fragments);
+    return (nextProps.selectedWord !== selectedWord) || (nextProps.fragments !== fragments);
   }
+
   getUniqueDomId = () => 'word-in-context-';
+
   handleDownloadSvg = () => {
     const { selectedWord } = this.props;
     // a little crazy, but it works (we have to just walk the DOM rendered by the library we are using)
@@ -51,6 +50,7 @@ class WordInContextDrillDownContainer extends React.Component {
     const svgDownloadPrefix = `${slugify(selectedWord.word)}-in-context`;
     downloadSvg(svgDownloadPrefix, svgNode);
   }
+
   render() {
     const { selectedWord, handleAddToAllQueries, handleClose, fragments, helpButton } = this.props;
     const { formatMessage } = this.props.intl;
@@ -117,7 +117,7 @@ WordInContextDrillDownContainer.propTypes = {
   fetchData: PropTypes.func.isRequired,
   handleAddToAllQueries: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
-    // from mergeProps
+  // from mergeProps
   asyncFetch: PropTypes.func.isRequired,
   // from context
   intl: PropTypes.object.isRequired,
@@ -155,13 +155,12 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 }
 
 export default
-  injectIntl(
-    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      withHelp(localMessages.helpTitle, [localMessages.helpText, messages.wordTreeHelpText])(
-        withAsyncFetch(
-          WordInContextDrillDownContainer
-        )
+injectIntl(
+  connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+    withHelp(localMessages.helpTitle, [localMessages.helpText, messages.wordTreeHelpText])(
+      withAsyncFetch(
+        WordInContextDrillDownContainer
       )
     )
-  );
-
+  )
+);

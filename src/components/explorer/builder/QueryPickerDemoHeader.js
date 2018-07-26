@@ -19,6 +19,7 @@ class QueryPickerDemoHeader extends React.Component {
     const registrationUrl = '/login';
     window.open(registrationUrl, '_blank');
   };
+
   render() {
     const { query, isLabelEditable, isDeletable, onColorChange, onDelete, handleMenuItemKeyDown, focusUsernameInputField } = this.props;
     const { formatMessage } = this.props.intl;
@@ -74,7 +75,7 @@ class QueryPickerDemoHeader extends React.Component {
             </div>
           </div>
         );
-      } else {  // the labels are not editable when the Demo user views the sample searches
+      } else { // the labels are not editable when the Demo user views the sample searches
         nameInfo = (
           <div>
             {colorPickerContent}
@@ -108,6 +109,6 @@ QueryPickerDemoHeader.propTypes = {
 
 
 export default
-  injectIntl(
-    QueryPickerDemoHeader
-  );
+injectIntl(
+  QueryPickerDemoHeader
+);

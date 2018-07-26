@@ -77,7 +77,7 @@ class QueryPickerLoadUserSearchesDialog extends React.Component {
             return (
               <div key={idx}>
                 <DeleteButton className="delete-search" onClick={() => this.onDeleteRequest(search)} />
-                <Col lg={11} >
+                <Col lg={11}>
                   <ListItem onTouchTap={() => this.onLoadConfirm(search)}>
                     <Link to={`queries/search?q=${search.queryParams}`}>{search.queryName}</Link>
                     <br /><FormattedDate value={searchDate} />
@@ -137,6 +137,6 @@ QueryPickerLoadUserSearchesDialog.propTypes = {
 
 
 export default
-  injectIntl(
-    QueryPickerLoadUserSearchesDialog
-  );
+injectIntl(
+  QueryPickerLoadUserSearchesDialog
+);

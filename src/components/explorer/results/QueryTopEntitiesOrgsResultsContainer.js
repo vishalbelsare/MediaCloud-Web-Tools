@@ -27,6 +27,7 @@ class QueryTopEntitiesOrgsResultsContainer extends React.Component {
   downloadCsv = (query) => {
     postToDownloadUrl(`/api/explorer/tags/${TAG_SET_CLIFF_ORGS}/top-tags.csv`, query);
   }
+
   render() {
     const { results, queries, handleEntitySelection, selectedTabIndex, tabSelector } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
@@ -37,7 +38,7 @@ class QueryTopEntitiesOrgsResultsContainer extends React.Component {
       if (coverageRatio > COVERAGE_REQUIRED) {
         content = (
           <div>
-            {rawData &&
+            {rawData && (
               <EntitiesTable
                 className="explorer-entity"
                 entityColNameMsg={localMessages.organization}
@@ -45,7 +46,7 @@ class QueryTopEntitiesOrgsResultsContainer extends React.Component {
                 onClick={e => handleEntitySelection(e, queries[0].searchId)}
                 maxTitleLength={50}
               />
-            }
+            )}
           </div>
         );
       } else {
@@ -65,7 +66,7 @@ class QueryTopEntitiesOrgsResultsContainer extends React.Component {
         { content }
         <div className="actions">
           <ActionMenu actionTextMsg={messages.downloadOptions}>
-            {queries.map((q, idx) =>
+            {queries.map((q, idx) => (
               <MenuItem
                 key={idx}
                 className="action-icon-menu-item"
@@ -73,7 +74,7 @@ class QueryTopEntitiesOrgsResultsContainer extends React.Component {
                 rightIcon={<DownloadButton />}
                 onTouchTap={() => this.downloadCsv(q)}
               />
-            )}
+            ))}
           </ActionMenu>
         </div>
       </div>
@@ -153,14 +154,14 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 }
 
 export default
-  injectIntl(
-    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeSummarizedVisualization(localMessages.title, localMessages.helpIntro, [messages.entityHelpDetails])(
-        withAsyncFetch(
-          withQueryResults(
-            QueryTopEntitiesOrgsResultsContainer
-          )
+injectIntl(
+  connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+    composeSummarizedVisualization(localMessages.title, localMessages.helpIntro, [messages.entityHelpDetails])(
+      withAsyncFetch(
+        withQueryResults(
+          QueryTopEntitiesOrgsResultsContainer
         )
       )
     )
-  );
+  )
+);

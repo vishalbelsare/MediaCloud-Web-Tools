@@ -36,7 +36,7 @@ class QuerySampleStoriesResultsContainer extends React.Component {
   render() {
     const { results, queries, selectedTabIndex, tabSelector, internalItemSelected } = this.props;
     const { formatMessage } = this.props.intl;
-// why isn't this re-rendering if selectedStory has changed?
+    // why isn't this re-rendering if selectedStory has changed?
     return (
       <div>
         {tabSelector}
@@ -49,7 +49,7 @@ class QuerySampleStoriesResultsContainer extends React.Component {
         />
         <div className="actions">
           <ActionMenu actionTextMsg={messages.downloadOptions}>
-            {queries.map((q, idx) =>
+            {queries.map((q, idx) => (
               <MenuItem
                 key={idx}
                 className="action-icon-menu-item"
@@ -57,7 +57,7 @@ class QuerySampleStoriesResultsContainer extends React.Component {
                 rightIcon={<DownloadButton />}
                 onTouchTap={() => this.downloadCsv(q)}
               />
-            )}
+            ))}
           </ActionMenu>
         </div>
       </div>
@@ -143,14 +143,14 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 }
 
 export default
-  injectIntl(
-    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeSummarizedVisualization(localMessages.title, localMessages.helpIntro, localMessages.helpDetails)(
-        withAsyncFetch(
-          withQueryResults(
-            QuerySampleStoriesResultsContainer
-          )
+injectIntl(
+  connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+    composeSummarizedVisualization(localMessages.title, localMessages.helpIntro, localMessages.helpDetails)(
+      withAsyncFetch(
+        withQueryResults(
+          QuerySampleStoriesResultsContainer
         )
       )
     )
-  );
+  )
+);

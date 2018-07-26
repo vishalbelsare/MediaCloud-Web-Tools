@@ -25,6 +25,7 @@ class QueryTopEntitiesPeopleResultsContainer extends React.Component {
   downloadCsv = (query) => {
     postToDownloadUrl(`/api/explorer/tags/${TAG_SET_CLIFF_PEOPLE}/top-tags.csv`, query);
   }
+
   render() {
     const { results, queries, handleEntitySelection, tabSelector, selectedTabIndex } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
@@ -35,7 +36,7 @@ class QueryTopEntitiesPeopleResultsContainer extends React.Component {
       if (coverageRatio > COVERAGE_REQUIRED) {
         content = (
           <div>
-            {rawData &&
+            {rawData && (
               <EntitiesTable
                 className="explorer-entity"
                 entityColNameMsg={localMessages.person}
@@ -43,7 +44,7 @@ class QueryTopEntitiesPeopleResultsContainer extends React.Component {
                 onClick={e => handleEntitySelection(e, queries[0].searchId)}
                 maxTitleLength={50}
               />
-            }
+            )}
           </div>
         );
       } else {
@@ -63,7 +64,7 @@ class QueryTopEntitiesPeopleResultsContainer extends React.Component {
         { content }
         <div className="actions">
           <ActionMenu actionTextMsg={messages.downloadOptions}>
-            {queries.map((q, idx) =>
+            {queries.map((q, idx) => (
               <MenuItem
                 key={idx}
                 className="action-icon-menu-item"
@@ -71,7 +72,7 @@ class QueryTopEntitiesPeopleResultsContainer extends React.Component {
                 rightIcon={<DownloadButton />}
                 onTouchTap={() => this.downloadCsv(q)}
               />
-            )}
+            ))}
           </ActionMenu>
         </div>
       </div>
@@ -151,14 +152,14 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 }
 
 export default
-  injectIntl(
-    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeSummarizedVisualization(localMessages.title, localMessages.helpIntro, [messages.entityHelpDetails])(
-        withAsyncFetch(
-          withQueryResults(
-            QueryTopEntitiesPeopleResultsContainer
-          )
+injectIntl(
+  connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+    composeSummarizedVisualization(localMessages.title, localMessages.helpIntro, [messages.entityHelpDetails])(
+      withAsyncFetch(
+        withQueryResults(
+          QueryTopEntitiesPeopleResultsContainer
         )
       )
     )
-  );
+  )
+);

@@ -4,7 +4,6 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { formValueSelector } from 'redux-form';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-// import { push } from 'react-router-redux';
 import * as d3 from 'd3';
 import messages from '../../../resources/messages';
 import QueryForm from './QueryForm';
@@ -30,50 +29,7 @@ const localMessages = {
 const formSelector = formValueSelector('queryForm');
 
 class QueryPicker extends React.Component {
-  // load selected if collections have been updated
- /* componentWillReceiveProps(nextProps) {
-    const { queries, selected, handleQuerySelected } = nextProps;
-    const selectedCollectionStatus = selected.collections.reduce((combined, c) => combined && c.tag_sets_id !== undefined, true);
-    if (!selectedCollectionStatus) {
-      const selectedIndex = queries.findIndex(q => q.id === selected.id);
-      handleQuerySelected(queries[selectedIndex]);
-    }
-  } */
-  addAQuery(newQueryObj) {
-    const { addAQuery, selected } = this.props;
-    this.handleSelectedQueryChange(selected, selected.index);
-    addAQuery(newQueryObj);
-  }
-  focusRequested = field => field.focus();
-
-  updateDemoQueryLabel(query, newValue) {
-    // update both label and q for query
-    const { updateCurrentQuery } = this.props;
-    const updatedQuery = { ...query };
-    updatedQuery.label = newValue;
-    updatedQuery.q = newValue;
-    updatedQuery.autoNaming = false;
-    updateCurrentQuery(updatedQuery, 'label');
-  }
-  // called by query picker to update things like label or color
-  updateQueryProperty(query, propertyName, newValue) {
-    const { updateCurrentQuery, formQuery } = this.props;
-    const updatedQuery = {
-      ...query,
-      ...formQuery,
-    };
-    updatedQuery[propertyName] = newValue;
-    if (propertyName === 'label') { // no longer auto-name query if the user has intentionally changed it
-      updatedQuery.autoNaming = false;
-    }
-    if (propertyName === 'q' && updatedQuery.autoNaming) { // no longer auto-name query if the user has intentionally changed it
-      updatedQuery.label = newValue;
-    }
-    // now update it in the store
-    updateCurrentQuery(updatedQuery, propertyName);
-  }
-
-  handleColorChange = (newColorInfo) => {
+  handleColorChange(newColorInfo) {
     // when user changes color we want to change it on all charts right away
     const { selected, formQuery, updateCurrentQuery } = this.props;
     const updatedQuery = {
@@ -84,7 +40,8 @@ class QueryPicker extends React.Component {
     // this.handleSelectedQueryChange(selected, selected.index);
     updateCurrentQuery(updatedQuery, 'color');
   }
-  handleMediaDelete = (toBeDeletedObj) => {
+
+  handleMediaDelete(toBeDeletedObj) {
     // the user has removed media from the Query Form SourceCollectionsFieldList
     const { selected, formQuery, updateCurrentQuery } = this.props; // formQuery same as selected
     // filter out removed ids...
@@ -99,8 +56,7 @@ class QueryPicker extends React.Component {
     updateCurrentQuery(updatedMedia, null);
   }
 
-
-  handleMediaChange = (sourceAndCollections) => {
+  handleMediaChange(sourceAndCollections) {
     // the user has picked new sources and/or collections so we need to save in order to update the list onscreen
     const { selected, formQuery, updateCurrentQueryThenReselect } = this.props;
     const updatedQuery = {
@@ -114,10 +70,50 @@ class QueryPicker extends React.Component {
     updateCurrentQueryThenReselect(updatedQuery);
   }
 
-  isDeletable() {
-    const { queries } = this.props;
-    const unDeletedQueries = queries.filter(q => q.deleted !== true);
-    return unDeletedQueries.length >= 2; // because we always have an empty query in the query array
+  saveAndSearch() {
+    // wrap the save handler here because we need to save the changes to the selected query the user
+    // might have made on the form, and then search
+    const { onSearch, queries, isLoggedIn, updateOneQuery } = this.props;
+    if (isLoggedIn) {
+      this.saveChangesToSelectedQuery();
+    } else {
+      // for demo mode we have to save all the queries they entered first, and then search
+      const nonDeletedQueries = queries.filter(q => q.deleted !== true);
+      nonDeletedQueries.forEach((q) => {
+        const queryText = document.getElementById(`query-${q.index}-q`).value; // not super robust,
+        const updatedQuery = {
+          ...q,
+          q: queryText,
+        };
+        updatedQuery.label = updatedQuery.autoNaming ? autoMagicQueryLabel(updatedQuery) : updatedQuery.label; // have to call this alone because input is the whole query
+        updateOneQuery(updatedQuery);
+      });
+    }
+    onSearch();
+  }
+
+  saveThisSearch(queryName) {
+    const { queries, sendAndSaveUserSearch } = this.props; // formQuery same as selected
+    // filter out removed ids...
+    const searchstr = generateQueryParamString(queries.map(q => ({
+      label: q.label,
+      q: q.q,
+      color: q.color,
+      startDate: q.startDate,
+      endDate: q.endDate,
+      sources: q.sources,
+      collections: q.collections,
+    })));
+    const userSearch = Object.assign({}, queryName, { timestamp: Date.now(), queryParams: searchstr });
+    sendAndSaveUserSearch(userSearch);
+  }
+
+  handleSelectedQueryChange(nextSelectedQuery, nextSelectedIndex) {
+    const { handleQuerySelected } = this.props;
+    // first update the one we are unmounting
+    this.saveChangesToSelectedQuery();
+
+    handleQuerySelected(nextSelectedQuery, nextSelectedQuery.index ? nextSelectedQuery.index : nextSelectedIndex);
   }
 
   handleDeleteAndSelectQuery(query) {
@@ -135,49 +131,38 @@ class QueryPicker extends React.Component {
     updateCurrentQuery(updatedQuery, 'label');
   }
 
-  handleSelectedQueryChange(nextSelectedQuery, nextSelectedIndex) {
-    const { handleQuerySelected } = this.props;
-    // first update the one we are unmounting
-    this.saveChangesToSelectedQuery();
-
-    handleQuerySelected(nextSelectedQuery, nextSelectedQuery.index ? nextSelectedQuery.index : nextSelectedIndex);
+  isDeletable() {
+    const { queries } = this.props;
+    const unDeletedQueries = queries.filter(q => q.deleted !== true);
+    return unDeletedQueries.length >= 2; // because we always have an empty query in the query array
   }
 
-  saveAndSearch = () => {
-    // wrap the save handler here because we need to save the changes to the selected query the user
-    // might have made on the form, and then search
-    const { onSearch, queries, isLoggedIn, updateOneQuery } = this.props;
-    if (isLoggedIn) {
-      this.saveChangesToSelectedQuery();
-    } else {
-      // for demo mode we have to save all the queries they entered first, and then search
-      const nonDeletedQueries = queries.filter(q => q.deleted !== true);
-      nonDeletedQueries.forEach((q) => {
-        const queryText = document.getElementById(`query-${q.index}-q`).value;  // not super robust,
-        const updatedQuery = {
-          ...q,
-          q: queryText,
-        };
-        updatedQuery.label = updatedQuery.autoNaming ? autoMagicQueryLabel(updatedQuery) : updatedQuery.label; // have to call this alone because input is the whole query
-        updateOneQuery(updatedQuery);
-      });
+  updateDemoQueryLabel(query, newValue) {
+    // update both label and q for query
+    const { updateCurrentQuery } = this.props;
+    const updatedQuery = { ...query };
+    updatedQuery.label = newValue;
+    updatedQuery.q = newValue;
+    updatedQuery.autoNaming = false;
+    updateCurrentQuery(updatedQuery, 'label');
+  }
+
+  // called by query picker to update things like label or color
+  updateQueryProperty(query, propertyName, newValue) {
+    const { updateCurrentQuery, formQuery } = this.props;
+    const updatedQuery = {
+      ...query,
+      ...formQuery,
+    };
+    updatedQuery[propertyName] = newValue;
+    if (propertyName === 'label') { // no longer auto-name query if the user has intentionally changed it
+      updatedQuery.autoNaming = false;
     }
-    onSearch();
-  }
-  saveThisSearch = (queryName) => {
-    const { queries, sendAndSaveUserSearch } = this.props; // formQuery same as selected
-    // filter out removed ids...
-    const searchstr = generateQueryParamString(queries.map(q => ({
-      label: q.label,
-      q: q.q,
-      color: q.color,
-      startDate: q.startDate,
-      endDate: q.endDate,
-      sources: q.sources,
-      collections: q.collections,
-    })));
-    const userSearch = Object.assign({}, queryName, { timestamp: Date.now(), queryParams: searchstr });
-    sendAndSaveUserSearch(userSearch);
+    if (propertyName === 'q' && updatedQuery.autoNaming) { // no longer auto-name query if the user has intentionally changed it
+      updatedQuery.label = newValue;
+    }
+    // now update it in the store
+    updateCurrentQuery(updatedQuery, propertyName);
   }
 
   render() {
@@ -280,7 +265,7 @@ class QueryPicker extends React.Component {
           {demoSearchButtonContent}
         </div>
       );
-      if (isLoggedIn) {  // if logged in show full form
+      if (isLoggedIn) { // if logged in show full form
         queryFormContent = (
           <QueryForm
             initialValues={selected}
@@ -302,7 +287,7 @@ class QueryPicker extends React.Component {
             handleDeleteSearch={l => handleDeleteUserSearch(l)}
             handleCopyAll={property => handleCopyAll(property, selected, queries)}
             isEditable={canSelectMedia}
-            focusRequested={this.focusRequested}
+            focusRequested={field => field.focus()}
             // TODO change to on
           />
         );
@@ -411,16 +396,16 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   handleDeleteUserSearch: (selectedSearch) => {
     if (selectedSearch && selectedSearch.queryName) {
       dispatch(deleteUserSearch(selectedSearch))
-      .then((results) => {
-        if (results.success) {
-          dispatch(loadUserSearches());
-        } else {
-          dispatch(updateFeedback({
-            open: true,
-            message: ownProps.intl.formatMessage(localMessages.deleteFailed),
-          }));
-        }
-      });
+        .then((results) => {
+          if (results.success) {
+            dispatch(loadUserSearches());
+          } else {
+            dispatch(updateFeedback({
+              open: true,
+              message: ownProps.intl.formatMessage(localMessages.deleteFailed),
+            }));
+          }
+        });
     }
   },
   sendAndSaveUserSearch: (savedSearch) => {
@@ -437,9 +422,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 });
 
 export default
-  injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
-      QueryPicker
-    )
-  );
-
+injectIntl(
+  connect(mapStateToProps, mapDispatchToProps)(
+    QueryPicker
+  )
+);

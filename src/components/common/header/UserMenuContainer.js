@@ -15,9 +15,8 @@ import messages from '../../../resources/messages';
 const localMessages = {
   menuTitle: { id: 'sources.menu.title', defaultMessage: 'Login' },
 };
-/**
- * A permissioned menu of user-related activities, for display on a nav bar or something.
- **/
+
+// A permissioned menu of user-related activities, for display on a nav bar or something.
 const UserMenuContainer = (props) => {
   const { user, routeToUrl } = props;
   const { formatMessage } = props.intl;
@@ -76,8 +75,8 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default
-  injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
-      UserMenuContainer
-    )
-  );
+injectIntl(
+  connect(mapStateToProps, mapDispatchToProps)(
+    UserMenuContainer
+  )
+);

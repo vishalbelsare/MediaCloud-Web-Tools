@@ -28,13 +28,16 @@ class QueryHelpDialog extends React.Component {
   state = {
     open: false,
   };
+
   handleOpen = (evt) => {
     this.setState({ open: true });
     evt.preventDefault();
   };
+
   handleClose = () => {
     this.setState({ open: false });
   };
+
   render() {
     const { formatMessage } = this.props.intl;
     const dialogActions = [
@@ -69,6 +72,6 @@ QueryHelpDialog.propTypes = {
 };
 
 export default
-  injectIntl(
-    QueryHelpDialog
-  );
+injectIntl(
+  QueryHelpDialog
+);

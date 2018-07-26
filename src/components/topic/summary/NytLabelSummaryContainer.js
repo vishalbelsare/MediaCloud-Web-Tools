@@ -22,7 +22,7 @@ import { WarningNotice } from '../../common/Notice';
 const BUBBLE_CHART_DOM_ID = 'nyt-tag-representation-bubble-chart';
 const COLORS = schemeCategory10;
 const PERCENTAGE_MIN_VALUE = 0.03; // anything lower than this goes into an "other" bubble
-const COVERAGE_REQUIRED = 0.8;  // need > this many of the stories tagged to show the results
+const COVERAGE_REQUIRED = 0.8; // need > this many of the stories tagged to show the results
 const BUBBLES_TO_SHOW = 5;
 
 const localMessages = {

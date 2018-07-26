@@ -102,7 +102,7 @@ class InfluentialStoryExplorer extends React.Component {
       const maxFacebookShares = d3.max(data.map(d => d.facebook_share_count));
       const facebookBinSize = maxFacebookShares / FACEBOOK_BIN_COUNT;
       const maxInlinks = d3.max(data.map(d => d.media_inlink_count));
-      const inlinkBinSize = d3.max([1, (maxInlinks / INLINK_BIN_COUNT)]);  // don't do < 1 for bin size
+      const inlinkBinSize = d3.max([1, (maxInlinks / INLINK_BIN_COUNT)]); // don't do < 1 for bin size
       // clean up the data
       for (let i = 0; i < data.length; i += 1) {
         const d = data[i];

@@ -26,7 +26,7 @@ const StoryTable = (props) => {
           </tr>
           {stories.map((story, idx) => {
             const domain = storyDomainName(story);
-            let dateToShow = null;  // need to handle undateable stories
+            let dateToShow = null; // need to handle undateable stories
             let dateStyle = '';
             const title = maxTitleLength !== undefined ? `${trimToMaxLength(story.title, maxTitleLength)}` : story.title;
             const isSelected = selectedStory === story.stories_id ? ' selected' : ' ';
@@ -56,8 +56,7 @@ const StoryTable = (props) => {
                 <td><span className={`story-date ${dateStyle}`}>{dateToShow}</span></td>
               </tr>
             );
-          }
-          )}
+          })}
         </tbody>
       </table>
     </div>

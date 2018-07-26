@@ -26,6 +26,7 @@ class QueryWordSpaceResultsContainer extends React.Component {
   handleDownloadCsv = (query) => {
     postToDownloadUrl('/api/explorer/words/wordcount.csv', query);
   }
+
   render() {
     const { results, queries, selectedTabIndex, tabSelector } = this.props;
     const { formatMessage } = this.props.intl;
@@ -43,7 +44,7 @@ class QueryWordSpaceResultsContainer extends React.Component {
         />
         <div className="actions">
           <ActionMenu actionTextMsg={messages.downloadOptions}>
-            {queries.map((q, idx) =>
+            {queries.map((q, idx) => (
               <span key={`wordspace-actions-${idx}`}>
                 <MenuItem
                   className="action-icon-menu-item"
@@ -61,7 +62,7 @@ class QueryWordSpaceResultsContainer extends React.Component {
                   }}
                 />
               </span>
-            )}
+            ))}
           </ActionMenu>
         </div>
       </div>
@@ -105,14 +106,14 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 });
 
 export default
-  injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
-      composeSummarizedVisualization(localMessages.title, localMessages.descriptionIntro, messages.wordSpaceLayoutHelp)(
-        withAsyncFetch(
-          withQueryResults(
-            QueryWordSpaceResultsContainer
-          )
+injectIntl(
+  connect(mapStateToProps, mapDispatchToProps)(
+    composeSummarizedVisualization(localMessages.title, localMessages.descriptionIntro, messages.wordSpaceLayoutHelp)(
+      withAsyncFetch(
+        withQueryResults(
+          QueryWordSpaceResultsContainer
         )
       )
     )
-  );
+  )
+);

@@ -165,7 +165,7 @@ class MediaContainer extends React.Component {
 
 MediaContainer.propTypes = {
   // from context
-  params: PropTypes.object.isRequired,       // params from router
+  params: PropTypes.object.isRequired, // params from router
   intl: PropTypes.object.isRequired,
   // from parent
   // from dispatch
@@ -191,7 +191,7 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = dispatch => ({
   fetchData: (topicId, mediaId, filters) => {
-    dispatch(selectMedia(mediaId));    // save it to the state
+    dispatch(selectMedia(mediaId)); // save it to the state
     dispatch(fetchMedia(topicId, mediaId, filters)); // fetch the info we need
   },
 });

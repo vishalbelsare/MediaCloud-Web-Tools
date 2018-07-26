@@ -34,9 +34,9 @@ const FocusSetSelectorContainer = (props) => {
           onChange={onFocalSetSelected}
           fullWidth
         >
-          {focalSets.map(fs =>
-            <MenuItem key={fs.focal_sets_id} value={fs.focal_sets_id} primaryText={fs.name} />)
-          }
+          {focalSets.map(fs => (
+            <MenuItem key={fs.focal_sets_id} value={fs.focal_sets_id} primaryText={fs.name} />
+          ))}
           {noneOption}
         </SelectField>
       </div>
@@ -76,8 +76,8 @@ const mapStateToProps = state => ({
 });
 
 export default
-  connect(mapStateToProps)(
-    injectIntl(
-      FocusSetSelectorContainer
-    )
-  );
+connect(mapStateToProps)(
+  injectIntl(
+    FocusSetSelectorContainer
+  )
+);

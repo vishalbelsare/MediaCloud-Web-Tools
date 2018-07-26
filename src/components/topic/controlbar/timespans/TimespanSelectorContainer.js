@@ -105,7 +105,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     dispatch(toggleTimespanControls(isExpanded));
   },
   fetchData: (topicId, snapshotId, focusId, timespanId, selectedTimespan) => {
-    const cleanedFocus = isNaN(focusId) ? null : focusId;
+    const cleanedFocus = Number.isNaN(focusId) ? null : focusId;
     dispatch(fetchTopicTimespansList(topicId, snapshotId, { focusId: cleanedFocus }))
       .then((response) => {
         let pickDefault = false;

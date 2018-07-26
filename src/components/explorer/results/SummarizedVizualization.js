@@ -15,17 +15,20 @@ function composeSummarizedVisualization(titleMesage, introMessage, detailedMesas
         showingDetails: false,
         extraContent: null,
       };
+
       toggleShowingDetails = () => {
-        this.setState({ showingDetails: !this.state.showingDetails });
+        this.setState(prevState => ({ showingDetails: !prevState.showingDetails }));
       }
+
       handleExtraContent = (extraContent) => {
         this.setState({ extraContent });
       }
+
       render() {
         let detailsContent;
         let showDetailsButton;
 
-        if (detailedMesasge) {  // only toggle extra text if there is any
+        if (detailedMesasge) { // only toggle extra text if there is any
           if (this.state.showingDetails) {
             if (Array.isArray(detailedMesasge)) {
               detailsContent = detailedMesasge.map(msgId => <FormattedHTMLMessage key={msgId.id} {...msgId} />);
