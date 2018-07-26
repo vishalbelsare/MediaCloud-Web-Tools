@@ -1,4 +1,4 @@
-@import '_constants';
+@import '../_constants';
 
 body {
   font-family: $font-families;
@@ -52,13 +52,13 @@ table {
 }
 
 table th {
- 	font-weight: bold;
+    font-weight: bold;
   text-align: left;
   white-space: nowrap;
   text-overflow: ellipsis;
   color: $material-grey900;
-	position: relative;
-	background-color: inherit;
+    position: relative;
+    background-color: inherit;
   padding: 5px 13px;
 
   &.numeric {
@@ -112,4 +112,19 @@ code {
   font-size: 85%;
   background-color: rgba(27, 31, 35, 0.05);
   display: inline-block;
+}
+
+#content { 
+  min-height: 400px;
+  padding-bottom: 30px;
+  background-color: $white;
+
+  .notice {
+    padding: 10px;
+  }
+
+}
+
+.warning {
+  color: $warning-color;
 }
