@@ -47,7 +47,7 @@ class FocusBuilderWizard extends React.Component {
     const stepLabelStyle = { height: 45 };
     return (
       <div className="focus-builder-wizard">
-        <BackLinkingControlBar message={localMessages.backToFociManager} linkTo={`/topics/${topicId}/snapshot/foci`} >
+        <BackLinkingControlBar message={localMessages.backToFociManager} linkTo={`/topics/${topicId}/snapshot/foci`}>
           <Stepper activeStep={currentStep}>
             <Step>
               <StepLabel style={stepLabelStyle}><FormattedMessage {...localMessages.step0Name} /></StepLabel>

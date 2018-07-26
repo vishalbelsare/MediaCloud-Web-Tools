@@ -111,7 +111,7 @@ const mapStateToProps = state => ({
   topicId: state.topics.selected.id,
   fetchStatus: state.topics.selected.summary.topWords.fetchStatus,
   topWords: state.topics.selected.summary.topWords,
-  wordCounts: state.topics.selected.summary.topWords.list,        // for just this timespan
+  wordCounts: state.topics.selected.summary.topWords.list, // for just this timespan
   totalWordCounts: state.topics.selected.summary.topWords.totals, // for the whole snapshot/focus
 });
 

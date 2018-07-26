@@ -29,7 +29,6 @@ const localMessages = {
 };
 
 class ManageSourcesContainer extends React.Component {
-
   state = {
     scrapedAll: false,
   }
@@ -158,7 +157,6 @@ class ManageSourcesContainer extends React.Component {
       </Grid>
     );
   }
-
 }
 
 ManageSourcesContainer.propTypes = {
@@ -187,8 +185,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   scrapeFeeds: (sourceId) => {
     dispatch(scrapeSourceFeeds(sourceId))
       .then((results) => {
-        if ((results.job_state.state === SOURCE_SCRAPE_STATE_QUEUED) ||
-          (results.job_state.state === SOURCE_SCRAPE_STATE_RUNNING)) {
+        if ((results.job_state.state === SOURCE_SCRAPE_STATE_QUEUED)
+          || (results.job_state.state === SOURCE_SCRAPE_STATE_RUNNING)) {
           dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(messages.sourceScraping) }));
           // update the page so the user sees the new scrape status
           window.location.reload();
@@ -213,10 +211,10 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 }
 
 export default
-  injectIntl(
-    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      withAsyncFetch(
-        ManageSourcesContainer
-      )
+injectIntl(
+  connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+    withAsyncFetch(
+      ManageSourcesContainer
     )
-  );
+  )
+);

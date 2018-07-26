@@ -22,7 +22,6 @@ const localMessages = {
 };
 
 class SourceSuggestion extends React.Component {
-
   state = {
     showApproveDialog: false,
     showRejectDialog: false,
@@ -155,7 +154,6 @@ class SourceSuggestion extends React.Component {
       </div>
     );
   }
-
 }
 
 SourceSuggestion.propTypes = {
@@ -169,6 +167,6 @@ SourceSuggestion.propTypes = {
 };
 
 export default
-  injectIntl(
-    SourceSuggestion
-  );
+injectIntl(
+  SourceSuggestion
+);

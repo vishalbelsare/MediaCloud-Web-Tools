@@ -35,8 +35,8 @@ class Word2VecTimespanPlayerContainer extends React.Component {
           <DataCard>
             <h1><FormattedMessage {...localMessages.title} /></h1>
             <Word2VecTimespanPlayer
-              xProperty={'w2v_x'}
-              yProperty={'w2v_y'}
+              xProperty="w2v_x"
+              yProperty="w2v_y"
               initialTimespan={selectedTimespan}
               timespanEmbeddings={timespanEmbeddings}
             />
@@ -86,10 +86,10 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 }
 
 export default
-  injectIntl(
-    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      withAsyncFetch(
-        Word2VecTimespanPlayerContainer
-      )
+injectIntl(
+  connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+    withAsyncFetch(
+      Word2VecTimespanPlayerContainer
     )
-  );
+  )
+);

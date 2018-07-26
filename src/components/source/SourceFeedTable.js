@@ -26,8 +26,8 @@ const SourceFeedTable = (props) => {
             <th><FormattedMessage {...messages.feedIsActive} /></th>
             <th><FormattedMessage {...messages.feedUrl} /></th>
           </tr>
-          {feeds.map((feed, idx) =>
-            (<tr key={feed.feeds_id} className={`${(idx % 2 === 0) ? 'even' : 'odd'} feed-${(feed.active) ? 'active' : 'disabled'}`}>
+          {feeds.map((feed, idx) => (
+            <tr key={feed.feeds_id} className={`${(idx % 2 === 0) ? 'even' : 'odd'} feed-${(feed.active) ? 'active' : 'disabled'}`}>
               <td>
                 {feed.name}
               </td>
@@ -41,13 +41,12 @@ const SourceFeedTable = (props) => {
                 <a href={feed.url}>{feed.url}</a>
               </td>
               <td>
-                <Link to={`/sources/${feed.media_id}/feeds/${feed.feeds_id}/edit`} >
+                <Link to={`/sources/${feed.media_id}/feeds/${feed.feeds_id}/edit`}>
                   <EditButton />
                 </Link>
               </td>
             </tr>
-            )
-          )}
+          ))}
         </tbody>
       </table>
     </div>

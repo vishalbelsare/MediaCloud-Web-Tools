@@ -79,7 +79,7 @@ class WordContainer extends React.Component {
 
 WordContainer.propTypes = {
   // from context
-  params: PropTypes.object.isRequired,       // params from router
+  params: PropTypes.object.isRequired, // params from router
   location: PropTypes.object,
   intl: PropTypes.object.isRequired,
   // from parent

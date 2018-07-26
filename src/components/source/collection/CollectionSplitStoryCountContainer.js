@@ -33,14 +33,17 @@ class CollectionSplitStoryCountContainer extends React.Component {
   state = {
     storyCollection: VIEW_REGULARLY_COLLECTED,
   }
+
   onIncludeSpidered = (d) => {
     this.setState({ storyCollection: d }); // reset this to trigger a re-render
   }
+
   downloadCsv = () => {
     const { collectionId } = this.props;
     const url = `/api/collections/${collectionId}/story-split/count.csv`;
     window.location = url;
   }
+
   handleDataPointClick = (startDate, endDate) => {
     const { collectionName, collectionId } = this.props;
     const startDateStr = `${startDate.getFullYear()}-${startDate.getMonth() + 1}-${startDate.getDate()}`;
@@ -49,6 +52,7 @@ class CollectionSplitStoryCountContainer extends React.Component {
       startDateStr, endDateStr);
     window.open(url, '_blank');
   }
+
   render() {
     const { allStories, partialStories, intl, filename, helpButton, collectionName } = this.props;
     const { formatMessage, formatNumber } = intl;
@@ -138,12 +142,12 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 });
 
 export default
-  injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
-      withHelp(localMessages.helpTitle, [localMessages.helpText, messages.attentionChartHelpText])(
-        withAsyncFetch(
-          CollectionSplitStoryCountContainer
-        )
+injectIntl(
+  connect(mapStateToProps, mapDispatchToProps)(
+    withHelp(localMessages.helpTitle, [localMessages.helpText, messages.attentionChartHelpText])(
+      withAsyncFetch(
+        CollectionSplitStoryCountContainer
       )
     )
-  );
+  )
+);

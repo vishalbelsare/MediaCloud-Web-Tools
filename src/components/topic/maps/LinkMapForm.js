@@ -68,17 +68,17 @@ const LinkMapForm = (props) => {
           >
             <MenuItem
               key={0}
-              value={'partisan_code'}
+              value="partisan_code"
               primaryText={formatMessage(localMessages.partisanCode)}
             />
             <MenuItem
               key={1}
-              value={'media_type'}
+              value="media_type"
               primaryText={formatMessage(localMessages.mediaType)}
             />
             <MenuItem
               key={2}
-              value={'partisan_retweet'}
+              value="partisan_retweet"
               primaryText={formatMessage(localMessages.partisanRetweet)}
             />
           </Field>
@@ -177,12 +177,12 @@ const reduxFormConfig = {
 };
 
 export default
-  injectIntl(
-    withIntlForm(
-      reduxForm(reduxFormConfig)(
-        connect(mapStateToProps)(
-          LinkMapForm
-        )
+injectIntl(
+  withIntlForm(
+    reduxForm(reduxFormConfig)(
+      connect(mapStateToProps)(
+        LinkMapForm
       )
     )
-  );
+  )
+);

@@ -27,7 +27,6 @@ const localMessages = {
 };
 
 class ModifyTopicDialog extends React.Component {
-
   state = {
     open: false,
   };
@@ -68,11 +67,11 @@ class ModifyTopicDialog extends React.Component {
           actions={dialogActions}
           open={this.state.open}
           onRequestClose={this.handleRemoveDialogClose}
-          className={'modify-topic-dialog'}
-          bodyClassName={'modify-topic-dialog-body'}
-          contentClassName={'modify-topic-dialog-content'}
-          overlayClassName={'modify-topic-dialog-overlay'}
-          titleClassName={'modify-topic-dialog-title'}
+          className="modify-topic-dialog"
+          bodyClassName="modify-topic-dialog-body"
+          contentClassName="modify-topic-dialog-content"
+          overlayClassName="modify-topic-dialog-overlay"
+          titleClassName="modify-topic-dialog-title"
           autoDetectWindowHeight={false}
         >
           <DescriptiveButton
@@ -117,7 +116,6 @@ class ModifyTopicDialog extends React.Component {
       </div>
     );
   }
-
 }
 
 ModifyTopicDialog.propTypes = {
@@ -131,7 +129,4 @@ ModifyTopicDialog.propTypes = {
   onUrlChange: PropTypes.func.isRequired,
 };
 
-export default
-  injectIntl(
-    ModifyTopicDialog
-  );
+export default injectIntl(ModifyTopicDialog);

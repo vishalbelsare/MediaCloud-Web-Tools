@@ -157,7 +157,7 @@ class StoryContainer extends React.Component {
             </Col>
           </Row>
           <Row>
-            <Col lg={12} >
+            <Col lg={12}>
               <StoryEntitiesContainer storyId={storiesId} />
             </Col>
           </Row>
@@ -170,7 +170,7 @@ class StoryContainer extends React.Component {
 
 StoryContainer.propTypes = {
   // from context
-  params: PropTypes.object.isRequired,       // params from router
+  params: PropTypes.object.isRequired, // params from router
   intl: PropTypes.object.isRequired,
   // from parent
   // from dispatch

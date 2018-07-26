@@ -67,8 +67,8 @@ const mapDispatchToProps = () => ({
 });
 
 export default
-  injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
-      CollectionUploadConfirmer
-    )
-  );
+injectIntl(
+  connect(mapStateToProps, mapDispatchToProps)(
+    CollectionUploadConfirmer
+  )
+);

@@ -40,13 +40,13 @@ const localMessages = {
 };
 
 class SourceSelectionRendererRaw extends React.Component {
-
   state = {
     collectionId: null, // the id of a collection to copy
-    sourceUrls: null,   // an array of source urls to add by hand
+    sourceUrls: null, // an array of source urls to add by hand
   };
 
   resetCollectionId = () => this.setState({ collectionId: null });
+
   resetSourceUrls = () => this.setState({ sourceUrls: null });
 
   pickCollectionToCopy = (collectionId) => {
@@ -83,6 +83,7 @@ class SourceSelectionRendererRaw extends React.Component {
       this.addSources(searchResults);
     }
   }
+
   render() {
     const { submitButton, fields, meta: { error }, currentSources, editCollectionId, renderTextField } = this.props;
     const { formatMessage } = this.props.intl;
@@ -120,7 +121,7 @@ class SourceSelectionRendererRaw extends React.Component {
           <Row>
             <Col lg={10}>
               <Tabs>
-                <Tab label={<FormattedMessage {...localMessages.tabSource} />} >
+                <Tab label={<FormattedMessage {...localMessages.tabSource} />}>
                   <h3><FormattedMessage {...localMessages.tabSource} /></h3>
                   <p><FormattedMessage {...localMessages.tabSourceIntro} /></p>
                   <SourceSearchContainer
@@ -129,7 +130,7 @@ class SourceSelectionRendererRaw extends React.Component {
                     maxSources={12}
                   />
                 </Tab>
-                <Tab label={<FormattedMessage {...localMessages.tabCollection} />} >
+                <Tab label={<FormattedMessage {...localMessages.tabCollection} />}>
                   <h3><FormattedMessage {...localMessages.tabCollection} /></h3>
                   <p><FormattedMessage {...localMessages.tabCollectionIntro} /></p>
                   <SourceSearchContainer
@@ -138,7 +139,7 @@ class SourceSelectionRendererRaw extends React.Component {
                   />
                   {copyConfirmation}
                 </Tab>
-                <Tab label={<FormattedMessage {...localMessages.tabUrls} />} >
+                <Tab label={<FormattedMessage {...localMessages.tabUrls} />}>
                   <h3><FormattedMessage {...localMessages.tabUrls} /></h3>
                   <p><FormattedMessage {...localMessages.tabUrlsIntro} /></p>
                   <Field
@@ -156,7 +157,7 @@ class SourceSelectionRendererRaw extends React.Component {
                   />
                   {addByUrlConfirmer}
                 </Tab>
-                <Tab label={<FormattedMessage {...localMessages.tabUpload} />} >
+                <Tab label={<FormattedMessage {...localMessages.tabUpload} />}>
                   <h3><FormattedMessage {...localMessages.tabUpload} /></h3>
                   <CollectionUploadSourceContainer
                     onConfirm={item => this.addSources(item)}
@@ -186,7 +187,7 @@ class SourceSelectionRendererRaw extends React.Component {
                     <th><FormattedMessage {...messages.sourceUrlProp} /></th>
                     <th />
                   </tr>
-                  {fields.map((source, idx) =>
+                  {fields.map((source, idx) => (
                     <Field
                       key={idx}
                       name={source}
@@ -207,7 +208,7 @@ class SourceSelectionRendererRaw extends React.Component {
                         </tr>
                       )}
                     />
-                  )}
+                  ))}
                 </tbody>
               </table>
             </Col>
@@ -238,10 +239,7 @@ SourceSelectionRendererRaw.propTypes = {
   intl: PropTypes.object.isRequired,
 };
 
-const SourceSelectionRenderer =
-  withIntlForm(
-    SourceSelectionRendererRaw
-  );
+const SourceSelectionRenderer = withIntlForm(SourceSelectionRendererRaw);
 
 const CollectionMediaForm = props => (
   <div>
@@ -297,10 +295,10 @@ const reduxFormConfig = {
 };
 
 export default
-  withIntlForm(
-    reduxForm(reduxFormConfig)(
-      connect(mapStateToProps, mapDispatchToProps)(
-        CollectionMediaForm
-      )
+withIntlForm(
+  reduxForm(reduxFormConfig)(
+    connect(mapStateToProps, mapDispatchToProps)(
+      CollectionMediaForm
     )
-  );
+  )
+);

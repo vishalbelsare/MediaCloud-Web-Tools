@@ -56,7 +56,7 @@ const SourceFeedForm = (props) => {
           </span>
         </Col>
         <Col md={8}>
-          <Field name="type" component={renderSelectField} >
+          <Field name="type" component={renderSelectField}>
             <MenuItem key="syndicated" value="syndicated" primaryText={formatMessage(localMessages.typeSyndicated)} />
             <MenuItem key="web_page" value="web_page" primaryText={formatMessage(localMessages.typeWebPage)} />
           </Field>
@@ -123,10 +123,10 @@ const reduxFormConfig = {
 };
 
 export default
-  injectIntl(
-    withIntlForm(
-      reduxForm(reduxFormConfig)(
-        SourceFeedForm
-      )
+injectIntl(
+  withIntlForm(
+    reduxForm(reduxFormConfig)(
+      SourceFeedForm
     )
-  );
+  )
+);

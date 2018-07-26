@@ -69,7 +69,7 @@ class DownloadMapContainer extends React.Component {
       content = (
         <div>
           <h3><FormattedMessage {...localMessages.linkMap} />:</h3>
-          <p><LinkWithFilters to={`/topics/${topicId}/link-map`} ><FormattedMessage {...localMessages.linkMapDownload} /></LinkWithFilters></p>
+          <p><LinkWithFilters to={`/topics/${topicId}/link-map`}><FormattedMessage {...localMessages.linkMapDownload} /></LinkWithFilters></p>
           <h3><FormattedMessage {...localMessages.wordMap} />:</h3>
           {wordMapContent}
         </div>

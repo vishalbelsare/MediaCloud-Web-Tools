@@ -106,7 +106,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 
 const reduxFormConfig = {
   form: 'snapshotFocus', // make sure this matches the sub-components and other wizard steps
-  destroyOnUnmount: false,  // so the wizard works
+  destroyOnUnmount: false, // so the wizard works
 };
 
 export default

@@ -20,7 +20,7 @@ const SourceMetadataForm = props => (
       <Col lg={3} xs={12}>
         <MetadataPickerContainer
           id={TAG_SET_PUBLICATION_COUNTRY}
-          name={'publicationCountry'}
+          name="publicationCountry"
           form="sourceForm"
           initialValues={props.initialValues}
         />
@@ -28,7 +28,7 @@ const SourceMetadataForm = props => (
       <Col lg={3} xs={12}>
         <MetadataPickerContainer
           id={TAG_SET_PUBLICATION_STATE}
-          name={'publicationState'}
+          name="publicationState"
           form="sourceForm"
           initialValues={props.initialValues}
         />
@@ -36,7 +36,7 @@ const SourceMetadataForm = props => (
       <Col lg={3} xs={12}>
         <MetadataPickerContainer
           id={TAG_SET_PRIMARY_LANGUAGE}
-          name={'primaryLanguage'}
+          name="primaryLanguage"
           form="sourceForm"
           disabled
           initialValues={props.initialValues}
@@ -45,7 +45,7 @@ const SourceMetadataForm = props => (
       <Col lg={3} xs={12}>
         <MetadataPickerContainer
           id={TAG_SET_COUNTRY_OF_FOCUS}
-          name={'countryOfFocus'}
+          name="countryOfFocus"
           form="sourceForm"
           disabled
           initialValues={props.initialValues}
@@ -56,7 +56,7 @@ const SourceMetadataForm = props => (
       <Col lg={3} xs={12}>
         <MetadataPickerContainer
           id={TAG_SET_MEDIA_TYPE}
-          name={'mediaType'}
+          name="mediaType"
           form="sourceForm"
           showDescription
           initialValues={props.initialValues}
@@ -73,6 +73,6 @@ SourceMetadataForm.propTypes = {
 };
 
 export default
-  injectIntl(
-    SourceMetadataForm
-  );
+injectIntl(
+  SourceMetadataForm
+);

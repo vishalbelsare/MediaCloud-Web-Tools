@@ -14,7 +14,6 @@ const localMessages = {
 };
 
 class CollectionCopyConfirmer extends Component {
-
   componentWillReceiveProps(nextProps) {
     const { collectionId, fetchData } = this.props;
     if ((nextProps.collectionId !== collectionId)) {
@@ -46,7 +45,6 @@ class CollectionCopyConfirmer extends Component {
       </div>
     );
   }
-
 }
 
 CollectionCopyConfirmer.propTypes = {
@@ -82,10 +80,10 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 });
 
 export default
-  injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
-      withAsyncFetch(
-        CollectionCopyConfirmer
-      )
+injectIntl(
+  connect(mapStateToProps, mapDispatchToProps)(
+    withAsyncFetch(
+      CollectionCopyConfirmer
     )
-  );
+  )
+);

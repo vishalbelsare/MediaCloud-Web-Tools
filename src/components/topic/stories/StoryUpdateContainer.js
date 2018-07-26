@@ -66,7 +66,7 @@ class StoryUpdateContainer extends React.Component {
             <h2>{titleHandler()}</h2>
           </Row>
           <Row>
-            <Col lg={6} xs={12} >
+            <Col lg={6} xs={12}>
               <StoryDetailForm story={story} initialValues={story} language={lang} storiesId={storiesId} onSave={onSave} buttonLabel="save" />
             </Col>
           </Row>
@@ -79,7 +79,7 @@ class StoryUpdateContainer extends React.Component {
 
 StoryUpdateContainer.propTypes = {
   // from context
-  params: PropTypes.object.isRequired,       // params from router
+  params: PropTypes.object.isRequired, // params from router
   intl: PropTypes.object.isRequired,
   // from parent
   // from dispatch

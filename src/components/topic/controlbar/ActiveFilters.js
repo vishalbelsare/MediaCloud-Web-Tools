@@ -16,7 +16,7 @@ const ActiveFilters = (props) => {
   if (focus) {
     focusChip = (
       <Chip
-        backgroundColor={'rgb(255,255,255)'}
+        backgroundColor="rgb(255,255,255)"
         style={{ border: '1px solid rgb(189,189,189)', display: 'inline-flex' }}
         onRequestDelete={onRemoveFocus}
       >
@@ -27,7 +27,7 @@ const ActiveFilters = (props) => {
   if (query) {
     queryChip = (
       <Chip
-        backgroundColor={'rgb(255,255,255)'}
+        backgroundColor="rgb(255,255,255)"
         style={{ border: '1px solid rgb(189,189,189)', display: 'inline-flex' }}
         onRequestDelete={onRemoveQuery}
       >

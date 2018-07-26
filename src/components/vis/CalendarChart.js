@@ -31,7 +31,7 @@ const CalendarChart = (props) => {
 
 CalendarChart.propTypes = {
   domId: PropTypes.string.isRequired,
-  data: PropTypes.array.isRequired,  // an array of [jsDateObj, countInteger]
+  data: PropTypes.array.isRequired, // an array of [jsDateObj, countInteger]
   cellSize: PropTypes.number.isRequired,
 };
 

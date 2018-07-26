@@ -57,7 +57,7 @@ WordSplitStoryCountContainer.propTypes = {
   // from parent
   topicId: PropTypes.number.isRequired,
   term: PropTypes.string.isRequired,
-  stem: PropTypes.string.isRequired,  // from state
+  stem: PropTypes.string.isRequired, // from state
   filters: PropTypes.object.isRequired,
   // from state
   fetchStatus: PropTypes.string.isRequired,

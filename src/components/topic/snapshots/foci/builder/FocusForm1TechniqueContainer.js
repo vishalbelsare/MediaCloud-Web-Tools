@@ -34,7 +34,7 @@ const FocusForm1TechniqueContainer = (props) => {
         </Row>
         <FocalTechniqueSelector />
         <Row>
-          <Col lg={12} md={12} sm={12} >
+          <Col lg={12} md={12} sm={12}>
             <AppButton
               disabled={(currentFocalTechnique === undefined) || submitting}
               type="submit"

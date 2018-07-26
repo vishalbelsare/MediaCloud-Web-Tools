@@ -69,7 +69,7 @@ const TimespanSelector = (props) => {
           <Col lg={8} sm={8} xs={12} className="center">
             <TimespanDateRange timespan={selectedTimespan} />
           </Col>
-          <Col lg={2} sm={2} xs={12} >
+          <Col lg={2} sm={2} xs={12}>
             <div className="toggle-control">
               {expandControl}
               {helpButton}

@@ -88,10 +88,10 @@ const reduxFormConfig = {
 };
 
 export default
-  injectIntl(
-    withIntlForm(
-      reduxForm(reduxFormConfig)(
-        CollectionDetailsForm
-      )
+injectIntl(
+  withIntlForm(
+    reduxForm(reduxFormConfig)(
+      CollectionDetailsForm
     )
-  );
+  )
+);

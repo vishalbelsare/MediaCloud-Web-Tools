@@ -69,7 +69,7 @@ SplitStoryCountSummaryContainer.propTypes = {
   // from state
   fetchStatus: PropTypes.string.isRequired,
   total: PropTypes.number,
-  counts: PropTypes.array,  // array of {date: epochMS, count: int]
+  counts: PropTypes.array, // array of {date: epochMS, count: int]
   // from dispath
   asyncFetch: PropTypes.func.isRequired,
   fetchData: PropTypes.func.isRequired,

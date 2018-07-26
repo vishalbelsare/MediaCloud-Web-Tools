@@ -234,7 +234,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 
 const reduxFormConfig = {
   form: 'topicForm',
-  destroyOnUnmount: false,  // so the wizard works
+  destroyOnUnmount: false, // so the wizard works
   forceUnregisterOnUnmount: true, // <------ unregister fields on unmount
 };
 

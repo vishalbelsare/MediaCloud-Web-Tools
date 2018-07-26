@@ -138,7 +138,7 @@ const TopicDetailForm = (props) => {
       <Row>
         <Col lg={10}>
           <br />
-          <Card style={{ boxShadow: 'none' }} >
+          <Card style={{ boxShadow: 'none' }}>
             <CardHeader
               style={{ fontWeight: 'bold' }}
               title={formatMessage(localMessages.advancedSettings)}

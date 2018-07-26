@@ -134,7 +134,7 @@ class SourceSearchContainer extends React.Component {
     clearTimeout(this.state.searchTimeout); // cancel any pending searches
     this.setState({
       lastSearchString: searchString,
-      searchTimeout: setTimeout(this.fireSearchIfNeeded, DELAY_BEFORE_SEARCH_MS),  // schedule a search for when they stop typing
+      searchTimeout: setTimeout(this.fireSearchIfNeeded, DELAY_BEFORE_SEARCH_MS), // schedule a search for when they stop typing
     });
   }
 
@@ -176,9 +176,9 @@ class SourceSearchContainer extends React.Component {
 SourceSearchContainer.propTypes = {
   intl: PropTypes.object.isRequired,
   // from parent
-  searchSources: PropTypes.bool,      // include source results?
-  searchCollections: PropTypes.bool,  // include collection results?
-  searchStaticCollections: PropTypes.bool,  // inclue static collecton results?
+  searchSources: PropTypes.bool, // include source results?
+  searchCollections: PropTypes.bool, // include collection results?
+  searchStaticCollections: PropTypes.bool, // inclue static collecton results?
   onMediaSourceSelected: PropTypes.func,
   onCollectionSelected: PropTypes.func,
   onAdvancedSearchSelected: PropTypes.func,
@@ -228,8 +228,8 @@ SourceSearchContainer.propTypes = {
 };
 
 export default
-  injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
-      SourceSearchContainer
-    )
-  );
+injectIntl(
+  connect(mapStateToProps, mapDispatchToProps)(
+    SourceSearchContainer
+  )
+);

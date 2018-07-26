@@ -227,7 +227,7 @@ class InfluentialStoryExplorer extends React.Component {
                   <h3>
                     <FormattedMessage {...localMessages.storiesChartTitle} />
                     <small>
-                      <span className="reset" style={{ display: 'none' }} >
+                      <span className="reset" style={{ display: 'none' }}>
                         <span className="filter" />
                         &nbsp;
                         <a onClick={this.resetStoriesChart} tabIndex={0}><FormattedMessage {...messages.reset} /></a>
