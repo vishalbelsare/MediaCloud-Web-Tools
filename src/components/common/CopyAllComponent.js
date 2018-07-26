@@ -17,17 +17,17 @@ class CopyAllComponent extends React.Component {
   handleOpen = () => {
     this.setState({ open: true });
   };
-  
+
   handleClose = () => {
     const { onOk } = this.props;
     this.setState({ open: false });
     onOk();
   };
-  
+
   handleCancel = () => {
     this.setState({ open: false });
   };
-  
+
   render() {
     const { label, title, msg } = this.props;
     const { formatMessage } = this.props.intl;

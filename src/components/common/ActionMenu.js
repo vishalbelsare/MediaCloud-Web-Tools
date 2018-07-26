@@ -22,21 +22,25 @@ class ActionMenu extends React.Component {
       this.handlePopupClose(event);
     }
   }
+
   handlePopupOpen = (event) => {
     event.preventDefault();
-    this.setState({
-      isPopupOpen: !this.state.isPopupOpen,
+    this.setState(prevState => ({
+      isPopupOpen: !prevState.isPopupOpen,
       anchorEl: event.currentTarget,
-    });
+    }));
   }
+
   handlePopupClose = () => {
-    this.setState({
-      isPopupOpen: !this.state.isPopupOpen,
-    });
+    this.setState(prevState => ({
+      isPopupOpen: !prevState.isPopupOpen,
+    }));
   }
+
   handleMouseEnter = () => {
     this.setState({ backgroundColor: getBrandDarkerColor() });
   }
+
   handleMouseLeave = () => {
     this.setState({ backgroundColor: getBrandDarkColor() });
   }
@@ -47,21 +51,21 @@ class ActionMenu extends React.Component {
     const otherProps = {};
     otherProps.backgroundColor = this.state.backgroundColor;
     let closeIconButton = (
-      <IconButton style={{ padding: 0, margin: 0, width: 32, height: 32 }} >
+      <IconButton style={{ padding: 0, margin: 0, width: 32, height: 32 }}>
         <CloseIcon color={color} {...otherProps} />
       </IconButton>
     );
     let openIconButton = (
-      <IconButton style={{ padding: 0, margin: 0, width: 32, height: 32 }} >
+      <IconButton style={{ padding: 0, margin: 0, width: 32, height: 32 }}>
         <MoreOptionsIcon color={color} {...otherProps} />
       </IconButton>
     );
 
     if (openButton) {
-      openIconButton = open;
+      openIconButton = openButton;
     }
     if (closeButton) {
-      closeIconButton = close;
+      closeIconButton = closeButton;
     }
 
     const icon = (this.state.isPopupOpen) ? closeIconButton : openIconButton;
@@ -90,7 +94,7 @@ class ActionMenu extends React.Component {
         <IconMenu
           open={this.state.isPopupOpen}
           iconButtonElement={icon}
-          onRequestChange={() => this.handlePopupOpenClick(event)}
+          onRequestChange={evt => this.handlePopupOpenClick(evt)}
           anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
           targetOrigin={{ horizontal: 'right', vertical: 'top' }}
         >
