@@ -17,7 +17,6 @@ const localMessages = {
 };
 
 class EditFocusContainer extends React.Component {
-
   getInitialValues = () => {
     const { topicId, focusDefinition } = this.props;
     return {
@@ -46,7 +45,6 @@ class EditFocusContainer extends React.Component {
       />
     );
   }
-
 }
 
 EditFocusContainer.propTypes = {
@@ -67,8 +65,8 @@ const findFocalSetDefById = (state, focusDefId) => {
   }
   const matchingFocalSetDef = focalSetDefinitions.find(
     focalSetDef => focalSetDef.focus_definitions.map(
-        focusDef => focusDef.focus_definitions_id
-      ).includes(focusDefId)
+      focusDef => focusDef.focus_definitions_id
+    ).includes(focusDefId)
   );
   const matchingFocusDef = matchingFocalSetDef.focus_definitions.find(
     focusDef => focusDef.focus_definitions_id === focusDefId
@@ -115,10 +113,10 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 }
 
 export default
-  injectIntl(
-    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      withAsyncFetch(
-        EditFocusContainer
-      )
+injectIntl(
+  connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+    withAsyncFetch(
+      EditFocusContainer
     )
-  );
+  )
+);

@@ -19,7 +19,6 @@ const localMessages = {
 };
 
 class FocusBuilderWizard extends React.Component {
-
   componentWillMount = () => {
     const { startStep, goToStep } = this.props;
     goToStep(startStep || 0);
@@ -67,7 +66,6 @@ class FocusBuilderWizard extends React.Component {
       </div>
     );
   }
-
 }
 
 FocusBuilderWizard.propTypes = {
@@ -98,8 +96,8 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default
-  injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
-      FocusBuilderWizard
-    )
-  );
+injectIntl(
+  connect(mapStateToProps, mapDispatchToProps)(
+    FocusBuilderWizard
+  )
+);

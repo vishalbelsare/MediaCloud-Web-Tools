@@ -35,12 +35,13 @@ class StoryTotalsSummaryContainer extends React.Component {
       fetchData(nextProps);
     }
   }
+
   render() {
     const { counts } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
     let content = null;
     if (counts !== null) {
-      const data = [  // format the data for the bubble chart help
+      const data = [ // format the data for the bubble chart help
         {
           value: counts.count,
           fill: getBrandDarkColor(),
@@ -54,10 +55,12 @@ class StoryTotalsSummaryContainer extends React.Component {
           rolloverText: `${formatMessage(localMessages.totalLabel)}: ${formatNumber(counts.total)} stories`,
         },
       ];
-      content = (<PackedBubbleChart
-        data={data}
-        domId={BUBBLE_CHART_DOM_ID}
-      />);
+      content = (
+        <PackedBubbleChart
+          data={data}
+          domId={BUBBLE_CHART_DOM_ID}
+        />
+      );
     }
     return (
       <DataCard>
@@ -113,12 +116,12 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 }
 
 export default
-  injectIntl(
-    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      withDescription(localMessages.descriptionIntro, localMessages.description)(
-        withAsyncFetch(
-          StoryTotalsSummaryContainer
-        )
+injectIntl(
+  connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+    withDescription(localMessages.descriptionIntro, localMessages.description)(
+      withAsyncFetch(
+        StoryTotalsSummaryContainer
       )
     )
-  );
+  )
+);

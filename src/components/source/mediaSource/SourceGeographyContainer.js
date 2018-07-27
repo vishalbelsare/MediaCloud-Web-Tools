@@ -87,7 +87,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default
 injectIntl(
   connect(mapStateToProps, mapDispatchToProps)(
-     withHelp(localMessages.helpTitle, [localMessages.intro, messages.heatMapHelpText])(
+    withHelp(localMessages.helpTitle, [localMessages.intro, messages.heatMapHelpText])(
       withAsyncFetch(
         SourceGeographyContainer
       )

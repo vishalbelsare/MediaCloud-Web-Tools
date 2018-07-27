@@ -141,8 +141,8 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 }
 
 export default
-  injectIntl(
-    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      CreateFocusContainer
-    )
-  );
+injectIntl(
+  connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+    CreateFocusContainer
+  )
+);

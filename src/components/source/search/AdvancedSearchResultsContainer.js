@@ -36,9 +36,9 @@ class AdvancedSearchResultsContainer extends React.Component {
   };
 
   evalStateAndPage = () => {
-    if (this.state &&
-      (this.state.allOrNoneCheck === ADD_ALL_PAGES ||
-      (this.state.allOrNoneCheck === ADD_ALL_THIS_PAGE && FIRST_PAGE))) {
+    if (this.state
+      && (this.state.allOrNoneCheck === ADD_ALL_PAGES
+        || (this.state.allOrNoneCheck === ADD_ALL_THIS_PAGE && FIRST_PAGE))) {
       return true;
     }
     return false;

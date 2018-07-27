@@ -19,8 +19,7 @@ InfluentialWordsContainer.propTypes = {
   intl: PropTypes.object.isRequired,
 };
 
-
 export default
-  injectIntl(
-    InfluentialWordsContainer
-  );
+injectIntl(
+  InfluentialWordsContainer
+);

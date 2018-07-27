@@ -127,8 +127,8 @@ const mapStateToProps = state => ({
 });
 
 export default
-  injectIntl(
-    connect(mapStateToProps)(
-      TopicsHomepage
-    )
-  );
+injectIntl(
+  connect(mapStateToProps)(
+    TopicsHomepage
+  )
+);

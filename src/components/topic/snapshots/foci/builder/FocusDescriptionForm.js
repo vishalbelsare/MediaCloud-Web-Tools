@@ -27,7 +27,6 @@ const localMessages = {
 };
 
 class FocusDescriptionForm extends React.Component {
-
   componentWillMount() {
     const { change, focalTechnique, keywords } = this.props;
     const { formatMessage } = this.props.intl;
@@ -59,13 +58,13 @@ class FocusDescriptionForm extends React.Component {
             component={renderSelectField}
             floatingLabelText={localMessages.pickFocalSet}
           >
-            {focalSetDefinitions.map(focalSetDef =>
+            {focalSetDefinitions.map(focalSetDef => (
               <MenuItem
                 key={focalSetDef.focal_set_definitions_id}
                 value={focalSetDef.focal_set_definitions_id}
                 primaryText={focalSetDef.name}
               />
-            )}
+            ))}
             <MenuItem
               key={NEW_FOCAL_SET_PLACEHOLDER_ID}
               value={NEW_FOCAL_SET_PLACEHOLDER_ID}
@@ -112,7 +111,6 @@ class FocusDescriptionForm extends React.Component {
       </div>
     );
   }
-
 }
 
 FocusDescriptionForm.propTypes = {
@@ -150,10 +148,10 @@ const reduxFormConfig = {
 };
 
 export default
-  injectIntl(
-    withIntlForm(
-      reduxForm(reduxFormConfig)(
-        FocusDescriptionForm
-      )
+injectIntl(
+  withIntlForm(
+    reduxForm(reduxFormConfig)(
+      FocusDescriptionForm
     )
-  );
+  )
+);

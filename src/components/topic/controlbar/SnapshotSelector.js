@@ -1,3 +1,5 @@
+/* eslint prefer-destructuring: 0 */
+
 import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
@@ -11,7 +13,6 @@ const localMessages = {
 };
 
 class SnapshotSelector extends React.Component {
-
   handleSnapshotSelected = (evt, index, value) => {
     const { onSnapshotSelected, snapshots } = this.props;
     onSnapshotSelected(snapshots.find(s => s.snapshots_id === value));
@@ -53,7 +54,6 @@ class SnapshotSelector extends React.Component {
 
     );
   }
-
 }
 
 SnapshotSelector.propTypes = {
@@ -64,6 +64,6 @@ SnapshotSelector.propTypes = {
 };
 
 export default
-  injectIntl(
-    SnapshotSelector
-  );
+injectIntl(
+  SnapshotSelector
+);

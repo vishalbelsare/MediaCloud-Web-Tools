@@ -13,7 +13,6 @@ const localMessages = {
 };
 
 class FocusDefinition extends React.Component {
-
   state = {
     deleteConfirmationOpen: false,
   };
@@ -77,7 +76,6 @@ class FocusDefinition extends React.Component {
       </div>
     );
   }
-
 }
 
 FocusDefinition.propTypes = {
@@ -90,6 +88,6 @@ FocusDefinition.propTypes = {
 };
 
 export default
-  injectIntl(
-    FocusDefinition
-  );
+injectIntl(
+  FocusDefinition
+);

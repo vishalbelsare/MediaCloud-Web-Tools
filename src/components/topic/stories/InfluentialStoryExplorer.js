@@ -29,7 +29,6 @@ const FACEBOOK_BIN_COUNT = 15;
 const INLINK_BIN_COUNT = 15;
 
 class InfluentialStoryExplorer extends React.Component {
-
   componentDidMount() {
     const { selectedTimespan } = this.props;
     this.renderDC(selectedTimespan);
@@ -195,7 +194,7 @@ class InfluentialStoryExplorer extends React.Component {
           d => d.outlink_count,
           d => d.facebook_share_count,
         ])
-        .sortBy(d => d.media_inlink_count)  // TODO: make this selectable
+        .sortBy(d => d.media_inlink_count) // TODO: make this selectable
         .order(d3.descending);
       this.setState({
         charts: {
@@ -230,7 +229,7 @@ class InfluentialStoryExplorer extends React.Component {
                       <span className="reset" style={{ display: 'none' }}>
                         <span className="filter" />
                         &nbsp;
-                        <a onClick={this.resetStoriesChart} tabIndex={0}><FormattedMessage {...messages.reset} /></a>
+                        <a onClick={this.resetStoriesChart} href="#"><FormattedMessage {...messages.reset} /></a>
                       </span>
                     </small>
                   </h3>
@@ -240,7 +239,7 @@ class InfluentialStoryExplorer extends React.Component {
                 <div id="language-chart">
                   <h3>
                     <FormattedMessage {...localMessages.languagesChartTitle} />
-                    <small><a className="reset" onClick={this.resetLanguageChart} style={{ display: 'none' }} tabIndex={0}><FormattedMessage {...messages.reset} /></a></small>
+                    <small><a className="reset" onClick={this.resetLanguageChart} style={{ display: 'none' }} href="#"><FormattedMessage {...messages.reset} /></a></small>
                   </h3>
                 </div>
               </Col>
@@ -250,7 +249,7 @@ class InfluentialStoryExplorer extends React.Component {
                 <div id="facebook-share-chart">
                   <h3>
                     <FormattedMessage {...localMessages.facebookChartTitle} />
-                    <small><a className="reset" onClick={this.resetFacebookChart} style={{ display: 'none' }} tabIndex={0}><FormattedMessage {...messages.reset} /></a></small>
+                    <small><a className="reset" onClick={this.resetFacebookChart} style={{ display: 'none' }} href="#"><FormattedMessage {...messages.reset} /></a></small>
                   </h3>
                 </div>
               </Col>
@@ -258,7 +257,7 @@ class InfluentialStoryExplorer extends React.Component {
                 <div id="inlink-chart">
                   <h3>
                     <FormattedMessage {...localMessages.inlinkChartTitle} />
-                    <small><a className="reset" onClick={this.resetInlinkChart} style={{ display: 'none' }} tabIndex={0}><FormattedMessage {...messages.reset} /></a></small>
+                    <small><a className="reset" onClick={this.resetInlinkChart} style={{ display: 'none' }} href="#"><FormattedMessage {...messages.reset} /></a></small>
                   </h3>
                 </div>
               </Col>
@@ -306,7 +305,4 @@ InfluentialStoryExplorer.propTypes = {
   selectedTimespan: PropTypes.object,
 };
 
-export default
-  injectIntl(
-    InfluentialStoryExplorer
-  );
+export default injectIntl(InfluentialStoryExplorer);

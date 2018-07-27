@@ -13,13 +13,12 @@ import { PERMISSION_TOPIC_WRITE } from '../../../lib/auth';
 import { toggleFilterControls, filterByFocus, filterByQuery, fetchTopicFocalSetsList, fetchFocalSetDefinitions, setTopicNeedsNewSnapshot, topicStartSpider } from '../../../actions/topicActions';
 import { updateFeedback, addNotice } from '../../../actions/appActions';
 import FilterSelectorContainer from './FilterSelectorContainer';
+import { REMOVE_FOCUS } from './FocusSelector';
 import ActiveFiltersContainer from './ActiveFiltersContainer';
 import { asyncContainerize } from '../../common/hocs/AsyncContainer';
 import ModifyTopicDialog from './ModifyTopicDialog';
 import { LEVEL_WARNING } from '../../common/Notice';
 import { urlToExplorerQuery } from '../../../lib/urlUtil';
-
-const REMOVE_FOCUS = 0;
 
 const localMessages = {
   editPermissions: { id: 'topic.editPermissions', defaultMessage: 'Edit Topic Permissions' },
@@ -39,9 +38,10 @@ class TopicFilterControlBar extends React.Component {
       fetchData(nextProps.topicId, nextProps.filters.snapshotId, snapshots);
     }
   }
+
   render() {
     const { topicId, topic, location, filters, goToUrl, handleFilterToggle, handleFocusSelected,
-            needsNewSnapshot, handleQuerySelected, handleSpiderRequest, selectedTimespan } = this.props;
+      needsNewSnapshot, handleQuerySelected, handleSpiderRequest, selectedTimespan } = this.props;
     const { formatMessage } = this.props.intl;
     // both the focus and timespans selectors need the snapshot to be selected first
     let subControls = null;
@@ -233,10 +233,10 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 }
 
 export default
-  injectIntl(
-    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      asyncContainerize(
-        TopicFilterControlBar
-      )
+injectIntl(
+  connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+    asyncContainerize(
+      TopicFilterControlBar
     )
-  );
+  )
+);

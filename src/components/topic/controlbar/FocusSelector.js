@@ -3,15 +3,15 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
-import { REMOVE_FOCUS } from './TopicFilterControlBar';
 import { getBrandDarkerColor } from '../../../styles/colors';
 import messages from '../../../resources/messages';
+
+export const REMOVE_FOCUS = 0;
 
 const localMessages = {
 };
 
 class FocusSelector extends React.Component {
-
   handleFocusChange = (evt, index, value) => {
     const { foci, onFocusSelected } = this.props;
     const { formatMessage } = this.props.intl;
@@ -36,13 +36,15 @@ class FocusSelector extends React.Component {
       return 0;
     });
     let detailsContent;
-    /* if ((selectedId) && (selectedId !== REMOVE_FOCUS)) {
+    /*
+    if ((selectedId) && (selectedId !== REMOVE_FOCUS)) {
       detailsContent = (
         <div className="selected-focus-details">
           details
         </div>
       );
-    }*/
+    }
+    */
     // default to none
     return (
       <div className="focus-selector-wrapper">
@@ -56,20 +58,19 @@ class FocusSelector extends React.Component {
           fullWidth
           onChange={this.handleFocusChange}
         >
-          {foci.map(focus =>
+          {foci.map(focus => (
             <MenuItem
               key={focus.foci_id}
               value={focus.foci_id}
               primaryText={focusName(focus)}
             />
-          )}
+          ))}
           <MenuItem value={REMOVE_FOCUS} primaryText={formatMessage(messages.removeFocus)} />
         </SelectField>
         {detailsContent}
       </div>
     );
   }
-
 }
 
 FocusSelector.propTypes = {
@@ -80,6 +81,6 @@ FocusSelector.propTypes = {
 };
 
 export default
-  injectIntl(
-    FocusSelector
-  );
+injectIntl(
+  FocusSelector
+);

@@ -27,7 +27,4 @@ TopicsApp.propTypes = {
   intl: PropTypes.object.isRequired,
 };
 
-export default
-  injectIntl(
-    TopicsApp
-  );
+export default injectIntl(TopicsApp);

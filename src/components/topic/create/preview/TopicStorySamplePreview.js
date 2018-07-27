@@ -29,6 +29,7 @@ class TopicStorySamplePreview extends React.Component {
       fetchData(nextProps.query);
     }
   }
+
   render() {
     const { stories } = this.props;
     return (
@@ -76,7 +77,7 @@ const mapDispatchToProps = dispatch => ({
     infoForQuery['collections[]'] = [];
     infoForQuery['sources[]'] = [];
 
-    if ('sourcesAndCollections' in query) {  // in FieldArrays on the form
+    if ('sourcesAndCollections' in query) { // in FieldArrays on the form
       infoForQuery['collections[]'] = query.sourcesAndCollections.map(s => s.tags_id);
       infoForQuery['sources[]'] = query.sourcesAndCollections.map(s => s.media_id);
     }
@@ -93,12 +94,12 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 }
 
 export default
-  injectIntl(
-    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      withDescription(localMessages.descriptionIntro)(
-        withAsyncFetch(
-          TopicStorySamplePreview
-        )
+injectIntl(
+  connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+    withDescription(localMessages.descriptionIntro)(
+      withAsyncFetch(
+        TopicStorySamplePreview
       )
     )
-  );
+  )
+);

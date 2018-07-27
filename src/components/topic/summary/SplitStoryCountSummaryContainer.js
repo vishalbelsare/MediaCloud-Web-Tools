@@ -27,11 +27,13 @@ class SplitStoryCountSummaryContainer extends React.Component {
       fetchData(nextProps);
     }
   }
+
   downloadCsv = () => {
     const { topicId, filters } = this.props;
     const url = `/api/topics/${topicId}/split-story/count.csv?${filtersAsUrlParams(filters)}`;
     window.location = url;
   }
+
   render() {
     const { total, counts, topicId, filters } = this.props;
     const { formatMessage } = this.props.intl;
@@ -96,12 +98,12 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 }
 
 export default
-  injectIntl(
-    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      withDescription(localMessages.descriptionIntro, [messages.attentionChartHelpText])(
-        withAsyncFetch(
-          SplitStoryCountSummaryContainer
-        )
+injectIntl(
+  connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+    withDescription(localMessages.descriptionIntro, [messages.attentionChartHelpText])(
+      withAsyncFetch(
+        SplitStoryCountSummaryContainer
       )
     )
-  );
+  )
+);

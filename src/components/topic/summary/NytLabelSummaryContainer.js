@@ -43,6 +43,7 @@ class NytLabelSummaryContainer extends React.Component {
       fetchData(nextProps);
     }
   }
+
   downloadCsv = (evt) => {
     const { topicId, filters } = this.props;
     if (evt) {
@@ -51,6 +52,7 @@ class NytLabelSummaryContainer extends React.Component {
     const url = `/api/topics/${topicId}/nyt-tags/counts.csv?${filtersAsUrlParams(filters)}`;
     window.location = url;
   }
+
   handleBubbleClick = (data) => {
     const { filters, updateQueryFilter } = this.props;
     const queryFragment = `tags_id_stories: ${data.tagsId}`;
@@ -60,6 +62,7 @@ class NytLabelSummaryContainer extends React.Component {
       updateQueryFilter(queryFragment);
     }
   }
+
   render() {
     const { data, coverage } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
@@ -202,12 +205,12 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 }
 
 export default
-  injectIntl(
-    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      withDescription(localMessages.descriptionIntro, messages.nytThemeHelpDetails)(
-        withAsyncFetch(
-          NytLabelSummaryContainer
-        )
+injectIntl(
+  connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+    withDescription(localMessages.descriptionIntro, messages.nytThemeHelpDetails)(
+      withAsyncFetch(
+        NytLabelSummaryContainer
       )
     )
-  );
+  )
+);

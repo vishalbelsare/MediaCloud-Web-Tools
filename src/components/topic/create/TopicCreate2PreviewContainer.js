@@ -83,10 +83,10 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 }
 
 export default
-  injectIntl(
-    withIntlForm(
-      connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-        TopicCreate2PreviewContainer
-      )
+injectIntl(
+  withIntlForm(
+    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+      TopicCreate2PreviewContainer
     )
-  );
+  )
+);

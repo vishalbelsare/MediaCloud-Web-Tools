@@ -30,11 +30,13 @@ class GeoTagSummaryContainer extends React.Component {
       fetchData(nextProps.filters);
     }
   }
+
   downloadCsv = () => {
     const { topicId, filters } = this.props;
     const url = `/api/topics/${topicId}/geo-tags/counts.csv?${filtersAsUrlParams(filters)}`;
     window.location = url;
   }
+
   render() {
     const { data, coverage } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
@@ -64,7 +66,6 @@ class GeoTagSummaryContainer extends React.Component {
       </DataCard>
     );
   }
-
 }
 
 GeoTagSummaryContainer.propTypes = {
@@ -98,12 +99,12 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 });
 
 export default
-  injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
-      withDescription(localMessages.helpIntro, messages.heatMapHelpText)(
-        withAsyncFetch(
-          GeoTagSummaryContainer
-        )
+injectIntl(
+  connect(mapStateToProps, mapDispatchToProps)(
+    withDescription(localMessages.helpIntro, messages.heatMapHelpText)(
+      withAsyncFetch(
+        GeoTagSummaryContainer
       )
     )
-  );
+  )
+);

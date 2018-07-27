@@ -92,7 +92,8 @@ class SourceSuggestion extends React.Component {
             <TextField
               name="rejectReason"
               id={approveReasonInputId}
-              fullWidth hintText={formatMessage(localMessages.reasonHintText)}
+              fullWidth
+              hintText={formatMessage(localMessages.reasonHintText)}
             />
           </Dialog>
           <Dialog

@@ -19,9 +19,7 @@ const localMessages = {
   errorNoKeywords: { id: 'focalTechnique.boolean.keywords.error', defaultMessage: 'You need to specify some keywords.' },
 };
 
-
 class EditKeywordSearchContainer extends React.Component {
-
   constructor(props) {
     // Track this in local React state because we don't need it anywhere else.
     // We can't read out of the form state becase we need to know when they click "search",
@@ -102,7 +100,6 @@ class EditKeywordSearchContainer extends React.Component {
       </Grid>
     );
   }
-
 }
 
 EditKeywordSearchContainer.propTypes = {
@@ -154,12 +151,12 @@ const reduxFormConfig = {
 };
 
 export default
-  injectIntl(
-    withIntlForm(
-      reduxForm(reduxFormConfig)(
-        connect(mapStateToProps, mapDispatchToProps)(
-          EditKeywordSearchContainer
-        )
+injectIntl(
+  withIntlForm(
+    reduxForm(reduxFormConfig)(
+      connect(mapStateToProps, mapDispatchToProps)(
+        EditKeywordSearchContainer
       )
     )
-  );
+  )
+);

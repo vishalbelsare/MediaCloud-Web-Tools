@@ -19,12 +19,10 @@ const localMessages = {
 };
 
 class TopicSearchContainer extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
       lastSearchString: '',
-      lastKeypress: 0,
       searchTimeout: null,
     };
   }
@@ -132,8 +130,8 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default
-  injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
-      TopicSearchContainer
-    )
-  );
+injectIntl(
+  connect(mapStateToProps, mapDispatchToProps)(
+    TopicSearchContainer
+  )
+);

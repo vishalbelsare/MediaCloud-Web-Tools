@@ -41,6 +41,7 @@ class FociAttentionComparisonContainer extends React.Component {
       fetchData(nextProps.topicId, nextProps.selectedFocalSetId, nextProps.filters);
     }
   }
+
   render() {
     const { foci, overallTotal, overallCounts } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
@@ -167,10 +168,10 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 }
 
 export default
-  connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-    asyncContainerize(
-      injectIntl(
-        FociAttentionComparisonContainer
-      )
+connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+  asyncContainerize(
+    injectIntl(
+      FociAttentionComparisonContainer
     )
-  );
+  )
+);

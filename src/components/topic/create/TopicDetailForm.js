@@ -6,11 +6,12 @@ import { Row, Col } from 'react-flexbox-grid/lib';
 import { Card, CardHeader, CardText } from 'material-ui/Card';
 import MenuItem from 'material-ui/MenuItem';
 import withIntlForm from '../../common/hocs/IntlForm';
-import { TOPIC_FORM_MODE_EDIT } from './TopicForm';
 import { WarningNotice } from '../../common/Notice';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_MEDIA_EDIT, PERMISSION_ADMIN } from '../../../lib/auth';
 import QueryHelpDialog from '../../common/help/QueryHelpDialog';
+
+export const TOPIC_FORM_MODE_EDIT = 'TOPIC_FORM_MODE_EDIT';
 
 const localMessages = {
   basics: { id: 'topic.form.section.basics', defaultMessage: 'Basics' },
@@ -210,6 +211,6 @@ TopicDetailForm.propTypes = {
 };
 
 export default
-  withIntlForm(
-    TopicDetailForm
-  );
+withIntlForm(
+  TopicDetailForm
+);

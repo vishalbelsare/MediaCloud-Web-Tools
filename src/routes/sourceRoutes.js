@@ -44,7 +44,7 @@ const sourceRoutes = (
       <Route path="/favorites" component={FavoritedContainer} onEnter={requireAuth} />
     </Route>
 
-    <Route path="/sources" >
+    <Route path="/sources">
       <Route path="create" component={CreateSourceContainer} onEnter={requireAuth} />
       <Route path="suggest" component={SuggestSourceContainer} onEnter={requireAuth} />
       <Route path="suggestions" component={PendingSuggestionsContainer} onEnter={requireAuth} />
@@ -61,7 +61,7 @@ const sourceRoutes = (
       </Route>
     </Route>
 
-    <Route path="/collections" >
+    <Route path="/collections">
       <Route component={PageWrapper}>
         <Route path="media-cloud" component={MCCollectionListContainer} onEnter={requireAuth} />
         <Route path="country-and-state" component={CountryCollectionListContainer} onEnter={requireAuth} />

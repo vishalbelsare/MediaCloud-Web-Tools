@@ -32,7 +32,6 @@ const localMessages = {
 };
 
 class MediaContainer extends React.Component {
-
   state = {
     open: false,
   };
@@ -160,7 +159,6 @@ class MediaContainer extends React.Component {
       </div>
     );
   }
-
 }
 
 MediaContainer.propTypes = {
@@ -206,10 +204,10 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 }
 
 export default
-  injectIntl(
-    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      withAsyncFetch(
-        MediaContainer
-      )
+injectIntl(
+  connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+    withAsyncFetch(
+      MediaContainer
     )
-  );
+  )
+);

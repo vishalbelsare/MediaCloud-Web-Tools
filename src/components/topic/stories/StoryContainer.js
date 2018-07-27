@@ -38,7 +38,6 @@ const localMessages = {
 };
 
 class StoryContainer extends React.Component {
-
   state = {
     open: false,
   };
@@ -165,7 +164,6 @@ class StoryContainer extends React.Component {
       </div>
     );
   }
-
 }
 
 StoryContainer.propTypes = {
@@ -215,10 +213,10 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 }
 
 export default
-  injectIntl(
-    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      withAsyncFetch(
-        StoryContainer
-      )
+injectIntl(
+  connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+    withAsyncFetch(
+      StoryContainer
     )
-  );
+  )
+);

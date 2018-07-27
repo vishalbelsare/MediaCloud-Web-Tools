@@ -32,6 +32,7 @@ class TopicSummaryContainer extends React.Component {
     const { filters, topicId } = this.props;
     return (topicId && filters.snapshotId && filters.timespanId);
   }
+
   render() {
     const { filters, topicId, topicInfo, selectedTimespan, user, seletecFocus, location } = this.props;
     let content = <div />;
@@ -161,8 +162,8 @@ const mapStateToProps = state => ({
 });
 
 export default
-  injectIntl(
-    connect(mapStateToProps)(
-      TopicSummaryContainer
-    )
-  );
+injectIntl(
+  connect(mapStateToProps)(
+    TopicSummaryContainer
+  )
+);

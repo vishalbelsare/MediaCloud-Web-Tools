@@ -23,12 +23,10 @@ const localMessages = {
 };
 
 class SourceSearchContainer extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
       lastSearchString: '',
-      lastKeypress: 0,
       searchTimeout: null,
     };
   }
@@ -170,7 +168,6 @@ class SourceSearchContainer extends React.Component {
       </div>
     );
   }
-
 }
 
 SourceSearchContainer.propTypes = {
@@ -195,10 +192,10 @@ SourceSearchContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  fetchesOngoing: (state.sources.search.simple.sources.fetchStatus === FETCH_ONGOING) ||
-              (state.sources.search.simple.collections.fetchStatus === FETCH_ONGOING),
-  fetchesSucceeded: (state.sources.search.simple.sources.fetchStatus === FETCH_SUCCEEDED) &&
-              (state.sources.search.simple.collections.fetchStatus === FETCH_SUCCEEDED),
+  fetchesOngoing: (state.sources.search.simple.sources.fetchStatus === FETCH_ONGOING)
+  || (state.sources.search.simple.collections.fetchStatus === FETCH_ONGOING),
+  fetchesSucceeded: (state.sources.search.simple.sources.fetchStatus === FETCH_SUCCEEDED)
+  && (state.sources.search.simple.collections.fetchStatus === FETCH_SUCCEEDED),
   sourceResults: state.sources.search.simple.sources.list,
   collectionResults: state.sources.search.simple.collections.list,
 });

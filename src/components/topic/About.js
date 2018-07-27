@@ -39,7 +39,4 @@ About.propTypes = {
   intl: PropTypes.object.isRequired,
 };
 
-export default
-  injectIntl(
-    About
-  );
+export default injectIntl(About);

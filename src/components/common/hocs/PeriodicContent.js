@@ -30,6 +30,7 @@ const withTimePeriods = (ChildComponent, hideAllTimeOption = false) => {
       if (!hideAllTimeOption) {
         allTimeOptionContent = (
           <a
+            href="#"
             role="button"
             tabIndex="0"
             className={selectedTimePeriod === PAST_ALL ? 'selected' : ''}
@@ -42,6 +43,7 @@ const withTimePeriods = (ChildComponent, hideAllTimeOption = false) => {
       const timePeriodControls = (
         <div className="periodic-controls">
           <a
+            href="#"
             role="button"
             tabIndex="0"
             className={selectedTimePeriod === PAST_WEEK ? 'selected' : ''}
@@ -50,6 +52,7 @@ const withTimePeriods = (ChildComponent, hideAllTimeOption = false) => {
             <FormattedMessage {...localMessages.pastWeek} />
           </a>
           <a
+            href="#"
             role="button"
             tabIndex="0"
             className={selectedTimePeriod === PAST_MONTH ? 'selected' : ''}
@@ -58,6 +61,7 @@ const withTimePeriods = (ChildComponent, hideAllTimeOption = false) => {
             <FormattedMessage {...localMessages.pastMonth} />
           </a>
           <a
+            href="#"
             role="button"
             tabIndex="0"
             className={selectedTimePeriod === PAST_YEAR ? 'selected' : ''}

@@ -21,7 +21,6 @@ const localMessages = {
 };
 
 class WordCloudComparisonContainer extends React.Component {
-
   componentWillReceiveProps(nextProps) {
     const { fetchData, filters, selectedTimespan } = this.props;
     if ((nextProps.filters !== filters) || (nextProps.selectedTimespan !== selectedTimespan)) {
@@ -86,7 +85,6 @@ class WordCloudComparisonContainer extends React.Component {
       </Grid>
     );
   }
-
 }
 
 WordCloudComparisonContainer.propTypes = {
@@ -139,10 +137,10 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 }
 
 export default
-  injectIntl(
-    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      withAsyncFetch(
-        WordCloudComparisonContainer
-      )
+injectIntl(
+  connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+    withAsyncFetch(
+      WordCloudComparisonContainer
     )
-  );
+  )
+);

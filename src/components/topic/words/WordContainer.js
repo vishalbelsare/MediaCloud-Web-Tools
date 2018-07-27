@@ -17,7 +17,6 @@ const localMessages = {
 };
 
 class WordContainer extends React.Component {
-
   /* not an async */
   componentWillMount() {
     const { saveParamsToStore } = this.props;
@@ -74,7 +73,6 @@ class WordContainer extends React.Component {
       </div>
     );
   }
-
 }
 
 WordContainer.propTypes = {
@@ -117,8 +115,8 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 }
 
 export default
-  injectIntl(
-    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      WordContainer
-    )
-  );
+injectIntl(
+  connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+    WordContainer
+  )
+);

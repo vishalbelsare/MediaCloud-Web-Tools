@@ -36,7 +36,6 @@ const localMessages = {
 const formSelector = formValueSelector('snapshotFocus');
 
 class FocalTechniqueSelector extends React.Component {
-
   handleSelection = (focalTechniqueName) => {
     const { change } = this.props;
     change('focalTechnique', focalTechniqueName);
@@ -133,7 +132,6 @@ class FocalTechniqueSelector extends React.Component {
       </div>
     );
   }
-
 }
 
 FocalTechniqueSelector.propTypes = {
@@ -163,10 +161,10 @@ const reduxFormConfig = {
 
 
 export default
-  injectIntl(
-    reduxForm(reduxFormConfig)(
-      connect(mapStateToProps)(
-        FocalTechniqueSelector
-      )
+injectIntl(
+  reduxForm(reduxFormConfig)(
+    connect(mapStateToProps)(
+      FocalTechniqueSelector
     )
-  );
+  )
+);

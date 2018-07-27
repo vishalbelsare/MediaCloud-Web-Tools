@@ -31,19 +31,23 @@ class MediaSummaryContainer extends React.Component {
       fetchData(nextProps);
     }
   }
+
   onChangeSort = (newSort) => {
     const { sortData } = this.props;
     sortData(newSort);
   }
+
   refetchData = () => {
     const { topicId, filters, fetchData, sort } = this.props;
     fetchData(topicId, filters.snapshotId, filters.timespanId, sort);
   }
+
   downloadCsv = () => {
     const { topicId, filters, sort } = this.props;
     const url = `/api/topics/${topicId}/media.csv?${filtersAsUrlParams(filters)}&sort=${sort}`;
     window.location = url;
   }
+
   render() {
     const { media, sort, topicId, filters, user } = this.props;
     const { formatMessage } = this.props.intl;
@@ -124,12 +128,12 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 }
 
 export default
-  injectIntl(
-    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      withDescription(localMessages.descriptionIntro, localMessages.description)(
-        withAsyncFetch(
-          MediaSummaryContainer
-        )
+injectIntl(
+  connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+    withDescription(localMessages.descriptionIntro, localMessages.description)(
+      withAsyncFetch(
+        MediaSummaryContainer
       )
     )
-  );
+  )
+);

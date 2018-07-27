@@ -37,6 +37,14 @@ export function favoriteCollection(id, favorite) {
   return createPostingApiPromise(`/api/collections/${id}/favorite`, { favorite: (favorite) ? 1 : 0 }, 'put');
 }
 
+export function fetchFavoriteSources() {
+  return createApiPromise('/api/favorites/sources');
+}
+
+export function fetchFavoriteCollections() {
+  return createApiPromise('/api/favorites/collections');
+}
+
 export function metadataValuesForCountry(id) {
   return createApiPromise(`api/metadata/${id}/values`);
 }

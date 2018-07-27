@@ -18,7 +18,6 @@ const localMessages = {
 const ICON_STYLE = { margin: 0, padding: 0, width: 12, height: 12 };
 
 class TopicStoryTable extends React.Component {
-
   sortableHeader = (sortKey, textMsg) => {
     const { onChangeSort, sortedBy } = this.props;
     const { formatMessage } = this.props.intl;
@@ -100,9 +99,7 @@ class TopicStoryTable extends React.Component {
                         { foci.name }
                       </Link>
                     </span>
-                  ),
-                  )
-                );
+                  )));
                 // listOfFoci = intersperse(listOfFoci, ', ');
               }
               return (
@@ -133,14 +130,12 @@ class TopicStoryTable extends React.Component {
                   <td>{listOfFoci}</td>
                 </tr>
               );
-            }
-            )}
+            })}
           </tbody>
         </table>
       </div>
     );
   }
-
 }
 
 TopicStoryTable.propTypes = {

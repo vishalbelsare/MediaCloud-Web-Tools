@@ -20,7 +20,6 @@ const localMessages = {
 };
 
 class TopicBuilderWizard extends React.Component {
-
   componentWillMount = () => {
     const { startStep, goToStep } = this.props;
     goToStep(startStep || 0);
@@ -35,6 +34,7 @@ class TopicBuilderWizard extends React.Component {
       goToStep(stepNumber);
     }
   }
+
   componentWillUnmount = () => {
     const { handleUnmount } = this.props;
     handleUnmount();
@@ -68,7 +68,6 @@ class TopicBuilderWizard extends React.Component {
       </div>
     );
   }
-
 }
 
 TopicBuilderWizard.propTypes = {

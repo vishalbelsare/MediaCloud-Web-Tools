@@ -11,12 +11,13 @@ import { filteredLinkTo } from '../../util/location';
 import AppButton from '../../common/AppButton';
 import withIntlForm from '../../common/hocs/IntlForm';
 import messages from '../../../resources/messages';
-import { updateTopic, resetTopic, setTopicNeedsNewSnapshot } from '../../../actions/topicActions';
+import { updateTopic, /* resetTopic, */ setTopicNeedsNewSnapshot } from '../../../actions/topicActions';
 import { updateFeedback } from '../../../actions/appActions';
 import BackLinkingControlBar from '../BackLinkingControlBar';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_TOPIC_WRITE } from '../../../lib/auth';
-import TopicForm, { TOPIC_FORM_MODE_EDIT } from './TopicForm';
+import TopicForm from './TopicForm';
+import { TOPIC_FORM_MODE_EDIT } from './TopicDetailForm';
 import UpdateForStorySearchWarning from '../UpdateForStorySearchWarning';
 
 const localMessages = {
@@ -37,14 +38,17 @@ class EditTopicContainer extends React.Component {
   state = {
     editConfirmationOpen: false,
   }
+
   handleCancelSave = () => {
     this.setState({ editConfirmationOpen: false });
   };
+
   handleConfirmSave = () => {
     const { formData, topicInfo, handleSave } = this.props;
     this.setState({ editConfirmationOpen: false });
     return handleSave(formData.values, topicInfo);
   };
+
   handleRequestSave = (values) => {
     const { topicInfo, handleSave } = this.props;
     if (this.riskModifiedTopicSpidering(values)) {
@@ -53,16 +57,20 @@ class EditTopicContainer extends React.Component {
     }
     return handleSave(values, topicInfo);
   };
+
   riskModifiedTopicSpidering = (values) => {
     const { formData } = this.props;
     const modifiedFields = Object.keys(values).filter((f) => {
       if (f === 'solr_seed_query') { // if modified seed query
         return values[f] !== formData.initial[f];
-      } else if (f === 'start_date') {
+      }
+      if (f === 'start_date') {
         return values[f] > formData.initial[f]; // if more restrictive dates
-      } else if (f === 'end_date') {
+      }
+      if (f === 'end_date') {
         return values[f] < formData.initial[f];
-      } else if (f === 'sourcesAndCollections') { // if more restrictive sources
+      }
+      if (f === 'sourcesAndCollections') { // if more restrictive sources
         return values[f].length < formData.initial[f].length;
       }
       return false;
@@ -73,8 +81,9 @@ class EditTopicContainer extends React.Component {
     }
     return false;
   };
+
   render() {
-      // so we have to get them from the formData
+    // so we have to get them from the formData
     const { topicInfo, formData, topicId, handleMediaChangeFromMediaPicker } = this.props;
     const { formatMessage } = this.props.intl;
     let initialValues = {};
@@ -207,14 +216,13 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
           // update topic info and redirect back to topic summary
         } else if (results.status === 500 && results.message.indexOf('cannot reduce') > -1) {
           dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.resetting) }));
-          dispatch(resetTopic(ownProps.params.topicId));
+          // dispatch(resetTopic(ownProps.params.topicId));
           const topicSummaryUrl = filteredLinkTo(`/topics/${results.topics_id}/summary`, filters);
           dispatch(push(topicSummaryUrl));
         } else {
           dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.failed) }));
         }
-      }
-    );
+      });
   },
   /* maintain sources and collections changes from the MediaPicker to the SourceCollectionsMediaForm */
   handleMediaChangeFromMediaPicker: (arrayFromMediaPicker) => {
@@ -239,10 +247,10 @@ const reduxFormConfig = {
 };
 
 export default
-  withIntlForm(
-    reduxForm(reduxFormConfig)(
-      connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-        EditTopicContainer
-      )
+withIntlForm(
+  reduxForm(reduxFormConfig)(
+    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+      EditTopicContainer
     )
-  );
+  )
+);

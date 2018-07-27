@@ -5,37 +5,25 @@ import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { push } from 'react-router-redux';
 import { fetchMetadataValuesForPrimaryLanguage } from '../../../actions/systemActions'; // TODO relocate metadata actions into system if we use more often...
-import { selectStory, fetchStory, updateStory } from '../../../actions/topicActions';
+import { selectStory, fetchStory } from '../../../actions/storyActions';
+import { updateStory } from '../../../actions/topicActions';
 import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import StoryDetailForm from './StoryDetailForm';
 import messages from '../../../resources/messages';
 import { updateFeedback } from '../../../actions/appActions';
 import { TAG_SET_PRIMARY_LANGUAGE } from '../../../lib/tagUtil';
 
-
 const localMessages = {
   feedback: { id: 'story.details.feedback', defaultMessage: 'Story Updates saved' },
 };
+
 class StoryUpdateContainer extends React.Component {
-
-  state = {
-    open: false,
-  };
-
   componentWillReceiveProps(nextProps) {
     if (nextProps.storiesId !== this.props.storiesId) {
       const { fetchData } = this.props;
       fetchData(nextProps.storiesId);
     }
   }
-
-  handleRemoveClick = () => {
-    this.setState({ open: true });
-  };
-
-  handleRemoveDialogClose = () => {
-    this.setState({ open: false });
-  };
 
   handleReadItClick = () => {
     const { story } = this.props;
@@ -74,7 +62,6 @@ class StoryUpdateContainer extends React.Component {
       </div>
     );
   }
-
 }
 
 StoryUpdateContainer.propTypes = {
@@ -124,12 +111,12 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 });
 
 export default
-  injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
-      withAsyncFetch(
-        injectIntl(
-          StoryUpdateContainer
-        )
+injectIntl(
+  connect(mapStateToProps, mapDispatchToProps)(
+    withAsyncFetch(
+      injectIntl(
+        StoryUpdateContainer
       )
     )
-  );
+  )
+);
