@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "webpack --mode development",
     "build": "webpack --mode production",
-    "dev-explorer": "webpack-serve --config config/base.config.js --port 2992",
+    "dev-explorer": "webpack-serve --config config/base.config.js --port 2992 --content build/public",
     "sources-dev": "NODE_ENV=dev node_modules/.bin/webpack-dev-server --hot --inline --history-api-fallback --config config/webpack.sources.config.babel.js",
     "sources-release": "NODE_ENV=production webpack --progress -p --config config/webpack.sources.config.babel.js",
     "topics-dev": "NODE_ENV=dev node_modules/.bin/webpack-dev-server --port 2992 --content-base build/public --hot --inline --history-api-fallback --config config/webpack.topics.config.babel.js",
@@ -104,7 +104,7 @@
     "if-env": "1.0.0",
     "image-webpack-loader": "3.3.1",
     "manifest-revision-webpack-plugin": "0.4.0",
-    "mini-css-extract-plugin": "^0.4.0",
+    "mini-css-extract-plugin": "^0.4.1",
     "nightmare": "2.10.0",
     "node-sass": "^4.9.0",
     "postcss-loader": "^2.1.5",
