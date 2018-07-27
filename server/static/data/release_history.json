@@ -5,11 +5,14 @@
       "version": "v3.3.1",
       "notes": [
         {
-          "apps": [
-            "sources"
-          ],
+          "apps": [ "sources" ],
           "type": "Fix",
           "note": "Now you can edit sources again."
+        },
+        {
+          "apps": [ "explorer" ],
+          "type": "Fix",
+          "note": "Show entities for a story correctly in Explorer."
         }
       ]
     },
