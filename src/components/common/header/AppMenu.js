@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
-import FlatButton from 'material-ui/FlatButton';
-// import MenuItem from 'material-ui/MenuItem';
-import Popover from 'material-ui/Popover';
+import Button from '@material-ui/core/Button';
+// import MenuItem from '@material-ui/core/MenuItem';
+import Popover from '@material-ui/core/Popover';
 import { ArrowDropDownButton, ArrowDropUpButton } from '../../common/IconButton';
 
 class AppMenu extends React.Component {
@@ -54,7 +54,8 @@ class AppMenu extends React.Component {
     }
     // let titleButtonClickHandler;
     let menuHeader = (
-      <FlatButton
+      <Button
+        variant="contained"
         onClick={event => onTitleClick(event)}
         label={formatMessage(titleMsg)}
       />
@@ -62,7 +63,8 @@ class AppMenu extends React.Component {
     if (showMenu) {
       const whichIcon = this.whichArrowIcon();
       menuHeader = (
-        <FlatButton
+        <Button
+          variant="contained"
           onClick={this.toggleMenu}
           label={formatMessage(titleMsg)}
           icon={whichIcon}

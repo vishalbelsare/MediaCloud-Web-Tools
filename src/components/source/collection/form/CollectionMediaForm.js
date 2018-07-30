@@ -5,7 +5,7 @@ import { FieldArray, Field, reduxForm, formValueSelector } from 'redux-form';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid/lib';
-import { Tabs, Tab } from 'material-ui/Tabs';
+import { Tabs, Tab } from '@material-ui/core/Tabs';
 import { updateFeedback } from '../../../../actions/appActions';
 import withIntlForm from '../../../common/hocs/IntlForm';
 import SourceSearchContainer from '../../controlbar/SourceSearchContainer';

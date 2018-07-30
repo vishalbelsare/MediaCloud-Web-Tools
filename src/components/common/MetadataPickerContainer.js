@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Field } from 'redux-form';
-import MenuItem from 'material-ui/MenuItem';
+import MenuItem from '@material-ui/core/MenuItem';
 import { FETCH_SUCCEEDED } from '../../lib/fetchConstants';
 import withAsyncFetch from './hocs/AsyncContainer';
 import { fetchMetadataValuesForCountry, fetchMetadataValuesForState, fetchMetadataValuesForPrimaryLanguage, fetchMetadataValuesForCountryOfFocus, fetchMetadataValuesForMediaType } from '../../actions/systemActions';
@@ -61,7 +61,7 @@ const MetadataPickerContainer = (props) => {
       }
       break;
     case MODE_AUTOCOMPLETE:
-      // need to figure out autocomplete text to prepopulate here
+      // need to figure out NoSsr text to prepopulate here
       // commented out because the initialvalues are interfering with the display of the selected values
       /* let initialText = '';
       if ((initialValues) && (initialValues[name]) && (tags.length > 0)) {

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import Dialog from 'material-ui/Dialog';
+import Dialog from '@material-ui/core/Dialog';
 import Link from 'react-router/lib/Link';
 import messages from '../../../resources/messages';
 import AppButton from '../../common/AppButton';

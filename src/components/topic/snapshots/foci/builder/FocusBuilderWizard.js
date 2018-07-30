@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Step, Stepper, StepLabel } from 'material-ui/Stepper';
+import { Step, Stepper, StepLabel } from '@material-ui/core/Stepper';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import BackLinkingControlBar from '../../../BackLinkingControlBar';
 import FocusForm1TechniqueContainer from './FocusForm1TechniqueContainer';

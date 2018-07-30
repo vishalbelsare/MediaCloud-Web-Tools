@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 import { getBrandDarkerColor } from '../../../styles/colors';
 
 const localMessages = {
@@ -26,7 +26,7 @@ class SnapshotSelector extends React.Component {
       selected = snapshots[0];
     }
     return (
-      <SelectField
+      <Select
         floatingLabelText={formatMessage(localMessages.pickSnapshot)}
         floatingLabelFixed
         floatingLabelStyle={{ color: 'rgb(224,224,224)', opacity: 0.8 }}
@@ -49,7 +49,7 @@ class SnapshotSelector extends React.Component {
             />
           );
         })}
-      </SelectField>
+      </Select>
 
     );
   }

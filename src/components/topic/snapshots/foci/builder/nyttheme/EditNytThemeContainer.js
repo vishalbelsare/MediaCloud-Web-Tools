@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { reduxForm, formValueSelector, Field } from 'redux-form';
-import MenuItem from 'material-ui/MenuItem';
+import MenuItem from '@material-ui/core/MenuItem';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
@@ -21,7 +21,7 @@ const localMessages = {
 };
 
 const EditNytThemeContainer = (props) => {
-  const { topicId, onPreviousStep, handleSubmit, finishStep, formData, initialValues, renderSelectField } = props;
+  const { topicId, onPreviousStep, handleSubmit, finishStep, formData, initialValues, renderSelect } = props;
   const { formatMessage } = props.intl;
   let numThemes = initialValues.numberSelected;
   if (formData && formData.values.numberSelected) {
@@ -39,7 +39,7 @@ const EditNytThemeContainer = (props) => {
         <Row>
           <Field
             name="numberSelected"
-            component={renderSelectField}
+            component={renderSelect}
             floatingLabelText={formatMessage(localMessages.numberLabel)}
             value={5}
           >
@@ -89,7 +89,7 @@ EditNytThemeContainer.propTypes = {
   intl: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   renderTextField: PropTypes.func.isRequired,
-  renderSelectField: PropTypes.func.isRequired,
+  renderSelect: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

@@ -5,7 +5,7 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Sigma, RelativeSize, LoadGEXF, ForceAtlas2, RandomizeNodePositions } from 'react-sigma';
 import { Row, Col } from 'react-flexbox-grid/lib';
-import MenuItem from 'material-ui/MenuItem';
+import MenuItem from '@material-ui/core/MenuItem';
 import AppButton from '../../common/AppButton';
 import withIntlForm from '../../common/hocs/IntlForm';
 import { generateParamStr } from '../../../lib/apiUtil';
@@ -29,7 +29,7 @@ const localMessages = {
 const formSelector = formValueSelector('linkMap');
 
 const LinkMapForm = (props) => {
-  const { renderTextField, renderSelectField, renderCheckbox, topicId, showMap, filters, fieldParams, downloadLabel, viewLabel, initialValues, submitting, handleSubmit, onGetMapData, onViewMapData } = props;
+  const { renderTextField, renderSelect, renderCheckbox, topicId, showMap, filters, fieldParams, downloadLabel, viewLabel, initialValues, submitting, handleSubmit, onGetMapData, onViewMapData } = props;
   const { formatMessage } = props.intl;
 
   let sigmaElement = null;
@@ -63,7 +63,7 @@ const LinkMapForm = (props) => {
           <Field
             name="color_field"
             values={initialValues.color_field}
-            component={renderSelectField}
+            component={renderSelect}
             floatingLabelText={formatMessage(localMessages.colorBy)}
           >
             <MenuItem
@@ -150,7 +150,7 @@ LinkMapForm.propTypes = {
   intl: PropTypes.object.isRequired,
   renderTextField: PropTypes.func.isRequired,
   renderCheckbox: PropTypes.func.isRequired,
-  renderSelectField: PropTypes.func.isRequired,
+  renderSelect: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func,
   onGetMapData: PropTypes.func.isRequired,
   onViewMapData: PropTypes.func.isRequired,

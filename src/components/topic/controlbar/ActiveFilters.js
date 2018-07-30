@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import Chip from 'material-ui/Chip';
+import Chip from '@material-ui/core/Chip';
 import messages from '../../../resources/messages';
 import { trimToMaxLength } from '../../../lib/stringUtil';
 

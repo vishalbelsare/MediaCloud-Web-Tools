@@ -39,7 +39,7 @@ const AdvancedSearchForm = (props) => {
             name={'publicationCountry'}
             form="advancedQueryForm"
             floatingLabelText={formatMessage(localMessages.pubCountrySuggestion)}
-            autocomplete
+            NoSsr
           />
         </Col>
         <Col lg={6}>
@@ -48,7 +48,7 @@ const AdvancedSearchForm = (props) => {
             name={'publicationState'}
             form="advancedQueryForm"
             floatingLabelText={formatMessage(localMessages.pubStateSuggestion)}
-            autocomplete
+            NoSsr
           />
         </Col>
         <Col lg={6}>
@@ -58,7 +58,7 @@ const AdvancedSearchForm = (props) => {
             name={'primaryLanguage'}
             form="advancedQueryForm"
             floatingLabelText={formatMessage(localMessages.pLanguageSuggestion)}
-            autocomplete
+            NoSsr
           />
         </Col>
         <Col lg={6}>
@@ -68,7 +68,7 @@ const AdvancedSearchForm = (props) => {
             name={'countryOfFocus'}
             form="advancedQueryForm"
             floatingLabelText={formatMessage(localMessages.pCountryOfFocusSuggestion)}
-            autocomplete
+            NoSsr
           />
         </Col>
         <Col lg={6}>

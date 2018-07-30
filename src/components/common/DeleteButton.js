@@ -1,12 +1,12 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import FontIcon from 'material-ui/FontIcon';
+import Icon from '@material-ui/core/Icon';
 import Link from 'react-router/lib/Link';
 import { getBrandDarkColor } from '../../styles/colors';
 
 const DeleteButton = props => (
   <Link to="#" onClick={props.onClick} name={props.tooltip}>
-    <FontIcon className="material-icons" color={getBrandDarkColor()}>delete</FontIcon>
+    <Icon className="material-icons" color={getBrandDarkColor()}>delete</Icon>
   </Link>
 );
 

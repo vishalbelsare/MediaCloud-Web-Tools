@@ -1,11 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import TextField from 'material-ui/TextField';
-import Checkbox from 'material-ui/Checkbox';
-import SelectField from 'material-ui/SelectField';
-import AutoComplete from 'material-ui/AutoComplete';
-import DatePicker from 'material-ui/DatePicker';
+import TextField from '@material-ui/core/TextField';
+import Checkbox from '@material-ui/core/Checkbox';
+import Select from '@material-ui/core/Select';
+import NoSsr from '@material-ui/core/NoSsr';
 
 /**
  * Helpful compositional wrapper for forms that want to use Material-UI, react-intl and redux-form.
@@ -71,10 +70,10 @@ function withIntlForm(Component) {
       />
     );
 
-    renderSelectField = ({ input, meta: { touched, error }, children, ...custom }) => {
+    renderSelect = ({ input, meta: { touched, error }, children, ...custom }) => {
       const intlCustom = this.intlCustomProps(custom);
       return (
-        <SelectField
+        <Select
           className="form-field-select"
           errorText={touched && (error ? this.intlIfObject(error) : null)}
           {...input}
@@ -82,15 +81,15 @@ function withIntlForm(Component) {
           {...intlCustom}
         >
           {children}
-        </SelectField>
+        </Select>
       );
     }
 
-    renderAutoComplete = ({ input, meta: { touched, error }, onNewRequest: onNewRequestFunc, ...custom }) => {
+    renderNoSsr = ({ input, meta: { touched, error }, onNewRequest: onNewRequestFunc, ...custom }) => {
       const intlCustom = this.intlCustomProps(custom);
       return (
-        <AutoComplete
-          className="form-field-autocomplete"
+        <NoSsr
+          className="form-field-NoSsr"
           {...input}
           errorText={touched && (error ? this.intlIfObject(error) : null)}
           onNewRequest={(currentValue, index) => {
@@ -100,36 +99,18 @@ function withIntlForm(Component) {
             return input.onChange(intlCustom.dataSourceConfig ? currentValue[intlCustom.dataSourceConfig.value] : currentValue);
           }}
           {...intlCustom}
-          filter={AutoComplete.fuzzyFilter}
+          filter={NoSsr.fuzzyFilter}
         />
       );
     }
 
-    renderDatePickerInline = ({ input, name, type, ...custom }) => {
-      const intlCustom = this.intlCustomProps(custom);
-      return (
-        <DatePicker
-          className="form-field-date"
-          {...input}
-          value={new Date(input.value)}
-          onChange={(event, value) => input.onChange(value)}
-          name={name}
-          autoOk
-          {...intlCustom}
-          container={type}
-          mode="landscape"
-          hintText={intlCustom.hintText}
-        />
-      );
-    }
 
     render() {
       const helpers = {
         renderTextField: this.renderTextField,
         renderCheckbox: this.renderCheckbox,
-        renderSelectField: this.renderSelectField,
-        renderAutoComplete: this.renderAutoComplete,
-        renderDatePickerInline: this.renderDatePickerInline,
+        renderSelect: this.renderSelect,
+        renderNoSsr: this.renderNoSsr,
         renderTextFieldWithFocus: this.renderTextFieldWithFocus,
       };
       return (

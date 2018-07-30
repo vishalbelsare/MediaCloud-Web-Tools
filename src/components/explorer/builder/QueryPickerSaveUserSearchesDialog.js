@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import FlatButton from 'material-ui/FlatButton';
-import Dialog from 'material-ui/Dialog';
-import TextField from 'material-ui/TextField';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import TextField from '@material-ui/core/TextField';
 import AppButton from '../../common/AppButton';
 
 const localMessages = {
@@ -57,12 +57,12 @@ class QueryPickerSaveUserSearchesDialog extends React.Component {
     const { searchNickname, submitting } = this.props;
     const { formatMessage } = this.props.intl;
     const actions = [
-      <FlatButton
+      <Button
         label="Cancel"
         secondary
         onClick={this.handleDialogClose}
       />,
-      <FlatButton
+      <Button
         label="Submit"
         primary
         keyboardFocused

@@ -1,8 +1,7 @@
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import React from 'react';
-import RaisedButton from 'material-ui/RaisedButton';
-import FlatButton from 'material-ui/FlatButton';
+import Button from '@material-ui/core/Button';
 
 /**
  * Simple wrapper so we can style all the button the same.  Use this instead of
@@ -44,9 +43,9 @@ class AppButton extends React.Component {
     let content = null;
     if (flat) {
       delete buttonProps.flat;
-      content = <FlatButton {...buttonProps} />;
+      content = <Button variant="outlined" {...buttonProps} />;
     } else {
-      content = <RaisedButton {...buttonProps} />;
+      content = <Button variant="contained" {...buttonProps} />;
     }
     return content;
   }

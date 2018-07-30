@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
-import TextField from 'material-ui/TextField';
+import TextField from '@material-ui/core/TextField';
 
 const localMessages = {
   pickQuery: { id: 'query.pick', defaultMessage: 'Story Search (press enter to apply)' },

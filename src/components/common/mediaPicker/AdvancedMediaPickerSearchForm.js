@@ -50,7 +50,7 @@ class AdvancedMediaPickerSearchForm extends React.Component {
               name={'publicationCountry'}
               form="advancedQueryForm"
               floatingLabelText={formatMessage(localMessages.pubCountrySuggestion)}
-              autocomplete
+              NoSsr
             />
           </Col>
           <Col lg={6}>
@@ -59,7 +59,7 @@ class AdvancedMediaPickerSearchForm extends React.Component {
               name={'publicationState'}
               form="advancedQueryForm"
               floatingLabelText={formatMessage(localMessages.pubStateSuggestion)}
-              autocomplete
+              NoSsr
             />
           </Col>
           <Col lg={6}>
@@ -69,7 +69,7 @@ class AdvancedMediaPickerSearchForm extends React.Component {
               name={'primaryLanguage'}
               form="advancedQueryForm"
               floatingLabelText={formatMessage(localMessages.pLanguageSuggestion)}
-              autocomplete
+              NoSsr
             />
           </Col>
           <Col lg={6}>
@@ -79,7 +79,7 @@ class AdvancedMediaPickerSearchForm extends React.Component {
               name={'countryOfFocus'}
               form="advancedQueryForm"
               floatingLabelText={formatMessage(localMessages.pCountryOfFocusSuggestion)}
-              autocomplete
+              NoSsr
             />
           </Col>
           <Col lg={6}>

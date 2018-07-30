@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 import { REMOVE_FOCUS } from './TopicFilterControlBar';
 import { getBrandDarkerColor } from '../../../styles/colors';
 import messages from '../../../resources/messages';
@@ -46,7 +46,7 @@ class FocusSelector extends React.Component {
     // default to none
     return (
       <div className="focus-selector-wrapper">
-        <SelectField
+        <Select
           floatingLabelText={formatMessage(messages.focusPick)}
           floatingLabelFixed
           floatingLabelStyle={{ color: 'rgb(224,224,224)', opacity: 0.8 }}
@@ -64,7 +64,7 @@ class FocusSelector extends React.Component {
             />
           )}
           <MenuItem value={REMOVE_FOCUS} primaryText={formatMessage(messages.removeFocus)} />
-        </SelectField>
+        </Select>
         {detailsContent}
       </div>
     );

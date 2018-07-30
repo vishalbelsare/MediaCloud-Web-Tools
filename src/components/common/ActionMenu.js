@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import IconMenu from 'material-ui/IconMenu';
-import Popover from 'material-ui/Popover';
-import IconButton from 'material-ui/IconButton';
+import Menu from '@material-ui/core/Menu';
+import Popover from '@material-ui/core/Popover';
+import IconButton from '@material-ui/core/IconButton';
 import MoreOptionsIcon from './icons/MoreOptionsIcon';
 import CloseIcon from './icons/CloseIcon';
 import { getBrandDarkColor, getBrandDarkerColor } from '../../styles/colors';
@@ -87,7 +87,7 @@ class ActionMenu extends React.Component {
       );
     } else {
       menuContent = (
-        <IconMenu
+        <Menu
           open={this.state.isPopupOpen}
           iconButtonElement={icon}
           onRequestChange={() => this.handlePopupOpenClick(event)}
@@ -95,7 +95,7 @@ class ActionMenu extends React.Component {
           targetOrigin={{ horizontal: 'right', vertical: 'top' }}
         >
           {children}
-        </IconMenu>
+        </Menu>
       );
     }
 

@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import TextField from 'material-ui/TextField';
-import Dialog from 'material-ui/Dialog';
+import TextField from '@material-ui/core/TextField';
+import Dialog from '@material-ui/core/Dialog';
 import AppButton from '../../common/AppButton';
 import QueryPickerLoggedInHeader from './QueryPickerLoggedInHeader';
 import QueryPickerDemoHeader from './QueryPickerDemoHeader';

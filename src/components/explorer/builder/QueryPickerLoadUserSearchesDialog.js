@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedDate, FormattedHTMLMessage } from 'react-intl';
-import FlatButton from 'material-ui/FlatButton';
-import Dialog from 'material-ui/Dialog';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
 import { Col } from 'react-flexbox-grid/lib';
-import { List, ListItem } from 'material-ui/List';
+import { List, ListItem } from '@material-ui/core/List';
 import Link from 'react-router/lib/Link';
 import { DeleteButton } from '../../common/IconButton';
 import AppButton from '../../common/AppButton';
@@ -56,7 +56,7 @@ class QueryPickerLoadUserSearchesDialog extends React.Component {
     const { searches, submitting } = this.props;
     const { formatMessage } = this.props.intl;
     const actions = [
-      <FlatButton
+      <Button
         label="Done"
         primary
         keyboardFocused

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import Popover from 'material-ui/Popover';
+import Popover from '@material-ui/core/Popover';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import Link from 'react-router/lib/Link';
 import { NotificationsButton } from '../IconButton';

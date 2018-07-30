@@ -3,7 +3,7 @@ import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
-import MenuItem from 'material-ui/MenuItem';
+import MenuItem from '@material-ui/core/MenuItem';
 import withIntlForm from '../../../../common/hocs/IntlForm';
 import FocalSetForm from './FocalSetForm';
 import { emptyString, nullOrUndefined } from '../../../../../lib/formValidators';
@@ -42,7 +42,7 @@ class FocusDescriptionForm extends React.Component {
   }
 
   render() {
-    const { renderTextField, renderSelectField, focalSetDefinitions, initialValues, currentFocalSetDefinitionId, focalTechnique } = this.props;
+    const { renderTextField, renderSelect, focalSetDefinitions, initialValues, currentFocalSetDefinitionId, focalTechnique } = this.props;
     const { formatMessage } = this.props.intl;
     // only show focal set selection for editing mode
     let focalSetContent;
@@ -56,7 +56,7 @@ class FocusDescriptionForm extends React.Component {
         <div className="focal-set-details">
           <Field
             name="focalSetDefinitionId"
-            component={renderSelectField}
+            component={renderSelect}
             floatingLabelText={localMessages.pickFocalSet}
           >
             {focalSetDefinitions.map(focalSetDef =>
@@ -126,7 +126,7 @@ FocusDescriptionForm.propTypes = {
   // form composition
   intl: PropTypes.object.isRequired,
   renderTextField: PropTypes.func.isRequired,
-  renderSelectField: PropTypes.func.isRequired,
+  renderSelect: PropTypes.func.isRequired,
   change: PropTypes.func.isRequired,
   // from state
 };

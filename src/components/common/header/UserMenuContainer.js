@@ -3,11 +3,11 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { push } from 'react-router-redux';
 import { connect } from 'react-redux';
-import IconMenu from 'material-ui/IconMenu';
-import PersonIcon from 'material-ui/svg-icons/social/person';
-import FlatButton from 'material-ui/FlatButton';
-import MenuItem from 'material-ui/MenuItem';
-import IconButton from 'material-ui/IconButton';
+import Menu from '@material-ui/core/Menu';
+import PersonIcon from '@material-ui/icons/Person';
+import Button from '@material-ui/core/Button';
+import MenuItem from '@material-ui/core/MenuItem';
+import IconButton from '@material-ui/core/IconButton';
 import { PERMISSION_LOGGED_IN, logout } from '../../../lib/auth';
 import Permissioned from '../Permissioned';
 import messages from '../../../resources/messages';
@@ -23,7 +23,8 @@ const UserMenuContainer = (props) => {
   const { formatMessage } = props.intl;
   // gotta show login or logout correctly based on the user state
   let loginLogoutMenuItem = (
-    <FlatButton
+    <Button
+      variant="contained"
       className="user-login"
       onClick={() => routeToUrl('/login')}
       label={formatMessage(localMessages.menuTitle).toUpperCase()}
@@ -32,7 +33,7 @@ const UserMenuContainer = (props) => {
   if (user.isLoggedIn) {
     loginLogoutMenuItem = (
       <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
-        <IconMenu
+        <Menu
           iconButtonElement={<IconButton><PersonIcon /></IconButton>}
           anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
           targetOrigin={{ horizontal: 'right', vertical: 'top' }}
@@ -46,7 +47,7 @@ const UserMenuContainer = (props) => {
           <MenuItem id="user-logout" onTouchTap={logout}>
             <FormattedMessage {...messages.userLogout} />
           </MenuItem>
-        </IconMenu>
+        </Menu>
       </Permissioned>
     );
   }

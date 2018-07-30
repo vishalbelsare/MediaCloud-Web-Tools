@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 import { connect } from 'react-redux';
 import Link from 'react-router/lib/Link';
 
@@ -29,7 +29,7 @@ const FocusSetSelectorContainer = (props) => {
         <p>
           <FormattedMessage {...localMessages.pick} />
         </p>
-        <SelectField
+        <Select
           value={selectedFocalSetId !== NO_FOCAL_SET_SELECTED ? selectedFocalSetId : focalSets[0].focal_sets_id}
           onChange={onFocalSetSelected}
           fullWidth
@@ -38,7 +38,7 @@ const FocusSetSelectorContainer = (props) => {
             <MenuItem key={fs.focal_sets_id} value={fs.focal_sets_id} primaryText={fs.name} />)
           }
           {noneOption}
-        </SelectField>
+        </Select>
       </div>
     );
   } else {

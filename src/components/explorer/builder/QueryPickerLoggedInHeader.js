@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
-import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
-import IconMenu from 'material-ui/IconMenu';
-import MenuItem from 'material-ui/MenuItem';
-import IconButton from 'material-ui/IconButton';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import IconButton from '@material-ui/core/IconButton';
 import ColorPicker from '../../common/ColorPicker';
 import messages from '../../../resources/messages';
 import { QUERY_LABEL_CHARACTER_LIMIT } from '../../../lib/explorerUtil';
@@ -36,14 +36,14 @@ class QueryPickerLoggedInHeader extends React.Component {
     }
     if (menuChildren !== null) {
       iconOptions = (
-        <IconMenu
+        <Menu
           className="query-picker-icon-button"
           iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
           anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
           targetOrigin={{ horizontal: 'left', vertical: 'top' }}
         >
           {menuChildren}
-        </IconMenu>
+        </Menu>
       );
       let abbrevQuery = query.label;
       if (abbrevQuery.length > QUERY_LABEL_CHARACTER_LIMIT) {

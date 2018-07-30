@@ -146,7 +146,7 @@ FocusForm3DescribeContainer.propTypes = {
   // form composition
   intl: PropTypes.object.isRequired,
   renderTextField: PropTypes.func.isRequired,
-  renderSelectField: PropTypes.func.isRequired,
+  renderSelect: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   // from state
   fetchStatus: PropTypes.string.isRequired,

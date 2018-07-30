@@ -3,7 +3,7 @@ import React from 'react';
 import { reduxForm, formValueSelector, Field } from 'redux-form';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import MenuItem from 'material-ui/MenuItem';
+import MenuItem from '@material-ui/core/MenuItem';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import AppButton from '../../../../../common/AppButton';
 import withIntlForm from '../../../../../common/hocs/IntlForm';
@@ -21,7 +21,7 @@ const localMessages = {
 };
 
 const EditTopCountriesContainer = (props) => {
-  const { topicId, onPreviousStep, handleSubmit, finishStep, formData, renderSelectField, initialValues } = props;
+  const { topicId, onPreviousStep, handleSubmit, finishStep, formData, renderSelect, initialValues } = props;
   const { formatMessage } = props.intl;
   let numCountries = initialValues.numberSelected;
   if (formData && formData.values.numberSelected) {
@@ -40,7 +40,7 @@ const EditTopCountriesContainer = (props) => {
           <Col md={12}>
             <Field
               name="numberSelected"
-              component={renderSelectField}
+              component={renderSelect}
               floatingLabelText={formatMessage(localMessages.numberLabel)}
               value={5}
             >
@@ -92,7 +92,7 @@ EditTopCountriesContainer.propTypes = {
   intl: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   renderTextField: PropTypes.func.isRequired,
-  renderSelectField: PropTypes.func.isRequired,
+  renderSelect: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

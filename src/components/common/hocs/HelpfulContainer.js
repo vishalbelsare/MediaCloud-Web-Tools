@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedHTMLMessage, injectIntl } from 'react-intl';
-import FlatButton from 'material-ui/FlatButton';
+import Button from '@material-ui/core/Button';
 import { Row, Col } from 'react-flexbox-grid/lib';
-import Dialog from 'material-ui/Dialog';
+import Dialog from '@material-ui/core/Dialog';
 import messages from '../../../resources/messages';
 import { HelpButton } from '../IconButton';
 
@@ -36,7 +36,8 @@ function withHelp(contentTitleMsg, contentHTMLTextMsg, showHelpSidebar) {
       render() {
         const { formatMessage } = this.props.intl;
         const dialogActions = [
-          <FlatButton
+          <Button
+            variant="outlined"
             label={formatMessage(messages.ok)}
             primary
             onClick={this.handleClose}

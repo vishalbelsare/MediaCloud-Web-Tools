@@ -3,8 +3,8 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import AutoComplete from 'material-ui/AutoComplete';
-import MenuItem from 'material-ui/MenuItem';
+import NoSsr from '@material-ui/core/NoSsr';
+import MenuItem from '@material-ui/core/MenuItem';
 import { fetchTopicSearchResults } from '../../../actions/topicActions';
 import LoadingSpinner from '../../common/LoadingSpinner';
 import { SearchButton } from '../../common/IconButton';
@@ -90,7 +90,7 @@ class TopicSearchContainer extends React.Component {
       <div className="async-search topic-search right">
         <SearchButton />
         <div className="fetching">{fetchingStatus}</div>
-        <AutoComplete
+        <NoSsr
           hintText={formatMessage(localMessages.searchHint)}
           fullWidth
           openOnFocus={false}

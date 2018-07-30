@@ -2,8 +2,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import { fetchAdminTopicList } from '../../../actions/topicActions';
@@ -36,13 +36,13 @@ class TopicStatusDashboardContainer extends React.Component {
         </Row>
         <Row>
           <Col lg={12}>
-            <SelectField
+            <Select
               floatingLabelText={formatMessage(localMessages.stateToShow)}
               value={this.state.selectedTopicState}
               onChange={this.handleTopicStateSelected}
             >
               {uniqueStates.map((state, index) => <MenuItem key={index} value={state} primaryText={state} />)}
-            </SelectField>
+            </Select>
           </Col>
         </Row>
         <Row>

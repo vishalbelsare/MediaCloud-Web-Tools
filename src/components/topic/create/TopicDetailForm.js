@@ -3,8 +3,8 @@ import React from 'react';
 import { FormattedMessage, FormattedHTMLMessage } from 'react-intl';
 import { Field } from 'redux-form';
 import { Row, Col } from 'react-flexbox-grid/lib';
-import { Card, CardHeader, CardText } from 'material-ui/Card';
-import MenuItem from 'material-ui/MenuItem';
+import { Card, CardHeader, CardText } from '@material-ui/core/Card';
+import MenuItem from '@material-ui/core/MenuItem';
 import withIntlForm from '../../common/hocs/IntlForm';
 import { TOPIC_FORM_MODE_EDIT } from './TopicForm';
 import { WarningNotice } from '../../common/Notice';
@@ -38,7 +38,7 @@ const localMessages = {
 };
 
 const TopicDetailForm = (props) => {
-  const { renderTextField, renderCheckbox, renderSelectField, mode } = props;
+  const { renderTextField, renderCheckbox, renderSelect, mode } = props;
   const { formatMessage } = props.intl;
   const iterations = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
   let queryWarning = null;
@@ -180,7 +180,7 @@ const TopicDetailForm = (props) => {
                 <Col lg={12}>
                   <Field
                     name="max_iterations"
-                    component={renderSelectField}
+                    component={renderSelect}
                     fullWidth
                     floatingLabelText={localMessages.maxIterations}
                   >
@@ -202,7 +202,7 @@ TopicDetailForm.propTypes = {
   intl: PropTypes.object.isRequired,
   renderTextField: PropTypes.func.isRequired,
   renderCheckbox: PropTypes.func.isRequired,
-  renderSelectField: PropTypes.func.isRequired,
+  renderSelect: PropTypes.func.isRequired,
   renderDatePickerInline: PropTypes.func.isRequired,
   // from parent
   mode: PropTypes.string.isRequired,

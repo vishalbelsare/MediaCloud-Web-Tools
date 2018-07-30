@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import Chip from 'material-ui/Chip';
-import Avatar from 'material-ui/Avatar';
+import Chip from '@material-ui/core/Chip';
+import Avatar from '@material-ui/core/Avatar';
 import CollectionIcon from './icons/CollectionIcon';
 import MediaSourceIcon from './icons/MediaSourceIcon';
 import { urlToCollection, urlToSource } from '../../lib/urlUtil';
