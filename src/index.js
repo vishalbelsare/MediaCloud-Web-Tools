@@ -4,20 +4,17 @@ import 'core-js/es6/map';
 import 'core-js/es6/set';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import ReactGA from 'react-ga';
 import { IntlProvider } from 'react-intl';
 import { Provider } from 'react-redux';
 import Router from 'react-router/lib/Router';
 import hashHistory from 'react-router/lib/hashHistory';
 import { syncHistoryWithStore } from 'react-router-redux';
-import getMuiTheme from '@material-ui/core/styles';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import Raven from 'raven-js';
 import { loginWithCookie } from './actions/userActions';
 import getStore from './store';
 import { getAppName, getVersion, isProdMode } from './config';
-import { getBrandColors } from './styles/colors';
 
 const APP_DOM_ELEMENT_ID = 'app';
 const DEFAULT_LOCALE = 'en';
@@ -39,32 +36,15 @@ function reallyInitializeApp(routes) {
     }
   };
 
-  const muiTheme = getMuiTheme({
-    fontFamily: 'Lato, sans',
-    zIndex: {
-      menu: 10001,
-      dialogOverlay: 9999,
-      dialog: 10000,
-      layer: 10001,
-      popover: 10001,
-    },
-    palette: {
-      primary1Color: getBrandColors().dark,
-      accent1Color: getBrandColors().light,
-    },
-  });
-
   const renderApp = () => {
     ReactDOM.render(
-      <MuiThemeProvider muiTheme={muiTheme}>
-        <Provider store={store}>
-          <IntlProvider locale={DEFAULT_LOCALE}>
-            <Router history={history} onUpdate={logPageView}>
-              {routes}
-            </Router>
-          </IntlProvider>
-        </Provider>
-      </MuiThemeProvider>,
+      <Provider store={store}>
+        <IntlProvider locale={DEFAULT_LOCALE}>
+          <Router history={history} onUpdate={logPageView}>
+            {routes}
+          </Router>
+        </IntlProvider>
+      </Provider>,
       document.getElementById(APP_DOM_ELEMENT_ID)
     );
   };

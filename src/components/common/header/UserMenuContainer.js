@@ -4,10 +4,8 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { push } from 'react-router-redux';
 import { connect } from 'react-redux';
 import Menu from '@material-ui/core/Menu';
-import PersonIcon from '@material-ui/icons/Person';
 import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
-import IconButton from '@material-ui/core/IconButton';
 import { PERMISSION_LOGGED_IN, logout } from '../../../lib/auth';
 import Permissioned from '../Permissioned';
 import messages from '../../../resources/messages';
@@ -34,9 +32,8 @@ const UserMenuContainer = (props) => {
     loginLogoutMenuItem = (
       <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
         <Menu
-          iconButtonElement={<IconButton><PersonIcon /></IconButton>}
+          open
           anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-          targetOrigin={{ horizontal: 'right', vertical: 'top' }}
         >
           <MenuItem onTouchTap={() => { routeToUrl('/user/profile'); }}>
             <FormattedMessage {...messages.userProfile} />

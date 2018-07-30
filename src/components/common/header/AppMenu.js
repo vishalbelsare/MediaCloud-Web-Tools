@@ -57,8 +57,9 @@ class AppMenu extends React.Component {
       <Button
         variant="contained"
         onClick={event => onTitleClick(event)}
-        label={formatMessage(titleMsg)}
-      />
+      >
+        {formatMessage(titleMsg)}
+      </Button>
     );
     if (showMenu) {
       const whichIcon = this.whichArrowIcon();
@@ -66,9 +67,10 @@ class AppMenu extends React.Component {
         <Button
           variant="contained"
           onClick={this.toggleMenu}
-          label={formatMessage(titleMsg)}
           icon={whichIcon}
-        />
+        >
+          {formatMessage(titleMsg)}
+        </Button>
       );
     }
     return (

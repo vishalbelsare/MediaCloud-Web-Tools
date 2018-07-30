@@ -4,6 +4,7 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import NoSsr from '@material-ui/core/NoSsr';
+import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import { fetchTopicSearchResults } from '../../../actions/topicActions';
 import LoadingSpinner from '../../common/LoadingSpinner';
@@ -90,17 +91,18 @@ class TopicSearchContainer extends React.Component {
       <div className="async-search topic-search right">
         <SearchButton />
         <div className="fetching">{fetchingStatus}</div>
-        <NoSsr
-          hintText={formatMessage(localMessages.searchHint)}
-          fullWidth
-          openOnFocus={false}
-          onClick={this.resetIfRequested}
-          dataSource={resultsAsComponents}
-          onUpdateInput={this.handleUpdateInput}
-          onNewRequest={this.handleNewRequest}
-          maxSearchResults={10}
-          filter={() => true}
-        />
+        <NoSsr>
+          <TextField>
+            hintText={formatMessage(localMessages.searchHint)}
+            openOnFocus={false}
+            onClick={this.resetIfRequested}
+            dataSource={resultsAsComponents}
+            onUpdateInput={this.handleUpdateInput}
+            onNewRequest={this.handleNewRequest}
+            maxSearchResults={10}
+            filter={() => true}
+          </TextField>
+        </NoSsr>
       </div>
     );
   }
