@@ -16,11 +16,12 @@ import NextIcon from '@material-ui/icons/SkipNext';
 import PreviousIcon from '@material-ui/icons/SkipPrevious';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
+import HelpIcon from '@material-ui/icons/Help';
+
 import slugify from 'slugify';
 import messages from '../../resources/messages';
 import ExploreIcon from './icons/ExploreIcon';
 import DownloadIcon from './icons/DownloadIcon';
-import HelpIcon from './icons/HelpIcon';
 import DeleteIcon from './icons/DeleteIcon';
 import DeleteMediaIcon from './icons/DeleteMediaIcon';
 import AddIcon from './icons/AddIcon';
@@ -77,7 +78,7 @@ function composeIconButton(Icon, defaultTooltipMessage, useBackgroundColor = tru
           tooltip={displayTooltip}
           style={{ padding: 0, border: 0, width: defaultWidth || 26, height: defaultHeight || 26, color, backgroundColor }}
         >
-          <Icon color="secondary" {...otherProps} />
+          <Icon color="inherit" {...otherProps} />
         </IconButton>
       );
       let content;
@@ -123,7 +124,7 @@ export const ExploreButton = composeIconButton(ExploreIcon, messages.explore);
 
 export const DownloadButton = composeIconButton(DownloadIcon, messages.download);
 
-export const HelpButton = composeIconButton(HelpIcon, messages.help);
+export const HelpButton = composeIconButton(HelpIcon, messages.help, false);
 
 export const DeleteButton = composeIconButton(DeleteIcon, messages.delete);
 
