@@ -32,7 +32,7 @@ const UserMenuContainer = (props) => {
     loginLogoutMenuItem = (
       <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
         <Menu
-          open
+          open={false}
           anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
         >
           <MenuItem onTouchTap={() => { routeToUrl('/user/profile'); }}>

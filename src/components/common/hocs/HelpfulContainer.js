@@ -44,7 +44,7 @@ function withHelp(contentTitleMsg, contentHTMLTextMsg, showHelpSidebar) {
           />,
         ];
         const helpButton = <HelpButton onClick={this.handleOpen} />;
-        let content = null;
+        let content = <br />;
         if (this.state.contentMsg) {
           if (Array.isArray(this.state.contentMsg)) {
             content = this.state.contentMsg.map(msg => (msg ? <FormattedHTMLMessage key={msg.id} {...msg} /> : ''));

@@ -28,9 +28,8 @@ const SourceOrCollectionChip = (props) => {
     <Chip
       className={`chip ${typeClass}`}
       key={`chip${objectId}`}
-      onRequestDelete={onDelete}
-      onTouchTap={autoLink ? defaultOnClick : onClick}
-      backgroundColor={'rgb(255,255,255)'}
+      onDelete={onDelete}
+      onClick={autoLink ? defaultOnClick : onClick}
       style={{ border: '1px solid rgb(204,204,204)' }}
     >
       <Avatar size={32}>{icon}</Avatar>

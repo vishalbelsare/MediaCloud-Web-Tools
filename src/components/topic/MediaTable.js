@@ -74,11 +74,11 @@ class MediaTable extends React.Component {
                 <td className="numeric"><FormattedNumber value={m.media_inlink_count !== undefined ? m.media_inlink_count : '?'} /></td>
                 <td className="numeric"><FormattedNumber value={m.outlink_count !== undefined ? m.outlink_count : '?'} /></td>
                 <td className="numeric"><FormattedNumber value={m.facebook_share_count !== undefined ? m.facebook_share_count : '?'} /></td>
-                <td>{m.metadata.media_type ? m.metadata.media_type.label : '?'}</td>
-                <td>{m.metadata.language ? m.metadata.language.label : '?'}</td>
-                <td>{m.metadata.pub_country ? m.metadata.pub_country.label : '?'}</td>
-                <td>{m.metadata.pub_state ? m.metadata.pub_state.label : '?'}</td>
-                <td>{m.metadata.about_country ? m.metadata.about_country.label : '?'}</td>
+                <td>{m.metadata ? m.metadata.media_type.label : '?'}</td>
+                <td>{m.metadata ? m.metadata.language.label : '?'}</td>
+                <td>{m.metadata ? m.metadata.pub_country.label : '?'}</td>
+                <td>{m.metadata ? m.metadata.pub_state.label : '?'}</td>
+                <td>{m.metadata ? m.metadata.about_country.label : '?'}</td>
               </tr>)
             )}
           </tbody>

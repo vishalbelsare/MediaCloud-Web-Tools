@@ -92,7 +92,7 @@ class TopicSearchContainer extends React.Component {
         <SearchButton />
         <div className="fetching">{fetchingStatus}</div>
         <NoSsr>
-          <TextField>
+          <TextField
             hintText={formatMessage(localMessages.searchHint)}
             openOnFocus={false}
             onClick={this.resetIfRequested}
@@ -101,7 +101,7 @@ class TopicSearchContainer extends React.Component {
             onNewRequest={this.handleNewRequest}
             maxSearchResults={10}
             filter={() => true}
-          </TextField>
+          />
         </NoSsr>
       </div>
     );
