@@ -2,6 +2,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
 import { DeleteButton, EditButton } from '../../../common/IconButton';
 import AppButton from '../../../common/AppButton';
 import messages from '../../../../resources/messages';
@@ -65,14 +68,20 @@ class FocusDefinition extends React.Component {
           <FormattedMessage {...messages.query} />: <code>{focusDefinition.query}</code>
         </p>
         <Dialog
-          title={formatMessage(localMessages.deleteConfirmTitle)}
-          actions={dialogActions}
           modal
           open={this.state.deleteConfirmationOpen}
-          onRequestClose={this.handleDeleteCancel}
+          onClose={this.handleDeleteCancel}
           className="app-dialog"
         >
-          <p><FormattedMessage {...localMessages.deleteConfirmDescription} /></p>
+          <DialogTitle>
+            {formatMessage(localMessages.deleteConfirmTitle)}
+          </DialogTitle>
+          <DialogActions>
+            {dialogActions}
+          </DialogActions>
+          <DialogContent>
+            <p><FormattedMessage {...localMessages.deleteConfirmDescription} /></p>
+          </DialogContent>
         </Dialog>
       </div>
     );

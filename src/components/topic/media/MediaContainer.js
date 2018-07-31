@@ -3,6 +3,9 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
 import Button from '@material-ui/core/Button';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
@@ -104,16 +107,22 @@ class MediaContainer extends React.Component {
             </Col>
           </Row>
           <Dialog
-            className="app-dialog"
-            title={formatMessage(localMessages.removeTitle)}
-            actions={dialogActions}
-            modal={false}
-            open={this.state.open}
-            onRequestClose={this.handleRemoveDialogClose}
-          >
-            <p><FormattedMessage {...localMessages.removeAbout} /></p>
-            <ComingSoon />
-          </Dialog>
+                modal={false}
+                open={this.state.open}
+                onClose={this.handleRemoveDialogClose}
+                className="app-dialog"
+              >
+                <DialogTitle>
+                  {formatMessage(localMessages.removeTitle)}
+                </DialogTitle>
+                <DialogActions>
+                  {dialogActions}
+                </DialogActions>
+                <DialogContent>
+                  <p><FormattedMessage {...localMessages.removeAbout} /></p>
+                  <ComingSoon />
+                </DialogContent>
+              </Dialog>
           <Row>
             <Col lg={12}>
               <StatBar stats={summaryStats} columnWidth={2} />

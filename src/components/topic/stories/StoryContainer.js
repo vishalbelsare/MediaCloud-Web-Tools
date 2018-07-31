@@ -3,6 +3,9 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
 import Link from 'react-router/lib/Link';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
@@ -96,15 +99,21 @@ class StoryContainer extends React.Component {
                 {displayTitle}
               </h1>
               <Dialog
-                title={formatMessage(localMessages.removeTitle)}
-                className="app-dialog"
-                actions={dialogActions}
                 modal={false}
                 open={this.state.open}
-                onRequestClose={this.handleRemoveDialogClose}
+                onClose={this.handleRemoveDialogClose}
+                className="app-dialog"
               >
-                <p><FormattedMessage {...localMessages.removeAbout} /></p>
-                <ComingSoon />
+                <DialogTitle>
+                  {formatMessage(localMessages.removeTitle)}
+                </DialogTitle>
+                <DialogActions>
+                  {dialogActions}
+                </DialogActions>
+                <DialogContent>
+                  <p><FormattedMessage {...localMessages.removeAbout} /></p>
+                  <ComingSoon />
+                </DialogContent>
               </Dialog>
             </Col>
           </Row>
