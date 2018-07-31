@@ -22,7 +22,7 @@ function withIntlForm(Component) {
 
     intlCustomProps = (customProps) => {
       const intlCustom = Object.assign({}, customProps);
-      ['label', 'floatingLabelText', 'hintText', 'errorText', 'disabled'].forEach((prop) => {
+      ['label', 'floatinglabeltext', 'hinttext', 'error', 'disabled'].forEach((prop) => {
         if ((prop in customProps)) {
           intlCustom[prop] = this.intlIfObject(customProps[prop]);
         }
@@ -35,7 +35,7 @@ function withIntlForm(Component) {
       return (
         <TextField
           className="form-field-text"
-          errorText={touched &&
+          error={touched &&
             ((error ? this.intlIfObject(error) : null)
               || (warning ? this.intlIfObject(warning) : null))}
           {...input}
@@ -49,7 +49,7 @@ function withIntlForm(Component) {
       return (
         <TextField
           className="form-field-text"
-          errorText={touched &&
+          error={touched &&
             ((error ? this.intlIfObject(error) : null)
               || (warning ? this.intlIfObject(warning) : null))}
           ref={saveRef}
@@ -65,7 +65,7 @@ function withIntlForm(Component) {
         className="form-field-checkbox"
         label={this.intlIfObject(label)}
         checked={input.value === true || input.value === 1}
-        onCheck={input.onChange}
+        onChange={input.onChange}
         disabled={this.intlIfObject(disabled)}
       />
     );
@@ -75,7 +75,7 @@ function withIntlForm(Component) {
       return (
         <Select
           className="form-field-select"
-          errorText={touched && (error ? this.intlIfObject(error) : null)}
+          error={touched && (error ? this.intlIfObject(error) : null)}
           {...input}
           onChange={(event, index, value) => input.onChange(value)}
           {...intlCustom}
@@ -91,7 +91,7 @@ function withIntlForm(Component) {
         <NoSsr
           className="form-field-NoSsr"
           {...input}
-          errorText={touched && (error ? this.intlIfObject(error) : null)}
+          error={touched && (error ? this.intlIfObject(error) : null)}
           onNewRequest={(currentValue, index) => {
             if (onNewRequestFunc && typeof onNewRequestFunc === 'function') {
               onNewRequestFunc(currentValue, index);

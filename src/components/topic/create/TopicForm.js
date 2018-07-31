@@ -57,7 +57,7 @@ class TopicForm extends React.Component {
         <Row>
           <Col lg={10}>
             <TopicDetailForm
-              initialValues={initialValues}
+              defaultValue={initialValues}
               mode={mode}
             />
           </Col>
@@ -81,7 +81,7 @@ class TopicForm extends React.Component {
               form="topicForm"
               destroyOnUnmount={false}
               name="sourcesAndCollections"
-              initialValues={initialValues.sourcesAndCollections} // to and from MediaPicker
+              defaultValue={initialValues.sourcesAndCollections} // to and from MediaPicker
               allowRemoval
             />
             {mediaPicker}
