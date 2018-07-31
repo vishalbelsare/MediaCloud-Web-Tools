@@ -95,7 +95,7 @@ class TopicForm extends React.Component {
               type="submit"
               disabled={pristine || submitting || asyncValidating === true}
               label={initialValues.buttonLabel}
-              primary
+              color="primary"
             />
           </Col>
         </Row>

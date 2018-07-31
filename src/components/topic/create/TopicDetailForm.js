@@ -64,6 +64,7 @@ const TopicDetailForm = (props) => {
             name="name"
             component={renderTextField}
             fullWidth
+            label={formatMessage(localMessages.name)}
           />
         </Col>
       </Row>
@@ -73,6 +74,7 @@ const TopicDetailForm = (props) => {
             name="description"
             component={renderTextField}
             fullWidth
+            label={formatMessage(localMessages.description)}
           />
         </Col>
       </Row>
@@ -126,6 +128,7 @@ const TopicDetailForm = (props) => {
             rows={2}
             rowsMax={4}
             fullWidth
+            label={formatMessage(localMessages.seedQuery)}
           />
           <small><b><QueryHelpDialog /></b> <FormattedMessage {...localMessages.seedQueryDescription} /></small>
           {queryWarning}

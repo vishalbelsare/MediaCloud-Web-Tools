@@ -30,14 +30,12 @@ function withIntlForm(Component) {
       return intlCustom;
     };
 
-    renderTextField = ({ input, meta: { touched, error, warning }, ...custom }) => {
+    renderTextField = ({ input, meta: { error }, ...custom }) => {
       const intlCustom = this.intlCustomProps(custom);
       return (
         <TextField
           className="form-field-text"
-          error={touched &&
-            ((error ? this.intlIfObject(error) : null)
-              || (warning ? this.intlIfObject(warning) : null))}
+          error={error}
           {...input}
           {...intlCustom}
         />
