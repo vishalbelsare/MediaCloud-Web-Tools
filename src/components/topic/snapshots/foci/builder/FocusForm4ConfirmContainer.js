@@ -83,7 +83,7 @@ const FocusForm4ConfirmContainer = (props) => {
             &nbsp; &nbsp;
             <AppButton
               disabled={submitting}
-              primary
+              color="primary"
               label={formatMessage(localMessages.addAnotherFocus)}
               type="submit"
             />

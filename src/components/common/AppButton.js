@@ -40,6 +40,12 @@ class AppButton extends React.Component {
     if ((buttonProps.label) && (typeof buttonProps.label === 'object')) {
       buttonProps.label = formatMessage(buttonProps.label);
     }
+    // material-ui shim
+    if (buttonProps.primary) {
+      buttonProps.color = 'primary';
+    } else if (buttonProps.secondary) {
+      buttonProps.color = 'secondary';
+    }
     let content = null;
     if (flat) {
       delete buttonProps.flat;

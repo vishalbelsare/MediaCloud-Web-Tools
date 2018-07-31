@@ -65,6 +65,7 @@ const TopicDetailForm = (props) => {
             component={renderTextField}
             fullWidth
             label={formatMessage(localMessages.name)}
+            helperText={formatMessage(localMessages.nameError)}
           />
         </Col>
       </Row>
@@ -75,6 +76,7 @@ const TopicDetailForm = (props) => {
             component={renderTextField}
             fullWidth
             label={formatMessage(localMessages.description)}
+            helperText={formatMessage(localMessages.descriptionError)}
           />
         </Col>
       </Row>
@@ -129,6 +131,7 @@ const TopicDetailForm = (props) => {
             rowsMax={4}
             fullWidth
             label={formatMessage(localMessages.seedQuery)}
+            helperText={formatMessage(localMessages.seedQueryError)}
           />
           <small><b><QueryHelpDialog /></b> <FormattedMessage {...localMessages.seedQueryDescription} /></small>
           {queryWarning}

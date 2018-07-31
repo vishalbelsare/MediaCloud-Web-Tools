@@ -163,7 +163,7 @@ const asyncValidate = (values, dispatch) => (
   dispatch(fetchTopicWithNameExists(values.name, values.topics_id))
     .then((results) => {
       if (results.nameInUse === true) {
-        const error = { name: localMessages.nameInUseError };
+        const error = { name: 'error' };
         throw error;
       }
     })

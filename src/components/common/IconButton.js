@@ -69,9 +69,9 @@ function composeIconButton(Icon, defaultTooltipMessage, useBackgroundColor = tru
       const clickHandler = (onClick) ? this.handleClick : null;
       const otherProps = {};
       if (backgroundColor) {
-        otherProps.backgroundColor = backgroundColor;
+        otherProps.backgroundcolor = backgroundColor; // note lowercase to pass through
       } else if (useBackgroundColor === true) {
-        otherProps.backgroundColor = this.state.backgroundColor;
+        otherProps.backgroundcolor = this.state.backgroundColor;
       }
       const button = (
         <IconButton

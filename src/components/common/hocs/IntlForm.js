@@ -22,20 +22,22 @@ function withIntlForm(Component) {
 
     intlCustomProps = (customProps) => {
       const intlCustom = Object.assign({}, customProps);
-      ['label', 'floatinglabeltext', 'hinttext', 'error', 'disabled'].forEach((prop) => {
+      ['label', 'helpertext', 'error', 'disabled'].forEach((prop) => {
         if ((prop in customProps)) {
           intlCustom[prop] = this.intlIfObject(customProps[prop]);
+        }
+        if (prop === 'helpertext') {
+          intlCustom.helperText = this.intlIfObject(customProps[prop]);
         }
       });
       return intlCustom;
     };
 
-    renderTextField = ({ input, meta: { error }, ...custom }) => {
+    renderTextField = ({ input, ...custom }) => {
       const intlCustom = this.intlCustomProps(custom);
       return (
         <TextField
           className="form-field-text"
-          error={error}
           {...input}
           {...intlCustom}
         />
