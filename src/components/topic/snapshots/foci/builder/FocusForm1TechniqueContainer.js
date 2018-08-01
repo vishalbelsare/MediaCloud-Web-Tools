@@ -40,7 +40,9 @@ const FocusForm1TechniqueContainer = (props) => {
               type="submit"
               label={formatMessage(messages.next)}
               color="primary"
-            />
+            >
+              {formatMessage(messages.next)}
+            </AppButton>
           </Col>
         </Row>
       </form>

@@ -55,7 +55,8 @@ class AppMenu extends React.Component {
     // let titleButtonClickHandler;
     let menuHeader = (
       <Button
-        variant="contained"
+        color="primary"
+        variant="text"
         onClick={event => onTitleClick(event)}
       >
         {formatMessage(titleMsg)}
@@ -65,7 +66,8 @@ class AppMenu extends React.Component {
       const whichIcon = this.whichArrowIcon();
       menuHeader = (
         <Button
-          variant="contained"
+          color="primary"
+          variant="text"
           onClick={this.toggleMenu}
           icon={whichIcon}
         >

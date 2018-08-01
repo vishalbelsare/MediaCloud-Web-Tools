@@ -43,6 +43,18 @@ function reallyInitializeApp(routes) {
       primary: getBrandColors(),
       secondary: getBrandColors(),
     },
+    status: {
+      info: 'info',
+      warning: 'warning',
+      error: 'error',
+    },
+    overrides: { // Name of the component ⚛️ / style sheet
+      MuiButton: {
+        containedPrimary: {
+          color: 'white', // Some CSS
+        },
+      },
+    },
   });
 
   const renderApp = () => {

@@ -49,9 +49,9 @@ class AppButton extends React.Component {
     let content = null;
     if (flat) {
       delete buttonProps.flat;
-      content = <Button variant="outlined" {...buttonProps} />;
+      content = <Button variant="outlined" {...buttonProps}>{buttonProps.label}</Button>;
     } else {
-      content = <Button variant="contained" {...buttonProps} />;
+      content = <Button variant="contained" {...buttonProps}>{buttonProps.label}</Button>;
     }
     return content;
   }
