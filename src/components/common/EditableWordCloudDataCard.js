@@ -124,7 +124,7 @@ class EditableWordCloudDataCard extends React.Component {
           className="action-icon-menu-item"
           primaryText={formatMessage(localMessages.modeTopicW2V)}
           disabled={this.state.editing || this.state.view === VIEW_TOPIC_W2V}
-          onTouchTap={() => this.setView(VIEW_TOPIC_W2V)}
+          onClick={() => this.setView(VIEW_TOPIC_W2V)}
         >
           {formatMessage(localMessages.modeTopicW2V)}
         </MenuItem>
@@ -137,9 +137,9 @@ class EditableWordCloudDataCard extends React.Component {
           className="action-icon-menu-item"
           primaryText={formatMessage(localMessages.modeGoogleW2V)}
           disabled={this.state.editing || this.state.view === VIEW_GOOGLE_W2V}
-          onTouchTap={() => this.setView(VIEW_GOOGLE_W2V)}
+          onClick={() => this.setView(VIEW_GOOGLE_W2V)}
         >
-          {formatMessage(localMessages.modeGoogleW2V)}
+          <FormattedMessage {...localMessages.modeGoogleW2V} />
         </MenuItem>
       );
     }
@@ -152,7 +152,7 @@ class EditableWordCloudDataCard extends React.Component {
           disabled={initSampleSize === VIEW_1K}
           onClick={() => onViewSampleSizeClick(VIEW_1K)}
         >
-          {formatMessage(localMessages.sampleSize1k)}
+          <FormattedMessage {...localMessages.sampleSize1k} />
         </MenuItem>
         <MenuItem
           className="action-icon-menu-item"
@@ -160,7 +160,7 @@ class EditableWordCloudDataCard extends React.Component {
           disabled={initSampleSize === VIEW_10K}
           onClick={() => onViewSampleSizeClick(VIEW_10K)}
         >
-          {formatMessage(localMessages.sampleSize10k)}
+          <FormattedMessage {...localMessages.sampleSize10k} />
         </MenuItem>
         <Divider />
         <MenuItem
@@ -168,7 +168,7 @@ class EditableWordCloudDataCard extends React.Component {
           primaryText={formatMessage(localMessages.learnMore)}
           onClick={this.goToBlog}
         >
-          {formatMessage(localMessages.learnMore)}
+          <FormattedMessage {...localMessages.learnMore} />
         </MenuItem>
       </span>
     );
@@ -178,17 +178,17 @@ class EditableWordCloudDataCard extends React.Component {
           className="action-icon-menu-item"
           primaryText={formatMessage(localMessages.modeOrdered)}
           disabled={this.state.editing || this.state.view === VIEW_ORDERED}
-          onTouchTap={() => this.setView(VIEW_ORDERED)}
+          onClick={() => this.setView(VIEW_ORDERED)}
         >
-          {formatMessage(localMessages.modeOrdered)}
+          <FormattedMessage {...localMessages.modeOrdered} />
         </MenuItem>
         <MenuItem
           className="action-icon-menu-item"
           primaryText={formatMessage(localMessages.modeCloud)}
           disabled={this.state.editing || this.state.view === VIEW_CLOUD}
-          onTouchTap={() => this.setView(VIEW_CLOUD)}
+          onClick={() => this.setView(VIEW_CLOUD)}
         >
-          {formatMessage(localMessages.modeCloud)}
+          <FormattedMessage {...localMessages.modeCloud} />
         </MenuItem>
         {topicWord2VecMenuItem}
         {googleWord2VecMenuItem}
@@ -198,9 +198,9 @@ class EditableWordCloudDataCard extends React.Component {
           primaryText={formatMessage(this.state.editing ? messages.viewWordCloud : messages.editWordCloud)}
           rightIcon={(this.state.view === VIEW_ORDERED) ? <EditButton /> : undefined}
           disabled={this.state.view !== VIEW_ORDERED} // can only edit in ordered mode
-          onTouchTap={this.toggleEditing}
+          onClick={this.toggleEditing}
         >
-          {formatMessage(this.state.editing ? messages.viewWordCloud : messages.editWordCloud)}
+          <FormattedMessage {...this.state.editing ? messages.viewWordCloud : messages.editWordCloud} />
         </MenuItem>
       </span>
     );
@@ -211,34 +211,34 @@ class EditableWordCloudDataCard extends React.Component {
           primaryText={formatMessage(localMessages.downloadWordCSV)}
           rightIcon={<DownloadButton />}
           disabled={this.state.editing} // can't download until done editing
-          onTouchTap={() => this.downloadCsv(1)}
+          onClick={() => this.downloadCsv(1)}
         >
-          {formatMessage(localMessages.downloadWordCSV)}
+          <FormattedMessage {...localMessages.downloadWordCSV} />
         </MenuItem>
         <MenuItem
           className="action-icon-menu-item"
           primaryText={formatMessage(localMessages.downloadBigramCSV)}
           rightIcon={<DownloadButton />}
           disabled={this.state.editing} // can't download until done editing
-          onTouchTap={() => this.downloadCsv(2)}
+          onClick={() => this.downloadCsv(2)}
         >
-          {formatMessage(localMessages.downloadBigramCSV)}
+          <FormattedMessage {...localMessages.downloadBigramCSV} />
         </MenuItem>
         <MenuItem
           className="action-icon-menu-item"
           primaryText={formatMessage(localMessages.downloadTrigramCSV)}
           rightIcon={<DownloadButton />}
           disabled={this.state.editing} // can't download until done editing
-          onTouchTap={() => this.downloadCsv(3)}
+          onClick={() => this.downloadCsv(3)}
         >
-          {formatMessage(localMessages.downloadTrigramCSV)}
+          <FormattedMessage {...localMessages.downloadTrigramCSV} />
         </MenuItem>
         <MenuItem
           className="action-icon-menu-item"
           primaryText={formatMessage(messages.downloadSVG)}
           rightIcon={<DownloadButton />}
           disabled={this.state.editing} // can't download until done editing
-          onTouchTap={() => {
+          onClick={() => {
             let domIdOrElement;
             if (this.state.ordered) { // tricky to get the correct element to serialize
               domIdOrElement = uniqueDomId;
@@ -250,7 +250,7 @@ class EditableWordCloudDataCard extends React.Component {
             downloadSvg(filename, domIdOrElement);
           }}
         >
-          {formatMessage(messages.downloadSVG)}
+          <FormattedMessage {...messages.downloadSVG} />
         </MenuItem>
       </span>
     );
