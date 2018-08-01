@@ -32,26 +32,27 @@ function withIntlForm(Component) {
 
     renderTextField = ({ input, meta: { error }, ...custom }) => {
       const intlCustom = this.intlCustomProps(custom);
+      if (intlCustom && intlCustom.helpertext !== undefined) {
+        intlCustom.helperText = intlCustom.helpertext;
+      }
       return (
         <TextField
           className="form-field-text"
-          error={error}
+          error={error !== undefined}
           {...input}
           {...intlCustom}
         />
       );
     };
-    renderTextFieldWithFocus = ({ input, saveRef, meta: { touched, error, warning }, ...custom }) => {
+    renderTextFieldWithFocus = ({ input, saveRef, meta: { error }, ...custom }) => {
       const intlCustom = this.intlCustomProps(custom);
-      if (intlCustom.prop === 'helpertext') {
-        intlCustom.helperText = intlCustom.prop.helpertext;
+      if (intlCustom.helpertext !== undefined) {
+        intlCustom.helperText = intlCustom.helpertext;
       }
       return (
         <TextField
           className="form-field-text"
-          error={touched &&
-            ((error ? this.intlIfObject(error) : null)
-              || (warning ? this.intlIfObject(warning) : null))}
+          error={error !== undefined}
           ref={saveRef}
           {...input}
           {...intlCustom}
