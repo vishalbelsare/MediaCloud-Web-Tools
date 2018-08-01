@@ -65,7 +65,7 @@ const TopicDetailForm = (props) => {
             component={renderTextField}
             fullWidth
             label={formatMessage(localMessages.name)}
-            helperText={formatMessage(localMessages.nameError)}
+            helpertext={formatMessage(localMessages.nameError)}
           />
         </Col>
       </Row>
@@ -76,7 +76,7 @@ const TopicDetailForm = (props) => {
             component={renderTextField}
             fullWidth
             label={formatMessage(localMessages.description)}
-            helperText={formatMessage(localMessages.descriptionError)}
+            helpertext={formatMessage(localMessages.descriptionError)}
           />
         </Col>
       </Row>
@@ -97,7 +97,7 @@ const TopicDetailForm = (props) => {
             type="inline"
             fullWidth
             label={formatMessage(localMessages.endDate)}
-            helperText={formatMessage(localMessages.endDate)}
+            helpertext={formatMessage(localMessages.endDate)}
           />
         </Col>
       </Row>
@@ -131,7 +131,7 @@ const TopicDetailForm = (props) => {
             rowsMax={4}
             fullWidth
             label={formatMessage(localMessages.seedQuery)}
-            helperText={formatMessage(localMessages.seedQueryError)}
+            helpertext={formatMessage(localMessages.seedQueryError)}
           />
           <small><b><QueryHelpDialog /></b> <FormattedMessage {...localMessages.seedQueryDescription} /></small>
           {queryWarning}
@@ -154,9 +154,9 @@ const TopicDetailForm = (props) => {
                       component={renderTextField}
                       type="inline"
                       fullWidth
-                      defaultValue="100000"
+                      // defaultValue="100000"
                       label={formatMessage(localMessages.maxStories)}
-                      helperText={100000}
+                      helpertext={100000}
                     />
                     <small><FormattedMessage {...localMessages.maxSeedStoriesHelp} /></small>
                   </Col>

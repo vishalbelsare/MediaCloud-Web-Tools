@@ -26,18 +26,16 @@ function withIntlForm(Component) {
         if ((prop in customProps)) {
           intlCustom[prop] = this.intlIfObject(customProps[prop]);
         }
-        if (prop === 'helpertext') {
-          intlCustom.helperText = this.intlIfObject(customProps[prop]);
-        }
       });
       return intlCustom;
     };
 
-    renderTextField = ({ input, ...custom }) => {
+    renderTextField = ({ input, meta: { error }, ...custom }) => {
       const intlCustom = this.intlCustomProps(custom);
       return (
         <TextField
           className="form-field-text"
+          error={error}
           {...input}
           {...intlCustom}
         />
@@ -45,7 +43,9 @@ function withIntlForm(Component) {
     };
     renderTextFieldWithFocus = ({ input, saveRef, meta: { touched, error, warning }, ...custom }) => {
       const intlCustom = this.intlCustomProps(custom);
-
+      if (intlCustom.prop === 'helpertext') {
+        intlCustom.helperText = intlCustom.prop.helpertext;
+      }
       return (
         <TextField
           className="form-field-text"
