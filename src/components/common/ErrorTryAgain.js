@@ -15,7 +15,7 @@ const ErrorTryAgain = (props) => {
   return (
     <div className="error-try-again">
       <p><FormattedMessage {...localMessages.errorCantLoad} /></p>
-      <Button variant="outlined" label={tryAgainMsg} primary onClick={onTryAgain} />
+      <Button variant="outlined" label={tryAgainMsg} color="primary" onClick={onTryAgain}>{tryAgainMsg}</Button>
     </div>
   );
 };

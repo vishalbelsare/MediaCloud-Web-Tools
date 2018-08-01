@@ -43,7 +43,7 @@ function withHelp(contentTitleMsg, contentHTMLTextMsg, showHelpSidebar) {
             onClick={this.handleClose}
           />,
         ];
-        const helpButton = <HelpButton color="white" backgroundColor="lightgrey" onClick={this.handleOpen} />;
+        const helpButton = <HelpButton color="white" backgroundcolor="lightgrey" onClick={this.handleOpen} />;
         let content = <br />;
         if (this.state.contentMsg) {
           if (Array.isArray(this.state.contentMsg)) {

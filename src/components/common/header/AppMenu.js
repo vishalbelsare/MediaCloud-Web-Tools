@@ -81,7 +81,7 @@ class AppMenu extends React.Component {
         <Popover
           open={this.state.open}
           anchorEl={this.state.anchorEl}
-          onRequestClose={this.close}
+          onClose={this.close}
         >
           {newItems}
         </Popover>
