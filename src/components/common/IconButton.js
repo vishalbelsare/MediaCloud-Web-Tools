@@ -46,6 +46,7 @@ function composeIconButton(Icon, defaultTooltipMessage, useBackgroundColor = tru
   defaultWidth = undefined, defaultHeight = undefined) {
   class AppIconButton extends React.Component {
     state = {
+      color: 'primary',
       backgroundColor: getBrandDarkColor(),
     };
     handleMouseEnter = () => {
@@ -69,9 +70,12 @@ function composeIconButton(Icon, defaultTooltipMessage, useBackgroundColor = tru
       const clickHandler = (onClick) ? this.handleClick : null;
       const otherProps = {};
       if (backgroundColor) {
-        otherProps.backgroundcolor = backgroundColor; // note lowercase to pass through
+        otherProps.backgroundColor = backgroundColor; // note lowercase to pass through to icon
       } else if (useBackgroundColor === true) {
-        otherProps.backgroundcolor = this.state.backgroundColor;
+        otherProps.backgroundColor = this.state.backgroundColor;
+      }
+      if (color === undefined) {
+        otherProps.color = this.state.color;
       }
       const button = (
         <IconButton
@@ -122,7 +126,7 @@ function composeIconButton(Icon, defaultTooltipMessage, useBackgroundColor = tru
 
 export const ExploreButton = composeIconButton(ExploreIcon, messages.explore);
 
-export const DownloadButton = composeIconButton(DownloadIcon, messages.download);
+export const DownloadButton = composeIconButton(DownloadIcon, messages.download, true);
 
 export const HelpButton = composeIconButton(HelpIcon, messages.help, false);
 

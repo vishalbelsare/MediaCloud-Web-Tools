@@ -107,22 +107,22 @@ class MediaContainer extends React.Component {
             </Col>
           </Row>
           <Dialog
-                modal={false}
-                open={this.state.open}
-                onClose={this.handleRemoveDialogClose}
-                className="app-dialog"
-              >
-                <DialogTitle>
-                  {formatMessage(localMessages.removeTitle)}
-                </DialogTitle>
-                <DialogActions>
-                  {dialogActions}
-                </DialogActions>
-                <DialogContent>
-                  <p><FormattedMessage {...localMessages.removeAbout} /></p>
-                  <ComingSoon />
-                </DialogContent>
-              </Dialog>
+            modal={false}
+            open={this.state.open}
+            onClose={this.handleRemoveDialogClose}
+            className="app-dialog"
+          >
+            <DialogTitle>
+              {formatMessage(localMessages.removeTitle)}
+            </DialogTitle>
+            <DialogActions>
+              {dialogActions}
+            </DialogActions>
+            <DialogContent>
+              <p><FormattedMessage {...localMessages.removeAbout} /></p>
+              <ComingSoon />
+            </DialogContent>
+          </Dialog>
           <Row>
             <Col lg={12}>
               <StatBar stats={summaryStats} columnWidth={2} />

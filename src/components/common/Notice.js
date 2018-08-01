@@ -45,7 +45,7 @@ function composeNotice(level) {
       }
       return (
         <div className={`notice ${level}-notice`}>
-          <Icon className="material-icons" color="primary">{fontIconName}</Icon>
+          <Icon className="material-icons" color="disabled">{fontIconName}</Icon>
           {children}
           {detailsContent}
         </div>

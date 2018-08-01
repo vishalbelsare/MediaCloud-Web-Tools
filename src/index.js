@@ -5,6 +5,8 @@ import 'core-js/es6/set';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ReactGA from 'react-ga';
+import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
+import { createMuiTheme } from '@material-ui/core/styles';
 import { IntlProvider } from 'react-intl';
 import { Provider } from 'react-redux';
 import Router from 'react-router/lib/Router';
@@ -15,6 +17,7 @@ import Raven from 'raven-js';
 import { loginWithCookie } from './actions/userActions';
 import getStore from './store';
 import { getAppName, getVersion, isProdMode } from './config';
+import { getBrandColors } from './styles/colors';
 
 const APP_DOM_ELEMENT_ID = 'app';
 const DEFAULT_LOCALE = 'en';
@@ -35,16 +38,24 @@ function reallyInitializeApp(routes) {
       ReactGA.pageview(window.location.pathname);
     }
   };
+  const muiTheme = createMuiTheme({
+    palette: {
+      primary: getBrandColors(),
+      secondary: getBrandColors(),
+    },
+  });
 
   const renderApp = () => {
     ReactDOM.render(
-      <Provider store={store}>
-        <IntlProvider locale={DEFAULT_LOCALE}>
-          <Router history={history} onUpdate={logPageView}>
-            {routes}
-          </Router>
-        </IntlProvider>
-      </Provider>,
+      <MuiThemeProvider theme={muiTheme}>
+        <Provider store={store}>
+          <IntlProvider locale={DEFAULT_LOCALE}>
+            <Router history={history} onUpdate={logPageView}>
+              {routes}
+            </Router>
+          </IntlProvider>
+        </Provider>
+      </MuiThemeProvider>,
       document.getElementById(APP_DOM_ELEMENT_ID)
     );
   };

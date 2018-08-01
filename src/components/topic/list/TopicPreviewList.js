@@ -4,13 +4,13 @@ import { injectIntl, FormattedMessage, FormattedDate } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import Link from 'react-router/lib/Link';
+import Icon from '@material-ui/core/Icon';
 import DataCard from '../../common/DataCard';
 import FavoriteToggler from '../../common/FavoriteToggler';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import messages from '../../../resources/messages';
 import { TOPIC_SNAPSHOT_STATE_COMPLETED } from '../../../reducers/topics/selected/snapshots';
-import { ErrorNotice } from '../../common/Notice';
 
 const localMessages = {
   range: { id: 'topitopic.list.range', defaultMessage: '{start} - {end}' },
@@ -33,7 +33,12 @@ const TopicPreviewList = (props) => {
 
         let errorNotice = null;
         if (topic.state !== TOPIC_SNAPSHOT_STATE_COMPLETED) {
-          errorNotice = <ErrorNotice><Link to={linkGenerator(topic)}><FormattedMessage {...localMessages.errorInTopic} /></Link></ErrorNotice>;
+          errorNotice = (
+            <div>
+              <Icon className="material-icons" color="error">error</Icon>
+              <Link to={linkGenerator(topic)}><FormattedMessage {...localMessages.errorInTopic} /></Link>;
+            </div>
+          );
         }
         return (
           <Col lg={4}>
