@@ -125,7 +125,9 @@ class EditableWordCloudDataCard extends React.Component {
           primaryText={formatMessage(localMessages.modeTopicW2V)}
           disabled={this.state.editing || this.state.view === VIEW_TOPIC_W2V}
           onTouchTap={() => this.setView(VIEW_TOPIC_W2V)}
-        />
+        >
+          {formatMessage(localMessages.modeTopicW2V)}
+        </MenuItem>
       );
     }
     let googleWord2VecMenuItem;
@@ -136,7 +138,9 @@ class EditableWordCloudDataCard extends React.Component {
           primaryText={formatMessage(localMessages.modeGoogleW2V)}
           disabled={this.state.editing || this.state.view === VIEW_GOOGLE_W2V}
           onTouchTap={() => this.setView(VIEW_GOOGLE_W2V)}
-        />
+        >
+          {formatMessage(localMessages.modeGoogleW2V)}
+        </MenuItem>
       );
     }
     const actionMenuSubHeaderContent = actionMenuHeaderText ? <Subheader>{actionMenuHeaderText}</Subheader> : null;
@@ -147,19 +151,25 @@ class EditableWordCloudDataCard extends React.Component {
           primaryText={formatMessage(localMessages.sampleSize1k)}
           disabled={initSampleSize === VIEW_1K}
           onClick={() => onViewSampleSizeClick(VIEW_1K)}
-        />
+        >
+          {formatMessage(localMessages.sampleSize1k)}
+        </MenuItem>
         <MenuItem
           className="action-icon-menu-item"
           primaryText={formatMessage(localMessages.sampleSize10k)}
           disabled={initSampleSize === VIEW_10K}
           onClick={() => onViewSampleSizeClick(VIEW_10K)}
-        />
+        >
+          {formatMessage(localMessages.sampleSize10k)}
+        </MenuItem>
         <Divider />
         <MenuItem
           className="action-icon-menu-item"
           primaryText={formatMessage(localMessages.learnMore)}
           onClick={this.goToBlog}
-        />
+        >
+          {formatMessage(localMessages.learnMore)}
+        </MenuItem>
       </span>
     );
     const viewOptions = (
@@ -169,13 +179,17 @@ class EditableWordCloudDataCard extends React.Component {
           primaryText={formatMessage(localMessages.modeOrdered)}
           disabled={this.state.editing || this.state.view === VIEW_ORDERED}
           onTouchTap={() => this.setView(VIEW_ORDERED)}
-        />
+        >
+          {formatMessage(localMessages.modeOrdered)}
+        </MenuItem>
         <MenuItem
           className="action-icon-menu-item"
           primaryText={formatMessage(localMessages.modeCloud)}
           disabled={this.state.editing || this.state.view === VIEW_CLOUD}
           onTouchTap={() => this.setView(VIEW_CLOUD)}
-        />
+        >
+          {formatMessage(localMessages.modeCloud)}
+        </MenuItem>
         {topicWord2VecMenuItem}
         {googleWord2VecMenuItem}
         <Divider />
@@ -185,7 +199,9 @@ class EditableWordCloudDataCard extends React.Component {
           rightIcon={(this.state.view === VIEW_ORDERED) ? <EditButton /> : undefined}
           disabled={this.state.view !== VIEW_ORDERED} // can only edit in ordered mode
           onTouchTap={this.toggleEditing}
-        />
+        >
+          {formatMessage(this.state.editing ? messages.viewWordCloud : messages.editWordCloud)}
+        </MenuItem>
       </span>
     );
     const downloadOptions = (
@@ -196,21 +212,27 @@ class EditableWordCloudDataCard extends React.Component {
           rightIcon={<DownloadButton />}
           disabled={this.state.editing} // can't download until done editing
           onTouchTap={() => this.downloadCsv(1)}
-        />
+        >
+          {formatMessage(localMessages.downloadWordCSV)}
+        </MenuItem>
         <MenuItem
           className="action-icon-menu-item"
           primaryText={formatMessage(localMessages.downloadBigramCSV)}
           rightIcon={<DownloadButton />}
           disabled={this.state.editing} // can't download until done editing
           onTouchTap={() => this.downloadCsv(2)}
-        />
+        >
+          {formatMessage(localMessages.downloadBigramCSV)}
+        </MenuItem>
         <MenuItem
           className="action-icon-menu-item"
           primaryText={formatMessage(localMessages.downloadTrigramCSV)}
           rightIcon={<DownloadButton />}
           disabled={this.state.editing} // can't download until done editing
           onTouchTap={() => this.downloadCsv(3)}
-        />
+        >
+          {formatMessage(localMessages.downloadTrigramCSV)}
+        </MenuItem>
         <MenuItem
           className="action-icon-menu-item"
           primaryText={formatMessage(messages.downloadSVG)}
@@ -227,7 +249,9 @@ class EditableWordCloudDataCard extends React.Component {
             const filename = svgDownloadPrefix || 'word-cloud';
             downloadSvg(filename, domIdOrElement);
           }}
-        />
+        >
+          {formatMessage(messages.downloadSVG)}
+        </MenuItem>
       </span>
     );
     // now build the menu options as appropriate

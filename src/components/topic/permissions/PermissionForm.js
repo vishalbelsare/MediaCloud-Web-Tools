@@ -46,9 +46,9 @@ const PermissionForm = (props) => {
         </Col>
         <Col lg={3} md={3} sm={3} xs={12}>
           <Field name="permission" component={renderSelect} floatingLabelText={localMessages.permission}>
-            <MenuItem key={PERMISSION_TOPIC_READ} value={PERMISSION_TOPIC_READ} primaryText={formatMessage(localMessages.read)} />
-            <MenuItem key={PERMISSION_TOPIC_WRITE} value={PERMISSION_TOPIC_WRITE} primaryText={formatMessage(localMessages.write)} />
-            <MenuItem key={PERMISSION_TOPIC_ADMIN} value={PERMISSION_TOPIC_ADMIN} primaryText={formatMessage(localMessages.admin)} />
+            <MenuItem key={PERMISSION_TOPIC_READ} value={PERMISSION_TOPIC_READ} primaryText={formatMessage(localMessages.read)}>{PERMISSION_TOPIC_READ}</MenuItem>
+            <MenuItem key={PERMISSION_TOPIC_WRITE} value={PERMISSION_TOPIC_WRITE} primaryText={formatMessage(localMessages.write)}>{PERMISSION_TOPIC_WRITE}</MenuItem>
+            <MenuItem key={PERMISSION_TOPIC_ADMIN} value={PERMISSION_TOPIC_ADMIN} primaryText={formatMessage(localMessages.admin)}>{PERMISSION_TOPIC_ADMIN}</MenuItem>
           </Field>
         </Col>
         <Col lg={2} md={2} sm={2} xs={12}>
@@ -57,7 +57,7 @@ const PermissionForm = (props) => {
             type="submit"
             disabled={pristine || submitting}
             label={buttonLabel}
-            primary
+            color="primary"
           />
           {deleteButton}
         </Col>

@@ -100,13 +100,17 @@ class NytLabelSummaryContainer extends React.Component {
                   primaryText={formatMessage(messages.downloadCSV)}
                   rightIcon={<DownloadButton />}
                   onTouchTap={this.downloadCsv}
-                />
+                >
+                  {formatMessage(messages.downloadCSV)}
+                </MenuItem>
                 <MenuItem
                   className="action-icon-menu-item"
                   primaryText={formatMessage(messages.downloadSVG)}
                   rightIcon={<DownloadButton />}
                   onTouchTap={() => downloadSvg(BUBBLE_CHART_DOM_ID)}
-                />
+                >
+                  {formatMessage(messages.downloadCSV)}
+                </MenuItem>
               </ActionMenu>
             </div>
           </Permissioned>

@@ -68,14 +68,18 @@ class StoriesSummaryContainer extends React.Component {
                 primaryText={formatMessage(localMessages.downloadNoFBData)}
                 rightIcon={<DownloadButton />}
                 onTouchTap={this.downloadCsvNoFBData}
-              />
+              >
+                {formatMessage(localMessages.downloadNoFBData)}
+              </MenuItem>
               <MenuItem
                 className="action-icon-menu-item"
                 id="topic-summary-top-stories-download-with-facebook"
                 primaryText={formatMessage(localMessages.downloadWithFBData)}
                 rightIcon={<DownloadButton />}
                 onTouchTap={this.downloadCsvWithFBData}
-              />
+              >
+                {formatMessage(localMessages.downloadWithFBData)}
+              </MenuItem>
             </ActionMenu>
           </div>
         </Permissioned>
