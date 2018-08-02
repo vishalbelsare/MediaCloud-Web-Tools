@@ -44,11 +44,11 @@ const EditTopCountriesContainer = (props) => {
               floatingLabelText={formatMessage(localMessages.numberLabel)}
               value={5}
             >
-              <MenuItem value={5} primaryText={formatMessage(messages.top5)}>5</MenuItem>
-              <MenuItem value={10} primaryText={formatMessage(messages.top10)}>10</MenuItem>
-              <MenuItem value={15} primaryText={formatMessage(messages.top15)}>15</MenuItem>
-              <MenuItem value={20} primaryText={formatMessage(messages.top20)}>20</MenuItem>
-              <MenuItem value={25} primaryText={formatMessage(messages.top25)}>25</MenuItem>
+              <MenuItem value={5}><FormattedMessage {...messages.top5} /></MenuItem>
+              <MenuItem value={10}><FormattedMessage {...messages.top10} /></MenuItem>
+              <MenuItem value={15}><FormattedMessage {...messages.top15} /></MenuItem>
+              <MenuItem value={20}><FormattedMessage {...messages.top20} /></MenuItem>
+              <MenuItem value={25}><FormattedMessage {...messages.top25} /></MenuItem>
             </Field>
           </Col>
         </Row>

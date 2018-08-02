@@ -43,7 +43,6 @@ class FocusDescriptionForm extends React.Component {
 
   render() {
     const { renderTextField, renderSelect, focalSetDefinitions, initialValues, currentFocalSetDefinitionId, focalTechnique } = this.props;
-    const { formatMessage } = this.props.intl;
     // only show focal set selection for editing mode
     let focalSetContent;
     if (initialValues.focusDefinitionId === undefined) {
@@ -63,14 +62,16 @@ class FocusDescriptionForm extends React.Component {
               <MenuItem
                 key={focalSetDef.focal_set_definitions_id}
                 value={focalSetDef.focal_set_definitions_id}
-                label={focalSetDef.name}
-              />
+              >
+                {focalSetDef.name}
+              </MenuItem>
             )}
             <MenuItem
               key={NEW_FOCAL_SET_PLACEHOLDER_ID}
               value={NEW_FOCAL_SET_PLACEHOLDER_ID}
-              label={formatMessage(localMessages.newFocalSetName)}
-            />
+            >
+              <FormattedMessage {...localMessages.newFocalSetName} />
+            </MenuItem>
           </Field>
           {focalSetDetailedContent}
         </div>

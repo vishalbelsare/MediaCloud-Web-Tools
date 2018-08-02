@@ -70,10 +70,6 @@ class ModifyTopicDialog extends React.Component {
           open={this.state.open}
           onClose={this.handleRemoveDialogClose}
           className={'modify-topic-dialog'}
-          bodyClassName={'modify-topic-dialog-body'}
-          contentClassName={'modify-topic-dialog-content'}
-          overlayClassName={'modify-topic-dialog-overlay'}
-          titleClassName={'modify-topic-dialog-title'}
           autoDetectWindowHeight={false}
         >
           <DialogTitle>

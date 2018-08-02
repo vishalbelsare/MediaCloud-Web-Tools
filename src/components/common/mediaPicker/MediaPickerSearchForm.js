@@ -58,7 +58,7 @@ class MediaPickerSearchForm extends React.Component {
             onKeyPress={this.handleMenuItemKeyDown}
             ref={this.focusUsernameInputField}
             fullWidth
-            hintText={hintText}
+            label={hintText}
           />
         </Col>
         <Col lg={2}>
@@ -67,7 +67,7 @@ class MediaPickerSearchForm extends React.Component {
             label={formatMessage(localMessages.search)}
             onClick={this.handleSearchButtonClick}
             disabled={pristine}
-            primary
+            color="primary"
           />
         </Col>
       </Row>

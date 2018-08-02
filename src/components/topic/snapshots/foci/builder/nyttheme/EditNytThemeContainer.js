@@ -43,11 +43,11 @@ const EditNytThemeContainer = (props) => {
             floatingLabelText={formatMessage(localMessages.numberLabel)}
             value={5}
           >
-            <MenuItem value={5} primaryText={formatMessage(messages.top5)} />
-            <MenuItem value={10} primaryText={formatMessage(messages.top10)} />
-            <MenuItem value={15} primaryText={formatMessage(messages.top15)} />
-            <MenuItem value={20} primaryText={formatMessage(messages.top20)} />
-            <MenuItem value={25} primaryText={formatMessage(messages.top25)} />
+            <MenuItem value={5}><FormattedMessage {...messages.top5} /></MenuItem>
+            <MenuItem value={10}><FormattedMessage {...messages.top10} /></MenuItem>
+            <MenuItem value={15}><FormattedMessage {...messages.top15} /></MenuItem>
+            <MenuItem value={20}><FormattedMessage {...messages.top20} /></MenuItem>
+            <MenuItem value={25}><FormattedMessage {...messages.top25} /></MenuItem>
           </Field>
         </Row>
         <Row>
