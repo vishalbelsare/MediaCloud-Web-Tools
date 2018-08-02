@@ -79,6 +79,7 @@ function composeIconButton(Icon, defaultTooltipMessage, useBackgroundColor = tru
       }
       const button = (
         <IconButton
+          {...otherProps}
           tooltip={displayTooltip}
           style={{ padding: 0, border: 0, width: defaultWidth || 26, height: defaultHeight || 26, color, backgroundColor }}
         >
