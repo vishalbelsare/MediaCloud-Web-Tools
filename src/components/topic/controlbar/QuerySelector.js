@@ -66,17 +66,13 @@ class QuerySelector extends React.Component {
     return (
       <div className="query-selector-wrapper">
         <TextField
-          floatingLabelText={formatMessage(localMessages.pickQuery)}
-          floatingLabelFixed
-          floatingLabelStyle={{ color: 'rgb(224,224,224)', opacity: 0.8 }}
-          value={this.state.value}
+          label={formatMessage(localMessages.pickQuery)}
+          style={{ color: 'rgb(224,224,224)', opacity: 0.8 }}
+          value={this.state.value ? this.state.value : ''}
           onKeyDown={this.handleMenuItemKeyDown}
           fullWidth
           id="topic-filter-query"
           onChange={this.handleChange}
-          inputStyle={{
-            color: '#FFFFFF',
-          }}
           onFocus={this.handleFocus}
           onBlur={this.handleBlur}
         />

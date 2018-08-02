@@ -27,9 +27,8 @@ class SnapshotSelector extends React.Component {
     }
     return (
       <Select
-        floatingLabelText={formatMessage(localMessages.pickSnapshot)}
-        floatingLabelFixed
-        floatingLabelStyle={{ color: 'rgb(224,224,224)', opacity: 0.8 }}
+        label={formatMessage(localMessages.pickSnapshot)}
+        style={{ color: 'rgb(224,224,224)', opacity: 0.8 }}
         selectedMenuItemStyle={{ color: getBrandDarkerColor(), fontWeight: 'bold' }}
         labelStyle={{ color: 'rgb(255,255,255)' }}
         value={selectedId}
@@ -45,8 +44,9 @@ class SnapshotSelector extends React.Component {
               disabled={!snapshot.isUsable}
               key={snapshot.snapshots_id}
               value={snapshot.snapshots_id}
-              primaryText={`${formattedDateStr} ${stateMessage} ${noteMessage}`}
-            />
+            >
+              {`${formattedDateStr} ${stateMessage} ${noteMessage}`}
+            </MenuItem>
           );
         })}
       </Select>
