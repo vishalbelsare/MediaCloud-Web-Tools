@@ -3,7 +3,6 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-import { getBrandDarkerColor } from '../../../styles/colors';
 
 const localMessages = {
   pickSnapshot: { id: 'snapshot.pick', defaultMessage: 'Load an Archived Snapshot' },
@@ -29,8 +28,7 @@ class SnapshotSelector extends React.Component {
       <Select
         label={formatMessage(localMessages.pickSnapshot)}
         style={{ color: 'rgb(224,224,224)', opacity: 0.8 }}
-        selectedMenuItemStyle={{ color: getBrandDarkerColor(), fontWeight: 'bold' }}
-        labelStyle={{ color: 'rgb(255,255,255)' }}
+        underline={{ color: 'rgb(255,255,255)', opacity: 0.8 }}
         value={selectedId}
         fullWidth
         onChange={this.handleSnapshotSelected}

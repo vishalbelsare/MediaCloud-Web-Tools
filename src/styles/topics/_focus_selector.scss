@@ -1,12 +1,18 @@
+@import '../constants';
 
 .focus-selector-wrapper {
   position: relative;
+  color: $white !important;
+
+  label {
+    color: $white !important;
+  }
 
   .selected-focus-details {
     position: absolute;
     top: 17px;
     left: 82px;
-    color: rgb(224, 224, 224); 
+    color: rgb(224, 224, 224) !important; 
     font-size: 13px;
   }
   

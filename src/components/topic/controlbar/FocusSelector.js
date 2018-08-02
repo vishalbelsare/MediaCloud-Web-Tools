@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { REMOVE_FOCUS } from './TopicFilterControlBar';
@@ -43,9 +44,11 @@ class FocusSelector extends React.Component {
     // default to none
     return (
       <div className="focus-selector-wrapper">
+        <InputLabel htmlFor="name-readonly">Name</InputLabel>
         <Select
           label={formatMessage(messages.focusPick)}
           style={{ color: 'rgb(224,224,224)', opacity: 0.8 }}
+          underline={{ color: 'rgb(255,255,255)' }}
           value={selectedId || ''}
           fullWidth
           onChange={this.handleFocusChange}

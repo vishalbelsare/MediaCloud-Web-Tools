@@ -51,7 +51,12 @@ function reallyInitializeApp(routes) {
     overrides: { // Name of the component ⚛️ / style sheet
       MuiButton: {
         containedPrimary: {
-          color: 'white', // Some CSS
+          color: 'white',
+        },
+      },
+      MuiChip: {
+        containedPrimary: {
+          color: 'white',
         },
       },
     },
