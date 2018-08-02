@@ -23,7 +23,7 @@ class ActionMenu extends React.Component {
   handlePopupOpen = (event) => {
     event.preventDefault();
     this.setState({
-      anchorEl: event.currentTarget,
+      anchorEl: event.currentTarget.parentElement,
     });
   }
   handlePopupClose = () => {
@@ -43,10 +43,10 @@ class ActionMenu extends React.Component {
     const otherProps = {};
     otherProps.backgroundColor = this.state.backgroundColor;
     let closeIconButton = (
-      <CloseButton onClick={this.handlePopupClose} color={color} {...otherProps} aria-haspopup="true" />
+      <CloseButton onClick={this.handlePopupClose} color={color} {...otherProps} aria-controls="action-menu" />
     );
     let openIconButton = (
-      <MoreOptionsButton onClick={this.handlePopupOpenClick} color={color} {...otherProps} aria-haspopup="true" />
+      <MoreOptionsButton onClick={this.handlePopupOpenClick} color={color} {...otherProps} aria-haspopup="true" aria-owns="action-menu" aria-controls="action-menu" />
     );
 
     if (openButton) {
@@ -68,8 +68,6 @@ class ActionMenu extends React.Component {
           </a>
           <Popover
             open={this.state.anchorEl}
-            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-            targetOrigin={{ horizontal: 'right', vertical: 'top' }}
             onClose={this.handlePopupClose}
           >
             {children}
@@ -81,9 +79,15 @@ class ActionMenu extends React.Component {
         <span>
           {icon}
           <Menu
+            id="action-menu"
             anchorEl={this.state.anchorEl}
             open={Boolean(anchorEl)}
             onClose={this.handlePopupClose}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right',
+            }}
+            getContentAnchorEl={null}
           >
             {children}
           </Menu>
