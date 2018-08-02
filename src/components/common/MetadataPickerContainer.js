@@ -31,18 +31,17 @@ const MetadataPickerContainer = (props) => {
             disabled={disabled}
             floatingLabelText={floatingLabelText || label}
           >
-            <MenuItem className="header-primary-menu" value={null} primaryText={''} />
+            <MenuItem className="header-primary-menu" value={null} />
             {tags.map(t =>
               <MenuItem
                 className="header-primary-menu"
                 key={t.tags_id}
                 value={t.tags_id}
-                primaryText={
-                  <div className="header-primary-label">{t.label}
-                    <br /><span className="header-primary-description">{t.description}</span>
-                  </div>
-                }
-              />
+              >
+                <div className="header-primary-label">{t.label}
+                  <br /><span className="header-primary-description">{t.description}</span>
+                </div>
+              </MenuItem>
             )}
           </Field>
         );
@@ -55,7 +54,7 @@ const MetadataPickerContainer = (props) => {
             floatingLabelText={floatingLabelText || label}
           >
             <MenuItem value={null} primaryText={''} />
-            {tags.map(t => <MenuItem key={t.tags_id} value={t.tags_id} primaryText={t.label} />)}
+            {tags.map(t => <MenuItem key={t.tags_id} value={t.tags_id}>{t.label}</MenuItem>)}
           </Field>
         );
       }

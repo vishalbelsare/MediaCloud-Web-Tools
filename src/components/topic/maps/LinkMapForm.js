@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Field, reduxForm, formValueSelector } from 'redux-form';
-import { injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Sigma, RelativeSize, LoadGEXF, ForceAtlas2, RandomizeNodePositions } from 'react-sigma';
 import { Row, Col } from 'react-flexbox-grid/lib';
@@ -64,23 +64,26 @@ const LinkMapForm = (props) => {
             name="color_field"
             values={initialValues.color_field}
             component={renderSelect}
-            floatingLabelText={formatMessage(localMessages.colorBy)}
+            label={formatMessage(localMessages.colorBy)}
           >
             <MenuItem
               key={0}
               value={'partisan_code'}
-              primaryText={formatMessage(localMessages.partisanCode)}
-            />
+            >
+              <FormattedMessage {...localMessages.partisanCode} />
+            </MenuItem>
             <MenuItem
               key={1}
               value={'media_type'}
-              primaryText={formatMessage(localMessages.mediaType)}
-            />
+            >
+              <FormattedMessage {...localMessages.mediaType} />
+            </MenuItem>
             <MenuItem
               key={2}
               value={'partisan_retweet'}
-              primaryText={formatMessage(localMessages.partisanRetweet)}
-            />
+            >
+              <FormattedMessage {...localMessages.partisanRetweet} />
+            </MenuItem>
           </Field>
         </Col>
         <Col lg={3} xs={12}>
@@ -88,7 +91,7 @@ const LinkMapForm = (props) => {
             values={initialValues.media}
             name="num_media"
             component={renderTextField}
-            floatingLabelText={formatMessage(localMessages.media)}
+            label={formatMessage(localMessages.media)}
           />
         </Col>
         <Col lg={3} xs={12} className="checkbox-top-align">
@@ -104,7 +107,7 @@ const LinkMapForm = (props) => {
           <Field
             name="num_links_per_medium"
             component={renderTextField}
-            floatingLabelText={formatMessage(localMessages.outlinks)}
+            label={formatMessage(localMessages.outlinks)}
           />
         </Col>
       </Row>
@@ -117,7 +120,7 @@ const LinkMapForm = (props) => {
             type="submit"
             label={downloadLabel}
             disabled={submitting}
-            primary
+            color="primary"
           />
         </Col>
         <Col lg={3} xs={12}>
@@ -127,8 +130,8 @@ const LinkMapForm = (props) => {
             type="button"
             label={viewLabel}
             disabled={submitting}
-            onTouchTap={onViewMapData}
-            primary
+            onClick={onViewMapData}
+            color="primary"
           />
         </Col>
       </Row>

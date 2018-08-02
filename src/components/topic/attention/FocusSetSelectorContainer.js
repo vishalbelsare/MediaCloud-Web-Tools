@@ -16,11 +16,11 @@ export const NO_FOCAL_SET_SELECTED = 0;
 
 const FocusSetSelectorContainer = (props) => {
   const { selectedFocalSetId, topicId, focalSets, onFocalSetSelected, hideNoneOption } = props;
-  const { formatMessage } = props.intl;
+
   const linkToNewFoci = `/topics/${topicId}/snapshot/foci`;
   let noneOption = null;
   if (hideNoneOption !== true) {
-    noneOption = (<MenuItem value={NO_FOCAL_SET_SELECTED} primaryText={formatMessage(localMessages.noFocalSet)} />);
+    noneOption = (<MenuItem value={NO_FOCAL_SET_SELECTED}><FormattedMessage {...localMessages.noFocalSet} /></MenuItem>);
   }
   let content = null;
   if (focalSets.length > 0) {
@@ -35,7 +35,7 @@ const FocusSetSelectorContainer = (props) => {
           fullWidth
         >
           {focalSets.map(fs =>
-            <MenuItem key={fs.focal_sets_id} value={fs.focal_sets_id} primaryText={fs.name} />)
+            <MenuItem key={fs.focal_sets_id} value={fs.focal_sets_id}>{fs.name}</MenuItem>)
           }
           {noneOption}
         </Select>

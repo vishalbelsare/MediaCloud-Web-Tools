@@ -37,11 +37,11 @@ class TopicStatusDashboardContainer extends React.Component {
         <Row>
           <Col lg={12}>
             <Select
-              floatingLabelText={formatMessage(localMessages.stateToShow)}
+              label={formatMessage(localMessages.stateToShow)}
               value={this.state.selectedTopicState}
               onChange={this.handleTopicStateSelected}
             >
-              {uniqueStates.map((state, index) => <MenuItem key={index} value={state} primaryText={state} />)}
+              {uniqueStates.map((state, index) => <MenuItem key={index} value={state}>{state}</MenuItem>)}
             </Select>
           </Col>
         </Row>

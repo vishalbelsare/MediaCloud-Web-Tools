@@ -181,7 +181,7 @@ const TopicDetailForm = (props) => {
                     component={renderSelect}
                     fullWidth
                   >
-                    {iterations.map(t => <MenuItem key={t} value={t} primaryText={t === 0 ? `${t} - no spidering` : t} />)}
+                    {iterations.map(t => <MenuItem key={t} value={t}>{t === 0 ? `${t} - no spidering` : t}</MenuItem>)}
                   </Field>
                   <small><FormattedMessage {...localMessages.maxIterationsHelp} /></small>
                 </Col>
