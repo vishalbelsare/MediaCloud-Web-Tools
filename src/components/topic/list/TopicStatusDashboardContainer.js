@@ -4,6 +4,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import ListItemText from '@material-ui/core/ListItemText';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import { fetchAdminTopicList } from '../../../actions/topicActions';
@@ -20,7 +21,7 @@ class TopicStatusDashboardContainer extends React.Component {
     selectedTopicState: 'error',
   };
 
-  handleTopicStateSelected = (event, index, value) => this.setState({ selectedTopicState: value });
+  handleTopicStateSelected = value => this.setState({ selectedTopicState: value });
 
   render() {
     const { topics } = this.props;
@@ -38,10 +39,9 @@ class TopicStatusDashboardContainer extends React.Component {
           <Col lg={12}>
             <Select
               label={formatMessage(localMessages.stateToShow)}
-              value={this.state.selectedTopicState}
-              onChange={this.handleTopicStateSelected}
+              value={this.state.selectedTopicState || ''}
             >
-              {uniqueStates.map((state, index) => <MenuItem key={index} value={state}>{state}</MenuItem>)}
+              {uniqueStates.map((state, index) => <MenuItem key={index} value={state}><ListItemText onClick={() => this.handleTopicStateSelected(state)}>{state}</ListItemText></MenuItem>)}
             </Select>
           </Col>
         </Row>
