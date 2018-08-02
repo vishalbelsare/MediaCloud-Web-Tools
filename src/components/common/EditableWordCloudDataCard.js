@@ -6,6 +6,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Link from 'react-router/lib/Link';
 import Divider from '@material-ui/core/Divider';
 import Subheader from '@material-ui/core/ListSubheader';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 import DataCard from './DataCard';
 import messages from '../../resources/messages';
 import OrderedWordCloud from '../vis/OrderedWordCloud';
@@ -118,11 +120,14 @@ class EditableWordCloudDataCard extends React.Component {
     const { includeTopicWord2Vec, hideGoogleWord2Vec, actionMenuHeaderText, actionsAsLinksUnderneath, svgDownloadPrefix, onViewSampleSizeClick, initSampleSize } = this.props;
     const { formatMessage } = this.props.intl;
     let topicWord2VecMenuItem;
+    let wcChoice = <FormattedMessage {...messages.editWordCloud} />;
+    if (this.state.editing) {
+      wcChoice = <FormattedMessage {...messages.viewWordCloud} />;
+    }
     if (includeTopicWord2Vec === true) {
       topicWord2VecMenuItem = (
         <MenuItem
           className="action-icon-menu-item"
-          primaryText={formatMessage(localMessages.modeTopicW2V)}
           disabled={this.state.editing || this.state.view === VIEW_TOPIC_W2V}
           onClick={() => this.setView(VIEW_TOPIC_W2V)}
         >
@@ -135,7 +140,6 @@ class EditableWordCloudDataCard extends React.Component {
       googleWord2VecMenuItem = (
         <MenuItem
           className="action-icon-menu-item"
-          primaryText={formatMessage(localMessages.modeGoogleW2V)}
           disabled={this.state.editing || this.state.view === VIEW_GOOGLE_W2V}
           onClick={() => this.setView(VIEW_GOOGLE_W2V)}
         >
@@ -148,7 +152,6 @@ class EditableWordCloudDataCard extends React.Component {
       <span>
         <MenuItem
           className="action-icon-menu-item"
-          primaryText={formatMessage(localMessages.sampleSize1k)}
           disabled={initSampleSize === VIEW_1K}
           onClick={() => onViewSampleSizeClick(VIEW_1K)}
         >
@@ -156,7 +159,6 @@ class EditableWordCloudDataCard extends React.Component {
         </MenuItem>
         <MenuItem
           className="action-icon-menu-item"
-          primaryText={formatMessage(localMessages.sampleSize10k)}
           disabled={initSampleSize === VIEW_10K}
           onClick={() => onViewSampleSizeClick(VIEW_10K)}
         >
@@ -165,7 +167,6 @@ class EditableWordCloudDataCard extends React.Component {
         <Divider />
         <MenuItem
           className="action-icon-menu-item"
-          primaryText={formatMessage(localMessages.learnMore)}
           onClick={this.goToBlog}
         >
           <FormattedMessage {...localMessages.learnMore} />
@@ -176,7 +177,6 @@ class EditableWordCloudDataCard extends React.Component {
       <span>
         <MenuItem
           className="action-icon-menu-item"
-          primaryText={formatMessage(localMessages.modeOrdered)}
           disabled={this.state.editing || this.state.view === VIEW_ORDERED}
           onClick={() => this.setView(VIEW_ORDERED)}
         >
@@ -184,7 +184,6 @@ class EditableWordCloudDataCard extends React.Component {
         </MenuItem>
         <MenuItem
           className="action-icon-menu-item"
-          primaryText={formatMessage(localMessages.modeCloud)}
           disabled={this.state.editing || this.state.view === VIEW_CLOUD}
           onClick={() => this.setView(VIEW_CLOUD)}
         >
@@ -195,12 +194,13 @@ class EditableWordCloudDataCard extends React.Component {
         <Divider />
         <MenuItem
           className="action-icon-menu-item"
-          primaryText={formatMessage(this.state.editing ? messages.viewWordCloud : messages.editWordCloud)}
-          rightIcon={(this.state.view === VIEW_ORDERED) ? <EditButton /> : undefined}
           disabled={this.state.view !== VIEW_ORDERED} // can only edit in ordered mode
           onClick={this.toggleEditing}
         >
-          <FormattedMessage {...this.state.editing ? messages.viewWordCloud : messages.editWordCloud} />
+          <ListItemText>{wcChoice}</ListItemText>
+          <ListItemIcon>
+            {(this.state.view === VIEW_ORDERED) ? <EditButton /> : undefined}
+          </ListItemIcon>
         </MenuItem>
       </span>
     );
@@ -208,26 +208,26 @@ class EditableWordCloudDataCard extends React.Component {
       <span>
         <MenuItem
           className="action-icon-menu-item"
-          primaryText={formatMessage(localMessages.downloadWordCSV)}
-          rightIcon={<DownloadButton />}
           disabled={this.state.editing} // can't download until done editing
           onClick={() => this.downloadCsv(1)}
         >
-          <FormattedMessage {...localMessages.downloadWordCSV} />
+          <ListItemText><FormattedMessage {...localMessages.downloadWordCSV} /></ListItemText>
+          <ListItemIcon>
+            <DownloadButton />
+          </ListItemIcon>
         </MenuItem>
         <MenuItem
           className="action-icon-menu-item"
-          primaryText={formatMessage(localMessages.downloadBigramCSV)}
-          rightIcon={<DownloadButton />}
           disabled={this.state.editing} // can't download until done editing
           onClick={() => this.downloadCsv(2)}
         >
-          <FormattedMessage {...localMessages.downloadBigramCSV} />
+          <ListItemText><FormattedMessage {...localMessages.downloadBigramCSV} /></ListItemText>
+          <ListItemIcon>
+            <DownloadButton />
+          </ListItemIcon>
         </MenuItem>
         <MenuItem
           className="action-icon-menu-item"
-          primaryText={formatMessage(localMessages.downloadTrigramCSV)}
-          rightIcon={<DownloadButton />}
           disabled={this.state.editing} // can't download until done editing
           onClick={() => this.downloadCsv(3)}
         >
@@ -235,8 +235,6 @@ class EditableWordCloudDataCard extends React.Component {
         </MenuItem>
         <MenuItem
           className="action-icon-menu-item"
-          primaryText={formatMessage(messages.downloadSVG)}
-          rightIcon={<DownloadButton />}
           disabled={this.state.editing} // can't download until done editing
           onClick={() => {
             let domIdOrElement;
@@ -250,7 +248,10 @@ class EditableWordCloudDataCard extends React.Component {
             downloadSvg(filename, domIdOrElement);
           }}
         >
-          <FormattedMessage {...messages.downloadSVG} />
+          <ListItemText><FormattedMessage {...messages.downloadSVG} /></ListItemText>
+          <ListItemIcon>
+            <DownloadButton />
+          </ListItemIcon>
         </MenuItem>
       </span>
     );

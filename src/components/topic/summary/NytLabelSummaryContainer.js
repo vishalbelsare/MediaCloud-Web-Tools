@@ -3,6 +3,8 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import MenuItem from '@material-ui/core/MenuItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 import { schemeCategory10 } from 'd3';
 import { push } from 'react-router-redux';
 import { fetchTopicNytLabelCounts, filterByQuery } from '../../../actions/topicActions';
@@ -97,19 +99,21 @@ class NytLabelSummaryContainer extends React.Component {
               <ActionMenu>
                 <MenuItem
                   className="action-icon-menu-item"
-                  primaryText={formatMessage(messages.downloadCSV)}
-                  rightIcon={<DownloadButton />}
                   onTouchTap={this.downloadCsv}
                 >
-                  {formatMessage(messages.downloadCSV)}
+                  <ListItemText><FormattedMessage {...messages.downloadCSV} /></ListItemText>
+                  <ListItemIcon>
+                    <DownloadButton />
+                  </ListItemIcon>
                 </MenuItem>
                 <MenuItem
                   className="action-icon-menu-item"
-                  primaryText={formatMessage(messages.downloadSVG)}
-                  rightIcon={<DownloadButton />}
                   onTouchTap={() => downloadSvg(BUBBLE_CHART_DOM_ID)}
                 >
-                  {formatMessage(messages.downloadCSV)}
+                  <ListItemText><FormattedMessage {...messages.downloadCSV} /></ListItemText>
+                  <ListItemIcon>
+                    <DownloadButton />
+                  </ListItemIcon>
                 </MenuItem>
               </ActionMenu>
             </div>

@@ -3,16 +3,14 @@ import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import Menu from '@material-ui/core/Menu';
 import Popover from '@material-ui/core/Popover';
-import IconButton from '@material-ui/core/IconButton';
-import MoreOptionsIcon from './icons/MoreOptionsIcon';
-import CloseIcon from './icons/CloseIcon';
+import { MoreOptionsButton, CloseButton } from './IconButton';
 import { getBrandDarkColor, getBrandDarkerColor } from '../../styles/colors';
 // import AppButton from './AppButton';
 
 class ActionMenu extends React.Component {
   state = {
     backgroundColor: getBrandDarkColor(),
-    isPopupOpen: false,
+    anchorEl: null,
   };
 
   handlePopupOpenClick = (event) => {
@@ -25,14 +23,11 @@ class ActionMenu extends React.Component {
   handlePopupOpen = (event) => {
     event.preventDefault();
     this.setState({
-      isPopupOpen: !this.state.isPopupOpen,
       anchorEl: event.currentTarget,
     });
   }
   handlePopupClose = () => {
-    this.setState({
-      isPopupOpen: !this.state.isPopupOpen,
-    });
+    this.setState({ anchorEl: null });
   }
   handleMouseEnter = () => {
     this.setState({ backgroundColor: getBrandDarkerColor() });
@@ -43,18 +38,15 @@ class ActionMenu extends React.Component {
 
   render() {
     const { color, openButton, closeButton, children, actionTextMsg } = this.props;
+    const { anchorEl } = this.state;
     const { formatMessage } = this.props.intl;
     const otherProps = {};
     otherProps.backgroundColor = this.state.backgroundColor;
     let closeIconButton = (
-      <IconButton style={{ padding: 0, margin: 0, width: 32, height: 32 }} >
-        <CloseIcon color={color} {...otherProps} />
-      </IconButton>
+      <CloseButton onClick={this.handlePopupClose} color={color} {...otherProps} aria-haspopup="true" />
     );
     let openIconButton = (
-      <IconButton style={{ padding: 0, margin: 0, width: 32, height: 32 }} >
-        <MoreOptionsIcon color={color} {...otherProps} />
-      </IconButton>
+      <MoreOptionsButton onClick={this.handlePopupOpenClick} color={color} {...otherProps} aria-haspopup="true" />
     );
 
     if (openButton) {
@@ -64,7 +56,7 @@ class ActionMenu extends React.Component {
       closeIconButton = close;
     }
 
-    const icon = (this.state.isPopupOpen) ? closeIconButton : openIconButton;
+    const icon = (this.state.anchorEl) ? closeIconButton : openIconButton;
 
     // support text or icon-driven menus
     let menuContent;
@@ -75,11 +67,10 @@ class ActionMenu extends React.Component {
             <FormattedMessage {...actionTextMsg} />
           </a>
           <Popover
-            open={this.state.isPopupOpen}
-            anchorEl={this.state.anchorEl}
+            open={this.state.anchorEl}
             anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
             targetOrigin={{ horizontal: 'right', vertical: 'top' }}
-            onRequestClose={this.handlePopupClose}
+            onClose={this.handlePopupClose}
           >
             {children}
           </Popover>
@@ -87,15 +78,16 @@ class ActionMenu extends React.Component {
       );
     } else {
       menuContent = (
-        <Menu
-          open={this.state.isPopupOpen}
-          iconButtonElement={icon}
-          onRequestChange={() => this.handlePopupOpenClick(event)}
-          anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-          targetOrigin={{ horizontal: 'right', vertical: 'top' }}
-        >
-          {children}
-        </Menu>
+        <span>
+          {icon}
+          <Menu
+            anchorEl={this.state.anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={this.handlePopupClose}
+          >
+            {children}
+          </Menu>
+        </span>
       );
     }
 
