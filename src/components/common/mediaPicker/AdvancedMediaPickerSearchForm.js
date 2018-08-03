@@ -38,7 +38,7 @@ class AdvancedMediaPickerSearchForm extends React.Component {
               name={'advancedSearchQueryString'}
               value={initValues}
               component={renderTextField}
-              floatingLabelText={formatMessage(localMessages.searchSuggestion)}
+              label={formatMessage(localMessages.searchSuggestion)}
               fullWidth
             />
           </Col>
@@ -49,7 +49,7 @@ class AdvancedMediaPickerSearchForm extends React.Component {
               id={TAG_SET_PUBLICATION_COUNTRY}
               name={'publicationCountry'}
               form="advancedQueryForm"
-              floatingLabelText={formatMessage(localMessages.pubCountrySuggestion)}
+              label={formatMessage(localMessages.pubCountrySuggestion)}
               NoSsr
             />
           </Col>
@@ -58,7 +58,7 @@ class AdvancedMediaPickerSearchForm extends React.Component {
               id={TAG_SET_PUBLICATION_STATE}
               name={'publicationState'}
               form="advancedQueryForm"
-              floatingLabelText={formatMessage(localMessages.pubStateSuggestion)}
+              label={formatMessage(localMessages.pubStateSuggestion)}
               NoSsr
             />
           </Col>
@@ -68,7 +68,7 @@ class AdvancedMediaPickerSearchForm extends React.Component {
               id={TAG_SET_PRIMARY_LANGUAGE}
               name={'primaryLanguage'}
               form="advancedQueryForm"
-              floatingLabelText={formatMessage(localMessages.pLanguageSuggestion)}
+              label={formatMessage(localMessages.pLanguageSuggestion)}
               NoSsr
             />
           </Col>
@@ -78,7 +78,7 @@ class AdvancedMediaPickerSearchForm extends React.Component {
               id={TAG_SET_COUNTRY_OF_FOCUS}
               name={'countryOfFocus'}
               form="advancedQueryForm"
-              floatingLabelText={formatMessage(localMessages.pCountryOfFocusSuggestion)}
+              label={formatMessage(localMessages.pCountryOfFocusSuggestion)}
               NoSsr
             />
           </Col>
@@ -88,7 +88,7 @@ class AdvancedMediaPickerSearchForm extends React.Component {
               showDescription
               name="mediaType"
               form="advancedQueryForm"
-              floatingLabelText={formatMessage(localMessages.pMediaType)}
+              label={formatMessage(localMessages.pMediaType)}
             />
           </Col>
         </Row>
@@ -98,7 +98,7 @@ class AdvancedMediaPickerSearchForm extends React.Component {
               style={{ marginTop: 30 }}
               label={formatMessage(localMessages.search)}
               onClick={this.handleSearchButtonClick}
-              primary
+              color="primary"
             />
           </Col>
         </Row>

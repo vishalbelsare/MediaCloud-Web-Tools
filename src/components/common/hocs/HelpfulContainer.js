@@ -87,7 +87,7 @@ function withHelp(contentTitleMsg, contentHTMLTextMsg, showHelpSidebar) {
               modal={false}
               className="app-dialog"
               open={this.state.open}
-              onRequestClose={this.handleClose}
+              onClose={this.handleClose}
             >
               {content}
             </Dialog>

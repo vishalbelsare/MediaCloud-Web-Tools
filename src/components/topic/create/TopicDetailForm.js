@@ -3,9 +3,11 @@ import React from 'react';
 import { FormattedMessage, FormattedHTMLMessage } from 'react-intl';
 import { Field } from 'redux-form';
 import { Row, Col } from 'react-flexbox-grid/lib';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import Collapse from '@material-ui/core/Collapse';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import Typography from '@material-ui/core/Typography';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MenuItem from '@material-ui/core/MenuItem';
 import withIntlForm from '../../common/hocs/IntlForm';
 import { TOPIC_FORM_MODE_EDIT } from './TopicForm';
@@ -140,54 +142,51 @@ const TopicDetailForm = (props) => {
       <Row>
         <Col lg={10}>
           <br />
-          <Card style={{ boxShadow: 'none' }} >
-            <CardHeader
-              style={{ fontWeight: 'bold' }}
-              title={formatMessage(localMessages.advancedSettings)}
-            />
-            <Collapse>
-              <Permissioned onlyRole={PERMISSION_ADMIN}>
-                <Row>
-                  <Col lg={12}>
-                    <Field
-                      name="max_stories"
-                      component={renderTextField}
-                      type="inline"
-                      fullWidth
-                      // defaultValue="100000"
-                      label={formatMessage(localMessages.maxStories)}
-                      helpertext={100000}
-                    />
-                    <small><FormattedMessage {...localMessages.maxSeedStoriesHelp} /></small>
-                  </Col>
-                </Row>
-              </Permissioned>
-              <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
-                <Row>
-                  <Col lg={12}>
-                    <Field
-                      name="ch_monitor_id"
-                      component={renderTextField}
-                      fullWidth
-                    />
-                    <small><FormattedMessage {...localMessages.crimsonHexagonHelp} /></small>
-                  </Col>
-                </Row>
-              </Permissioned>
-              <Row>
-                <Col lg={12}>
+          <ExpansionPanel>
+            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography>{formatMessage(localMessages.advancedSettings)}</Typography>
+            </ExpansionPanelSummary>
+            <Permissioned onlyRole={PERMISSION_ADMIN}>
+              <ExpansionPanelDetails>
+                <Typography>
                   <Field
-                    name="max_iterations"
-                    component={renderSelect}
+                    name="max_stories"
+                    component={renderTextField}
+                    type="inline"
                     fullWidth
-                  >
-                    {iterations.map(t => <MenuItem key={t} value={t}>{t === 0 ? `${t} - no spidering` : t}</MenuItem>)}
-                  </Field>
-                  <small><FormattedMessage {...localMessages.maxIterationsHelp} /></small>
-                </Col>
-              </Row>
-            </Collapse>
-          </Card>
+                    // defaultValue="100000"
+                    label={formatMessage(localMessages.maxStories)}
+                    helpertext={100000}
+                  />
+                  <small><FormattedMessage {...localMessages.maxSeedStoriesHelp} /></small>
+                </Typography>
+              </ExpansionPanelDetails>
+            </Permissioned>
+            <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
+              <ExpansionPanelDetails>
+                <Typography>
+                  <Field
+                    name="ch_monitor_id"
+                    component={renderTextField}
+                    fullWidth
+                  />
+                  <small><FormattedMessage {...localMessages.crimsonHexagonHelp} /></small>
+                </Typography>
+              </ExpansionPanelDetails>
+            </Permissioned>
+            <ExpansionPanelDetails>
+              <Typography>
+                <Field
+                  name="max_iterations"
+                  component={renderSelect}
+                  fullWidth
+                >
+                  {iterations.map(t => <MenuItem key={t} value={t}>{t === 0 ? `${t} - no spidering` : t}</MenuItem>)}
+                </Field>
+                <small><FormattedMessage {...localMessages.maxIterationsHelp} /></small>
+              </Typography>
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
         </Col>
       </Row>
     </div>

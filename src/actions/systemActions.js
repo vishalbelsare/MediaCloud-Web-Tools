@@ -4,3 +4,4 @@ export * from './system/statActions';
 export * from './system/mediaPickerActions';
 export * from './system/recentNewsActions';
 export * from './system/favoriteActions';
+export * from './system/metadataActions';

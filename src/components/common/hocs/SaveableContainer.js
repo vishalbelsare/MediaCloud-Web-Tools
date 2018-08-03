@@ -87,8 +87,8 @@ const withSaving = (ChildComponent) => {
             <p><FormattedMessage {...localMessages.saveDialogText} /></p>
             <TextField
               id="saveToNotebookNotes"
-              hintText={formatMessage(localMessages.noteToSelf)}
-              multiLine
+              label={formatMessage(localMessages.noteToSelf)}
+              multiline
               fullWidth
               rows={1}
             />
