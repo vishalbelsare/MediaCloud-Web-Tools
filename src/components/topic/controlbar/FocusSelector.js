@@ -48,7 +48,7 @@ class FocusSelector extends React.Component {
         <Select
           label={formatMessage(messages.focusPick)}
           style={{ color: 'rgb(224,224,224)', opacity: 0.8 }}
-          underline={{ color: 'rgb(255,255,255)' }}
+          className="focus-selector"
           value={selectedId || ''}
           fullWidth
           onChange={this.handleFocusChange}
