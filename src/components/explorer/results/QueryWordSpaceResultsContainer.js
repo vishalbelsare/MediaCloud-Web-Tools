@@ -1,8 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import MenuItem from '@material-ui/core/MenuItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 import ActionMenu from '../../common/ActionMenu';
 import composeSummarizedVisualization from './SummarizedVizualization';
 import { DownloadButton } from '../../common/IconButton';
@@ -28,7 +30,6 @@ class QueryWordSpaceResultsContainer extends React.Component {
   }
   render() {
     const { results, queries, selectedTabIndex, tabSelector } = this.props;
-    const { formatMessage } = this.props.intl;
     const domId = `${WORD_SPACE_DOM_ID}-${selectedTabIndex}`;
     return (
       <div>
@@ -47,19 +48,29 @@ class QueryWordSpaceResultsContainer extends React.Component {
               <span key={`wordspace-actions-${idx}`}>
                 <MenuItem
                   className="action-icon-menu-item"
-                  primaryText={formatMessage(localMessages.downloadCsv, { name: q.label })}
-                  rightIcon={<DownloadButton />}
                   onTouchTap={() => this.handleDownloadCsv(q)}
-                />
+                >
+                  <ListItemText>
+                    <FormattedMessage {...localMessages.downloadCsv} values={{ name: q.label }} />
+                  </ListItemText>
+                  <ListItemIcon>
+                    <DownloadButton />
+                  </ListItemIcon>
+                </MenuItem>
                 <MenuItem
                   className="action-icon-menu-item"
-                  primaryText={formatMessage(localMessages.downloadSvg, { name: q.label })}
-                  rightIcon={<DownloadButton />}
                   onTouchTap={() => {
                     const svgChild = document.getElementById(domId);
                     downloadExplorerSvg(q.label, 'sampled-word-space', svgChild);
                   }}
-                />
+                >
+                  <ListItemText>
+                    <FormattedMessage {...localMessages.downloadSvg} values={{ name: q.label }} />
+                  </ListItemText>
+                  <ListItemIcon>
+                    <DownloadButton />
+                  </ListItemIcon>
+                </MenuItem>
               </span>
             )}
           </ActionMenu>

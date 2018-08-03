@@ -32,7 +32,7 @@ class WordSelectWrapper extends React.Component {
   render() {
     const { queries, leftQuery, rightQuery } = this.props;
     const menuItems = queries.map((q, idx) =>
-      <MenuItem key={idx} value={idx} primaryText={q.label} />
+      <MenuItem key={idx} value={idx}>{q.label}</MenuItem>
     );
     let content = null;
     if (leftQuery !== null) {

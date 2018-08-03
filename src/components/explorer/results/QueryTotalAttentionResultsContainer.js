@@ -1,8 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import MenuItem from '@material-ui/core/MenuItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import composeSummarizedVisualization from './SummarizedVizualization';
 import { DownloadButton } from '../../common/IconButton';
@@ -52,7 +54,7 @@ class QueryTotalAttentionResultsContainer extends React.Component {
 
   render() {
     const { results, queries } = this.props;
-    const { formatNumber, formatMessage } = this.props.intl;
+    const { formatNumber } = this.props.intl;
     let content = null;
 
     const safeResults = results.map((r, idx) => Object.assign({}, r, queries[idx]));
@@ -92,25 +94,36 @@ class QueryTotalAttentionResultsContainer extends React.Component {
                 <MenuItem
                   key={idx}
                   className="action-icon-menu-item"
-                  primaryText={formatMessage(localMessages.downloadCsv, { name: q.label })}
-                  rightIcon={<DownloadButton />}
                   onTouchTap={() => this.downloadCsv(q)}
-                />
+                >
+                  <ListItemText>
+                    <FormattedMessage {...localMessages.downloadCsv} values={{ name: q.label }} />
+                  </ListItemText>
+                  <ListItemIcon>
+                    <DownloadButton />
+                  </ListItemIcon>
+                </MenuItem>
               )}
             </ActionMenu>
             <ActionMenu actionTextMsg={messages.viewOptions}>
               <MenuItem
                 className="action-icon-menu-item"
-                primaryText={formatMessage(localMessages.viewNormalized)}
                 disabled={this.state.view === VIEW_REGULAR}
                 onClick={() => this.setView(VIEW_REGULAR)}
-              />
+              >
+                <ListItemText>
+                  <FormattedMessage {...localMessages.viewNormalized} values={{ name: q.label }} />
+                </ListItemText>
+              </MenuItem>
               <MenuItem
                 className="action-icon-menu-item"
-                primaryText={formatMessage(localMessages.viewRegular)}
                 disabled={this.state.view === VIEW_NORMALIZED}
                 onClick={() => this.setView(VIEW_NORMALIZED)}
-              />
+              >
+                <ListItemText>
+                  <FormattedMessage {...localMessages.viewRegular} values={{ name: q.label }} />
+                </ListItemText>
+              </MenuItem>
             </ActionMenu>
           </div>
         </div>

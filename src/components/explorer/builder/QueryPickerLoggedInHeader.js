@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -16,21 +16,20 @@ const localMessages = {
 class QueryPickerLoggedInHeader extends React.Component {
   render() {
     const { query, isDeletable, onColorChange, onDelete, onLabelEditRequest } = this.props;
-    const { formatMessage } = this.props.intl;
     let nameInfo = <div />;
     let menuChildren = null;
     let iconOptions = null;
     if (isDeletable()) { // if this is not the only QueryPickerItem
       menuChildren = (
         <div>
-          <MenuItem primaryText={formatMessage(localMessages.title)} onTouchTap={() => onLabelEditRequest()} />
-          <MenuItem primaryText={formatMessage(messages.delete)} onTouchTap={() => onDelete(query)} />
+          <MenuItem onTouchTap={() => onLabelEditRequest()}><FormattedMessage {...localMessages.title} /></MenuItem>
+          <MenuItem onTouchTap={() => onDelete(query)}><FormattedMessage {...messages.delete} /></MenuItem>
         </div>
       );
     } else {
       menuChildren = (
         <div>
-          <MenuItem primaryText={formatMessage(localMessages.title)} onTouchTap={() => onLabelEditRequest()} />
+          <MenuItem onTouchTap={() => onLabelEditRequest()}><FormattedMessage {...localMessages.title} /></MenuItem>
         </div>
       );
     }

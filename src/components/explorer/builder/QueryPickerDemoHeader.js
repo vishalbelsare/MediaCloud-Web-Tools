@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import TextField from '@material-ui/core/TextField';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import IconMenu from '@material-ui/core/Menu';
@@ -32,10 +32,10 @@ class QueryPickerDemoHeader extends React.Component {
     let menuDelete = null;
     if (query) {
       if (!isThisAProtectedQuery) {
-        menuRegister = <MenuItem primaryText={formatMessage(localMessages.register)} onTouchTap={this.sendToLink} />;
+        menuRegister = <MenuItem onTouchTap={this.sendToLink}><FormattedMessage {...localMessages.register} /></MenuItem>;
       }
       if (!isThisAProtectedQuery && isDeletable()) { // can delete only if this is a custom query (vs sample query) for demo users and this is not the only QueryPickerItem
-        menuDelete = <MenuItem primaryText={formatMessage(messages.delete)} onTouchTap={() => onDelete(query)} />;
+        menuDelete = <MenuItem onTouchTap={() => onDelete(query)}><FormattedMessage {...messages.delete} /></MenuItem>;
       }
       if (menuRegister !== null || menuDelete !== null) {
         iconOptions = (

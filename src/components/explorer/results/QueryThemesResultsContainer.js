@@ -3,6 +3,8 @@ import React from 'react';
 import { injectIntl, FormattedHTMLMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import MenuItem from '@material-ui/core/MenuItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 import composeSummarizedVisualization from './SummarizedVizualization';
 import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import { DownloadButton } from '../../common/IconButton';
@@ -81,16 +83,26 @@ class QueryThemesResultsContainer extends React.Component {
                 <MenuItem
                   key={idx}
                   className="action-icon-menu-item"
-                  primaryText={formatMessage(localMessages.downloadCsv, { name: q.label })}
-                  rightIcon={<DownloadButton />}
                   onTouchTap={() => this.downloadCsv(q)}
-                />
+                >
+                  <ListItemText>
+                    <FormattedMessage {...localMessages.downloadCsv} values={{ name: q.label }} />
+                  </ListItemText>
+                  <ListItemIcon>
+                    <DownloadButton />
+                  </ListItemIcon>
+                </MenuItem>
                 <MenuItem
                   className="action-icon-menu-item"
-                  primaryText={formatMessage(localMessages.downloadSvg, { name: q.label })}
-                  rightIcon={<DownloadButton />}
                   onTouchTap={() => downloadExplorerSvg(q.label, 'sampled-nyt_themes', BUBBLE_CHART_DOM_ID)}
-                />
+                >
+                  <ListItemText>
+                    <FormattedMessage {...localMessages.downloadSvg} values={ name: q.label } />
+                  </ListItemText>
+                  <ListItemIcon>
+                    <DownloadButton />
+                  </ListItemIcon>
+                </MenuItem>
               </span>
             )}
           </ActionMenu>

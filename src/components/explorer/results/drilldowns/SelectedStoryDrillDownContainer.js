@@ -38,7 +38,7 @@ class SelectedStoryDrillDownContainer extends React.Component {
   }
   render() {
     const { selectedStory, storyInfo, handleClose, helpButton } = this.props;
-    const { formatMessage, formatDate } = this.props.intl;
+    const { formatDate } = this.props.intl;
 
     let content = null;
     if (selectedStory) {
@@ -50,14 +50,16 @@ class SelectedStoryDrillDownContainer extends React.Component {
                 <ActionMenu>
                   <MenuItem
                     className="action-icon-menu-item"
-                    primaryText={formatMessage(localMessages.close)}
                     onTouchTap={handleClose}
-                  />
+                  >
+                    <FormattedMessage {...localMessages.close} />
+                  </MenuItem>
                   <MenuItem
                     className="action-icon-menu-item"
-                    primaryText={formatMessage(localMessages.readThisStory)}
                     onTouchTap={() => this.openNewPage(storyInfo.url)}
-                  />
+                  >
+                    <FormattedMessage {...localMessages.readThisStory} />
+                  </MenuItem>
                 </ActionMenu>
                 <h2>
                   <FormattedMessage {...localMessages.title} values={{ title: trimToMaxLength(storyInfo.title, 80) }} />

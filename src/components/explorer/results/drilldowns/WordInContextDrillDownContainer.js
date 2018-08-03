@@ -53,7 +53,6 @@ class WordInContextDrillDownContainer extends React.Component {
   }
   render() {
     const { selectedWord, handleAddToAllQueries, handleClose, fragments, helpButton } = this.props;
-    const { formatMessage } = this.props.intl;
     const uniqueDomId = this.getUniqueDomId();
 
     let content = null;
@@ -64,23 +63,26 @@ class WordInContextDrillDownContainer extends React.Component {
             <ActionMenu>
               <MenuItem
                 className="action-icon-menu-item"
-                primaryText={formatMessage(localMessages.close)}
                 onTouchTap={handleClose}
-              />
+              >
+                <FormattedMessage {...localMessages.close} />
+              </MenuItem>
               <MenuItem
                 className="action-icon-menu-item"
-                primaryText={formatMessage(localMessages.addWordToAllQueries)}
                 onTouchTap={() => {
                   const wordToAdd = selectedWord.word;
                   handleClose();
                   handleAddToAllQueries(wordToAdd);
                 }}
-              />
+              >
+                <FormattedMessage {...localMessages.addWordToAllQueries} />
+              </MenuItem>
               <MenuItem
                 className="action-icon-menu-item"
-                primaryText={formatMessage(messages.downloadSVG)}
                 onTouchTap={this.handleDownloadSvg}
-              />
+              >
+                <FormattedMessage {...messages.downloadSVG} />
+              </MenuItem>
             </ActionMenu>
             <h2>
               <FormattedMessage {...localMessages.title} values={{ word: selectedWord.word }} />

@@ -3,6 +3,8 @@ import React from 'react';
 import { injectIntl, FormattedHTMLMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import MenuItem from '@material-ui/core/MenuItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import composeSummarizedVisualization from './SummarizedVizualization';
 import withQueryResults from './QueryResultsSelector';
@@ -27,7 +29,7 @@ class QueryGeoResultsContainer extends React.Component {
   }
   render() {
     const { results, intl, queries, handleCountryClick, selectedTabIndex, tabSelector } = this.props;
-    const { formatMessage, formatNumber } = intl;
+    const { formatNumber } = intl;
     let content;
     const coverageRatio = results[selectedTabIndex] ? results[selectedTabIndex].coverage_percentage : 0;
     if (coverageRatio > COVERAGE_REQUIRED) {
@@ -65,10 +67,15 @@ class QueryGeoResultsContainer extends React.Component {
               <MenuItem
                 key={idx}
                 className="action-icon-menu-item"
-                primaryText={formatMessage(localMessages.downloadCsv, { name: q.label })}
-                rightIcon={<DownloadButton />}
                 onTouchTap={() => this.downloadCsv(q)}
-              />
+              >
+                <ListItemText>
+                  <FormattedMessage {...localMessages.downloadCsv} values={{ name: q.label }} />
+                </ListItemText>
+                <ListItemIcon>
+                  <DownloadButton />
+                </ListItemIcon>
+              </MenuItem>
             )}
           </ActionMenu>
         </div>

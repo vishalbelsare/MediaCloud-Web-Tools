@@ -1,8 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { injectIntl, FormattedHTMLMessage } from 'react-intl';
+import { FormattedMessage, injectIntl, FormattedHTMLMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import MenuItem from '@material-ui/core/MenuItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 import composeSummarizedVisualization from './SummarizedVizualization';
 import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import { DownloadButton } from '../../common/IconButton';
@@ -29,7 +31,7 @@ class QueryTopEntitiesOrgsResultsContainer extends React.Component {
   }
   render() {
     const { results, queries, handleEntitySelection, selectedTabIndex, tabSelector } = this.props;
-    const { formatMessage, formatNumber } = this.props.intl;
+    const { formatNumber } = this.props.intl;
     let content = null;
     if (results) {
       const rawData = results[selectedTabIndex] ? results[selectedTabIndex].results : [];
@@ -69,10 +71,15 @@ class QueryTopEntitiesOrgsResultsContainer extends React.Component {
               <MenuItem
                 key={idx}
                 className="action-icon-menu-item"
-                primaryText={formatMessage(localMessages.downloadCsv, { name: q.label })}
-                rightIcon={<DownloadButton />}
                 onTouchTap={() => this.downloadCsv(q)}
-              />
+              >
+                <ListItemText>
+                  <FormattedMessage {...localMessages.downloadCsv} values={{ name: q.label }} />
+                </ListItemText>
+                <ListItemIcon>
+                  <DownloadButton />
+                </ListItemIcon>
+              </MenuItem>
             )}
           </ActionMenu>
         </div>
