@@ -139,7 +139,7 @@ class QueryForm extends React.Component {
                     name="startDate"
                     type="inline"
                     component={renderTextField}
-                    disableUnderline
+                    disableunderline="true"
                     disabled={!isEditable}
                     onChange={onDateChange}
                   />
@@ -150,7 +150,7 @@ class QueryForm extends React.Component {
                     name="endDate"
                     type="inline"
                     component={renderTextField}
-                    disableUnderline
+                    disableunderline="true"
                     disabled={!isEditable}
                     onChange={onDateChange}
                   />

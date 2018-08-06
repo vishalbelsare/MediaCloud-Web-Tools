@@ -73,12 +73,15 @@ function withIntlForm(Component) {
 
     renderSelect = ({ input, meta: { touched, error }, children, ...custom }) => {
       const intlCustom = this.intlCustomProps(custom);
+      if (intlCustom && intlCustom.helpertext !== undefined) {
+        intlCustom.helperText = intlCustom.helpertext;
+      }
       return (
         <Select
           className="form-field-select"
           error={touched && (error ? this.intlIfObject(error) : null)}
           {...input}
-          onChange={(event, index, value) => input.onChange(value)}
+          onChange={event => input.onChange(event.target.value)}
           {...intlCustom}
         >
           {children}

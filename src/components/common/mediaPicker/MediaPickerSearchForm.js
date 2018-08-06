@@ -56,7 +56,6 @@ class MediaPickerSearchForm extends React.Component {
             name="mediaKeyword"
             defaultValue={storedKeyword.mediaKeyword}
             onKeyPress={this.handleMenuItemKeyDown}
-            ref={this.focusUsernameInputField}
             fullWidth
             label={hintText}
           />

@@ -17,7 +17,7 @@ const localMessages = {
 };
 
 const MetadataPickerContainer = (props) => {
-  const { label, name, tags, renderSelectField, renderAutoComplete, autocomplete, floatingLabelText, disabled, showDescription } = props;
+  const { label, name, tags, renderSelect, renderAutoComplete, autocomplete, floatingLabelText, disabled, showDescription } = props;
   const { formatMessage } = props.intl;
   const mode = autocomplete ? MODE_AUTOCOMPLETE : MODE_SELECT;
   let content = null;
@@ -26,10 +26,11 @@ const MetadataPickerContainer = (props) => {
       if (showDescription) {
         content = (
           <Field
-            fullWidth name={name}
-            component={renderSelectField}
+            fullWidth
+            name={name}
+            component={renderSelect}
             disabled={disabled}
-            floatingLabelText={floatingLabelText || label}
+            label={floatingLabelText || label}
           >
             <MenuItem className="header-primary-menu" value={null} />
             {tags.map(t =>
@@ -49,11 +50,11 @@ const MetadataPickerContainer = (props) => {
         content = (
           <Field
             fullWidth name={name}
-            component={renderSelectField}
+            component={renderSelect}
             disabled={disabled}
-            floatingLabelText={floatingLabelText || label}
+            label={floatingLabelText || label}
           >
-            <MenuItem value={null} primaryText={''} />
+            <MenuItem value={null} />
             {tags.map(t => <MenuItem key={t.tags_id} value={t.tags_id}>{t.label}</MenuItem>)}
           </Field>
         );
@@ -102,7 +103,7 @@ MetadataPickerContainer.propTypes = {
   floatingLabelText: PropTypes.string,
   // from compositional chain
   intl: PropTypes.object.isRequired,
-  renderSelectField: PropTypes.func.isRequired,
+  renderSelect: PropTypes.func.isRequired,
   renderAutoComplete: PropTypes.func.isRequired,
   // from state
   fetchStatus: PropTypes.string,

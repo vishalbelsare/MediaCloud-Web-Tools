@@ -34,9 +34,9 @@ const SearchForm = (props) => {
             name="keyword"
             className="explorer-home-search-field"
             component={renderTextField}
-            hintText={localMessages.searchHint}
+            helpertext={localMessages.searchHint}
           />
-          <AppButton type="submit" label={messages.search} primary />
+          <AppButton type="submit" label={messages.search} color="primary" />
         </Col>
       </Row>
     </form>
