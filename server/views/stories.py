@@ -4,8 +4,8 @@ from operator import itemgetter
 import requests
 import logging
 
-from server import app, cliff, mc, NYT_THEME_LABELLER_URL
-from server.auth import user_mediacloud_client, user_mediacloud_key
+from server import app, cliff, NYT_THEME_LABELLER_URL, mc
+from server.auth import user_mediacloud_client
 from server.util.request import api_error_handler
 import server.util.csv as csv
 from server.cache import cache, key_generator
@@ -86,8 +86,8 @@ def entities_from_mc_or_cliff(stories_id):
 
 @cache.cache_on_arguments(function_key_generator=key_generator)
 def cached_story_raw_cliff_results(stories_id):
-    user_mc = user_mediacloud_client()
-    themes = user_mc.storyRawCliffResults([stories_id])
+    # need to pull story results with the tool key, so we don't need to cache on user key here
+    themes = mc.storyRawCliffResults([stories_id])
     return themes
 
 
