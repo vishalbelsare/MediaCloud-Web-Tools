@@ -5,16 +5,15 @@
   "scripts": {
     "dev": "webpack --mode development",
     "build": "webpack --mode production",
-    "dev-explorer": "webpack-serve --config config/base.config.js --port 2992 --content build/public",
-    "sources-dev": "NODE_ENV=dev node_modules/.bin/webpack-dev-server --hot --inline --history-api-fallback --config config/webpack.sources.config.babel.js",
-    "sources-release": "NODE_ENV=production webpack --progress -p --config config/webpack.sources.config.babel.js",
-    "topics-dev": "NODE_ENV=dev node_modules/.bin/webpack-dev-server --port 2992 --content-base build/public --hot --inline --history-api-fallback --config config/webpack.topics.config.babel.js",
-    "topics-release": "NODE_ENV=production webpack --progress -p --config config/webpack.topics.config.babel.js",
-    "tools-dev": "NODE_ENV=dev node_modules/.bin/webpack-dev-server --port 2992 --content-base build/public --hot --inline --history-api-fallback --config config/webpack.tools.config.babel.js",
-    "tools-release": "NODE_ENV=production webpack --progress -p --config config/webpack.tools.config.babel.js",
-    "test-acceptance": "react-scripts test --env=jsdom test/acceptance",
-    "explorer-dev": "NODE_ENV=dev node_modules/.bin/webpack-dev-server --port 2992 --content-base build/public --hot --inline --history-api-fallback --config config/webpack.explorer.config.babel.js",
-    "explorer-release": "NODE_ENV=production webpack --progress -p --config config/webpack.explorer.config.babel.js"
+    "explorer-dev": "MC_APP_NAME=explorer webpack-serve --config config/webpack.config.js --port 2992 --content build/public",
+    "explorer-release": "NODE_ENV=production MC_APP_NAME=explorer webpack --config config/webpack.config.js",
+    "sources-dev": "MC_APP_NAME=sources webpack-serve --config config/webpack.config.js --port 2992 --content build/public",
+    "sources-release": "NODE_ENV=production MC_APP_NAME=sources webpack --config config/webpack.config.js",
+    "topics-dev": "MC_APP_NAME=topics webpack-serve --config config/webpack.config.js --port 2992 --content build/public",
+    "topics-release": "NODE_ENV=production MC_APP_NAME=topics webpack --config config/webpack.config.js",
+    "tools-dev": "MC_APP_NAME=tools webpack-serve --config config/webpack.config.js --port 2992 --content build/public",
+    "tools-release": "NODE_ENV=production MC_APP_NAME=tools webpack --config config/webpack.config.js",
+    "test-acceptance": "react-scripts test --env=jsdom test/acceptance"
   },
   "jest": {
     "testPathDirs": [
@@ -107,6 +106,7 @@
     "mini-css-extract-plugin": "^0.4.1",
     "nightmare": "2.10.0",
     "node-sass": "^4.9.0",
+    "optimize-css-assets-webpack-plugin": "^5.0.0",
     "postcss-loader": "^2.1.5",
     "react-hot-loader": "3.0.0-beta.6",
     "react-scripts": "0.9.5",
@@ -114,6 +114,7 @@
     "sass-loader": "^7.0.3",
     "script-loader": "0.7.0",
     "style-loader": "^0.21.0",
+    "uglifyjs-webpack-plugin": "^1.2.7",
     "webpack": "^4.12.0",
     "webpack-cli": "^3.0.8",
     "webpack-config": "^6.1.2",

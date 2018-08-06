@@ -2,14 +2,10 @@
 const path = require('path');
 const webpack = require('webpack');
 const ManifestRevisionPlugin = require('manifest-revision-webpack-plugin');
-const merge = require('webpack-merge');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 // many of the webpack directives need an absolute path
 const basedir = path.resolve(__dirname, '../');
-
-// be smart about output based on dev or not
-// const devMode = process.env.NODE_ENV !== 'production';
 
 const baseConfig = {
   entry: {
@@ -19,11 +15,12 @@ const baseConfig = {
   plugins: [
     // needed this to get eslint working for some reason
     new webpack.LoaderOptionsPlugin({ options: {} }),
-    // this writes a file for our Flask server to read (pointing at the compiled JS)
+    // this writes JS files for our Flask server to read
     new ManifestRevisionPlugin(
       path.resolve(basedir, 'build', 'manifest.json'), // keep this path in sync with FlaskWebpack config
       { rootAssetPath: './src' } // important that this be relative, not absolute
     ),
+    // this writes CSS files for our Flask server to read
     new MiniCssExtractPlugin({
       filename: '[name].[hash].css',
     }),
@@ -44,40 +41,22 @@ const baseConfig = {
           // don't put options here; otherwise they override what is in the .babelrc
         },
       },
-      { // turn all the sass into regular CSS
-        test: /\.(css|scss)$/,
-        use: [
-          MiniCssExtractPlugin.loader, // tell it to compile CSS, not JS
+      { // compile the scss for react-flexbox-grid by itself because it doesn't work wth MiniCssExtractPlugin for some reason
+        test: /\.css$/,
+        loader: 'style-loader!css-loader',
+        include: /flexboxgrid/,
+      },
+      { // turn all our SCSS into regular CSS
+        test: /\.(scss|css)$/,
+        loaders: [
+          MiniCssExtractPlugin.loader, // focus on the CSS, and stick it in an external file
           'css-loader',
           'sass-loader',
         ],
+        exclude: /flexboxgrid/, // and make sure it doesn't try to compile the already-compiled files
       },
     ],
   },
 };
 
-const devConfig = {
-  // tells Webpack to do some stuff, including setting NODE_ENV
-  mode: 'development',
-  // gnerate source maps to help debug in browser
-  devtool: 'source-map',
-  // where to build dev files to for webpack-serve to work
-  output: {
-    path: path.resolve(basedir, 'build', 'public'),
-    pathinfo: true,
-    filename: '[name].[hash].js',
-    chunkFilename: '[id].[hash].js',
-    publicPath: 'http://localhost:2992/', // needed to get correct path in dev manifest file
-  },
-};
-
-const explorerConfig = {
-  entry: {
-    // the entry point for the explorer tool
-    app_js: [path.resolve(basedir, 'src', 'explorerIndex.js')],
-    // the entry point for explorer-specific style sheets
-    app_css: [path.resolve(basedir, 'src', 'styles', 'explorer', 'explorer.scss')],
-  },
-};
-
-module.exports = merge.smart(baseConfig, devConfig, explorerConfig);
+module.exports = baseConfig;
