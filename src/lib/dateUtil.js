@@ -120,7 +120,9 @@ export function solrDateToMoment(solrDateString, strict = true) {
 }
 
 export function storyPubDateToMoment(solrDateString, strict = true) {
-  return moment(solrDateString, DB_DATE_FORMAT, strict);
+  // need to trim date here because sometimes it has fractional seconds as a decimal and the
+  // intl helper can't format this
+  return moment(solrDateString.substring(0, 19), DB_DATE_FORMAT, strict);
 }
 
 export function storyPubDateToTimestamp(solrDateString, strict = true) {
