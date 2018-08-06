@@ -112,7 +112,7 @@ class QueryTotalAttentionResultsContainer extends React.Component {
                 onClick={() => this.setView(VIEW_REGULAR)}
               >
                 <ListItemText>
-                  <FormattedMessage {...localMessages.viewNormalized} values={{ name: q.label }} />
+                  <FormattedMessage {...localMessages.viewNormalized} />
                 </ListItemText>
               </MenuItem>
               <MenuItem
@@ -121,7 +121,7 @@ class QueryTotalAttentionResultsContainer extends React.Component {
                 onClick={() => this.setView(VIEW_NORMALIZED)}
               >
                 <ListItemText>
-                  <FormattedMessage {...localMessages.viewRegular} values={{ name: q.label }} />
+                  <FormattedMessage {...localMessages.viewRegular} />
                 </ListItemText>
               </MenuItem>
             </ActionMenu>

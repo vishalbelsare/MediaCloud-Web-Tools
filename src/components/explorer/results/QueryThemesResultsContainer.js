@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { injectIntl, FormattedHTMLMessage } from 'react-intl';
+import { injectIntl, FormattedHTMLMessage, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -33,7 +33,7 @@ class QueryThemesResultsContainer extends React.Component {
   }
   render() {
     const { results, queries, handleThemeClicked, selectedTabIndex, tabSelector } = this.props;
-    const { formatMessage, formatNumber } = this.props.intl;
+    const { formatNumber } = this.props.intl;
     let rawData = [];
     let content = null;
     if (results) {
@@ -97,7 +97,7 @@ class QueryThemesResultsContainer extends React.Component {
                   onTouchTap={() => downloadExplorerSvg(q.label, 'sampled-nyt_themes', BUBBLE_CHART_DOM_ID)}
                 >
                   <ListItemText>
-                    <FormattedMessage {...localMessages.downloadSvg} values={ name: q.label } />
+                    <FormattedMessage {...localMessages.downloadSvg} values={{ name: q.label }} />
                   </ListItemText>
                   <ListItemIcon>
                     <DownloadButton />

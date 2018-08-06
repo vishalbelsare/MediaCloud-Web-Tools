@@ -40,7 +40,7 @@ class WordSelectWrapper extends React.Component {
         <Row>
           <Col lg={3}>
             <Select
-              floatingLabelText="Left Column"
+              label="Left Column"
               value={leftQuery.index || queries[0].index}
               onChange={(...args) => this.selectThisQuery(LEFT, args[2])}
               fullWidth
@@ -50,7 +50,7 @@ class WordSelectWrapper extends React.Component {
           </Col>
           <Col>
             <Select
-              floatingLabelText="Right Column"
+              label="Right Column"
               value={rightQuery ? rightQuery.index : queries[1].index}
               onChange={(...args) => this.selectThisQuery(RIGHT, args[2])}
             >

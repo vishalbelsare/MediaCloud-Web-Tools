@@ -67,7 +67,8 @@ class ActionMenu extends React.Component {
             <FormattedMessage {...actionTextMsg} />
           </a>
           <Popover
-            open={this.state.anchorEl}
+            open={Boolean(anchorEl)}
+            onClick={this.handlePopupOpen}
             onClose={this.handlePopupClose}
           >
             {children}

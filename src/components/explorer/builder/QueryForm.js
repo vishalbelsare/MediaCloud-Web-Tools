@@ -95,7 +95,7 @@ class QueryForm extends React.Component {
                     name="q"
                     type="text"
                     value={currentQ}
-                    multiLine
+                    multiline
                     rows={3}
                     rowsMax={4}
                     fullWidth
@@ -139,7 +139,7 @@ class QueryForm extends React.Component {
                     name="startDate"
                     type="inline"
                     component={renderTextField}
-                    underlineShow={false}
+                    disableUnderline
                     disabled={!isEditable}
                     onChange={onDateChange}
                   />
@@ -150,7 +150,7 @@ class QueryForm extends React.Component {
                     name="endDate"
                     type="inline"
                     component={renderTextField}
-                    underlineShow={false}
+                    disableUnderline
                     disabled={!isEditable}
                     onChange={onDateChange}
                   />
@@ -180,7 +180,7 @@ class QueryForm extends React.Component {
                     label={buttonLabel}
                     disabled={submitting}
                     onClick={onWillSearch}
-                    primary
+                    color="primary"
                   />
                 </div>
               </Col>

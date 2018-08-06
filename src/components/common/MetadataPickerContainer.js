@@ -75,11 +75,10 @@ const MetadataPickerContainer = (props) => {
           // searchText={initialText}
           name={name}
           component={renderAutoComplete}
-          hintText={formatMessage(localMessages.hintText, { label })}
-          floatingLabelText={floatingLabelText || label}
+          label={formatMessage(localMessages.hintText, { label })}
           openOnFocus
           fullWidth
-          dataSource={tags}
+          options={tags}
           dataSourceConfig={{ text: 'label', value: 'tags_id' }}
           maxSearchResults={10}
         />

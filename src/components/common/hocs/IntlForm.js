@@ -86,22 +86,24 @@ function withIntlForm(Component) {
       );
     }
 
-    renderNoSsr = ({ input, meta: { touched, error }, onNewRequest: onNewRequestFunc, ...custom }) => {
+    renderAutoComplete = ({ input, meta: { touched, error }, onNewRequest: onNewRequestFunc, ...custom }) => {
       const intlCustom = this.intlCustomProps(custom);
       return (
-        <NoSsr
-          className="form-field-NoSsr"
-          {...input}
-          error={touched && (error ? this.intlIfObject(error) : null)}
-          onNewRequest={(currentValue, index) => {
-            if (onNewRequestFunc && typeof onNewRequestFunc === 'function') {
-              onNewRequestFunc(currentValue, index);
-            }
-            return input.onChange(intlCustom.dataSourceConfig ? currentValue[intlCustom.dataSourceConfig.value] : currentValue);
-          }}
-          {...intlCustom}
-          filter={NoSsr.fuzzyFilter}
-        />
+        <NoSsr>
+          <Select
+            className="form-field-NoSsr"
+            {...input}
+            error={touched && (error ? this.intlIfObject(error) : null)}
+            onNewRequest={(currentValue, index) => {
+              if (onNewRequestFunc && typeof onNewRequestFunc === 'function') {
+                onNewRequestFunc(currentValue, index);
+              }
+              return input.onChange(intlCustom.dataSourceConfig ? currentValue[intlCustom.dataSourceConfig.value] : currentValue);
+            }}
+            {...intlCustom}
+            filter={NoSsr.fuzzyFilter}
+          />
+        </NoSsr>
       );
     }
 
@@ -111,7 +113,7 @@ function withIntlForm(Component) {
         renderTextField: this.renderTextField,
         renderCheckbox: this.renderCheckbox,
         renderSelect: this.renderSelect,
-        renderNoSsr: this.renderNoSsr,
+        renderAutoComplete: this.renderAutoComplete,
         renderTextFieldWithFocus: this.renderTextFieldWithFocus,
       };
       return (

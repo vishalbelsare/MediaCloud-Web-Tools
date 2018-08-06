@@ -198,9 +198,7 @@ class EditableWordCloudDataCard extends React.Component {
           onClick={this.toggleEditing}
         >
           <ListItemText>{wcChoice}</ListItemText>
-          <ListItemIcon>
-            {(this.state.view === VIEW_ORDERED) ? <EditButton /> : undefined}
-          </ListItemIcon>
+          {(this.state.view === VIEW_ORDERED) ? <ListItemIcon><EditButton /></ListItemIcon> : ''}
         </MenuItem>
       </span>
     );

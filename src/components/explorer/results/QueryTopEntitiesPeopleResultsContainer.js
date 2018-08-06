@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { injectIntl, FormattedHTMLMessage } from 'react-intl';
+import { injectIntl, FormattedHTMLMessage, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -29,7 +29,7 @@ class QueryTopEntitiesPeopleResultsContainer extends React.Component {
   }
   render() {
     const { results, queries, handleEntitySelection, tabSelector, selectedTabIndex } = this.props;
-    const { formatMessage, formatNumber } = this.props.intl;
+    const { formatNumber } = this.props.intl;
     let content = null;
     if (results) {
       const rawData = results[selectedTabIndex] ? results[selectedTabIndex].results : [];

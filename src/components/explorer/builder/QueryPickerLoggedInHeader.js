@@ -14,6 +14,17 @@ const localMessages = {
 };
 
 class QueryPickerLoggedInHeader extends React.Component {
+  state = {
+    anchorEl: null,
+  };
+
+  handleClick = (event) => {
+    this.setState({ anchorEl: event.currentTarget });
+  };
+
+  handleClose = () => {
+    this.setState({ anchorEl: null });
+  };
   render() {
     const { query, isDeletable, onColorChange, onDelete, onLabelEditRequest } = this.props;
     let nameInfo = <div />;
@@ -35,14 +46,17 @@ class QueryPickerLoggedInHeader extends React.Component {
     }
     if (menuChildren !== null) {
       iconOptions = (
-        <Menu
-          className="query-picker-icon-button"
-          iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
-          anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
-          targetOrigin={{ horizontal: 'left', vertical: 'top' }}
-        >
-          {menuChildren}
-        </Menu>
+        <div className="query-picker-icon-button">
+          <IconButton className="query-picker-icon-button"><MoreVertIcon /></IconButton>
+          <Menu
+            open={Boolean(this.state.anchorEl)} // I don't understand why we have to do this - why isn't it part of the compoennt?
+            className="query-picker-icon-button"
+            anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
+            targetOrigin={{ horizontal: 'left', vertical: 'top' }}
+          >
+            {menuChildren}
+          </Menu>
+        </div>
       );
       let abbrevQuery = query.label;
       if (abbrevQuery.length > QUERY_LABEL_CHARACTER_LIMIT) {

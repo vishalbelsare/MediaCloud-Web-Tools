@@ -124,7 +124,7 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
               className="action-icon-menu-item"
               disabled={this.state.view === VIEW_REGULAR}
               onClick={() => this.setView(VIEW_REGULAR)}
-             >
+            >
               <FormattedMessage {...localMessages.withKeywords} />
             </MenuItem>
             <MenuItem
