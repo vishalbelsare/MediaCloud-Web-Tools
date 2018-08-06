@@ -21,10 +21,8 @@ class ActionMenu extends React.Component {
     }
   }
   handlePopupOpen = (event) => {
-    event.preventDefault();
-    this.setState({
-      anchorEl: event.currentTarget.parentElement,
-    });
+    event.preventDefault(); // don't go anywhere on anchor click
+    this.setState({ anchorEl: event.currentTarget });
   }
   handlePopupClose = () => {
     this.setState({ anchorEl: null });
@@ -68,8 +66,12 @@ class ActionMenu extends React.Component {
           </a>
           <Popover
             open={Boolean(anchorEl)}
+            anchorEl={this.state.anchorEl}
             onClick={this.handlePopupOpen}
-            onClose={this.handlePopupClose}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right',
+            }}
           >
             {children}
           </Popover>
