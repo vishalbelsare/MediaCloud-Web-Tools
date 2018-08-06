@@ -29,7 +29,7 @@ const localMessages = {
 const formSelector = formValueSelector('queryForm');
 
 class QueryPicker extends React.Component {
-  handleColorChange(newColorInfo) {
+  handleColorChange = (newColorInfo) => {
     // when user changes color we want to change it on all charts right away
     const { selected, formQuery, updateCurrentQuery } = this.props;
     const updatedQuery = {
@@ -41,7 +41,7 @@ class QueryPicker extends React.Component {
     updateCurrentQuery(updatedQuery, 'color');
   }
 
-  handleMediaDelete(toBeDeletedObj) {
+  handleMediaDelete = (toBeDeletedObj) => {
     // the user has removed media from the Query Form SourceCollectionsFieldList
     const { selected, formQuery, updateCurrentQuery } = this.props; // formQuery same as selected
     // filter out removed ids...
@@ -56,7 +56,7 @@ class QueryPicker extends React.Component {
     updateCurrentQuery(updatedMedia, null);
   }
 
-  handleMediaChange(sourceAndCollections) {
+  handleMediaChange = (sourceAndCollections) => {
     // the user has picked new sources and/or collections so we need to save in order to update the list onscreen
     const { selected, formQuery, updateCurrentQueryThenReselect } = this.props;
     const updatedQuery = {
@@ -70,7 +70,7 @@ class QueryPicker extends React.Component {
     updateCurrentQueryThenReselect(updatedQuery);
   }
 
-  saveAndSearch() {
+  saveAndSearch = () => {
     // wrap the save handler here because we need to save the changes to the selected query the user
     // might have made on the form, and then search
     const { onSearch, queries, isLoggedIn, updateOneQuery } = this.props;
@@ -92,7 +92,7 @@ class QueryPicker extends React.Component {
     onSearch();
   }
 
-  saveThisSearch(queryName) {
+  saveThisSearch = (queryName) => {
     const { queries, sendAndSaveUserSearch } = this.props; // formQuery same as selected
     // filter out removed ids...
     const searchstr = generateQueryParamString(queries.map(q => ({
@@ -108,7 +108,7 @@ class QueryPicker extends React.Component {
     sendAndSaveUserSearch(userSearch);
   }
 
-  handleSelectedQueryChange(nextSelectedQuery, nextSelectedIndex) {
+  handleSelectedQueryChange = (nextSelectedQuery, nextSelectedIndex) => {
     const { handleQuerySelected } = this.props;
     // first update the one we are unmounting
     this.saveChangesToSelectedQuery();
@@ -116,7 +116,7 @@ class QueryPicker extends React.Component {
     handleQuerySelected(nextSelectedQuery, nextSelectedQuery.index ? nextSelectedQuery.index : nextSelectedIndex);
   }
 
-  handleDeleteAndSelectQuery(query) {
+  handleDeleteAndSelectQuery = (query) => {
     const { queries, handleDeleteQuery } = this.props;
     const queryIndex = queries.findIndex(q => q.index !== null && q.index === query.index);
     const replaceSelectionWithWhichQuery = queryIndex === 0 ? 1 : 0; // replace with the query, not the position
@@ -125,19 +125,19 @@ class QueryPicker extends React.Component {
     }
   }
 
-  saveChangesToSelectedQuery() {
+  saveChangesToSelectedQuery = () => {
     const { selected, formQuery, updateCurrentQuery } = this.props;
     const updatedQuery = Object.assign({}, selected, formQuery);
     updateCurrentQuery(updatedQuery, 'label');
   }
 
-  isDeletable() {
+  isDeletable = () => {
     const { queries } = this.props;
     const unDeletedQueries = queries.filter(q => q.deleted !== true);
     return unDeletedQueries.length >= 2; // because we always have an empty query in the query array
   }
 
-  updateDemoQueryLabel(query, newValue) {
+  updateDemoQueryLabel = (query, newValue) => {
     // update both label and q for query
     const { updateCurrentQuery } = this.props;
     const updatedQuery = { ...query };
@@ -148,7 +148,7 @@ class QueryPicker extends React.Component {
   }
 
   // called by query picker to update things like label or color
-  updateQueryProperty(query, propertyName, newValue) {
+  updateQueryProperty = (query, propertyName, newValue) => {
     const { updateCurrentQuery, formQuery } = this.props;
     const updatedQuery = {
       ...query,
