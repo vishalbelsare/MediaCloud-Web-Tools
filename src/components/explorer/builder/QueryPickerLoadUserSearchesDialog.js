@@ -12,6 +12,7 @@ import Link from 'react-router/lib/Link';
 import { DeleteButton } from '../../common/IconButton';
 import AppButton from '../../common/AppButton';
 import { getDateFromTimestamp } from '../../../lib/dateUtil';
+import messages from '../../../resources/messages';
 
 const STORY_SEARCH_RELEASE_DATE = new Date(2018, 5, 18);
 
@@ -61,10 +62,11 @@ class QueryPickerLoadUserSearchesDialog extends React.Component {
     const actions = [
       <Button
         label="Done"
-        primary
-        keyboardFocused
+        color="primary"
         onClick={this.handleDialogClose}
-      />,
+      >
+        <FormattedMessage {...messages.done} />
+      </Button>,
     ];
     let searchList;
     if (searches !== null && searches !== undefined && searches.length > 0) {
@@ -105,7 +107,6 @@ class QueryPickerLoadUserSearchesDialog extends React.Component {
     return (
       <div className="load-saved-search-wrapper">
         <Dialog
-          modal={false}
           open={this.state.loadSearchDialogOpen}
           onClose={this.handleDialogClose}
           autoScrollBodyContent
