@@ -140,7 +140,7 @@ const TopicDetailForm = (props) => {
         </Col>
       </Row>
       <Row>
-        <Col lg={10}>
+        <Col lg={12}>
           <br />
           <ExpansionPanel>
             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
@@ -148,43 +148,37 @@ const TopicDetailForm = (props) => {
             </ExpansionPanelSummary>
             <Permissioned onlyRole={PERMISSION_ADMIN}>
               <ExpansionPanelDetails>
-                <Typography>
-                  <Field
-                    name="max_stories"
-                    component={renderTextField}
-                    type="inline"
-                    fullWidth
-                    // defaultValue="100000"
-                    label={formatMessage(localMessages.maxStories)}
-                    helpertext={100000}
-                  />
-                  <small><FormattedMessage {...localMessages.maxSeedStoriesHelp} /></small>
-                </Typography>
+                <Field
+                  name="max_stories"
+                  component={renderTextField}
+                  type="inline"
+                  fullWidth
+                  // defaultValue="100000"
+                  label={formatMessage(localMessages.maxStories)}
+                  helpertext={100000}
+                />
+                <Typography><small><FormattedMessage {...localMessages.maxSeedStoriesHelp} /></small></Typography>
               </ExpansionPanelDetails>
             </Permissioned>
             <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
               <ExpansionPanelDetails>
-                <Typography>
-                  <Field
-                    name="ch_monitor_id"
-                    component={renderTextField}
-                    fullWidth
-                  />
-                  <small><FormattedMessage {...localMessages.crimsonHexagonHelp} /></small>
-                </Typography>
+                <Field
+                  name="ch_monitor_id"
+                  component={renderTextField}
+                  fullWidth
+                />
+                <Typography><small><FormattedMessage {...localMessages.crimsonHexagonHelp} /></small></Typography>
               </ExpansionPanelDetails>
             </Permissioned>
             <ExpansionPanelDetails>
-              <Typography>
-                <Field
-                  name="max_iterations"
-                  component={renderSelect}
-                  fullWidth
-                >
-                  {iterations.map(t => <MenuItem key={t} value={t}>{t === 0 ? `${t} - no spidering` : t}</MenuItem>)}
-                </Field>
-                <small><FormattedMessage {...localMessages.maxIterationsHelp} /></small>
-              </Typography>
+              <Field
+                name="max_iterations"
+                component={renderSelect}
+                fullWidth
+              >
+                {iterations.map(t => <MenuItem key={t} value={t}>{t === 0 ? `${t} - no spidering` : t}</MenuItem>)}
+              </Field>
+              <Typography><small><FormattedMessage {...localMessages.maxIterationsHelp} /></small></Typography>
             </ExpansionPanelDetails>
           </ExpansionPanel>
         </Col>
