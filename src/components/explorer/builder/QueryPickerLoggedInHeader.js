@@ -58,6 +58,7 @@ class QueryPickerLoggedInHeader extends React.Component {
               horizontal: 'center',
             }}
             anchorEl={this.state.anchorEl}
+            onBackdropClick={this.handleClose}
             onClose={this.handleClose}
           >
             {menuChildren}

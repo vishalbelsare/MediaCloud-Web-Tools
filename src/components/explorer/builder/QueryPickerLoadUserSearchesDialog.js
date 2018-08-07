@@ -1,8 +1,11 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { injectIntl, FormattedDate, FormattedHTMLMessage } from 'react-intl';
+import { injectIntl, FormattedDate, FormattedHTMLMessage, FormattedMessage } from 'react-intl';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
 import { Col } from 'react-flexbox-grid/lib';
 import { List, ListItem } from '@material-ui/core/List';
 import Link from 'react-router/lib/Link';
@@ -102,14 +105,16 @@ class QueryPickerLoadUserSearchesDialog extends React.Component {
     return (
       <div className="load-saved-search-wrapper">
         <Dialog
-          title={formatMessage(localMessages.loadSearchTitle)}
           modal={false}
-          actions={actions}
           open={this.state.loadSearchDialogOpen}
-          onRequestClose={this.handleDialogClose}
+          onClose={this.handleDialogClose}
           autoScrollBodyContent
         >
-          {searchList}
+          <DialogTitle><FormattedMessage {...localMessages.loadSearchTitle} /></DialogTitle>
+          <DialogActions>{actions}</DialogActions>
+          <DialogContent>
+            {searchList}
+          </DialogContent>
         </Dialog>
         <AppButton
           style={{ marginTop: 30 }}
