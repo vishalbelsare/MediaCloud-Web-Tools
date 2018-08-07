@@ -53,9 +53,12 @@ class QueryPickerLoggedInHeader extends React.Component {
             open={Boolean(this.state.anchorEl)} // I don't understand why we have to do this - why isn't it part of the compoennt?
             className="query-picker-icon-button"
             anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
-            targetOrigin={{ horizontal: 'left', vertical: 'top' }}
+            transformOrigin={{
+              vertical: 'bottom',
+              horizontal: 'center',
+            }}
             anchorEl={this.state.anchorEl}
-            onClose={this.handlePopupClose}
+            onClose={this.handleClose}
           >
             {menuChildren}
           </Menu>
