@@ -68,7 +68,6 @@ class FocusDefinition extends React.Component {
           <FormattedMessage {...messages.query} />: <code>{focusDefinition.query}</code>
         </p>
         <Dialog
-          modal
           open={this.state.deleteConfirmationOpen}
           onClose={this.handleDeleteCancel}
           className="app-dialog"
@@ -80,7 +79,7 @@ class FocusDefinition extends React.Component {
             {dialogActions}
           </DialogActions>
           <DialogContent>
-            <p><FormattedMessage {...localMessages.deleteConfirmDescription} /></p>
+            <FormattedMessage {...localMessages.deleteConfirmDescription} />
           </DialogContent>
         </Dialog>
       </div>
