@@ -75,9 +75,6 @@ class ModifyTopicDialog extends React.Component {
           <DialogTitle>
             {formatMessage(localMessages.modifyTopic)}
           </DialogTitle>
-          <DialogActions>
-            {dialogActions}
-          </DialogActions>
           <DialogContent>
             <DescriptiveButton
               svgIcon={(<SnapshotIcon height={40} />)}
@@ -117,6 +114,9 @@ class ModifyTopicDialog extends React.Component {
               onClick={() => onUrlChange(`/topics/${topicId}/edit`)}
               id="modify-topic-settings"
             />
+            <DialogActions>
+              {dialogActions}
+            </DialogActions>
           </DialogContent>
         </Dialog>
       </div>
