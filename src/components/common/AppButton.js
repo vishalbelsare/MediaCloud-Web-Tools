@@ -26,7 +26,7 @@ class AppButton extends React.Component {
   }
 
   render() {
-    const { flat, className } = this.props;
+    const { flat, className, children } = this.props;
     const { formatMessage } = this.props.intl;
     const customClassName = className || '';
     const buttonProps = {
@@ -40,6 +40,10 @@ class AppButton extends React.Component {
     if ((buttonProps.label) && (typeof buttonProps.label === 'object')) {
       buttonProps.label = formatMessage(buttonProps.label);
     }
+    let textLabel = children;
+    if (children === undefined) {
+      textLabel = buttonProps.label;
+    }
     // material-ui shim
     if (buttonProps.primary) {
       buttonProps.color = 'primary';
@@ -49,9 +53,9 @@ class AppButton extends React.Component {
     let content = null;
     if (flat) {
       delete buttonProps.flat;
-      content = <Button variant="outlined" {...buttonProps}>{buttonProps.label}</Button>;
+      content = <Button variant="outlined" {...buttonProps}>{textLabel}</Button>;
     } else {
-      content = <Button variant="contained" {...buttonProps}>{buttonProps.label}</Button>;
+      content = <Button variant="contained" {...buttonProps}>{textLabel}</Button>;
     }
     return content;
   }
@@ -63,6 +67,7 @@ AppButton.propTypes = {
   disabled: PropTypes.bool,
   flat: PropTypes.bool,
   className: PropTypes.string,
+  children: PropTypes.node,
   // from composition chain
   intl: PropTypes.object.isRequired,
 };

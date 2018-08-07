@@ -3,6 +3,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import MenuItem from '@material-ui/core/MenuItem';
+import ListItemText from '@material-ui/core/ListItemText';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import ActionMenu from '../../../common/ActionMenu';
 import { resetStory } from '../../../../actions/storyActions';
@@ -12,6 +13,7 @@ import StoryEntitiesContainer from '../../../common/story/StoryEntitiesContainer
 import StoryNytThemesContainer from '../../../common/story/StoryNytThemesContainer';
 import messages from '../../../../resources/messages';
 import { urlToSource } from '../../../../lib/urlUtil';
+import { ACTION_MENU_ITEM_CLASS } from '../../../../lib/explorerUtil';
 import { TAG_SET_NYT_THEMES } from '../../../../lib/tagUtil';
 import { trimToMaxLength } from '../../../../lib/stringUtil';
 import StatBar from '../../../common/statbar/StatBar';
@@ -49,16 +51,20 @@ class SelectedStoryDrillDownContainer extends React.Component {
               <Col lg={12}>
                 <ActionMenu>
                   <MenuItem
-                    className="action-icon-menu-item"
+                    className={ACTION_MENU_ITEM_CLASS}
                     onTouchTap={handleClose}
                   >
-                    <FormattedMessage {...localMessages.close} />
+                    <ListItemText>
+                      <FormattedMessage {...localMessages.close} />
+                    </ListItemText>
                   </MenuItem>
                   <MenuItem
-                    className="action-icon-menu-item"
+                    className={ACTION_MENU_ITEM_CLASS}
                     onTouchTap={() => this.openNewPage(storyInfo.url)}
                   >
-                    <FormattedMessage {...localMessages.readThisStory} />
+                    <ListItemText>
+                      <FormattedMessage {...localMessages.readThisStory} />
+                    </ListItemText>
                   </MenuItem>
                 </ActionMenu>
                 <h2>

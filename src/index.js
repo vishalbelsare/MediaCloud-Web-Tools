@@ -59,8 +59,8 @@ function reallyInitializeApp(routes) {
           color: 'white',
         },
       },
-      MuiModal: {
-        zindex: 900,
+      zIndex: {
+        modal: 900,
       },
     },
   });

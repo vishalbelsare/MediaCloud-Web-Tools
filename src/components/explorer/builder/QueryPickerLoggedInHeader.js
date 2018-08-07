@@ -7,7 +7,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import IconButton from '@material-ui/core/IconButton';
 import ColorPicker from '../../common/ColorPicker';
 import messages from '../../../resources/messages';
-import { QUERY_LABEL_CHARACTER_LIMIT } from '../../../lib/explorerUtil';
+import { QUERY_LABEL_CHARACTER_LIMIT, ACTION_MENU_ITEM_CLASS } from '../../../lib/explorerUtil';
 
 const localMessages = {
   title: { id: 'explorer.querypicker.title', defaultMessage: 'Rename Query' },
@@ -33,26 +33,29 @@ class QueryPickerLoggedInHeader extends React.Component {
     if (isDeletable()) { // if this is not the only QueryPickerItem
       menuChildren = (
         <div>
-          <MenuItem onTouchTap={() => onLabelEditRequest()}><FormattedMessage {...localMessages.title} /></MenuItem>
-          <MenuItem onTouchTap={() => onDelete(query)}><FormattedMessage {...messages.delete} /></MenuItem>
+          <MenuItem className={ACTION_MENU_ITEM_CLASS} onClick={() => onLabelEditRequest()}><FormattedMessage {...localMessages.title} /></MenuItem>
+          <MenuItem className={ACTION_MENU_ITEM_CLASS} onClick={() => onDelete(query)}><FormattedMessage {...messages.delete} /></MenuItem>
         </div>
       );
     } else {
       menuChildren = (
         <div>
-          <MenuItem onTouchTap={() => onLabelEditRequest()}><FormattedMessage {...localMessages.title} /></MenuItem>
+          <MenuItem className={ACTION_MENU_ITEM_CLASS} onClick={() => onLabelEditRequest()}><FormattedMessage {...localMessages.title} /></MenuItem>
         </div>
       );
     }
     if (menuChildren !== null) {
       iconOptions = (
         <div className="query-picker-icon-button">
-          <IconButton className="query-picker-icon-button"><MoreVertIcon /></IconButton>
+          <IconButton onClick={this.handleClick} className="query-picker-icon-button" aria-haspopup="true" aria-owns="logged-in-header-menu"><MoreVertIcon /></IconButton>
           <Menu
+            id="logged-in-header-menu"
             open={Boolean(this.state.anchorEl)} // I don't understand why we have to do this - why isn't it part of the compoennt?
             className="query-picker-icon-button"
             anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
             targetOrigin={{ horizontal: 'left', vertical: 'top' }}
+            anchorEl={this.state.anchorEl}
+            onClose={this.handlePopupClose}
           >
             {menuChildren}
           </Menu>

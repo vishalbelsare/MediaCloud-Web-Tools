@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import Menu from '@material-ui/core/Menu';
-import Popover from '@material-ui/core/Popover';
+import Button from '@material-ui/core/Button';
 import { MoreOptionsButton, CloseButton } from './IconButton';
 import { getBrandDarkColor, getBrandDarkerColor } from '../../styles/colors';
 // import AppButton from './AppButton';
@@ -36,9 +36,8 @@ class ActionMenu extends React.Component {
 
   render() {
     const { color, openButton, closeButton, children, actionTextMsg } = this.props;
-    const { anchorEl } = this.state;
-    const { formatMessage } = this.props.intl;
     const otherProps = {};
+    const { anchorEl } = this.state;
     otherProps.backgroundColor = this.state.backgroundColor;
     let closeIconButton = (
       <CloseButton onClick={this.handlePopupClose} color={color} {...otherProps} aria-controls="action-menu" />
@@ -57,50 +56,43 @@ class ActionMenu extends React.Component {
     const icon = (this.state.anchorEl) ? closeIconButton : openIconButton;
 
     // support text or icon-driven menus
-    let menuContent;
+    let buttonContent;
     if (actionTextMsg) {
-      menuContent = (
-        <span>
-          <a className="text-trigger" role="button" href={`#${formatMessage(actionTextMsg)}`} onClick={this.handlePopupOpen}>
-            <FormattedMessage {...actionTextMsg} />
-          </a>
-          <Popover
-            open={Boolean(anchorEl)}
-            anchorEl={this.state.anchorEl}
-            onClick={this.handlePopupOpen}
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'right',
-            }}
-          >
-            {children}
-          </Popover>
-        </span>
+      buttonContent = (
+        <Button
+          className="action-menu-text"
+          onClick={this.handlePopupOpenClick}
+          aria-controls="action-menu"
+          aria-haspopup="true"
+          aria-owns="action-menu"
+        >
+          <FormattedMessage {...actionTextMsg} />
+        </Button>
       );
     } else {
-      menuContent = (
-        <span>
-          {icon}
-          <Menu
-            id="action-menu"
-            anchorEl={this.state.anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={this.handlePopupClose}
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'right',
-            }}
-            getContentAnchorEl={null}
-          >
-            {children}
-          </Menu>
-        </span>
-      );
+      buttonContent = icon;
     }
 
     return (
       <div className="action-icon-menu">
-        {menuContent}
+        {buttonContent}
+        <Menu
+          id="action-menu"
+          anchorEl={anchorEl}
+          onClose={this.handlePopupClose}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+          transformOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+          }}
+          open={Boolean(this.state.anchorEl)}
+          getContentAnchorEl={null}
+        >
+          {children}
+        </Menu>
       </div>
     );
   }

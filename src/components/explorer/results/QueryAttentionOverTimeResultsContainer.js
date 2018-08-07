@@ -13,7 +13,7 @@ import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
 import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import { oneDayLater, solrFormat } from '../../../lib/dateUtil';
-import { postToDownloadUrl } from '../../../lib/explorerUtil';
+import { postToDownloadUrl, ACTION_MENU_ITEM_CLASS } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
 import { FETCH_INVALID } from '../../../lib/fetchConstants';
 
@@ -107,8 +107,8 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
             {safeResults.map((q, idx) =>
               <MenuItem
                 key={idx}
-                className="action-icon-menu-item"
-                onTouchTap={() => this.downloadCsv(q)}
+                className={ACTION_MENU_ITEM_CLASS}
+                onClick={() => this.downloadCsv(q)}
               >
                 <ListItemText>
                   <FormattedMessage {...localMessages.downloadCsv} values={{ name: q.label }} />
@@ -121,18 +121,22 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
           </ActionMenu>
           <ActionMenu actionTextMsg={messages.viewOptions}>
             <MenuItem
-              className="action-icon-menu-item"
+              className={ACTION_MENU_ITEM_CLASS}
               disabled={this.state.view === VIEW_REGULAR}
               onClick={() => this.setView(VIEW_REGULAR)}
             >
-              <FormattedMessage {...localMessages.withKeywords} />
+              <ListItemText>
+                <FormattedMessage {...localMessages.withKeywords} />
+              </ListItemText>
             </MenuItem>
             <MenuItem
-              className="action-icon-menu-item"
+              className={ACTION_MENU_ITEM_CLASS}
               disabled={this.state.view === VIEW_NORMALIZED}
               onClick={() => this.setView(VIEW_NORMALIZED)}
             >
-              <FormattedMessage {...localMessages.withoutKeywords} />
+              <ListItemText>
+                <FormattedMessage {...localMessages.withoutKeywords} />
+              </ListItemText>
             </MenuItem>
           </ActionMenu>
         </div>

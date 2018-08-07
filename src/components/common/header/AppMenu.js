@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
-import Button from '@material-ui/core/Button';
+import Menu from '@material-ui/core/Popover';
+import AppButton from '../AppButton';
 // import MenuItem from '@material-ui/core/MenuItem';
-import Popover from '@material-ui/core/Popover';
+
 import { ArrowDropDownButton, ArrowDropUpButton } from '../../common/IconButton';
 
 class AppMenu extends React.Component {
@@ -54,37 +55,39 @@ class AppMenu extends React.Component {
     }
     // let titleButtonClickHandler;
     let menuHeader = (
-      <Button
+      <AppButton
         color="primary"
         variant="text"
         onClick={event => onTitleClick(event)}
       >
         {formatMessage(titleMsg)}
-      </Button>
+      </AppButton>
     );
     if (showMenu) {
       const whichIcon = this.whichArrowIcon();
       menuHeader = (
-        <Button
-          color="primary"
-          variant="text"
-          onClick={this.toggleMenu}
-          icon={whichIcon}
-        >
-          {formatMessage(titleMsg)}
-        </Button>
+        <div>
+          {whichIcon}
+          <AppButton
+            color="primary"
+            variant="text"
+            onClick={this.toggleMenu}
+          >
+            {formatMessage(titleMsg)}
+          </AppButton>
+        </div>
       );
     }
     return (
       <div className="app-menu">
         {menuHeader}
-        <Popover
+        <Menu
           open={this.state.open}
           anchorEl={this.state.anchorEl}
           onClose={this.close}
         >
           {newItems}
-        </Popover>
+        </Menu>
       </div>
     );
   }
