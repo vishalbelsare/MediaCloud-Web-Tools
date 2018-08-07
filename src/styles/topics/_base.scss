@@ -6,6 +6,13 @@
     color: $topics-primary;
   }
 
+  .chip.chip-collection {
+    div.app-icon.app-icon-large.app-icon-collection {
+      svg {
+        padding-top: 10px;
+      }
+    }
+  }
   .app-icon-filled-star > svg {
     fill: $topics-primary;
   }
@@ -14,6 +21,7 @@
     background-color: $topics-primary;
     li.topics {
       border-bottom: 2px solid white;
+      padding: 0px 10px 10px 10px;
     }
   }
 

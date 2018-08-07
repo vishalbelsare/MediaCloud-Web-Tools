@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
-import Menu from '@material-ui/core/Popover';
+import Menu from '@material-ui/core/Menu';
+import ListItemText from '@material-ui/core/ListItemText';
 import AppButton from '../AppButton';
 // import MenuItem from '@material-ui/core/MenuItem';
 
@@ -67,13 +68,13 @@ class AppMenu extends React.Component {
       const whichIcon = this.whichArrowIcon();
       menuHeader = (
         <div>
-          {whichIcon}
           <AppButton
             color="primary"
             variant="text"
             onClick={this.toggleMenu}
           >
-            {formatMessage(titleMsg)}
+            <ListItemText>{formatMessage(titleMsg)}</ListItemText>
+            {whichIcon}
           </AppButton>
         </div>
       );
