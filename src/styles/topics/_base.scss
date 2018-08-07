@@ -6,18 +6,6 @@
     color: $topics-primary;
   }
 
-  .app-button {
-    &.hovering :hover {
-      background-color: $topics-darker !important;
-    }
-  }
-
-  .app-icon-button {
-    &.hovering :hover {
-      background-color: $topics-darker !important;
-    }  	
-  }
-
   .app-icon-filled-star > svg {
     fill: $topics-primary;
   }
