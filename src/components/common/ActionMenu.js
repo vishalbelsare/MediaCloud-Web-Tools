@@ -22,7 +22,7 @@ class ActionMenu extends React.Component {
   }
   handlePopupOpen = (event) => {
     event.preventDefault(); // don't go anywhere on anchor click
-    this.setState({ anchorEl: event.currentTarget });
+    this.setState({ anchorEl: event.currentTarget.parentElement.parentElement });
   }
   handlePopupClose = () => {
     this.setState({ anchorEl: null });
@@ -43,7 +43,13 @@ class ActionMenu extends React.Component {
       <CloseButton onClick={this.handlePopupClose} color={color} {...otherProps} aria-controls="action-menu" />
     );
     let openIconButton = (
-      <MoreOptionsButton onClick={this.handlePopupOpenClick} color={color} {...otherProps} aria-haspopup="true" aria-owns="action-menu" aria-controls="action-menu" />
+      <MoreOptionsButton
+        className="action-menu-icon"
+        onClick={this.handlePopupOpenClick}
+        aria-haspopup="true"
+        aria-owns="action-menu"
+        aria-controls="action-menu"
+      />
     );
 
     if (openButton) {
