@@ -126,6 +126,7 @@ TopicForm.propTypes = {
   topicNameSearch: PropTypes.object,
   mode: PropTypes.string.isRequired,
   onMediaChange: PropTypes.func.isRequired,
+  meta: PropTypes.object,
 };
 
 function validate(values, props) {
@@ -138,7 +139,7 @@ function validate(values, props) {
     errors.description = localMessages.descriptionError;
   }
   if (emptyString(values.solr_seed_query)) {
-    errors.solr_seed_query = localMessages.seedQueryError;
+    errors.solr_seed_query = formatMessage(localMessages.seedQueryError);
   }
   if (invalidDate(values.start_date) || !isValidSolrDate(values.start_date)) {
     errors.start_date = localMessages.dateError;
@@ -158,16 +159,17 @@ function validate(values, props) {
   return errors;
 }
 
-const asyncValidate = (values, dispatch) => (
+const asyncValidate = (values, dispatch, props) => {
+  const { formatMessage } = props.intl;
   // verify topic name is unique
-  dispatch(fetchTopicWithNameExists(values.name, values.topics_id))
+  return dispatch(fetchTopicWithNameExists(values.name, values.topics_id))
     .then((results) => {
       if (results.nameInUse === true) {
-        const errors = { name: 'error' };
-        throw errors;
+        const error = { name: formatMessage(localMessages.nameInUseError) }; // object
+        throw error;
       }
-    })
-);
+    });
+};
 
 const reduxFormConfig = {
   form: 'topicForm',

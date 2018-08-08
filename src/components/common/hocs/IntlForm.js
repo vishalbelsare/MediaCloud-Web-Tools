@@ -30,17 +30,21 @@ function withIntlForm(Component) {
       return intlCustom;
     };
 
-    renderTextField = ({ input, meta: { error }, ...custom }) => {
+    renderTextField = ({ autoComplete, input, meta: { touched, error, asyncValidating }, ...custom }) => {
       const intlCustom = this.intlCustomProps(custom);
       if (intlCustom && intlCustom.helpertext !== undefined) {
         intlCustom.helperText = intlCustom.helpertext;
       }
       return (
         <TextField
-          className="form-field-text"
-          error={error !== undefined}
+          className={`form-field-text${asyncValidating ? 'async-validating' : ''}`}
           {...input}
           {...intlCustom}
+          error={Boolean(touched && error)}
+          inputProps={{
+            autoComplete,
+          }}
+          helperText={touched ? error : ''}
         />
       );
     };

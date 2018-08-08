@@ -67,7 +67,6 @@ const TopicDetailForm = (props) => {
             component={renderTextField}
             fullWidth
             label={formatMessage(localMessages.name)}
-            helpertext={formatMessage(localMessages.nameError)}
           />
         </Col>
       </Row>
@@ -78,7 +77,6 @@ const TopicDetailForm = (props) => {
             component={renderTextField}
             fullWidth
             label={formatMessage(localMessages.description)}
-            helpertext={formatMessage(localMessages.descriptionError)}
           />
         </Col>
       </Row>

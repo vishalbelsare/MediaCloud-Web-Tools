@@ -5,7 +5,7 @@ import { reduxForm, FieldArray, Field, propTypes } from 'redux-form';
 import withIntlForm from '../../common/hocs/IntlForm';
 import SourceOrCollectionWidget from '../../common/SourceOrCollectionWidget';
 
-const renderCollectionSelector = ({ allowRemoval, fields }) => (
+const renderCollectionSelector = ({ allowRemoval, fields, meta }) => (
   <div>
     {fields.map((name, index) => (
       <Field
@@ -26,6 +26,7 @@ const renderCollectionSelector = ({ allowRemoval, fields }) => (
         }}
       />
     ))}
+    {meta.error}
   </div>
 );
 renderCollectionSelector.propTypes = {
@@ -60,6 +61,7 @@ SourceCollectionsMediaForm.propTypes = {
   selected: PropTypes.object,
   allowRemoval: PropTypes.bool,
   name: PropTypes.string,
+  // valid: PropTypes.bool,  not using - but this is helpful to determine if validation is getting here
   onDelete: PropTypes.func,
 };
 
