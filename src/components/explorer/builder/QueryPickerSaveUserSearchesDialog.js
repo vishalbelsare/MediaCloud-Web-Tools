@@ -1,8 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
 import TextField from '@material-ui/core/TextField';
 import AppButton from '../../common/AppButton';
 
@@ -57,14 +59,16 @@ class QueryPickerSaveUserSearchesDialog extends React.Component {
     const { searchNickname, submitting } = this.props;
     const { formatMessage } = this.props.intl;
     const actions = [
-      <Button
+      <AppButton
+        variant="outlined"
         label="Cancel"
-        secondary
+        color="secondary"
         onClick={this.handleDialogClose}
       />,
-      <Button
+      <AppButton
+        variant="outlined"
         label="Submit"
-        primary
+        color="secondary"
         keyboardFocused
         onClick={this.handleLabelChangeAndClose}
       />,
@@ -72,25 +76,27 @@ class QueryPickerSaveUserSearchesDialog extends React.Component {
     return (
       <div className="save-search-wrapper">
         <Dialog
-          title={formatMessage(localMessages.saveSearchTitle)}
-          modal={false}
-          actions={actions}
           open={this.state.saveSearchDialogOpen}
-          onRequestClose={this.handleDialogClose}
+          onClose={this.handleDialogClose}
         >
-          <p><FormattedMessage {...localMessages.saveSearchDialog} /></p>
-          <TextField
-            className="query-picker-save-search-name"
-            id="searchNameInDialog"
-            name="searchNameInDialog"
-            ref={this.focusQueryInputField}
-            onChange={(e, val) => {
-              this.updateTextInDialog(val);
-            }}
-            hintText={searchNickname}
-          />
+          <DialogTitle><FormattedMessage {...localMessages.saveSearchTitle} /></DialogTitle>
+          <DialogContent>
+            <p><FormattedMessage {...localMessages.saveSearchDialog} /></p>
+            <TextField
+              className="query-picker-save-search-name"
+              id="searchNameInDialog"
+              name="searchNameInDialog"
+              ref={this.focusQueryInputField}
+              onChange={(e, val) => {
+                this.updateTextInDialog(val);
+              }}
+              label={searchNickname}
+            />
+          </DialogContent>
+          <DialogActions>{actions}</DialogActions>
         </Dialog>
         <AppButton
+          variant="outlined"
           style={{ marginTop: 30 }}
           onClick={this.onSaveRequest}
           label={formatMessage(localMessages.saveSearch)}

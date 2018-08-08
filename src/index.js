@@ -43,6 +43,9 @@ function reallyInitializeApp(routes) {
       primary: getBrandColors(),
       secondary: getBrandColors(),
     },
+    dialog: {
+      width: '80%',
+    },
     status: {
       info: 'info',
       warning: 'warning',
@@ -56,6 +59,9 @@ function reallyInitializeApp(routes) {
         outlined: {
           color: getBrandColors().dark,
         },
+      },
+      MuiModal: {
+        paperWidth: '80%',
       },
       zIndex: {
         modal: 900,

@@ -26,7 +26,7 @@ class AppButton extends React.Component {
   }
 
   render() {
-    const { flat, className, children } = this.props;
+    const { variant, className, children } = this.props;
     const { formatMessage } = this.props.intl;
     const customClassName = className || '';
     const buttonProps = {
@@ -51,12 +51,9 @@ class AppButton extends React.Component {
       buttonProps.color = 'secondary';
     }
     let content = null;
-    if (flat) {
-      delete buttonProps.flat;
-      content = <Button variant="outlined" {...buttonProps}>{textLabel}</Button>;
-    } else {
-      content = <Button variant="contained" {...buttonProps}>{textLabel}</Button>;
-    }
+
+    content = <Button variant={variant || 'contained'} {...buttonProps}>{textLabel}</Button>;
+
     return content;
   }
 
@@ -65,7 +62,7 @@ class AppButton extends React.Component {
 AppButton.propTypes = {
   // from parent
   disabled: PropTypes.bool,
-  flat: PropTypes.bool,
+  variant: PropTypes.string,
   className: PropTypes.string,
   children: PropTypes.node,
   // from composition chain
