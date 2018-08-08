@@ -255,11 +255,18 @@ def _cached_topic_split_story_counts(user_mc_key, topics_id, **kwargs):
     results['total_story_count'] = total_stories
     return results
 
+
+@cache.cache_on_arguments(function_key_generator=key_generator)
+def topic_foci_list(user_mc_key, topics_id, focal_sets_id):
+    # This needs user_mc_key in the function signature to make sure the caching is keyed correctly.
+    user_mc = user_admin_mediacloud_client()
+    response = user_mc.topicFociList(topics_id, focal_sets_id)
+    return response
+
+
 @cache.cache_on_arguments(function_key_generator=key_generator)
 def topic_focal_sets(user_mc_key, topics_id, snapshots_id):
-    '''
-    This needs user_mc_key in the function signature to make sure the caching is keyed correctly.
-    '''
+    # This needs user_mc_key in the function signature to make sure the caching is keyed correctly.
     user_mc = user_admin_mediacloud_client()
     response = user_mc.topicFocalSetList(topics_id, snapshots_id=snapshots_id)
     return response

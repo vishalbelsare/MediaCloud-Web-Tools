@@ -7,7 +7,6 @@ import { connect } from 'react-redux';
 import Link from 'react-router/lib/Link';
 
 const localMessages = {
-  pick: { id: 'attention.focalSet.selector.intro', defaultMessage: 'Pick a Set to compare the attention between the Subtopics.' },
   noFocalSet: { id: 'attention.focalSet.selector.none', defaultMessage: '(None)' },
   linktoCreateFocalSet: { id: 'attention.focalSet.selector.none', defaultMessage: "You don't have any subtopics defined. Click this link to build some in order to compare them here." },
 };
@@ -25,10 +24,7 @@ const FocusSetSelectorContainer = (props) => {
   let content = null;
   if (focalSets.length > 0) {
     content = (
-      <div>
-        <p>
-          <FormattedMessage {...localMessages.pick} />
-        </p>
+      <React.Fragment>
         <SelectField
           value={selectedFocalSetId !== NO_FOCAL_SET_SELECTED ? selectedFocalSetId : focalSets[0].focal_sets_id}
           onChange={onFocalSetSelected}
@@ -39,7 +35,7 @@ const FocusSetSelectorContainer = (props) => {
           }
           {noneOption}
         </SelectField>
-      </div>
+      </React.Fragment>
     );
   } else {
     content = (
@@ -71,13 +67,7 @@ FocusSetSelectorContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  fetchStatus: state.topics.selected.focalSets.all.fetchStatus,
   focalSets: state.topics.selected.focalSets.all.list,
 });
 
-export default
-  connect(mapStateToProps)(
-    injectIntl(
-      FocusSetSelectorContainer
-    )
-  );
+export default connect(mapStateToProps)(injectIntl(FocusSetSelectorContainer));

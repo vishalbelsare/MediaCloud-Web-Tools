@@ -163,7 +163,7 @@ def topic_snapshot_generate(topics_id):
 def topic_timespan_list(topics_id, snapshots_id):
     foci_id = request.args.get('focusId')
     timespans = cached_topic_timespan_list(user_mediacloud_key(), topics_id, snapshots_id, foci_id)
-    return jsonify({'list':timespans})
+    return jsonify({'list': timespans})
 
 
 @app.route('/api/topics/<topics_id>/favorite', methods=['PUT'])
