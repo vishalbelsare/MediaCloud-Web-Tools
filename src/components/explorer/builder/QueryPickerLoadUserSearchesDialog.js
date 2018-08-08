@@ -124,13 +124,11 @@ class QueryPickerLoadUserSearchesDialog extends React.Component {
           onClose={this.handleDialogClose}
           maxWidth={'md'}
         >
-          <div style={{ maxWidth: '90%' }}>
-            <DialogTitle><FormattedMessage {...localMessages.loadSearchTitle} /></DialogTitle>
-            <DialogContent>
-              {searchList}
-            </DialogContent>
-            <DialogActions>{actions}</DialogActions>
-          </div>
+          <DialogTitle><FormattedMessage {...localMessages.loadSearchTitle} /></DialogTitle>
+          <DialogContent>
+            {searchList}
+          </DialogContent>
+          <DialogActions>{actions}</DialogActions>
         </Dialog>
         <AppButton
           variant="outlined"
