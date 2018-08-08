@@ -51,8 +51,8 @@ class QueryPickerSaveUserSearchesDialog extends React.Component {
     this.onSaveConfirm();
   };
 
-  updateTextInDialog = (val) => {
-    this.setState({ searchName: val });
+  updateTextInDialog = (ev) => {
+    this.setState({ searchName: ev.target.value });
   };
 
   render() {
@@ -87,9 +87,7 @@ class QueryPickerSaveUserSearchesDialog extends React.Component {
               id="searchNameInDialog"
               name="searchNameInDialog"
               ref={this.focusQueryInputField}
-              onChange={(e, val) => {
-                this.updateTextInDialog(val);
-              }}
+              onChange={this.updateTextInDialog}
               label={searchNickname}
             />
           </DialogContent>
