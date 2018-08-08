@@ -212,7 +212,7 @@ def topic_update(topics_id):
 
     result = user_mc.topicUpdate(topics_id,  media_ids=media_ids_to_add, media_tags_ids=tag_ids_to_add, **args)
 
-    return topic_summary(result['topics'][0]['topics_id']) # give them back new data, so they can update the client
+    return topic_summary(result['topics'][0]['topics_id'])  # give them back new data, so they can update the client
 
 
 @app.route("/api/topics/<topics_id>/spider", methods=['POST'])
