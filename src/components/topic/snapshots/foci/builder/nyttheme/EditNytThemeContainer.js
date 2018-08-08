@@ -40,7 +40,7 @@ const EditNytThemeContainer = (props) => {
           <Field
             name="numberSelected"
             component={renderSelect}
-            floatingLabelText={formatMessage(localMessages.numberLabel)}
+            label={formatMessage(localMessages.numberLabel)}
             value={5}
           >
             <MenuItem value={5}><FormattedMessage {...messages.top5} /></MenuItem>

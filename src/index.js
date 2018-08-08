@@ -53,10 +53,8 @@ function reallyInitializeApp(routes) {
         containedPrimary: {
           color: 'white',
         },
-      },
-      MuiChip: {
-        containedPrimary: {
-          color: 'white',
+        outlined: {
+          color: getBrandColors().dark,
         },
       },
       zIndex: {

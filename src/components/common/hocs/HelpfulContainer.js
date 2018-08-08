@@ -1,11 +1,14 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedHTMLMessage, injectIntl } from 'react-intl';
-import Button from '@material-ui/core/Button';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
 import messages from '../../../resources/messages';
 import { HelpButton } from '../IconButton';
+import AppButton from '../AppButton';
 
 /**
  * Use this with the JS Composition pattern to make a Container that has a help button.
@@ -36,14 +39,13 @@ function withHelp(contentTitleMsg, contentHTMLTextMsg, showHelpSidebar) {
       render() {
         const { formatMessage } = this.props.intl;
         const dialogActions = [
-          <Button
+          <AppButton
             variant="outlined"
             label={formatMessage(messages.ok)}
-            primary
             onClick={this.handleClose}
           />,
         ];
-        const helpButton = <HelpButton color="white" backgroundcolor="lightgrey" onClick={this.handleOpen} />;
+        const helpButton = <HelpButton color="lightgrey" onClick={this.handleOpen} />;
         let content = <br />;
         if (this.state.contentMsg) {
           if (Array.isArray(this.state.contentMsg)) {
@@ -82,14 +84,15 @@ function withHelp(contentTitleMsg, contentHTMLTextMsg, showHelpSidebar) {
           <span className="helpful">
             {displayContent}
             <Dialog
-              title={dialogTitle}
-              actions={dialogActions}
-              modal={false}
               className="app-dialog"
               open={this.state.open}
               onClose={this.handleClose}
             >
-              {content}
+              <DialogTitle>{dialogTitle}</DialogTitle>
+              <DialogContent>
+                {content}
+              </DialogContent>
+              <DialogActions>{dialogActions}</DialogActions>
             </Dialog>
           </span>
         );

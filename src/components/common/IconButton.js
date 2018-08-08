@@ -83,7 +83,7 @@ function composeIconButton(Icon, defaultTooltipMessage, useBackgroundColor = tru
           tooltip={displayTooltip}
           style={{ padding: 0, border: 0, width: defaultWidth || 26, height: defaultHeight || 26, color, backgroundColor }}
         >
-          <Icon color={this.state.color} {...otherProps} />
+          <Icon color={this.state.color} />
         </IconButton>
       );
       let content;
@@ -127,7 +127,7 @@ function composeIconButton(Icon, defaultTooltipMessage, useBackgroundColor = tru
 
 export const ExploreButton = composeIconButton(ExploreIcon, messages.explore);
 
-export const DownloadButton = composeIconButton(DownloadIcon, messages.download, true);
+export const DownloadButton = composeIconButton(DownloadIcon, messages.download);
 
 export const HelpButton = composeIconButton(HelpIcon, messages.help, false);
 
