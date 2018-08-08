@@ -45,7 +45,8 @@ def topic_compare_subtopic_top_words(topics_id):
                for f in focal_set['foci']}
         data.append(row)
     return csv.stream_response(data, headers,
-                               'topic-{}-subtopic-{}-top-words-comparison'.format(topics_id, focal_sets_id))
+                               'topic-{}-subtopic-{}-{}-top-words-comparison'.format(
+                                   topics_id, focal_set['name'], selected_focal_sets_id))
 
 
 @app.route('/api/topics/<topics_id>/words/<word>', methods=['GET'])
@@ -53,7 +54,6 @@ def topic_compare_subtopic_top_words(topics_id):
 @api_error_handler
 def topic_word(topics_id, word):
     response = apicache.topic_word_counts(user_mediacloud_key(), topics_id, q=word)[:1]
-    logger.info(response)
     return jsonify(response)
 
 
