@@ -3,7 +3,6 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import NoSsr from '@material-ui/core/NoSsr';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import { fetchTopicSearchResults } from '../../../actions/topicActions';
@@ -91,16 +90,14 @@ class TopicSearchContainer extends React.Component {
       <div className="async-search topic-search right">
         <SearchButton />
         <div className="fetching">{fetchingStatus}</div>
-        <NoSsr>
-          <Select
-            label={formatMessage(localMessages.searchHint)}
-            autoComplete
-            onClick={this.resetIfRequested}
-            // dataSource={resultsAsComponents}
-            onChange={this.handleUpdateInput}
-            // onNewRequest={this.handleNewRequest}
-          />
-        </NoSsr>
+        <Select
+          label={formatMessage(localMessages.searchHint)}
+          onClick={this.resetIfRequested}
+          // TODO update this
+          // options={topicResults}
+          onChange={this.handleUpdateInput}
+          // onNewRequest={this.handleNewRequest}
+        />
       </div>
     );
   }
