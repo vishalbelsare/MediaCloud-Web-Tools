@@ -44,11 +44,11 @@ function withIntlForm(Component) {
           inputProps={{
             autoComplete,
           }}
-          helperText={touched ? error : ''}
+          helperText={touched ? this.intlIfObject(error) : ''}
         />
       );
     };
-    renderTextFieldWithFocus = ({ input, saveRef, meta: { error }, ...custom }) => {
+    renderTextFieldWithFocus = ({ input, saveRef, meta: { touched, error }, ...custom }) => {
       const intlCustom = this.intlCustomProps(custom);
       if (intlCustom.helpertext !== undefined) {
         intlCustom.helperText = intlCustom.helpertext;
@@ -60,6 +60,7 @@ function withIntlForm(Component) {
           ref={saveRef}
           {...input}
           {...intlCustom}
+          helperText={touched ? this.intlIfObject(error) : ''}
         />
       );
     };

@@ -20,7 +20,7 @@ const SourceOrCollectionWidget = (props) => {
         {children}
       </Col>
       <Col>
-        <DeleteMediaButton onClick={onDelete} />
+        <DeleteMediaButton color="primary" onClick={onDelete} />
       </Col>
     </div>
   );
