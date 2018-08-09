@@ -69,7 +69,6 @@ QuerySampleStoriesResultsContainer.propTypes = {
   lastSearchTime: PropTypes.number.isRequired,
   queries: PropTypes.array.isRequired,
   isLoggedIn: PropTypes.bool.isRequired,
-  location: PropTypes.object.isRequired,
   // from composition
   intl: PropTypes.object.isRequired,
   // from dispatch
