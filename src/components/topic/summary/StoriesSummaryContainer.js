@@ -10,7 +10,7 @@ import withSummary from '../../common/hocs/SummarizedVizualization';
 import { fetchTopicTopStories, sortTopicTopStories, filterByFocus } from '../../../actions/topicActions';
 import Permissioned from '../../common/Permissioned';
 import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
-import { ExploreButton, DownloadButton } from '../../common/IconButton';
+import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import TopicStoryTable from '../TopicStoryTable';
 import messages from '../../../resources/messages';
@@ -50,9 +50,8 @@ class StoriesSummaryContainer extends React.Component {
     notifyOfCsvDownload(HELP_STORIES_CSV_COLUMNS);
   }
   render() {
-    const { stories, sort, topicId, filters, handleFocusSelected, user, showTweetCounts } = this.props;
+    const { stories, sort, topicId, handleFocusSelected, user, showTweetCounts } = this.props;
     const { formatMessage } = this.props.intl;
-    const exploreUrl = `/topics/${topicId}/stories`;
     const isLoggedIn = hasPermissions(getUserRoles(user), PERMISSION_LOGGED_IN);
     return (
       <React.Fragment>
@@ -67,7 +66,6 @@ class StoriesSummaryContainer extends React.Component {
         />
         <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
           <div className="actions">
-            <ExploreButton linkTo={filteredLinkTo(exploreUrl, filters)} />
             <ActionMenu actionTextMsg={messages.downloadOptions}>
               <MenuItem
                 className="action-icon-menu-item"
