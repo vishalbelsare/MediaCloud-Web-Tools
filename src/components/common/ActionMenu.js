@@ -109,7 +109,7 @@ class ActionMenu extends React.Component {
 ActionMenu.propTypes = {
   onClick: PropTypes.func,
   topLevelButton: PropTypes.func,
-  children: PropTypes.array || PropTypes.object,
+  children: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
   openButton: PropTypes.object,
   closeButton: PropTypes.object,
   tooltip: PropTypes.string,
