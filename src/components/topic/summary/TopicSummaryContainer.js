@@ -146,15 +146,10 @@ class TopicSummaryContainer extends React.Component {
           );
           break;
         case 4:
-          // about
+          // stats
           viewContent = (
             <React.Fragment>
               <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
-                <Row>
-                  <Col lg={12}>
-                    <TopicStoryStatsContainer topicId={topicId} filters={filters} timespan={selectedTimespan} />
-                  </Col>
-                </Row>
                 <Row>
                   <Col lg={12}>
                     <TopicStoryMetadataStatsContainer topicId={topicId} filters={filters} timespan={selectedTimespan} />
@@ -173,6 +168,11 @@ class TopicSummaryContainer extends React.Component {
             <Row>
               <Col lg={12}>
                 {intro}
+              </Col>
+            </Row>
+            <Row>
+              <Col lg={12}>
+                <TopicStoryStatsContainer topicId={topicId} filters={filters} timespan={selectedTimespan} />
               </Col>
             </Row>
             <Row>
