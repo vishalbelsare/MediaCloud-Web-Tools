@@ -9,6 +9,7 @@ import intl from 'intl';  // eslint-disable-line
 import intlEn from 'intl/locale-data/jsonp/en.js';  // eslint-disable-line
 import { Row } from 'react-flexbox-grid/lib';
 import NavToolbar from './common/header/NavToolbar';
+import ErrorBoundary from './common/ErrorBoundary';
 import messages from '../resources/messages';
 import { getVersion } from '../config';
 import { updateFeedback } from '../actions/appActions';
@@ -49,9 +50,11 @@ const AppContainer = (props) => {
       <header>
         <NavToolbar />
       </header>
-      <div id="content">
-        {content}
-      </div>
+      <ErrorBoundary>
+        <div id="content">
+          {content}
+        </div>
+      </ErrorBoundary>
       <footer>
         <p><small>
           {'Created by the '}
