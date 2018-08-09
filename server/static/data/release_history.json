@@ -1,6 +1,74 @@
 {
   "releases": [
     {
+      "date": "2018-07-26",
+      "version": "v3.3.1",
+      "notes": [
+        {
+          "apps": [ "sources" ],
+          "type": "Fix",
+          "note": "Now you can edit sources again."
+        },
+        {
+          "apps": [ "explorer" ],
+          "type": "Fix",
+          "note": "Show entities for a story correctly in Explorer."
+        }
+      ]
+    },
+    {
+      "date": "2018-07-25",
+      "version": "v3.3.0",
+      "notes": [
+        {
+          "apps": [ "explorer" ],
+          "type": "Feature",
+          "note": "Click a sample story in Explorer to learn more about the data we have on it."
+        },
+        {
+          "apps": [ "topics" ],
+          "type": "Feature",
+          "note": "Add media metadata to topic top media lists."
+        },
+        {
+          "apps": [ "topics", "explorer" ],
+          "type": "Fix",
+          "note": "Remove duplicate entries from list of locations mentioned in a story."
+        },
+        {
+          "apps": [ "sources" ],
+          "type": "Feature",
+          "note": "Split view of RSS and spidered stories in Source Manager charts."
+        },
+        {
+          "apps": [ "topics", "explorer", "sources" ],
+          "type": "Feature",
+          "note": "Better about pages for every tool."
+        },
+        {
+          "apps": [ "topics" ],
+          "type": "Fix",
+          "note": "Remove duplicate subtopic info from topic story download CSV."
+        },
+        {
+          "apps": [ "explorer" ],
+          "type": "Fix",
+          "note": "Use a better color palette for Explorer geographic representation maps."
+        }
+      ]
+    },
+    {
+      "date": "2018-07-23",
+      "version": "v3.2.2",
+      "notes": [
+        {
+          "apps": [ "topics" ],
+          "type": "Fix",
+          "note": "Fix bug that was showing super long lists of stories in Topic Mapper."
+        }
+      ]
+    },
+    {
       "date": "2018-07-13",
       "version": "v3.2.1",
       "notes": [

@@ -15,11 +15,11 @@ export const EXPLORER_URL = 'https://explorer.mediacloud.org/';
 export const SOURCES_URL = 'https://sources.mediacloud.org/';
 const BLOG_URL = 'https://mediacloud.org/news/';
 const SUPPORT_URL = 'https://mediacloud.org/tools/';
-const ABOUT_URL = 'https://mediacloud.org/about/';
 
 const localMessages = {
   goHome: { id: 'nav.home', defaultMessage: 'Home' },
   support: { id: 'nav.support', defaultMessage: 'Support' },
+  about: { id: 'nav.about', defaultMessage: 'About' },
 };
 
 const goToHome = () => {
@@ -76,7 +76,7 @@ const NavToolbar = (props) => {
                 </a>
               </li>
               <li className="about">
-                <a href={ABOUT_URL}>
+                <a href={`#/${formatMessage(localMessages.about)}`}>
                   {formatMessage(messages.menuAbout).toUpperCase()}
                 </a>
               </li>

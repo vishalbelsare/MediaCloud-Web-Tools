@@ -9,6 +9,7 @@ import QueryAttentionOverTimeResultsContainer from './QueryAttentionOverTimeResu
 import QueryAttentionOverTimeDrillDownContainer from './drilldowns/QueryAttentionOverTimeDrillDownContainer';
 import QueryWordComparisonResultsContainer from './QueryWordComparisonResultsContainer';
 import WordInContextDrillDownContainer from './drilldowns/WordInContextDrillDownContainer';
+import SelectedStoryDrillDownContainer from './drilldowns/SelectedStoryDrillDownContainer';
 import QuerySampleStoriesResultsContainer from './QuerySampleStoriesResultsContainer';
 import QueryTotalAttentionResultsContainer from './QueryTotalAttentionResultsContainer';
 import QueryGeoResultsContainer from './QueryGeoResultsContainer';
@@ -18,6 +19,8 @@ import TabSelector from '../../common/TabSelector';
 import QueryThemesResultsContainer from './QueryThemesResultsContainer';
 import { updateQuery } from '../../../actions/explorerActions';
 import messages from '../../../resources/messages';
+import Permissioned from '../../common/Permissioned';
+import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
 
 class QueryResultsContainer extends React.Component {
   state = {
@@ -64,6 +67,15 @@ class QueryResultsContainer extends React.Component {
             isLoggedIn={isLoggedIn}
           />
         </Col>
+        <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
+          <Col lg={12} xs={12}>
+            <SelectedStoryDrillDownContainer
+              lastSearchTime={lastSearchTime}
+              queries={queries}
+              isLoggedIn={isLoggedIn}
+            />
+          </Col>
+        </Permissioned>
       </Row>
     );
     const languageSection = (
@@ -76,14 +88,16 @@ class QueryResultsContainer extends React.Component {
             onQueryModificationRequested={handleQueryModificationRequested}
           />
         </Col>
-        <Col lg={12} xs={12}>
-          <WordInContextDrillDownContainer
-            lastSearchTime={lastSearchTime}
-            queries={queries}
-            isLoggedIn={isLoggedIn}
-            onQueryModificationRequested={handleQueryModificationRequested}
-          />
-        </Col>
+        <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
+          <Col lg={12} xs={12}>
+            <WordInContextDrillDownContainer
+              lastSearchTime={lastSearchTime}
+              queries={queries}
+              isLoggedIn={isLoggedIn}
+              onQueryModificationRequested={handleQueryModificationRequested}
+            />
+          </Col>
+        </Permissioned>
         <Col lg={12} xs={12}>
           <QueryWordSpaceResultsContainer
             lastSearchTime={lastSearchTime}

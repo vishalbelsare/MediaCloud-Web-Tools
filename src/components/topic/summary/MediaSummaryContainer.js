@@ -56,6 +56,7 @@ class MediaSummaryContainer extends React.Component {
           onChangeSort={isLoggedIn ? this.onChangeSort : null}
           sortedBy={sort}
           topicId={topicId}
+          showMetadata
         />
         <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
           <ActionMenu actionTextMsg={messages.downloadOptions}>

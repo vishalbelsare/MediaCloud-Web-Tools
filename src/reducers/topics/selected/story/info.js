@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { FETCH_STORY, SELECT_STORY } from '../../../../actions/topicActions';
+import { FETCH_TOPIC_STORY_INFO, SELECT_STORY } from '../../../../actions/topicActions';
 import { createAsyncReducer } from '../../../../lib/reduxHelpers';
 import { TAG_SET_DATE_GUESS_METHOD, TAG_SET_EXTRACTOR_VERSION, TAG_SET_GEOCODER_VERSION, TAG_SET_NYT_THEMES_VERSION }
   from '../../../../lib/tagUtil';
@@ -17,7 +17,7 @@ const info = createAsyncReducer({
   initialState: {
     id: null,
   },
-  action: FETCH_STORY,
+  action: FETCH_TOPIC_STORY_INFO,
   handleSuccess: payload => ({
     ...payload,
     publishDateObj: moment(payload.publish_date).toDate(),

@@ -62,16 +62,14 @@ export function collectionDetails(id, params) {
   return createApiPromise(`/api/collections/${id}/details`, acceptedParams);
 }
 
-export function sourceSplitStoryCount(id) {
-  return createApiPromise(`api/sources/${id}/story-split/count`);
+export function sourceSplitStoryCount(id, params) {
+  const acceptedParams = acceptParams(params, ['separate_spidered']);
+  return createApiPromise(`api/sources/${id}/story-split/count`, acceptedParams);
 }
 
-export function collectionSplitStoryCount(id) {
-  return createApiPromise(`api/collections/${id}/story-split/count`);
-}
-
-export function collectionSourceSplitStoryCounts(id) {
-  return createApiPromise(`api/collections/${id}/sources/story-split/count`);
+export function collectionSplitStoryCount(id, params) {
+  const acceptedParams = acceptParams(params, ['separate_spidered']);
+  return createApiPromise(`api/collections/${id}/story-split/count`, acceptedParams);
 }
 
 export function collectionSourceSplitStoryHistoricalCounts(id, params) {
@@ -123,26 +121,6 @@ export function updateCollection(params) {
 export function addSourceToCollection(params) {
   const acceptedParams = acceptParams(params, ['sourceObj']);
   return acceptedParams;
-}
-
-export function metadataValuesForCountry(id) {
-  return createApiPromise(`api/metadata/${id}/values`);
-}
-
-export function metadataValuesForState(id) {
-  return createApiPromise(`api/metadata/${id}/values`);
-}
-
-export function metadataValuesForPrimaryLanguage(id) {
-  return createApiPromise(`api/metadata/${id}/values`);
-}
-
-export function metadataValuesForCountryOfFocus(id) {
-  return createApiPromise(`api/metadata/${id}/values`);
-}
-
-export function metadataValuesForMediaType(id) {
-  return createApiPromise(`api/metadata/${id}/values`);
 }
 
 export function createSource(params) {

@@ -44,7 +44,7 @@ def story(topics_id, stories_id):
                 more_fb_count = True
             else:
                 more_fb_count = False
-   
+
         for fb_item in all_fb_count:
             if int(fb_item['stories_id']) == int(stories_id):
                 story_topic_info['facebook_collection_date'] = fb_item['facebook_api_collect_date']
@@ -237,7 +237,7 @@ def stream_story_list_csv(user_key, filename, topics_id, **kwargs):
     props = [
         'stories_id', 'publish_date', 'title', 'url', 'language', 'ap_syndicated',
         'themes', 'subtopics',
-        'inlink_count', 'facebook_share_count', 'outlink_count', 'media_inlink_count', 'foci',
+        'inlink_count', 'facebook_share_count', 'outlink_count', 'media_inlink_count',
         'media_id', 'media_name', 'media_url',
         # 'media_pub_country', 'media_pub_state', 'media_language', 'media_about_country', 'media_media_type'
     ]
@@ -285,7 +285,7 @@ def _topic_story_list_by_page_as_csv_row(user_key, topics_id, props, **kwargs):
             more_pages = False
         for s in page['stories']:
             # first foci down to just the readable names
-            s['foci'] = [u"{}: {}".format(f['focal_set_name'], f['name']) for f in s['foci']]
+            s['subtopics'] = [u"{}: {}".format(f['focal_set_name'], f['name']) for f in s['foci']]
             cleaned_row = csv.dict2row(props, s)
             row_string = u','.join(cleaned_row) + u'\n'
             yield row_string
@@ -325,13 +325,13 @@ def _topic_story_page_with_media(user_key, topics_id, link_id, **kwargs):
 
         # build lookup for id => story for all stories in stories with tags (non topic results)
         for st in stories_with_tags:
-    
+
             if s['stories_id'] == st['stories_id']:
                 s.update(st)
-    
+
                 foci_names = [f['name'] for f in s['foci']]
                 s['subtopics'] = ", ".join(foci_names)
-    
+
                 s['themes'] = ''
                 story_tag_ids = [t['tags_id'] for t in s['story_tags']]
                 if tag_util.NYT_LABELER_1_0_0_TAG_ID in story_tag_ids:

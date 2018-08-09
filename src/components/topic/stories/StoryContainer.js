@@ -6,7 +6,8 @@ import Dialog from 'material-ui/Dialog';
 import Link from 'react-router/lib/Link';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import { selectStory, fetchStory } from '../../../actions/topicActions';
+import { selectStory, fetchStory } from '../../../actions/storyActions';
+import { fetchTopicStoryInfo } from '../../../actions/topicActions';
 import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import StoryWordsContainer from './StoryWordsContainer';
 import StoryInlinksContainer from './StoryInlinksContainer';
@@ -14,7 +15,7 @@ import StoryOutlinksContainer from './StoryOutlinksContainer';
 import StoryEntitiesContainer from '../../common/story/StoryEntitiesContainer';
 import StoryNytThemesContainer from '../../common/story/StoryNytThemesContainer';
 import { TAG_SET_GEOGRAPHIC_PLACES, TAG_SET_NYT_THEMES } from '../../../lib/tagUtil';
-import StoryDetails from './StoryDetails';
+import StoryDetails from '../../common/story/StoryDetails';
 import StoryPlaces from './StoryPlaces';
 import messages from '../../../resources/messages';
 import { EditButton, RemoveButton, ReadItNowButton } from '../../common/IconButton';
@@ -24,6 +25,7 @@ import Permissioned from '../../common/Permissioned';
 import { PERMISSION_TOPIC_WRITE, PERMISSION_STORY_EDIT } from '../../../lib/auth';
 import StatBar from '../../common/statbar/StatBar';
 import AppButton from '../../common/AppButton';
+import { urlToTopicMapper } from '../../../lib/urlUtil';
 
 const MAX_STORY_TITLE_LENGTH = 70;  // story titles longer than this will be trimmed and ellipses added
 
@@ -57,11 +59,11 @@ class StoryContainer extends React.Component {
   };
 
   render() {
-    const { story, topicId, storiesId, topicName } = this.props;
+    const { storyInfo, topicStoryInfo, topicId, storiesId, topicName } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
-    let displayTitle = story.title;
-    if (story.title.length > MAX_STORY_TITLE_LENGTH) {
-      displayTitle = `${story.title.substr(0, MAX_STORY_TITLE_LENGTH)}...`;
+    let displayTitle = storyInfo.title;
+    if (storyInfo.title.length > MAX_STORY_TITLE_LENGTH) {
+      displayTitle = `${storyInfo.title.substr(0, MAX_STORY_TITLE_LENGTH)}...`;
     }
     const dialogActions = [
       <AppButton
@@ -83,7 +85,7 @@ class StoryContainer extends React.Component {
                       <EditButton tooltip={formatMessage(localMessages.editStory)} />
                     </Link>
                   </Permissioned>
-                  <a href={story.url} target="_blank" rel="noopener noreferrer">
+                  <a href={storyInfo.url} target="_blank" rel="noopener noreferrer">
                     <ReadItNowButton />
                   </a>
                   <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
@@ -110,11 +112,11 @@ class StoryContainer extends React.Component {
             <Col lg={12}>
               <StatBar
                 stats={[
-                  { message: messages.mediaInlinks, data: formatNumber(story.media_inlink_count) },
-                  { message: messages.inlinks, data: formatNumber(story.inlink_count) },
-                  { message: messages.outlinks, data: formatNumber(story.outlink_count) },
-                  { message: messages.facebookShares, data: formatNumber(story.facebook_share_count) },
-                  { message: messages.language, data: story.language || formatMessage(localMessages.unknownLanguage) },
+                  { message: messages.mediaInlinks, data: formatNumber(topicStoryInfo.media_inlink_count) },
+                  { message: messages.inlinks, data: formatNumber(topicStoryInfo.inlink_count) },
+                  { message: messages.outlinks, data: formatNumber(topicStoryInfo.outlink_count) },
+                  { message: messages.facebookShares, data: formatNumber(topicStoryInfo.facebook_share_count) },
+                  { message: messages.language, data: storyInfo.language || formatMessage(localMessages.unknownLanguage) },
                 ]}
                 columnWidth={2}
               />
@@ -138,20 +140,20 @@ class StoryContainer extends React.Component {
           <Row>
             <Col lg={6}>
               <StoryPlaces
-                tags={story.story_tags ? story.story_tags.filter(t => t.tag_sets_id === TAG_SET_GEOGRAPHIC_PLACES) : []}
-                geocoderVersion={story.geocoderVersion}
+                tags={storyInfo.story_tags ? storyInfo.story_tags.filter(t => t.tag_sets_id === TAG_SET_GEOGRAPHIC_PLACES) : []}
+                geocoderVersion={storyInfo.geocoderVersion}
               />
             </Col>
             <Col lg={6}>
               <StoryNytThemesContainer
                 storyId={storiesId}
-                tags={story.story_tags ? story.story_tags.filter(t => t.tag_sets_id === TAG_SET_NYT_THEMES) : []}
+                tags={storyInfo.story_tags ? storyInfo.story_tags.filter(t => t.tag_sets_id === TAG_SET_NYT_THEMES) : []}
               />
             </Col>
           </Row>
           <Row>
             <Col lg={6}>
-              <StoryDetails topicId={topicId} story={story} />
+              <StoryDetails mediaLink={urlToTopicMapper(topicId)} story={storyInfo} />
             </Col>
           </Row>
           <Row>
@@ -175,7 +177,8 @@ StoryContainer.propTypes = {
   asyncFetch: PropTypes.func.isRequired,
   fetchData: PropTypes.func.isRequired,
   // from state
-  story: PropTypes.object.isRequired,
+  topicStoryInfo: PropTypes.object.isRequired,
+  storyInfo: PropTypes.object.isRequired,
   storiesId: PropTypes.number.isRequired,
   topicName: PropTypes.string.isRequired,
   topicId: PropTypes.number.isRequired,
@@ -184,18 +187,24 @@ StoryContainer.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => ({
-  fetchStatus: state.topics.selected.story.info.fetchStatus,
+  fetchStatus: state.story.info.fetchStatus,
   filters: state.topics.selected.filters,
   storiesId: parseInt(ownProps.params.storiesId, 10),
   topicId: state.topics.selected.id,
   topicName: state.topics.selected.info.name,
-  story: state.topics.selected.story.info,
+  topicStoryInfo: state.topics.selected.story.info,
+  storyInfo: state.story.info,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (storiesId, filters) => {
     dispatch(selectStory(storiesId));
-    dispatch(fetchStory(ownProps.params.topicId, storiesId, filters));
+    const q = {
+      ...filters,
+      id: ownProps.params.topicId,
+    };
+    dispatch(fetchStory(storiesId, q));
+    dispatch(fetchTopicStoryInfo(ownProps.params.topicId, storiesId, filters));
   },
 });
 

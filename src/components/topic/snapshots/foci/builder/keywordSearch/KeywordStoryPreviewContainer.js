@@ -9,12 +9,12 @@ import DataCard from '../../../../../common/DataCard';
 import TopicStoryTable from '../../../../TopicStoryTable';
 import messages from '../../../../../../resources/messages';
 
+const NUM_TO_SHOW = 20;
+
 const localMessages = {
-  title: { id: 'topic.summary.stories.title', defaultMessage: 'Top Stories' },
+  title: { id: 'topic.summary.stories.title', defaultMessage: 'Sample Stories' },
   helpTitle: { id: 'topic.summary.stories.help.title', defaultMessage: 'About Matching Top Stories' },
 };
-
-const NUM_TO_SHOW = 20;
 
 class KeywordStoryPreviewContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
@@ -31,7 +31,7 @@ class KeywordStoryPreviewContainer extends React.Component {
           <FormattedMessage {...localMessages.title} />
           {helpButton}
         </h2>
-        <TopicStoryTable stories={stories} showTweetCounts={showTweetCounts} topicId={topicId} />
+        <TopicStoryTable stories={stories.slice(0, NUM_TO_SHOW)} showTweetCounts={showTweetCounts} topicId={topicId} />
       </DataCard>
     );
   }

@@ -12,7 +12,7 @@ const messages = {
   toolsAppName: { id: 'app.tools.name', defaultMessage: 'Tools' },
   toolsAppDescription: { id: 'app.tools.description', defaultMessage: 'Support for MediaCloud, including FAQs, tools and how to use them' },
   explorerToolName: { id: 'app.explorer.name', defaultMessage: 'Explorer' },
-  explorerToolDescription: { id: 'app.explorer.description', defaultMessage: 'Get a quick overview of how your topic of interest is covered by digital news media by exploring attention, language, and representation.' },
+  explorerToolDescription: { id: 'app.explorer.description', defaultMessage: 'Get a quick overview of how your topic of interest is covered by digital news media by exploring attention, language, and entities.' },
   readGuide: { id: 'app.readGuide', defaultMessage: 'Read User Guide' },
 
   c4cmName: { id: 'c4cm.name', defaultMessage: 'MIT Center for Civic Media' },
@@ -42,6 +42,9 @@ const messages = {
   entityPerson: { id: 'entity.title.person', defaultMessage: 'Person' },
   entityOrg: { id: 'entity.title.org', defaultMessage: 'Organization' },
   entityPercentage: { id: 'entity.title.default', defaultMessage: 'Percentage' },
+  entityPeople: { id: 'entity.title.people', defaultMessage: 'People' },
+  entityOrganizations: { id: 'entity.title.orgs', defaultMessage: 'Organizations' },
+  entityLocations: { id: 'entity.title.locations', defaultMessage: 'Places' },
 
   snapshotAge: { id: 'topic.snapshot.age', defaultMessage: 'Snapshot taken {age}' },
   snapshotChange: { id: 'topic.snapshot.change', defaultMessage: 'pick a different Snapshot' },
@@ -81,7 +84,6 @@ const messages = {
   clicks: { id: 'common.clicks', defaultMessage: 'Clicks' },
   facebookShares: { id: 'common.facebookShares', defaultMessage: 'Facebook Shares' },
   tweetCounts: { id: 'common.tweetCounts', defaultMessage: 'Tweet Counts' },
-  publishDate: { id: 'common.publishDate', defaultMessage: 'Publish Data' },
   public: { id: 'common.public', defaultMessage: 'Public' },
   private: { id: 'common.private', defaultMessage: 'Private' },
   language: { id: 'common.language', defaultMessage: 'Language' },
@@ -121,7 +123,7 @@ const messages = {
   storyTitle: { id: 'story.title', defaultMessage: 'Title' },
   storyDescription: { id: 'story.description', defaultMessage: 'Description' },
   storyUrl: { id: 'story.url', defaultMessage: 'URL' },
-  storyDate: { id: 'story.date', defaultMessage: 'Publish Data' },
+  storyDate: { id: 'story.date', defaultMessage: 'Publish Date' },
   storyCustomDate: { id: 'story.customDate', defaultMessage: 'Custom Date?' },
   storyUndateable: { id: 'story.undateable', defaultMessage: 'Undateable?' },
   storiesTableHelpTitle: { id: 'stories.help.title', defaultMessage: 'About Stories' },
@@ -236,6 +238,7 @@ const messages = {
 
   mediaTypeHelpTitle: { id: 'mediaType.help.title', defaultMessage: 'About Media Type' },
   mediaTypeHelpContent: { id: 'mediaType.help.content', defaultMessage: `
+      <p>Each media source can be assigned a "media type".  This indicates what kind of a source it is, and can be helpful for comparative analysis between types of sources.</p>
       <p><b>Print Native</b>: This source is primarly a print publication. Use this for newspapers and magazines. Examples: New York Times, The Economist.</p>
       <p><b>Digital Native</b>: This source is internet based. Use this for news sources that began on the internet first, organizational websites, and blogs. Examples: CDC, Vox, Scroll.in.</p>
       <p><b>Video Broadcast</b>: This source is primarily a broadcast TV station (ie. video transcriptions or closed captions). Examples: CNN, FoxNews.</p>
@@ -260,10 +263,18 @@ const messages = {
   attention: { id: 'attention', defaultMessage: 'Attention' },
   storiesPerDay: { id: 'source.storiesPerDay', defaultMessage: 'Stories per Day' },
   sourceStartDate: { id: 'source.startDate', defaultMessage: 'First Story' },
-  representation: { id: 'representation', defaultMessage: 'Representation' },
+  representation: { id: 'representation', defaultMessage: 'Entities' },
   influence: { id: 'influence', defaultMessage: 'Influence' },
 
   countsVsPercentageHelp: { id: 'explorer.countsVsPercentageHelp', defaultMessage: '<p><b>Counts vs. Percentage</b><br />You can view the attention devoted to your issue in terms of absolute counts or as percentages.  Absolute counts suffer from weekly ebbs and flows, and while searching collections don\'t reflect when we add more sources.  You can switch to view percentages in order to see normalized results that you can compare across sources and collections. To generate the normalization we run each query again without the keywords.</p>' },
+
+  pubCountry: { id: 'source.pubCountry', defaultMessage: 'Publication Country' },
+  pubState: { id: 'source.pubState', defaultMessage: 'Publication State' },
+  mediaType: { id: 'source.pubState', defaultMessage: 'Media Type' },
+  primaryLanguage: { id: 'source.primaryLanguage', defaultMessage: 'Primary Language' },
+  countryOfFocus: { id: 'source.countryOfFocus', defaultMessage: 'Country of Focus' },
+  languageHelpContent: { id: 'source.details.language.help.content', defaultMessage: '<p>We automatically guess the langauge of stories in our system. This language is the one most used by this source based on the automatic detection.</p>' },
+  geoHelpDetailedContent: { id: 'source.details.geo.title', defaultMessage: '<p>This is the country this source writes about most.</p>' },
 
 };
 

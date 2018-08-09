@@ -289,21 +289,21 @@ class EditableWordCloudDataCard extends React.Component {
 
   render() {
     const { words, explore, onViewModeClick, width, height, maxFontSize, minFontSize, domId, actionsAsLinksUnderneath,
-      subHeaderContent, textAndLinkColor, textColor, linkColor, border } = this.props;
+      subHeaderContent, textAndLinkColor, textColor, linkColor, border, selectedTerm } = this.props;
     let className = 'editable-word-cloud-datacard';
-    let editingClickHandler = onViewModeClick;
+    let wordClickHandler = onViewModeClick;
     const tColor = textAndLinkColor || textColor || getBrandDarkColor();
     const lColor = textAndLinkColor || linkColor || getBrandDarkColor();
     let wordsArray = words.map(w => ({ ...w, display: true }));
     let editingWarning;
     const uniqueDomId = `${domId}-${(this.state.ordered ? 'ordered' : 'unordered')}`; // add mode to it so ordered or not works
     if (this.state.editing && this.state.modifiableWords) {
-      editingClickHandler = this.onEditModeClick;
+      wordClickHandler = this.onEditModeClick;
       className += ' editing';
       wordsArray = this.state.modifiableWords;
       editingWarning = (<WarningNotice><FormattedHTMLMessage {...localMessages.editing} /></WarningNotice>);
     } else if (!this.state.editing && this.state.displayOnlyWords) {
-      editingClickHandler = onViewModeClick;
+      wordClickHandler = onViewModeClick;
       wordsArray = this.state.displayOnlyWords;
       if (!this.isShowingAllWords()) {
         editingWarning = (<WarningNotice><FormattedHTMLMessage {...localMessages.edited} /></WarningNotice>);
@@ -325,8 +325,9 @@ class EditableWordCloudDataCard extends React.Component {
             height={height}
             maxFontSize={maxFontSize}
             minFontSize={minFontSize}
-            onWordClick={editingClickHandler}
+            onWordClick={wordClickHandler}
             domId={uniqueDomId}
+            selectedTerm={selectedTerm}
           />
         );
         break;
@@ -340,7 +341,7 @@ class EditableWordCloudDataCard extends React.Component {
             height={height}
             maxFontSize={maxFontSize}
             minFontSize={minFontSize}
-            onWordClick={editingClickHandler}
+            onWordClick={wordClickHandler}
             domId={uniqueDomId}
           />
         );
@@ -409,6 +410,7 @@ EditableWordCloudDataCard.propTypes = {
   linkColor: PropTypes.string,
   title: PropTypes.string,     // rendered as an H2 inside the DataCard
   words: PropTypes.array.isRequired,
+  selectedTerm: PropTypes.string,
   downloadUrl: PropTypes.string,          // used as the base for downloads, ngram_size appended for bigram/trigram download
   onDownload: PropTypes.func,             // if you want to handle the download request yourself, pass in a function (overrides downloadUrl)
   svgDownloadPrefix: PropTypes.string,    // for naming the SVG download file

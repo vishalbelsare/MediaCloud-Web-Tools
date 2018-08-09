@@ -5,7 +5,7 @@ import { Field } from 'redux-form';
 import MenuItem from 'material-ui/MenuItem';
 import { FETCH_SUCCEEDED } from '../../lib/fetchConstants';
 import withAsyncFetch from './hocs/AsyncContainer';
-import { fetchMetadataValuesForCountry, fetchMetadataValuesForState, fetchMetadataValuesForPrimaryLanguage, fetchMetadataValuesForCountryOfFocus, fetchMetadataValuesForMediaType } from '../../actions/sourceActions';
+import { fetchMetadataValuesForCountry, fetchMetadataValuesForState, fetchMetadataValuesForPrimaryLanguage, fetchMetadataValuesForCountryOfFocus, fetchMetadataValuesForMediaType } from '../../actions/systemActions';
 import withIntlForm from './hocs/IntlForm';
 import { TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE, TAG_SET_PRIMARY_LANGUAGE, TAG_SET_COUNTRY_OF_FOCUS, TAG_SET_MEDIA_TYPE } from '../../lib/tagUtil';
 

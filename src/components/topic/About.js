@@ -3,6 +3,8 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
+import TopicsMarketingFeatureList from './homepage/TopicsMarketingFeatureList';
+import messages from '../../resources/messages';
 
 const localMessages = {
   aboutTitle: { id: 'about.title', defaultMessage: 'About Topic Mapper' },
@@ -11,21 +13,23 @@ const localMessages = {
 
 const About = (props) => {
   const title = props.intl.formatMessage(localMessages.aboutTitle);
-  const titleHandler = parentTitle => `${title} | ${parentTitle}`;
   return (
-    <Grid>
-      <Helmet><title>{titleHandler()}</title></Helmet>
-      <Row>
-        <Col lg={6} md={6} sm={6}>
-          <h1><FormattedMessage {...localMessages.aboutTitle} /></h1>
-        </Col>
-      </Row>
-      <Row>
-        <Col lg={6} md={6} sm={6}>
-          <p><FormattedMessage {...localMessages.aboutText} /></p>
-        </Col>
-      </Row>
-    </Grid>
+    <div className="about">
+      <Grid>
+        <Helmet><title>{title}</title></Helmet>
+        <Row>
+          <Col lg={6} md={6} sm={6}>
+            <h1><FormattedMessage {...localMessages.aboutTitle} /></h1>
+          </Col>
+        </Row>
+        <Row>
+          <Col lg={12}>
+            <p className="subtitle"><FormattedMessage {...messages.topicsToolDescription} /></p>
+          </Col>
+        </Row>
+      </Grid>
+      <TopicsMarketingFeatureList />
+    </div>
   );
 };
 

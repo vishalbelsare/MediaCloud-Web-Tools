@@ -24,14 +24,6 @@ export function fetchMediaPickerSources(params) {
 export function metadataValuesForMediaType(id) {
   return createApiPromise(`/api/metadata/${id}/values`);
 }
-/*
-export function fetchMediaPickerSourcesByMetadata(params) {
-  const acceptedParams = acceptParams(params, ['searchString', 'tags']);
-  const paramStr = generateParamStr({ 'tags[]': acceptedParams.tags });
-  const searchStr = acceptedParams.searchString || '*';
-  return createApiPromise(`/api/sources/search/${searchStr}?${paramStr}`);
-}
-*/
 
 export function fetchRecentNews() {
   return createApiPromise('/api/release-notes');
@@ -44,3 +36,20 @@ export function favoriteSource(mediaId, favorite) {
 export function favoriteCollection(id, favorite) {
   return createPostingApiPromise(`/api/collections/${id}/favorite`, { favorite: (favorite) ? 1 : 0 }, 'put');
 }
+
+export function metadataValuesForCountry(id) {
+  return createApiPromise(`api/metadata/${id}/values`);
+}
+
+export function metadataValuesForState(id) {
+  return createApiPromise(`api/metadata/${id}/values`);
+}
+
+export function metadataValuesForPrimaryLanguage(id) {
+  return createApiPromise(`api/metadata/${id}/values`);
+}
+
+export function metadataValuesForCountryOfFocus(id) {
+  return createApiPromise(`api/metadata/${id}/values`);
+}
+

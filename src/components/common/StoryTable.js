@@ -4,6 +4,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import messages from '../../resources/messages';
 import { storyPubDateToTimestamp } from '../../lib/dateUtil';
 import { googleFavIconUrl, storyDomainName } from '../../lib/urlUtil';
+import { trimToMaxLength } from '../../lib/stringUtil';
 
 const localMessages = {
   undateable: { id: 'story.publishDate.undateable', defaultMessage: 'Undateable' },
@@ -11,7 +12,7 @@ const localMessages = {
 };
 
 const StoryTable = (props) => {
-  const { stories, maxTitleLength } = props;
+  const { stories, maxTitleLength, onChangeFocusSelection, selectedStory } = props;
   const { formatMessage, formatDate } = props.intl;
   return (
     <div className="story-table">
@@ -27,7 +28,8 @@ const StoryTable = (props) => {
             const domain = storyDomainName(story);
             let dateToShow = null;  // need to handle undateable stories
             let dateStyle = '';
-            const title = maxTitleLength !== undefined ? `${story.title.substr(0, maxTitleLength)}...` : story.title;
+            const title = maxTitleLength !== undefined ? `${trimToMaxLength(story.title, maxTitleLength)}` : story.title;
+            const isSelected = selectedStory === story.stories_id ? ' selected' : ' ';
             if (story.publish_date === 'undateable') {
               dateToShow = formatMessage(localMessages.undateable);
               dateStyle = 'story-date-undateable';
@@ -39,9 +41,9 @@ const StoryTable = (props) => {
               }
             }
             return (
-              <tr key={`${story.stories_id}${idx}`} className={(idx % 2 === 0) ? 'even' : 'odd'}>
+              <tr key={`${story.stories_id}${idx}`} className={(idx % 2 === 0) ? `even${isSelected}` : `odd${isSelected}`}>
                 <td>
-                  <a href={story.url} rel="noopener noreferrer" target="_blank">{title}</a>
+                  <a className="drilldown-trigger" tabIndex="0" role="button" onClick={() => onChangeFocusSelection(story)}>{title}</a>
                 </td>
                 <td>
                   <a href={story.media_url} rel="noopener noreferrer" target="_blank">
@@ -68,6 +70,7 @@ StoryTable.propTypes = {
   onChangeFocusSelection: PropTypes.func,
   sortedBy: PropTypes.string,
   maxTitleLength: PropTypes.number,
+  selectedStory: PropTypes.number,
 };
 
 export default injectIntl(StoryTable);
