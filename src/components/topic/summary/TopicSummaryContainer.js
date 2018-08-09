@@ -26,7 +26,7 @@ const localMessages = {
   title: { id: 'topic.summary.summary.title', defaultMessage: 'Topic: {name}' },
   previewTitle: { id: 'topic.summary.public.title', defaultMessage: 'Topic Preview: {name}' },
   previewIntro: { id: 'topic.summary.public.intro', defaultMessage: 'This is a preview of our {name} topic.  It shows just a sample of the data available once you login to the Topic Mapper tool. To explore, click on a link and sign in.' },
-  aboutTab: { id: 'topic.summary.summary.about', defaultMessage: 'Topic Stats' },
+  statsTabTitle: { id: 'topic.summary.summary.about', defaultMessage: 'Stats' },
 };
 
 class TopicSummaryContainer extends React.Component {
@@ -182,7 +182,7 @@ class TopicSummaryContainer extends React.Component {
                   formatMessage(messages.attention),
                   formatMessage(messages.language),
                   formatMessage(messages.representation),
-                  formatMessage(localMessages.aboutTab),
+                  formatMessage(localMessages.statsTabTitle),
                 ]}
                 onViewSelected={index => this.setState({ selectedViewIndex: index })}
               />
