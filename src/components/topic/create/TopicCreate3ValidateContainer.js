@@ -6,7 +6,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import withIntlForm from '../../common/hocs/IntlForm';
 import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import AppButton from '../../common/AppButton';
-import StoryRow from './StoryRow';
+import StoryFeedbackRow from './StoryFeedbackRow';
 import { WarningNotice } from '../../common/Notice';
 import { goToCreateTopicStep, fetchStorySampleByQuery } from '../../../actions/topicActions';
 import messages from '../../../resources/messages';
@@ -93,7 +93,7 @@ class TopicCreate3ValidateContainer extends React.Component {
             <Row start="lg" className="topic-create-sample-story-container">
               <Col lg={12}>
                 {stories.map(story =>
-                  <StoryRow
+                  <StoryFeedbackRow
                     key={story.stories_id}
                     story={story}
                     maxTitleLength={75}

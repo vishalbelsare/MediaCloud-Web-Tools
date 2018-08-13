@@ -13,7 +13,6 @@
     "react"
   ],
   "rules": {
-    "linebreak-style": ["error", "windows"],
     "max-len": 0,
     "no-case-declarations": 0,
     "react/jsx-filename-extension": 0,
@@ -34,16 +33,5 @@
     "react/require-default-props": 0,
     "react/no-array-index-key": 0,
     "click-events-have-key-events": 0,
-    "spaced-comment": ["error", "always", {
-      "line": {
-          "markers": ["/"],
-          "exceptions": ["-", "+"]
-      },
-      "block": {
-          "markers": ["!"],
-          "exceptions": ["*"],
-          "balanced": false
-      }
-    }]
  }
 }

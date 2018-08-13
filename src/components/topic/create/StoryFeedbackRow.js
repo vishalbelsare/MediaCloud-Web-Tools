@@ -15,7 +15,7 @@ const localMessages = {
   noLabel: { id: 'topic.create.validate.btn.no', defaultMessage: 'No' },
 };
 
-class StoryRow extends React.Component {
+class StoryFeedbackRow extends React.Component {
 
   state = {
     selection: selectionOptions.none,
@@ -98,7 +98,7 @@ class StoryRow extends React.Component {
   }
 }
 
-StoryRow.propTypes = {
+StoryFeedbackRow.propTypes = {
   // from parent
   story: PropTypes.object.isRequired,
   handleYesClick: PropTypes.func,
@@ -110,5 +110,5 @@ StoryRow.propTypes = {
 
 export default
   injectIntl(
-    StoryRow
+    StoryFeedbackRow
   );
