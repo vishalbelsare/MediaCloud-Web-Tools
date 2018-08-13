@@ -95,8 +95,9 @@ class CollectionSourceRepresentation extends React.Component {
         <div className="actions">
           <ExploreButton linkTo={`/collections/${collectionId}/content-history`} />
           <SVGAndCSVMenu
-            downloadCsv={() => this.downloadCsv}
+            downloadCsv={this.downloadCsv}
             downloadSvg={downloadSvg}
+            label="Representation"
           />
         </div>
         <h2>

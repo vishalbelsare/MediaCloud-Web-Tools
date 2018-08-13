@@ -149,23 +149,16 @@ class SourceSearchContainer extends React.Component {
   render() {
     const { fetchesOngoing } = this.props;
     const { formatMessage } = this.props.intl;
-    const resultsAsComponents = this.resetIfRequested();
+    // const resultsAsComponents = this.resetIfRequested();
     const fetchingStatus = (fetchesOngoing) ? <LoadingSpinner size={15} /> : null;
     return (
       <div className="async-search source-search">
-        <SearchButton />
+        <SearchButton color="secondary" variant="outlined" label="Search" />
         <div className="fetching">{fetchingStatus}</div>
         <Select
           label={formatMessage(localMessages.searchHint)}
           fullWidth
-          openOnFocus
-          searchText={this.state.lastSearchString}
-          onClick={this.resetIfRequested}
-          dataSource={resultsAsComponents}
-          onUpdateInput={this.handleUpdateInput}
-          onNewRequest={this.handleNewRequest}
-          maxSearchResults={this.getMaxSourcesToShow() + this.getMaxCollectionsToShow()}
-          filter={() => true}
+          value=""
         />
       </div>
     );

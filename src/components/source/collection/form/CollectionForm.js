@@ -21,12 +21,11 @@ const CollectionForm = (props) => {
   let sourceContent = null; // show as editable or not depending on disabled flag
   const submitButton = (
     <AppButton
-      type="submit"
-      label={buttonLabel}
       disabled={pristine || submitting}
       color="primary"
       className="submit-button"
-    />
+    >{buttonLabel}
+    </AppButton>
   );
   if (!initialValues.disabled) {
     sourceContent = (

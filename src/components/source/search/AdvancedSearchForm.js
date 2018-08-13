@@ -85,7 +85,6 @@ const AdvancedSearchForm = (props) => {
         <Col lg={12}>
           <AppButton
             style={{ marginTop: 30 }}
-            type="submit"
             label={buttonLabel}
             disabled={pristine || submitting}
             primary

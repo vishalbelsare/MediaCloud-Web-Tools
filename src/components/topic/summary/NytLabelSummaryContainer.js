@@ -2,9 +2,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import MenuItem from '@material-ui/core/MenuItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
 import { schemeCategory10 } from 'd3';
 import { push } from 'react-router-redux';
 import { fetchTopicNytLabelCounts, filterByQuery } from '../../../actions/topicActions';
@@ -16,7 +13,7 @@ import DataCard from '../../common/DataCard';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import messages from '../../../resources/messages';
-import ActionMenu from '../../common/ActionMenu';
+import SVGAndCSVMenu from '../../common/SVGAndCSVMenu';
 import { DownloadButton } from '../../common/IconButton';
 import { filtersAsUrlParams, filteredLocation } from '../../util/location';
 import { WarningNotice } from '../../common/Notice';
@@ -96,26 +93,10 @@ class NytLabelSummaryContainer extends React.Component {
         <div>
           <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
             <div className="actions">
-              <ActionMenu>
-                <MenuItem
-                  className="action-icon-menu-item"
-                  onTouchTap={this.downloadCsv}
-                >
-                  <ListItemText><FormattedMessage {...messages.downloadCSV} /></ListItemText>
-                  <ListItemIcon>
-                    <DownloadButton />
-                  </ListItemIcon>
-                </MenuItem>
-                <MenuItem
-                  className="action-icon-menu-item"
-                  onTouchTap={() => downloadSvg(BUBBLE_CHART_DOM_ID)}
-                >
-                  <ListItemText><FormattedMessage {...messages.downloadCSV} /></ListItemText>
-                  <ListItemIcon>
-                    <DownloadButton />
-                  </ListItemIcon>
-                </MenuItem>
-              </ActionMenu>
+              <SVGAndCSVMenu
+                downloadCsv={() => this.downloadCsv}
+                downloadSvg={() => downloadSvg(BUBBLE_CHART_DOM_ID)}
+              />
             </div>
           </Permissioned>
           <h2>

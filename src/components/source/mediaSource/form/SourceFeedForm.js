@@ -80,7 +80,6 @@ const SourceFeedForm = (props) => {
       </Row>
       <AppButton
         className="source-feed-updated"
-        type="submit"
         label={buttonLabel}
         color="primary"
         disabled={pristine || submitting}

@@ -60,6 +60,7 @@ class ManageSourcesContainer extends React.Component {
             <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
               <div className="action-buttons">
                 <AppButton
+                  color="primary"
                   className="source-scrape-feeds-button"
                   label={formatMessage(localMessages.scrapeAll)}
                   onClick={this.onScrapeAll}
@@ -87,14 +88,16 @@ class ManageSourcesContainer extends React.Component {
                   {sources.map((source, idx) => {
                     const scrapeButton = (
                       <AppButton
+                        color="secondary"
+                        variant="outlined"
                         className="source-scrape-feeds-button"
                         label={formatMessage(messages.scrapeForFeeds)}
                         onClick={() => scrapeFeeds(source.media_id)}
                       />
                     );
                     let scrapeContent;
-                    const lastScrapeUpdatedDate = formatDate(jobStatusDateToMoment(source.latest_scrape_job.last_updated));
-                    if (source.latest_scrape_job.state === SOURCE_SCRAPE_STATE_QUEUED) {
+                    const lastScrapeUpdatedDate = source.latest_scrape_job ? formatDate(jobStatusDateToMoment(source.latest_scrape_job.last_updated)) : 'n/a';
+                    if (source && source.latest_scrape_job && source.latest_scrape_job.state === SOURCE_SCRAPE_STATE_QUEUED) {
                       scrapeContent = (
                         <span>
                           <FormattedMessage {...localMessages.lastScrapeQueuedSince} values={{ date: lastScrapeUpdatedDate }} />
