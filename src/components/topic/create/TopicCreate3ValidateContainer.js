@@ -155,8 +155,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(goToCreateTopicStep(1));
   },
   handleNextStep: () => {
-    // dispatch(goToCreateTopicStep(3));
-    console.log('Next!');
+    dispatch(goToCreateTopicStep(3));
   },
   fetchData: (query) => {
     const infoForQuery = {

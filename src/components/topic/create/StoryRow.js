@@ -47,7 +47,7 @@ class StoryRow extends React.Component {
     }
     // update parent state
     if (handleNoClick) {
-      this.props.handleNoClick(this.state.selection);
+      this.props.handleNoClick(selectionOptions, this.state.selection);
     }
   }
 
