@@ -4,6 +4,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import TextField from '@material-ui/core/TextField';
 import Checkbox from '@material-ui/core/Checkbox';
 import Select from '@material-ui/core/Select';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 /**
  * Helpful compositional wrapper for forms that want to use Material-UI, react-intl and redux-form.
@@ -65,13 +66,18 @@ function withIntlForm(Component) {
     };
 
     renderCheckbox = ({ input, label, disabled }) => (
-      <Checkbox
-        name={input.name}
-        className="form-field-checkbox"
+      <FormControlLabel
+        control={
+          <Checkbox
+            name={input.name}
+            className="form-field-checkbox"
+            label={this.intlIfObject(label)}
+            checked={input.value === true || input.value === 1}
+            onChange={input.onChange}
+            disabled={this.intlIfObject(disabled)}
+          />
+        }
         label={this.intlIfObject(label)}
-        checked={input.value === true || input.value === 1}
-        onChange={input.onChange}
-        disabled={this.intlIfObject(disabled)}
       />
     );
 
