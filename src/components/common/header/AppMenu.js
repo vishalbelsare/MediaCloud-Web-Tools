@@ -74,8 +74,8 @@ class AppMenu extends React.Component {
             onClick={this.toggleMenu}
           >
             <ListItemText>{formatMessage(titleMsg)}</ListItemText>
-            {whichIcon}
           </AppButton>
+          {whichIcon}
         </div>
       );
     }

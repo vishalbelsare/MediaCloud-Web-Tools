@@ -1,14 +1,11 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { injectIntl, FormattedHTMLMessage, FormattedMessage } from 'react-intl';
+import { injectIntl, FormattedHTMLMessage } from 'react-intl';
 import { connect } from 'react-redux';
-import MenuItem from '@material-ui/core/MenuItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
 import composeSummarizedVisualization from './SummarizedVizualization';
 import withAsyncFetch from '../../common/hocs/AsyncContainer';
-import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
+import SVGAndCSVMenu from '../../common/SVGAndCSVMenu';
 import { resetThemes, fetchTopThemes, fetchDemoTopThemes } from '../../../actions/explorerActions';
 import { postToDownloadUrl, downloadExplorerSvg, COVERAGE_REQUIRED } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
@@ -80,29 +77,11 @@ class QueryThemesResultsContainer extends React.Component {
           <ActionMenu actionTextMsg={messages.downloadOptions}>
             {queries.map((q, idx) =>
               <span key={`q${idx}-items`}>
-                <MenuItem
-                  key={idx}
-                  className="action-icon-menu-item"
-                  onTouchTap={() => this.downloadCsv(q)}
-                >
-                  <ListItemText>
-                    <FormattedMessage {...localMessages.downloadCsv} values={{ name: q.label }} />
-                  </ListItemText>
-                  <ListItemIcon>
-                    <DownloadButton />
-                  </ListItemIcon>
-                </MenuItem>
-                <MenuItem
-                  className="action-icon-menu-item"
-                  onTouchTap={() => downloadExplorerSvg(q.label, 'sampled-nyt_themes', BUBBLE_CHART_DOM_ID)}
-                >
-                  <ListItemText>
-                    <FormattedMessage {...localMessages.downloadSvg} values={{ name: q.label }} />
-                  </ListItemText>
-                  <ListItemIcon>
-                    <DownloadButton />
-                  </ListItemIcon>
-                </MenuItem>
+                <SVGAndCSVMenu
+                  downloadCsv={() => this.downloadCsv(q.label)}
+                  downloadSvg={() => downloadExplorerSvg(q.label, 'sampled-nyt_themes', BUBBLE_CHART_DOM_ID)}
+                  label={q.label}
+                />
               </span>
             )}
           </ActionMenu>

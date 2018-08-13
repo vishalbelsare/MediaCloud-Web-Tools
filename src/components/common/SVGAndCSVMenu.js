@@ -11,7 +11,7 @@ import { ACTION_MENU_ITEM_CLASS } from '../../lib/explorerUtil';
 import messages from '../../resources/messages';
 
 const SVGAndCSVMenu = (props) => {
-  const { downloadCsv, label, idx } = props.intl;
+  const { downloadCsv, label, idx } = props;
   return (
     <ActionMenu>
       <MenuItem
