@@ -4,58 +4,64 @@ import { injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import FlatButton from 'material-ui/FlatButton';
 
+const selectionOptions = {
+  none: 'none',
+  match: 'match',
+  notMatch: 'not-match',
+};
+
 const localMessages = {
-  match: { id: 'topic.create.validate.match', defaultMessage: 'Yes' },
-  notMatch: { id: 'topic.create.validate.notMatch', defaultMessage: 'No' },
+  yesLabel: { id: 'topic.create.validate.btn.yes', defaultMessage: 'Yes' },
+  noLabel: { id: 'topic.create.validate.btn.no', defaultMessage: 'No' },
 };
 
 class StoryRow extends React.Component {
 
   state = {
-    selection: 'none',
+    selection: selectionOptions.none,
   };
 
   handleMatch = () => {
-    if (this.state.selection !== 'match') {
-      this.setState({ selection: 'match' });
-      this.props.updateStoryCount(1);
+    const { handleYesClick } = this.props;
+    // update local state
+    if (this.state.selection !== selectionOptions.match) {
+      this.setState({ selection: selectionOptions.match });
     } else {
       // allow user to undo selection
-      this.setState({ selection: 'none' });
-      this.props.updateStoryCount(-1);
+      this.setState({ selection: selectionOptions.none });
+    }
+    // update parent state
+    if (handleYesClick) {
+      this.props.handleYesClick(selectionOptions, this.state.selection);
     }
   }
 
   handleNotAMatch = () => {
-    if (this.state.selection !== 'not-match') {
-      if (this.state.selection === 'match') {
-        // undo match selection
-        this.props.updateStoryCount(-1);
-      }
-      this.setState({ selection: 'not-match' });
+    const { handleNoClick } = this.props;
+    // update local state
+    if (this.state.selection !== selectionOptions.notMatch) {
+      this.setState({ selection: selectionOptions.notMatch });
     } else {
       // allow user to undo selection
-      this.setState({ selection: 'none' });
+      this.setState({ selection: selectionOptions.none });
+    }
+    // update parent state
+    if (handleNoClick) {
+      this.props.handleNoClick(this.state.selection);
     }
   }
 
   render() {
-    const { story } = this.props;
+    const { story, maxTitleLength } = this.props;
     const { formatMessage, formatDate } = this.props.intl;
-    console.log(story);
-    // const title = maxTitleLength !== undefined ? `${story.title.substr(0, maxTitleLength)}...` : story.title;
-    const storyTitle = story.title.length > 75 ? (`${story.title.substring(0, 75)}...`) : story.title;
-
-    // button selection logic
-    const matchSelectedClass = this.state.selection === 'match' ? '-selected' : '';
-    const notMatchSelectedClass = this.state.selection === 'not-match' ? '-selected' : '';
+    const storyTitle = maxTitleLength !== undefined ? `${story.title.substr(0, maxTitleLength)}...` : story.title;
 
     return (
       <Row className={`story ${this.state.selection}`} middle="lg">
         <Col lg={8}>
           <Row>
             <Col lg={12}>
-              <b><a href={story.url} rel="noopener noreferrer" target="_blank">{storyTitle}</a></b>
+              <b><a href={story.url} rel="noopener noreferrer" target="_blank">{ storyTitle }</a></b>
             </Col>
           </Row>
           <Row>
@@ -72,10 +78,18 @@ class StoryRow extends React.Component {
         <Col lg={4}>
           <Row>
             <Col lg={6}>
-              <FlatButton className={`match-btn${matchSelectedClass}`} label={formatMessage(localMessages.match)} onClick={this.handleMatch} />
+              <FlatButton
+                className={`match-btn${this.state.selection === selectionOptions.match ? '-selected' : ''}`}
+                label={formatMessage(localMessages.yesLabel)}
+                onClick={this.handleMatch}
+              />
             </Col>
             <Col lg={6}>
-              <FlatButton className={`not-match-btn${notMatchSelectedClass}`} label={formatMessage(localMessages.notMatch)} onClick={this.handleNotAMatch} />
+              <FlatButton
+                className={`not-match-btn${this.state.selection === selectionOptions.notMatch ? '-selected' : ''}`}
+                label={formatMessage(localMessages.noLabel)}
+                onClick={this.handleNotAMatch}
+              />
             </Col>
           </Row>
         </Col>
@@ -87,8 +101,9 @@ class StoryRow extends React.Component {
 StoryRow.propTypes = {
   // from parent
   story: PropTypes.object.isRequired,
-  updateStoryCount: PropTypes.func,
-  // from state
+  handleYesClick: PropTypes.func,
+  handleNoClick: PropTypes.func,
+  maxTitleLength: PropTypes.number,
   // from compositional helper
   intl: PropTypes.object.isRequired,
 };

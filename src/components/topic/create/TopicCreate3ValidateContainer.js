@@ -8,7 +8,6 @@ import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import AppButton from '../../common/AppButton';
 import StoryRow from './StoryRow';
 import { WarningNotice } from '../../common/Notice';
-// import { updateFeedback } from '../../../actions/appActions';
 import { goToCreateTopicStep, fetchStorySampleByQuery } from '../../../actions/topicActions';
 import messages from '../../../resources/messages';
 
@@ -16,36 +15,58 @@ const NUM_TO_SHOW = 30;
 const VALIDATION_CUTOFF = 0.9;
 
 const localMessages = {
-  title: { id: 'topic.create.validate.title', defaultMessage: 'Change Topic Seed Query: Validate 30 Sample Stories' },
+  title: { id: 'topic.create.validate.title', defaultMessage: 'Step 3: Validate 30 Sample Stories' },
   about: { id: 'topic.create.validate.about',
-    defaultMessage: 'Please review this random sample to make sure these stories are relevant.' },
-  warning: { id: 'topic.create.validate.warning', defaultMessage: 'Sorry, but you need to have at least 90% of the random stories we\'ve shown you be relevant for the topic to work well. Please go back and modify your seed query to try and eliminate the irrelevant stories.' },
+    defaultMessage: 'To make sure your stories are relevant, you need to review this sample to see if these are the kinds of stories you want.' },
+  warning: { id: 'topic.create.validate.warning',
+    defaultMessage: 'Sorry, but you need to have at least 90% of the random stories we\'ve shown you be relevant for the topic to work well. ' +
+                    'Please go back and modify your seed query to try and eliminate the irrelevant stories.' },
 };
 
-// const TopicCreateNValidateContainer = (props) => {
-class TopicCreateNValidateContainer extends React.Component {
+class TopicCreate3ValidateContainer extends React.Component {
 
   state = {
     matchCount: 0,
+    showWarning: false,
   };
 
-  updateMatchCount = (addend) => {
-    this.setState({ matchCount: this.state.matchCount + addend });
+  handleYesClick = (options, prevSelection) => {
+    if (prevSelection === options.match) {
+      this.setState({ matchCount: this.state.matchCount - 1 });
+    } else {
+      this.setState({ matchCount: this.state.matchCount + 1 });
+    }
+  }
+
+  handleNoClick = (options, prevSelection) => {
+    if (prevSelection === options.match) {
+      this.setState({ matchCount: this.state.matchCount - 1 });
+    }
+  }
+
+  handleConfirm = () => {
+    const { handleNextStep, total } = this.props;
+    if (this.state.matchCount >= (VALIDATION_CUTOFF * total)) {
+      this.setState({ showWarning: false });
+      handleNextStep();
+    } else {
+      this.setState({ showWarning: true });
+    }
   }
 
   render = () => {
-    const { finishStep, handlePreviousStep, stories, total } = this.props;
+    const { handlePreviousStep, stories } = this.props;
     const { formatMessage } = this.props.intl;
 
     let warningContent;
-    if (this.state.matchCount >= (VALIDATION_CUTOFF * total)) {
-      warningContent = (<div />);
-    } else {
+    if (this.state.showWarning) {
       warningContent = (
         <WarningNotice>
           <p><FormattedHTMLMessage {...localMessages.warning} /></p>
         </WarningNotice>
       );
+    } else {
+      warningContent = (<div />);
     }
 
     return (
@@ -56,9 +77,6 @@ class TopicCreateNValidateContainer extends React.Component {
         <p>
           <FormattedHTMLMessage {...localMessages.about} />
         </p>
-        <h1>
-          Validated Stories: { this.state.matchCount } / { total }
-        </h1>
         <br />
         <Row start="lg" className="topic-create-sample-story-table">
           <Col lg={12}>
@@ -75,7 +93,13 @@ class TopicCreateNValidateContainer extends React.Component {
             <Row start="lg" className="topic-create-sample-story-container">
               <Col lg={12}>
                 {stories.map(story =>
-                  <StoryRow key={story.stories_id} story={story} updateStoryCount={this.updateMatchCount} />
+                  <StoryRow
+                    key={story.stories_id}
+                    story={story}
+                    maxTitleLength={75}
+                    handleYesClick={this.handleYesClick}
+                    handleNoClick={this.handleNoClick}
+                  />
                 )}
               </Col>
             </Row>
@@ -86,11 +110,12 @@ class TopicCreateNValidateContainer extends React.Component {
             { warningContent }
           </Col>
         </Row>
+        <br />
         <Row>
           <Col lg={12} md={12} sm={12} >
             <AppButton flat label={formatMessage(messages.previous)} onClick={() => handlePreviousStep()} />
             &nbsp; &nbsp;
-            <AppButton type="submit" label={formatMessage(messages.confirm)} primary onClick={() => finishStep(this.state.matchCount)} />
+            <AppButton type="submit" label={formatMessage(messages.confirm)} primary onClick={this.handleConfirm} />
           </Col>
         </Row>
       </Grid>
@@ -98,7 +123,7 @@ class TopicCreateNValidateContainer extends React.Component {
   }
 }
 
-TopicCreateNValidateContainer.propTypes = {
+TopicCreate3ValidateContainer.propTypes = {
   // from parent
   location: PropTypes.object.isRequired,
   // form composition
@@ -109,7 +134,6 @@ TopicCreateNValidateContainer.propTypes = {
   total: PropTypes.number.isRequired,
   stories: PropTypes.array.isRequired,
   // from dispatch
-  finishStep: PropTypes.func.isRequired,
   handlePreviousStep: PropTypes.func.isRequired,
   handleNextStep: PropTypes.func.isRequired,
   asyncFetch: PropTypes.func.isRequired,
@@ -128,16 +152,11 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   handlePreviousStep: () => {
-    dispatch(goToCreateTopicStep(0));
+    dispatch(goToCreateTopicStep(1));
   },
-  handleNextStep: (goToNextStep, failedMessage) => {
-    if (goToNextStep) {
-      // dispatch(goToCreateTopicStep(2));
-      console.log('Next!');
-    } else {
-      console.log(failedMessage);
-      // dispatch(updateFeedback({ open: true, message: failedMessage }));
-    }
+  handleNextStep: () => {
+    // dispatch(goToCreateTopicStep(3));
+    console.log('Next!');
   },
   fetchData: (query) => {
     const infoForQuery = {
@@ -145,7 +164,6 @@ const mapDispatchToProps = dispatch => ({
       start_date: query.start_date,
       end_date: query.end_date,
       rows: NUM_TO_SHOW,
-      limit: NUM_TO_SHOW,
     };
     infoForQuery['collections[]'] = [];
     infoForQuery['sources[]'] = [];
@@ -160,11 +178,6 @@ const mapDispatchToProps = dispatch => ({
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
-    finishStep: (matchCount) => {
-      const sufficientStories = matchCount >= (VALIDATION_CUTOFF * stateProps.total);
-      const failedMessage = ownProps.intl.formatMessage(localMessages.warning);
-      dispatchProps.handleNextStep(sufficientStories, failedMessage);
-    },
     asyncFetch: () => {
       dispatchProps.fetchData(stateProps.formData);
     },
@@ -176,7 +189,7 @@ export default
     withIntlForm(
       connect(mapStateToProps, mapDispatchToProps, mergeProps)(
         withAsyncFetch(
-          TopicCreateNValidateContainer
+          TopicCreate3ValidateContainer
         )
       )
     )

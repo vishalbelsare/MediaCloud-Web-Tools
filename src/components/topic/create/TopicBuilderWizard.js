@@ -6,17 +6,17 @@ import { Step, Stepper, StepLabel } from 'material-ui/Stepper';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import BackLinkingControlBar from '../BackLinkingControlBar';
 import TopicCreate1ConfigureContainer from './TopicCreate1ConfigureContainer';
-// import TopicCreate2PreviewContainer from './TopicCreate2PreviewContainer';
-import TopicCreateNValidateContainer from './TopicCreateNValidateContainer';
-// import TopicCreate3ConfirmContainer from './TopicCreate3ConfirmContainer';
+import TopicCreate2PreviewContainer from './TopicCreate2PreviewContainer';
+import TopicCreate3ValidateContainer from './TopicCreate3ValidateContainer';
+import TopicCreate4ConfirmContainer from './TopicCreate4ConfirmContainer';
 import { goToCreateTopicStep } from '../../../actions/topicActions';
 
 const localMessages = {
   backToTopicManager: { id: 'backToTopicManager', defaultMessage: 'back to Home' },
   step0Name: { id: 'topic.create.step0Name', defaultMessage: 'Configure' },
   step1Name: { id: 'topic.create.step1Name', defaultMessage: 'Preview' },
-  stepNName: { id: 'topic.create.stepNName', defaultMessage: 'Validate' },
-  step2Name: { id: 'topic.create.step3Name', defaultMessage: 'Confirm' },
+  step2Name: { id: 'topic.create.step2Name', defaultMessage: 'Validate' },
+  step3Name: { id: 'topic.create.step3Name', defaultMessage: 'Confirm' },
 };
 
 class TopicBuilderWizard extends React.Component {
@@ -35,9 +35,9 @@ class TopicBuilderWizard extends React.Component {
     const { currentStep, location, initialValues } = this.props;
     const steps = [
       TopicCreate1ConfigureContainer,
-      // TopicCreate2PreviewContainer,
-      TopicCreateNValidateContainer,
-      // TopicCreate3ConfirmContainer,
+      TopicCreate2PreviewContainer,
+      TopicCreate3ValidateContainer,
+      TopicCreate4ConfirmContainer,
     ];
     const CurrentStepComponent = steps[currentStep];
     const stepLabelStyle = { height: 45 };
@@ -48,19 +48,15 @@ class TopicBuilderWizard extends React.Component {
             <Step>
               <StepLabel style={stepLabelStyle}><FormattedMessage {...localMessages.step0Name} /></StepLabel>
             </Step>
-            {
-              // <Step>
-              //   <StepLabel style={stepLabelStyle}><FormattedMessage {...localMessages.step1Name} /></StepLabel>
-              // </Step>
-            }
             <Step>
-              <StepLabel style={stepLabelStyle}><FormattedMessage {...localMessages.stepNName} /></StepLabel>
+              <StepLabel style={stepLabelStyle}><FormattedMessage {...localMessages.step1Name} /></StepLabel>
             </Step>
-            {
-              // <Step>
-              //   <StepLabel style={stepLabelStyle}><FormattedMessage {...localMessages.step2Name} /></StepLabel>
-              // </Step>
-            }
+            <Step>
+              <StepLabel style={stepLabelStyle}><FormattedMessage {...localMessages.step2Name} /></StepLabel>
+            </Step>
+            <Step>
+              <StepLabel style={stepLabelStyle}><FormattedMessage {...localMessages.step3Name} /></StepLabel>
+            </Step>
           </Stepper>
         </BackLinkingControlBar>
         <CurrentStepComponent location={location} initialValues={initialValues} />
