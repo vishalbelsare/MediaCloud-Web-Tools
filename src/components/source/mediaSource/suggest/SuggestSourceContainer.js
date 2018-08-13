@@ -42,10 +42,11 @@ const SuggestSourceContainer = (props) => {
           <Row>
             <Col lg={12}>
               <AppButton
+                type="submit"
                 style={{ marginTop: 30 }}
                 label={formatMessage(localMessages.addButton)}
                 disabled={pristine || submitting}
-                primary
+                color="primary"
               />
             </Col>
           </Row>

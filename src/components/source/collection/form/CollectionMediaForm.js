@@ -155,7 +155,7 @@ class SourceSelectionRendererRaw extends React.Component {
           fullWidth
           multiline
           rows={4}
-          hintText={formatMessage(localMessages.sourceUrlHint)}
+          label={formatMessage(localMessages.sourceUrlHint)}
         />
         {addByUrlConfirmer}
       </TabContainer>

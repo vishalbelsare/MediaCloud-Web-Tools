@@ -79,6 +79,7 @@ const SourceFeedForm = (props) => {
         </Col>
       </Row>
       <AppButton
+        type="submit"
         className="source-feed-updated"
         label={buttonLabel}
         color="primary"
