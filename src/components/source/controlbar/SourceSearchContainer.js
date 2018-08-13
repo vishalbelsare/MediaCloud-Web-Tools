@@ -2,8 +2,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import NoSsr from '@material-ui/core/NoSsr';
 import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
 import LoadingSpinner from '../../common/LoadingSpinner';
 import { SearchButton } from '../../common/IconButton';
 import { FETCH_ONGOING, FETCH_SUCCEEDED } from '../../../lib/fetchConstants';
@@ -155,8 +155,8 @@ class SourceSearchContainer extends React.Component {
       <div className="async-search source-search">
         <SearchButton />
         <div className="fetching">{fetchingStatus}</div>
-        <NoSsr
-          hintText={formatMessage(localMessages.searchHint)}
+        <Select
+          label={formatMessage(localMessages.searchHint)}
           fullWidth
           openOnFocus
           searchText={this.state.lastSearchString}

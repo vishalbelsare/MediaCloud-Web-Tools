@@ -20,7 +20,7 @@ const SVGAndCSVMenu = (props) => {
         onClick={() => downloadCsv(label)}
       >
         <ListItemText>
-          <FormattedMessage {...messages.downloadCsv} values={{ name: label }} />
+          <FormattedMessage {...messages.downloadCSV} values={{ name: label }} />
         </ListItemText>
         <ListItemIcon>
           <DownloadButton />
@@ -32,7 +32,7 @@ const SVGAndCSVMenu = (props) => {
         onClick={() => downloadSvg(label)}
       >
         <ListItemText>
-          <FormattedMessage {...messages.downloadCsv} values={{ name: label }} />
+          <FormattedMessage {...messages.downloadSVG} values={{ name: label }} />
         </ListItemText>
         <ListItemIcon>
           <DownloadButton />

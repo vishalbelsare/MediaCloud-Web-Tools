@@ -4,7 +4,6 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import TextField from '@material-ui/core/TextField';
 import Checkbox from '@material-ui/core/Checkbox';
 import Select from '@material-ui/core/Select';
-import NoSsr from '@material-ui/core/NoSsr';
 
 /**
  * Helpful compositional wrapper for forms that want to use Material-UI, react-intl and redux-form.
@@ -97,21 +96,18 @@ function withIntlForm(Component) {
     renderAutoComplete = ({ input, meta: { touched, error }, onNewRequest: onNewRequestFunc, ...custom }) => {
       const intlCustom = this.intlCustomProps(custom);
       return (
-        <NoSsr>
-          <Select
-            className="form-field-NoSsr"
-            {...input}
-            error={touched && (error ? this.intlIfObject(error) : null)}
-            onNewRequest={(currentValue, index) => {
-              if (onNewRequestFunc && typeof onNewRequestFunc === 'function') {
-                onNewRequestFunc(currentValue, index);
-              }
-              return input.onChange(intlCustom.dataSourceConfig ? currentValue[intlCustom.dataSourceConfig.value] : currentValue);
-            }}
-            {...intlCustom}
-            filter={NoSsr.fuzzyFilter}
-          />
-        </NoSsr>
+        <Select
+          className="form-field-NoSsr"
+          {...input}
+          error={touched && (error ? this.intlIfObject(error) : null)}
+          onNewRequest={(currentValue, index) => {
+            if (onNewRequestFunc && typeof onNewRequestFunc === 'function') {
+              onNewRequestFunc(currentValue, index);
+            }
+            return input.onChange(intlCustom.dataSourceConfig ? currentValue[intlCustom.dataSourceConfig.value] : currentValue);
+          }}
+          {...intlCustom}
+        />
       );
     }
 

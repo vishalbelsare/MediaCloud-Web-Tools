@@ -72,16 +72,16 @@ function composeIconButton(Icon, defaultTooltipMessage, useBackgroundColor = tru
       const displayTooltip = ((tooltip !== undefined) && (tooltip !== null)) ? tooltip : formatMessage(defaultTooltipMessage);
       const linkTarget = linkTo || null;
       const clickHandler = (onClick) ? this.handleClick : null;
-      const otherProps = {};
+      let bC = '';
       if (backgroundColor) {
-        otherProps.backgroundColor = backgroundColor;
+        bC = backgroundColor;
       } else if (useBackgroundColor === true) {
-        otherProps.backgroundColor = this.state.backgroundColor;
+        bC = this.state.backgroundColor;
       }
       const button = (
         <IconButton
           tooltip={displayTooltip}
-          style={{ padding: 0, border: 0, width: defaultWidth || 26, height: defaultHeight || 26, color, backgroundColor }}
+          style={{ padding: 0, border: 0, width: defaultWidth || 26, height: defaultHeight || 26, color, backgroundColor: bC }}
         >
           <Icon color={this.state.color} />
         </IconButton>
