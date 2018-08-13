@@ -37,7 +37,7 @@ const SourceForm = (props) => {
             type="submit"
             label={buttonLabel}
             disabled={pristine || submitting}
-            primary
+            color="primary"
           />
         </Col>
       </Row>

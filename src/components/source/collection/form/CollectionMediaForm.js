@@ -150,7 +150,7 @@ class SourceSelectionRendererRaw extends React.Component {
                     hintText={formatMessage(localMessages.sourceUrlHint)}
                   />
                   <AppButton
-                    primary
+                    color="primary"
                     label={formatMessage(localMessages.addSourcesByUrl)}
                     onClick={this.addSourcesByUrl}
                   />

@@ -24,7 +24,7 @@ const CollectionForm = (props) => {
       type="submit"
       label={buttonLabel}
       disabled={pristine || submitting}
-      primary
+      color="primary"
       className="submit-button"
     />
   );

@@ -4,16 +4,15 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import * as d3 from 'd3';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import MenuItem from '@material-ui/core/MenuItem';
 import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import DataCard from '../../common/DataCard';
 import { fetchCollectionSourceRepresentation } from '../../../actions/sourceActions';
 import messages from '../../../resources/messages';
 import withHelp from '../../common/hocs/HelpfulContainer';
-import { DownloadButton, ExploreButton } from '../../common/IconButton';
+import { ExploreButton } from '../../common/IconButton';
 import PackedBubbleChart from '../../vis/PackedBubbleChart';
 import { getBrandDarkColor } from '../../../styles/colors';
-import ActionMenu from '../../common/ActionMenu';
+import SVGAndCSVMenu from '../../common/SVGAndCSVMenu';
 import { downloadSvg } from '../../util/svg';
 
 const localMessages = {
@@ -95,20 +94,10 @@ class CollectionSourceRepresentation extends React.Component {
       <DataCard>
         <div className="actions">
           <ExploreButton linkTo={`/collections/${collectionId}/content-history`} />
-          <ActionMenu>
-            <MenuItem
-              className="action-icon-menu-item"
-              primaryText={formatMessage(messages.downloadCSV)}
-              rightIcon={<DownloadButton />}
-              onTouchTap={this.downloadCsv}
-            />
-            <MenuItem
-              className="action-icon-menu-item"
-              primaryText={formatMessage(messages.downloadSVG)}
-              rightIcon={<DownloadButton />}
-              onTouchTap={() => downloadSvg(BUBBLE_CHART_DOM_ID)}
-            />
-          </ActionMenu>
+          <SVGAndCSVMenu
+            downloadCsv={this.downloadCsv}
+            downloadSvg={downloadSvg}
+          />
         </div>
         <h2>
           <FormattedMessage {...localMessages.title} />

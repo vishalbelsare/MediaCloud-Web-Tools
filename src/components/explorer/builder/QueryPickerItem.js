@@ -197,7 +197,7 @@ class QueryPickerItem extends React.Component {
               onChange={(e, val) => {
                 this.updateLabelInDialog(val);
               }}
-              ref={focusUsernameInputField}
+              inputRef={focusUsernameInputField}
               hintText={query.label || formatMessage(localMessages.searchHint)}
             />
           </DialogContent>

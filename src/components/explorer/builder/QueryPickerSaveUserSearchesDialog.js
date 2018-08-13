@@ -86,7 +86,7 @@ class QueryPickerSaveUserSearchesDialog extends React.Component {
               className="query-picker-save-search-name"
               id="searchNameInDialog"
               name="searchNameInDialog"
-              ref={this.focusQueryInputField}
+              inputRef={this.focusQueryInputField}
               onChange={this.updateTextInDialog}
               label={searchNickname}
             />

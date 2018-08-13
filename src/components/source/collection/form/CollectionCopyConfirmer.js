@@ -41,7 +41,7 @@ class CollectionCopyConfirmer extends Component {
         <AppButton
           label={formatMessage(messages.ok)}
           onClick={() => onConfirm(collection)}
-          primary
+          color="primary"
         />
       </div>
     );
