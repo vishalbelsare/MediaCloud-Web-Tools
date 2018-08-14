@@ -28,7 +28,7 @@ const SuggestSourceContainer = (props) => {
   const titleHandler = formatMessage(localMessages.mainTitle);
   return (
     <div>
-      <Helmet><title>{titleHandler()}</title></Helmet>
+      <Helmet><title>{titleHandler}</title></Helmet>
       <Grid>
         <Row>
           <Col lg={12}>
