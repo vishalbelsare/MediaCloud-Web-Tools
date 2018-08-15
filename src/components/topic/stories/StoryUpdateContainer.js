@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { push } from 'react-router-redux';
 import { fetchMetadataValuesForPrimaryLanguage } from '../../../actions/systemActions'; // TODO relocate metadata actions into system if we use more often...
-import { selectStory, fetchStory, updateStory } from '../../../actions/topicActions';
+import { selectStory, fetchStory, updateStory } from '../../../actions/storyActions';
 import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import StoryDetailForm from './StoryDetailForm';
 import messages from '../../../resources/messages';

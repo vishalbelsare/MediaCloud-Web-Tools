@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Helmet } from 'react-helmet';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import Dialog from 'material-ui/Dialog';
-import Link from 'react-router/lib/Link';
+import MenuItem from 'material-ui/MenuItem';
+// import ListItemText from '@material-ui/core/ListItemText';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { selectStory, fetchStory } from '../../../actions/storyActions';
@@ -12,6 +13,7 @@ import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import StoryWordsContainer from './StoryWordsContainer';
 import StoryInlinksContainer from './StoryInlinksContainer';
 import StoryOutlinksContainer from './StoryOutlinksContainer';
+import StoryActionMenu from '../../common/StoryActionMenu';
 import StoryEntitiesContainer from '../../common/story/StoryEntitiesContainer';
 import StoryNytThemesContainer from '../../common/story/StoryNytThemesContainer';
 import { TAG_SET_GEOGRAPHIC_PLACES, TAG_SET_NYT_THEMES } from '../../../lib/tagUtil';
@@ -35,6 +37,8 @@ const localMessages = {
   removeAbout: { id: 'story.details.remove.about', defaultMessage: 'If story is clearly not related to the Topic, or is messing up your analysis, you can remove it from the next Snapshot.  Be careful, because this means it won\'t show up anywhere on the new Snapshot you generate.' },
   unknownLanguage: { id: 'story.details.language.unknown', defaultMessage: 'Unknown' },
   editStory: { id: 'story.details.edit', defaultMessage: 'Edit This Story' },
+  readStory: { id: 'story.details.read', defaultMessage: 'Read This Story' },
+  removeStory: { id: 'story.details.remove', defaultMessage: 'Remove From Topic' },
 };
 
 class StoryContainer extends React.Component {
@@ -58,6 +62,15 @@ class StoryContainer extends React.Component {
     this.setState({ open: false });
   };
 
+  goToEdit = (topicId, storiesId) => {
+    window.location = urlToTopicMapper(`topics/${topicId}/stories/${storiesId}/update`);
+  };
+
+  goToStory = (url) => {
+    // target="_blank"
+    window.open = url;
+  };
+
   render() {
     const { storyInfo, topicStoryInfo, topicId, storiesId, topicName } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
@@ -79,19 +92,24 @@ class StoryContainer extends React.Component {
           <Row>
             <Col lg={12}>
               <h1>
-                <span className="actions">
+                <StoryActionMenu>
                   <Permissioned onlyRole={PERMISSION_STORY_EDIT}>
-                    <Link to={`/topics/${topicId}/stories/${storiesId}/update`}>
+                    <MenuItem onClick={() => this.goToEdit(topicId, storiesId)}>
+                      <FormattedMessage {...localMessages.editStory} />
                       <EditButton tooltip={formatMessage(localMessages.editStory)} />
-                    </Link>
+                    </MenuItem>
                   </Permissioned>
-                  <a href={storyInfo.url} target="_blank" rel="noopener noreferrer">
+                  <MenuItem onClick={() => this.goToStory(storyInfo.url)}>
+                    <FormattedMessage {...localMessages.readStory} />
                     <ReadItNowButton />
-                  </a>
+                  </MenuItem>
                   <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
-                    <RemoveButton tooltip={formatMessage(localMessages.removeTitle)} onClick={this.handleRemoveClick} />
+                    <MenuItem onClick={this.handleRemoveClick}>
+                      <FormattedMessage {...localMessages.removeStory} />
+                      <RemoveButton tooltip={formatMessage(localMessages.removeTitle)} />
+                    </MenuItem>
                   </Permissioned>
-                </span>
+                </StoryActionMenu>
                 <StoryIcon height={32} />
                 {displayTitle}
               </h1>
