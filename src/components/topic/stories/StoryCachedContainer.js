@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Grid } from 'react-flexbox-grid/lib';
+import { Grid, Row } from 'react-flexbox-grid/lib';
 import { FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { selectStory, fetchStory } from '../../../actions/storyActions';
 import withAsyncFetch from '../../common/hocs/AsyncContainer';
@@ -18,9 +18,9 @@ const StoryCachedContainer = (props) => {
     <Grid>
       <h1>{story.title}</h1>
       <h3><FormattedHTMLMessage {...localMessages.intro} values={{ publishDate: story.publish_date, ref: story.media.url, link: story.media.name, collectDate: story.collect_date }} /></h3>
-      <pre>
+      <Row>
         {story.story_text}
-      </pre>
+      </Row>
     </Grid>
   );
 };
