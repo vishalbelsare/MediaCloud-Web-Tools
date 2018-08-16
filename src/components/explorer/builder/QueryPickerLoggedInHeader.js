@@ -47,7 +47,7 @@ class QueryPickerLoggedInHeader extends React.Component {
     if (menuChildren !== null) {
       iconOptions = (
         <div className="query-picker-icon-button">
-          <IconButton onClick={this.handleClick} className="query-picker-icon-button" aria-haspopup="true" aria-owns="logged-in-header-menu"><MoreVertIcon /></IconButton>
+          <IconButton onClick={this.handleClick} aria-haspopup="true" aria-owns="logged-in-header-menu"><MoreVertIcon /></IconButton>
           <Menu
             id="logged-in-header-menu"
             open={Boolean(this.state.anchorEl)} // I don't understand why we have to do this - why isn't it part of the compoennt?

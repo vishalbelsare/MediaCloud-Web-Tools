@@ -39,15 +39,17 @@ class QueryPickerDemoHeader extends React.Component {
       }
       if (menuRegister !== null || menuDelete !== null) {
         iconOptions = (
-          <IconMenu
-            className="query-picker-icon-button"
-            iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
-            anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
-            targetOrigin={{ horizontal: 'left', vertical: 'top' }}
-          >
-            {menuRegister}
-            {menuDelete}
-          </IconMenu>
+          <div className="query-picker-icon-button">
+            <IconMenu
+              className="query-picker-icon-button"
+              iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
+              anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
+              targetOrigin={{ horizontal: 'left', vertical: 'top' }}
+            >
+              {menuRegister}
+              {menuDelete}
+            </IconMenu>
+          </div>
         );
       }
       const colorPickerContent = (
