@@ -34,7 +34,7 @@ const About = (props) => {
         <Row>
           <Col lg={10} md={10} sm={10} />
           <Col m={2} lg={2}>
-            <AppButton color="primary" primary onTouchTap={() => { window.location = urlToExplorer('queries/search?q="*"'); }}>
+            <AppButton color="primary" primary onTouchTap={() => { window.location = urlToExplorer('queries/search?q=[{"label":"*","q":"*","color":"%231f77b4","sources":[],"collections":[58722749]}]'); }}>
               <FormattedMessage {...messages.tryItNow} />
             </AppButton>
           </Col>
