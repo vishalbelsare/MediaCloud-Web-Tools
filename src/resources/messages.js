@@ -175,6 +175,7 @@ const messages = {
   nextPage: { id: 'paging.next', defaultMessage: 'Next Page' },
   previousPage: { id: 'paging.previous', defaultMessage: 'Previous Page' },
   readItNow: { id: 'readItNow', defaultMessage: 'Read It Now' },
+  tryItNow: { id: 'tryItNow', defaultMessage: 'Try It Now' },
   moreOptions: { id: 'moreOptions', defaultMessage: 'More Options' },
   filter: { id: 'filter', defaultMessage: 'Filter' },
   query: { id: 'query', defaultMessage: 'Query' },
