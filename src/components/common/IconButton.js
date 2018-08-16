@@ -135,13 +135,13 @@ export const HelpButton = composeIconButton(HelpIcon, messages.help, false);
 
 export const DeleteButton = composeIconButton(DeleteIcon, messages.delete);
 
-export const DeleteMediaButton = composeIconButton(DeleteMediaIcon, messages.delete);
+export const DeleteMediaButton = composeIconButton(DeleteMediaIcon, messages.delete, false);
 
 export const RemoveButton = composeIconButton(RemoveIcon, messages.remove);
 
 export const AddButton = composeIconButton(AddIcon, messages.add);
 
-export const AddQueryButton = composeIconButton(AddQueryIcon, messages.add);
+export const AddQueryButton = composeIconButton(AddQueryIcon, messages.add, false);
 
 export const FavoriteButton = composeIconButton(FilledStarIcon, messages.unfavorite);
 

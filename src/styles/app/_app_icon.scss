@@ -78,6 +78,15 @@
     }
   }
 
+  &.app-icon-delete-media {
+    svg {
+      margin-top: 8px;
+    }
+    &:hover {
+      background-color: #fc521f !important;
+    }
+  }
+
   &.app-icon-remove {
     background-color: $material-grey400;
     svg {

@@ -6,6 +6,13 @@ div [data-reactroot] {
 
 .add-media {
 
+  .add-media-label {
+    display: inline-block;
+    vertical-align: top;
+    padding-left: 4px;
+    padding-top: 6px;
+  }
+
   .select-media-dialog-modal {
     width: 90% !important;
     position: absolute;

@@ -111,7 +111,9 @@ class MediaPickerDialog extends React.Component {
           tooltip={formatMessage(localMessages.addMedia)}
         />
         {modalContent}
-        <FormattedMessage {...localMessages.addMedia} />
+        <div className="add-media-label">
+          <FormattedMessage {...localMessages.addMedia} />
+        </div>
       </div>
     );
   }
