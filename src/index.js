@@ -59,6 +59,10 @@ function reallyInitializeApp(routes) {
         outlined: {
           color: getBrandColors().dark,
         },
+        label: {
+          fontFamily: 'Lato, sans',
+          fontWeight: 200,
+        },
       },
       MuiModal: {
         paperWidth: '80%',
