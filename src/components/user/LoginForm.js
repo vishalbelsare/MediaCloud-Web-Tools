@@ -30,7 +30,7 @@ const LoginFormComponent = (props) => {
   return (
     <form onSubmit={handleSubmit(onSubmitLoginForm.bind(this))} className="app-form login-form">
       <Row>
-        <Col lg={4}>
+        <Col lg={12}>
           <Field
             name="email"
             component={renderTextField}
@@ -40,7 +40,7 @@ const LoginFormComponent = (props) => {
         </Col>
       </Row>
       <Row>
-        <Col lg={4}>
+        <Col lg={12}>
           <Field
             name="password"
             type="password"
@@ -51,7 +51,7 @@ const LoginFormComponent = (props) => {
         </Col>
       </Row>
       <Row>
-        <Col lg={4}>
+        <Col lg={12}>
           <AppButton
             type="submit"
             label={formatMessage(messages.userLogin)}
@@ -61,7 +61,7 @@ const LoginFormComponent = (props) => {
         </Col>
       </Row>
       <Row>
-        <Col lg={4}>
+        <Col lg={12}>
           <Link to="/user/signup">
             <AppButton
               variant="outlined"
@@ -71,7 +71,7 @@ const LoginFormComponent = (props) => {
         </Col>
       </Row>
       <Row>
-        <Col lg={4}>
+        <Col lg={12}>
           <Link to="/user/request-password-reset">
             <AppButton
               variant="outlined"
