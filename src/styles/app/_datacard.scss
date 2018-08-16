@@ -33,6 +33,12 @@
     padding: 0px;
   }
 
+  &.left-border{
+    border: 0px;
+    border-left: 1px solid $material-grey300;
+  }
+
+
   &.inline {
     margin-top: 0px;
     margin-bottom: 30px;
