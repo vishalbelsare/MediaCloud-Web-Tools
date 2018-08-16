@@ -67,6 +67,11 @@ function reallyInitializeApp(routes) {
           fontWeight: 200,
         },
       },
+      MuiInput: {
+        input: {
+          padding: '5px 10px',
+        },
+      },
       MuiModal: {
         paperWidth: '80%',
       },

@@ -45,6 +45,7 @@ function withIntlForm(Component) {
             autoComplete,
           }}
           helperText={touched ? this.intlIfObject(error) : ''}
+          margin="normal"
         />
       );
     };

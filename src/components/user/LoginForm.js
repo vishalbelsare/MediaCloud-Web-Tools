@@ -30,27 +30,28 @@ const LoginFormComponent = (props) => {
   return (
     <form onSubmit={handleSubmit(onSubmitLoginForm.bind(this))} className="app-form login-form">
       <Row>
-        <Col lg={12}>
+        <Col lg={4}>
           <Field
             name="email"
             component={renderTextField}
-            floatingLabelText={messages.userEmail}
+            label={messages.userEmail}
+            fullWidth
           />
         </Col>
       </Row>
       <Row>
-        <Col lg={12}>
+        <Col lg={4}>
           <Field
             name="password"
             type="password"
             component={renderTextField}
-            floatingLabelText={messages.userPassword}
+            label={messages.userPassword}
+            fullWidth
           />
         </Col>
       </Row>
       <Row>
-        <Col lg={12}>
-          <br />
+        <Col lg={4}>
           <AppButton
             type="submit"
             label={formatMessage(messages.userLogin)}
@@ -60,19 +61,20 @@ const LoginFormComponent = (props) => {
         </Col>
       </Row>
       <Row>
-        <Col lg={12}>
-          <br />
+        <Col lg={4}>
           <Link to="/user/signup">
             <AppButton
-              flat
+              variant="outlined"
               label={formatMessage(localMessages.signUpNow)}
             />
           </Link>
         </Col>
-        <Col lg={12}>
+      </Row>
+      <Row>
+        <Col lg={4}>
           <Link to="/user/request-password-reset">
             <AppButton
-              flat
+              variant="outlined"
               label={formatMessage(localMessages.forgotPassword)}
             />
           </Link>
