@@ -54,16 +54,7 @@ class AppMenu extends React.Component {
         },
       }));
     }
-    // let titleButtonClickHandler;
-    let menuHeader = (
-      <AppButton
-        color="primary"
-        variant="text"
-        onClick={event => onTitleClick(event)}
-      >
-        {formatMessage(titleMsg)}
-      </AppButton>
-    );
+    let menuHeader;
     if (showMenu) {
       const whichIcon = this.whichArrowIcon();
       menuHeader = (
@@ -77,6 +68,16 @@ class AppMenu extends React.Component {
           </AppButton>
           {whichIcon}
         </div>
+      );
+    } else {
+      menuHeader = (
+        <AppButton
+          color="primary"
+          variant="text"
+          onClick={event => onTitleClick(event)}
+        >
+          {formatMessage(titleMsg)}
+        </AppButton>
       );
     }
     return (

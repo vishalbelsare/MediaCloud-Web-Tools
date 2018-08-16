@@ -53,6 +53,9 @@ function reallyInitializeApp(routes) {
     },
     overrides: { // Name of the component ⚛️ / style sheet
       MuiButton: {
+        root: {
+          padding: '0px 16px',
+        },
         containedPrimary: {
           color: 'white',
         },
