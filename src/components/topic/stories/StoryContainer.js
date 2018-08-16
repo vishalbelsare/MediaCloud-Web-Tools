@@ -39,6 +39,7 @@ const localMessages = {
   editStory: { id: 'story.details.edit', defaultMessage: 'Edit This Story' },
   readStory: { id: 'story.details.read', defaultMessage: 'Read This Story' },
   removeStory: { id: 'story.details.remove', defaultMessage: 'Remove From Topic' },
+  readCachedCopy: { id: 'story.details.readCached', defaultMessage: 'Read Cached Copy' },
 };
 
 class StoryContainer extends React.Component {
@@ -69,6 +70,10 @@ class StoryContainer extends React.Component {
   goToStory = (url) => {
     // target="_blank"
     window.open = url;
+  };
+
+  goToCachedCopy = (topicId, storiesId) => {
+    window.location = urlToTopicMapper(`topics/${topicId}/stories/${storiesId}/cached`);
   };
 
   render() {
@@ -107,6 +112,12 @@ class StoryContainer extends React.Component {
                     <MenuItem onClick={this.handleRemoveClick}>
                       <FormattedMessage {...localMessages.removeStory} />
                       <RemoveButton tooltip={formatMessage(localMessages.removeTitle)} />
+                    </MenuItem>
+                  </Permissioned>
+                  <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
+                    <MenuItem onClick={() => this.goToCachedCopy(topicId, storiesId)}>
+                      <FormattedMessage {...localMessages.readCachedCopy} />
+                      <ReadItNowButton tooltip={formatMessage(localMessages.readCachedCopy)} />
                     </MenuItem>
                   </Permissioned>
                 </StoryActionMenu>
