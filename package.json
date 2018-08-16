@@ -34,7 +34,7 @@
     "highcharts-treemap": "^0.1.2",
     "intl": "1.2.5",
     "isomorphic-fetch": "2.2.1",
-    "material-ui": "0.20.1",
+    "@material-ui/core": "1.5.0",
     "moment": "2.19.3",
     "nightmare-inline-download": "^0.2.2",
     "npm": "^6.2.0",
