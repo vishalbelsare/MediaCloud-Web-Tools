@@ -31,7 +31,6 @@ const StoryDetailForm = (props) => {
             name="title"
             component={renderTextField}
             fullWidth
-            floatingLabelText={formatMessage(messages.storyTitle)}
             label={formatMessage(messages.storyTitle)}
             hintText={formatMessage(messages.storyTitle)}
           />
@@ -43,7 +42,6 @@ const StoryDetailForm = (props) => {
             name="description"
             component={renderTextField}
             fullWidth
-            floatingLabelText={formatMessage(messages.storyDescription)}
             label={formatMessage(messages.storyDescription)}
             hintText={formatMessage(messages.storyDescription)}
           />
@@ -56,7 +54,6 @@ const StoryDetailForm = (props) => {
             component={renderTextField}
             type="inline"
             fullWidth
-            floatingLabelText={formatMessage(messages.storyUrl)}
             label={formatMessage(messages.storyUrl)}
             hintText={formatMessage(messages.storyUrl)}
           />
@@ -69,7 +66,6 @@ const StoryDetailForm = (props) => {
             component={renderSelect}
             type="inline"
             fullWidth
-            floatingLabelText={formatMessage(messages.language)}
             label={formatMessage(messages.language)}
             hintText={formatMessage(messages.language)}
           >
@@ -84,7 +80,6 @@ const StoryDetailForm = (props) => {
             component={renderTextField}
             type="inline"
             fullWidth
-            floatingLabelText={formatMessage(messages.storyDate)}
             label={formatMessage(messages.storyDate)}
             hintText={formatMessage(messages.storyDate)}
           />
@@ -97,7 +92,6 @@ const StoryDetailForm = (props) => {
             component={renderCheckbox}
             type="inline"
             fullWidth
-            floatingLabelText={formatMessage(messages.storyCustomDate)}
             label={formatMessage(messages.storyCustomDate)}
             hintText={formatMessage(messages.storyCustomDate)}
           />
@@ -110,7 +104,6 @@ const StoryDetailForm = (props) => {
             component={renderCheckbox}
             type="inline"
             fullWidth
-            floatingLabelText={formatMessage(messages.storyUndateable)}
             label={formatMessage(messages.storyUndateable)}
             hintText={formatMessage(messages.storyUndateable)}
           />

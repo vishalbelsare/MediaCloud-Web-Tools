@@ -40,12 +40,12 @@ const PermissionForm = (props) => {
             name="email"
             component={renderTextField}
             fullWidth
-            floatingLabelText={localMessages.email}
+            label={localMessages.email}
             hintText={localMessages.emailFieldHint}
           />
         </Col>
         <Col lg={3} md={3} sm={3} xs={12}>
-          <Field name="permission" component={renderSelect} floatingLabelText={localMessages.permission}>
+          <Field name="permission" component={renderSelect} label={localMessages.permission}>
             <MenuItem key={PERMISSION_TOPIC_READ} value={PERMISSION_TOPIC_READ} primaryText={formatMessage(localMessages.read)}>{PERMISSION_TOPIC_READ}</MenuItem>
             <MenuItem key={PERMISSION_TOPIC_WRITE} value={PERMISSION_TOPIC_WRITE} primaryText={formatMessage(localMessages.write)}>{PERMISSION_TOPIC_WRITE}</MenuItem>
             <MenuItem key={PERMISSION_TOPIC_ADMIN} value={PERMISSION_TOPIC_ADMIN} primaryText={formatMessage(localMessages.admin)}>{PERMISSION_TOPIC_ADMIN}</MenuItem>

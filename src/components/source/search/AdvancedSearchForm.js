@@ -27,7 +27,7 @@ const AdvancedSearchForm = (props) => {
             name={'advancedSearchQueryString'}
             value={initialValues}
             component={renderTextField}
-            floatingLabelText={formatMessage(localMessages.searchSuggestion)}
+            label={formatMessage(localMessages.searchSuggestion)}
             fullWidth
           />
         </Col>
@@ -38,7 +38,7 @@ const AdvancedSearchForm = (props) => {
             id={TAG_SET_PUBLICATION_COUNTRY}
             name={'publicationCountry'}
             form="advancedQueryForm"
-            floatingLabelText={formatMessage(localMessages.pubCountrySuggestion)}
+            label={formatMessage(localMessages.pubCountrySuggestion)}
             NoSsr
           />
         </Col>
@@ -47,7 +47,7 @@ const AdvancedSearchForm = (props) => {
             id={TAG_SET_PUBLICATION_STATE}
             name={'publicationState'}
             form="advancedQueryForm"
-            floatingLabelText={formatMessage(localMessages.pubStateSuggestion)}
+            label={formatMessage(localMessages.pubStateSuggestion)}
             NoSsr
           />
         </Col>
@@ -57,7 +57,7 @@ const AdvancedSearchForm = (props) => {
             id={TAG_SET_PRIMARY_LANGUAGE}
             name={'primaryLanguage'}
             form="advancedQueryForm"
-            floatingLabelText={formatMessage(localMessages.pLanguageSuggestion)}
+            label={formatMessage(localMessages.pLanguageSuggestion)}
             NoSsr
           />
         </Col>
@@ -67,7 +67,7 @@ const AdvancedSearchForm = (props) => {
             id={TAG_SET_COUNTRY_OF_FOCUS}
             name={'countryOfFocus'}
             form="advancedQueryForm"
-            floatingLabelText={formatMessage(localMessages.pCountryOfFocusSuggestion)}
+            label={formatMessage(localMessages.pCountryOfFocusSuggestion)}
             NoSsr
           />
         </Col>
@@ -77,7 +77,7 @@ const AdvancedSearchForm = (props) => {
             showDescription
             name="mediaType"
             form="advancedQueryForm"
-            floatingLabelText={formatMessage(localMessages.pMediaType)}
+            label={formatMessage(localMessages.pMediaType)}
           />
         </Col>
       </Row>
