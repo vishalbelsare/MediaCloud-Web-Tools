@@ -54,11 +54,8 @@ const NavToolbar = (props) => {
               </li>
             </ul>
           </Col>
-          <Col lg={5}>
+          <Col lg={6}>
             <ul className="right">
-              <li className="recent-changes">
-                <RecentNewsMenuContainer />
-              </li>
               <li className="support">
                 <a
                   href={SUPPORT_URL}
@@ -80,10 +77,13 @@ const NavToolbar = (props) => {
                   {formatMessage(messages.menuAbout).toUpperCase()}
                 </a>
               </li>
+              <li className="recent-changes-item">
+                <RecentNewsMenuContainer />
+              </li>
+              <li className="user-menu-item">
+                <UserMenuContainer />
+              </li>
             </ul>
-          </Col>
-          <Col lg={1}>
-            <UserMenuContainer />
           </Col>
         </Row>
       </Grid>

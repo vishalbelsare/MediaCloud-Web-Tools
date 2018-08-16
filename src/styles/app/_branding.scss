@@ -12,22 +12,18 @@
 
     &.right {
       float: right;
+      margin-top: 5px;
       li {
         margin-right: 20px;
+        &.recent-changes-item, &.user-menu-item {
+          margin-right: 0px;
+        }
+        &.about {
+          margin-right: 10px;
+        }
       }
     }
 
-    li.support, li.blog, li.recent-changes {
-      color: $white;
-      margin-top: 10px;
-    }
-    li.about {
-      border-right: 1px solid white;
-      padding-right: 20px;
-    }
-    li.recent-changes {
-      margin-top: 15px;
-    }
     li {
       display: block;
       float: left;
@@ -41,10 +37,8 @@
         text-decoration: none;
         color: $white;
       }
+
     }
-  }
-  .user-menu {
-    margin-top: 10px;
   }
   .app-menu {
     .icon-button {

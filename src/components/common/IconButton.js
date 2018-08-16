@@ -17,6 +17,7 @@ import PreviousIcon from '@material-ui/icons/SkipPrevious';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 import HelpIcon from '@material-ui/icons/Help';
+import PersonIcon from '@material-ui/icons/Person';
 
 import slugify from 'slugify';
 import messages from '../../resources/messages';
@@ -82,12 +83,13 @@ function composeIconButton(Icon, defaultTooltipMessage, useBackgroundColor = tru
         <IconButton
           tooltip={displayTooltip}
           style={{ padding: 0, border: 0, width: defaultWidth || 26, height: defaultHeight || 26, color, backgroundColor: bC }}
+          onClick={clickHandler}
         >
           <Icon color={this.state.color} />
         </IconButton>
       );
       let content;
-      if (linkTarget || clickHandler) {
+      if (linkTarget) {
         content = (
           <Link
             to={linkTarget}
@@ -184,3 +186,5 @@ export const PreviousButton = composeIconButton(PreviousIcon, messages.skipPrevi
 export const NotificationsButton = composeIconButton(NotificationsIcon, messages.recentNews, false);
 
 export const NotificationsActivesButton = composeIconButton(NotificationsActiveIcon, messages.recentNews, false);
+
+export const PersonButton = composeIconButton(PersonIcon, messages.userLogin, false);
