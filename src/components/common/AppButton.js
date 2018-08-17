@@ -47,15 +47,17 @@ class AppButton extends React.Component {
     // material-ui shim
     if (buttonProps.primary) {
       buttonProps.color = 'primary';
+      buttonProps.variant = 'contained';
       delete buttonProps.primary;
     } else if (buttonProps.secondary) {
       buttonProps.color = 'secondary';
+      buttonProps.variant = 'outlined';
       delete buttonProps.secondary;
     }
     let content = null;
 
     content = (
-      <Button variant={variant || 'contained'} {...buttonProps}>
+      <Button variant={variant || 'outlined'} {...buttonProps}>
         {textLabel}
         {icon}
       </Button>
