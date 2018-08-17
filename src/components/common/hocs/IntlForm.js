@@ -103,10 +103,10 @@ function withIntlForm(Component) {
     renderAutoComplete = ({ input, meta: { touched, error }, onNewRequest: onNewRequestFunc, ...custom }) => {
       const intlCustom = this.intlCustomProps(custom);
       return (
-        <Select
-          className="form-field-NoSsr"
+        <AutoComplete
+          className="form-field-autocomplete"
           {...input}
-          error={touched && (error ? this.intlIfObject(error) : null)}
+          errorText={touched && (error ? this.intlIfObject(error) : null)}
           onNewRequest={(currentValue, index) => {
             if (onNewRequestFunc && typeof onNewRequestFunc === 'function') {
               onNewRequestFunc(currentValue, index);
@@ -114,6 +114,7 @@ function withIntlForm(Component) {
             return input.onChange(intlCustom.dataSourceConfig ? currentValue[intlCustom.dataSourceConfig.value] : currentValue);
           }}
           {...intlCustom}
+          filter={AutoComplete.fuzzyFilter}
         />
       );
     }
