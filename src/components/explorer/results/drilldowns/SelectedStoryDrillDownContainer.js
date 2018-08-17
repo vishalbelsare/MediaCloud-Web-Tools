@@ -19,7 +19,7 @@ import { trimToMaxLength } from '../../../../lib/stringUtil';
 import StatBar from '../../../common/statbar/StatBar';
 
 const localMessages = {
-  title: { id: 'word.inContext.title', defaultMessage: 'Details for: {title}' },
+  title: { id: 'word.inContext.title', defaultMessage: 'Story Details: ' },
   helpTitle: { id: 'word.inContext.help.title', defaultMessage: 'About Word in Context' },
   helpText: { id: 'word.inContext.help.text',
     defaultMessage: '<p>It is helpful to look at how a word is used, in addition to the fact that it is used.  While a word cloud can tell you what words are used, this interactive visualization can help you explore the use of a word in context.</p>',
@@ -68,7 +68,8 @@ class SelectedStoryDrillDownContainer extends React.Component {
                   </MenuItem>
                 </ActionMenu>
                 <h2>
-                  <FormattedMessage {...localMessages.title} values={{ title: trimToMaxLength(storyInfo.title, 80) }} />
+                  <FormattedMessage {...localMessages.title} />
+                  <a href={storyInfo.url} target="_blank" rel="noopener noreferrer">{trimToMaxLength(storyInfo.title, 80)}</a>
                   {helpButton}
                 </h2>
               </Col>

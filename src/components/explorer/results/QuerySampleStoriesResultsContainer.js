@@ -79,7 +79,6 @@ QuerySampleStoriesResultsContainer.propTypes = {
   lastSearchTime: PropTypes.number.isRequired,
   queries: PropTypes.array.isRequired,
   isLoggedIn: PropTypes.bool.isRequired,
-  location: PropTypes.object,
   // from hocs
   intl: PropTypes.object.isRequired,
   onShowLoginDialog: PropTypes.func.isRequired,
