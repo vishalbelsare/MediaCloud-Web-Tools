@@ -3,6 +3,7 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeSummarizedVisualization from './SummarizedVizualization';
+import withLoginRequired from '../../common/hocs/LoginRequiredDialog';
 import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import { fetchQueryTopWords, fetchDemoQueryTopWords, resetTopWords, selectWord }
 from '../../../actions/explorerActions';
@@ -24,8 +25,12 @@ class QueryWordsResultsContainer extends React.Component {
     postToDownloadUrl('/api/explorer/words/wordcount.csv', query, { ngramSize, sample_size: sampleSize });
   }
   handleWordClick = (wordDataPoint) => {
-    const { handleSelectedWord, selectedQuery } = this.props;
-    handleSelectedWord(selectedQuery, wordDataPoint.term);
+    const { handleSelectedWord, selectedQuery, isLoggedIn, onShowLoginDialog } = this.props;
+    if (isLoggedIn) {
+      handleSelectedWord(selectedQuery, wordDataPoint.term);
+    } else {
+      onShowLoginDialog();
+    }
   }
   render() {
     const { results, queries, tabSelector, selectedQueryIndex, fetchData, internalItemSelected } = this.props;
@@ -58,11 +63,12 @@ QueryWordsResultsContainer.propTypes = {
   lastSearchTime: PropTypes.number.isRequired,
   queries: PropTypes.array.isRequired,
   isLoggedIn: PropTypes.bool.isRequired,
-  // from composition
+  // from hocs
   intl: PropTypes.object.isRequired,
   selectedQueryIndex: PropTypes.number.isRequired,
   selectedQuery: PropTypes.object.isRequired,
   tabSelector: PropTypes.object.isRequired,
+  onShowLoginDialog: PropTypes.func.isRequired,
   // from dispatch
   fetchData: PropTypes.func.isRequired,
   results: PropTypes.array.isRequired,
@@ -147,7 +153,9 @@ export default
       composeSummarizedVisualization(localMessages.title, localMessages.descriptionIntro, messages.wordcloudHelpText)(
         withAsyncFetch(
           withQueryResults(
-            QueryWordsResultsContainer
+            withLoginRequired(
+              QueryWordsResultsContainer
+            )
           )
         )
       )

@@ -19,6 +19,8 @@ import TabSelector from '../../common/TabSelector';
 import QueryThemesResultsContainer from './QueryThemesResultsContainer';
 import { updateQuery } from '../../../actions/explorerActions';
 import messages from '../../../resources/messages';
+import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
+import Permissioned from '../../common/Permissioned';
 
 class QueryResultsContainer extends React.Component {
   state = {
@@ -37,13 +39,15 @@ class QueryResultsContainer extends React.Component {
             isLoggedIn={isLoggedIn}
           />
         </Col>
-        <Col lg={12} xs={12}>
-          <QueryAttentionOverTimeDrillDownContainer
-            lastSearchTime={lastSearchTime}
-            queries={queries}
-            isLoggedIn={isLoggedIn}
-          />
-        </Col>
+        <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
+          <Col lg={12} xs={12}>
+            <QueryAttentionOverTimeDrillDownContainer
+              lastSearchTime={lastSearchTime}
+              queries={queries}
+              isLoggedIn={isLoggedIn}
+            />
+          </Col>
+        </Permissioned>
         <Col lg={12} xs={12}>
           <QueryTotalAttentionResultsContainer
             lastSearchTime={lastSearchTime}
@@ -65,13 +69,15 @@ class QueryResultsContainer extends React.Component {
             isLoggedIn={isLoggedIn}
           />
         </Col>
-        <Col lg={12} xs={12}>
-          <SelectedStoryDrillDownContainer
-            lastSearchTime={lastSearchTime}
-            queries={queries}
-            isLoggedIn={isLoggedIn}
-          />
-        </Col>
+        <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
+          <Col lg={12} xs={12}>
+            <SelectedStoryDrillDownContainer
+              lastSearchTime={lastSearchTime}
+              queries={queries}
+              isLoggedIn={isLoggedIn}
+            />
+          </Col>
+        </Permissioned>
       </Row>
     );
     const languageSection = (
@@ -84,14 +90,16 @@ class QueryResultsContainer extends React.Component {
             onQueryModificationRequested={handleQueryModificationRequested}
           />
         </Col>
-        <Col lg={12} xs={12}>
-          <WordInContextDrillDownContainer
-            lastSearchTime={lastSearchTime}
-            queries={queries}
-            isLoggedIn={isLoggedIn}
-            onQueryModificationRequested={handleQueryModificationRequested}
-          />
-        </Col>
+        <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
+          <Col lg={12} xs={12}>
+            <WordInContextDrillDownContainer
+              lastSearchTime={lastSearchTime}
+              queries={queries}
+              isLoggedIn={isLoggedIn}
+              onQueryModificationRequested={handleQueryModificationRequested}
+            />
+          </Col>
+        </Permissioned>
         <Col lg={12} xs={12}>
           <QueryWordSpaceResultsContainer
             lastSearchTime={lastSearchTime}

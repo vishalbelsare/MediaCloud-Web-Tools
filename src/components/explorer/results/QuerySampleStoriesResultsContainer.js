@@ -6,6 +6,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import composeSummarizedVisualization from './SummarizedVizualization';
+import withLoginRequired from '../../common/hocs/LoginRequiredDialog';
 import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
@@ -27,8 +28,12 @@ const localMessages = {
 
 class QuerySampleStoriesResultsContainer extends React.Component {
   onStorySelection = (selectedStory) => {
-    const { handleStorySelection, selectedQuery } = this.props;
-    handleStorySelection(selectedQuery, selectedStory);
+    const { handleStorySelection, selectedQuery, isLoggedIn, onShowLoginDialog } = this.props;
+    if (isLoggedIn) {
+      handleStorySelection(selectedQuery, selectedStory);
+    } else {
+      onShowLoginDialog();
+    }
   }
 
   downloadCsv = (query) => {
@@ -75,8 +80,9 @@ QuerySampleStoriesResultsContainer.propTypes = {
   queries: PropTypes.array.isRequired,
   isLoggedIn: PropTypes.bool.isRequired,
   location: PropTypes.object,
-  // from composition
+  // from hocs
   intl: PropTypes.object.isRequired,
+  onShowLoginDialog: PropTypes.func.isRequired,
   // from dispatch
   fetchData: PropTypes.func.isRequired,
   results: PropTypes.array.isRequired,
@@ -153,7 +159,9 @@ export default
       composeSummarizedVisualization(localMessages.title, localMessages.helpIntro, localMessages.helpDetails)(
         withAsyncFetch(
           withQueryResults(
-            QuerySampleStoriesResultsContainer
+            withLoginRequired(
+              QuerySampleStoriesResultsContainer
+            )
           )
         )
       )
