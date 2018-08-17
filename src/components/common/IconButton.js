@@ -140,7 +140,7 @@ export const AddButton = composeIconButton(AddIcon, messages.add);
 
 export const AddQueryButton = composeIconButton(AddQueryIcon, messages.add, false);
 
-export const FavoriteButton = composeIconButton(FilledStarIcon, messages.unfavorite);
+export const FavoriteButton = composeIconButton(FilledStarIcon, messages.unfavorite, false);
 
 export const FavoriteBorderButton = composeIconButton(EmptyStarIcon, messages.favorite);
 

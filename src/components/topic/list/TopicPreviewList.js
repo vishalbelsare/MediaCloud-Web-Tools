@@ -23,7 +23,7 @@ const TopicPreviewList = (props) => {
   let content = null;
   if (topics && topics.length > 0) {
     content = (
-      topics.map((topic) => {
+      topics.map((topic, idx) => {
         let ownerListContent;
         if (topic.owners.length > 0) {
           ownerListContent = topic.owners.map(u => u.full_name).join(', ');
@@ -41,7 +41,7 @@ const TopicPreviewList = (props) => {
           );
         }
         return (
-          <Col lg={4}>
+          <Col lg={4} key={`topic-item-${idx}`}>
             <DataCard className="topic-preview-list-item">
               <div className="content" id={`topic-preview-${topic.topics_id}`}>
                 <div>
