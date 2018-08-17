@@ -75,6 +75,11 @@ function reallyInitializeApp(routes) {
       MuiModal: {
         // paperWidth: '80%',
       },
+      MuiTypography: {
+        title: {
+          fontFamily: 'Lato, sans',
+        },
+      },
       zIndex: {
         modal: 900,
       },
