@@ -2,9 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import Menu from '@material-ui/core/Menu';
-import ListItemText from '@material-ui/core/ListItemText';
 import AppButton from '../AppButton';
-// import MenuItem from '@material-ui/core/MenuItem';
 
 import { ArrowDropDownButton, ArrowDropUpButton } from '../../common/IconButton';
 
@@ -60,24 +58,20 @@ class AppMenu extends React.Component {
       menuHeader = (
         <div>
           <AppButton
-            color="primary"
             variant="text"
             onClick={this.toggleMenu}
-          >
-            <ListItemText>{formatMessage(titleMsg)}</ListItemText>
-          </AppButton>
-          {whichIcon}
+            label={formatMessage(titleMsg)}
+            icon={whichIcon}
+          />
         </div>
       );
     } else {
       menuHeader = (
         <AppButton
-          color="primary"
           variant="text"
           onClick={event => onTitleClick(event)}
-        >
-          {formatMessage(titleMsg)}
-        </AppButton>
+          label={formatMessage(titleMsg)}
+        />
       );
     }
     return (
@@ -87,6 +81,9 @@ class AppMenu extends React.Component {
           open={this.state.open}
           anchorEl={this.state.anchorEl}
           onClose={this.close}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+          transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+          getContentAnchorEl={null}
         >
           {newItems}
         </Menu>
