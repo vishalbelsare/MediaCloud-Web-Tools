@@ -5,11 +5,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import { Col } from 'react-flexbox-grid/lib';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import { Row, Col } from 'react-flexbox-grid/lib';
 import Link from 'react-router/lib/Link';
 import { DeleteButton } from '../../common/IconButton';
 import AppButton from '../../common/AppButton';
@@ -73,42 +69,24 @@ class QueryPickerLoadUserSearchesDialog extends React.Component {
     if (searches !== null && searches !== undefined && searches.length > 0) {
       searchList = (
         <div className="query-picker-save-search-list">
-          <List
-            id="searchNameInDialog"
-            name="searchNameInDialog"
-          >
-            {searches.map((search, idx) => {
-              const searchDate = getDateFromTimestamp(search.timestamp);
-              const needsUpdating = searchDate < STORY_SEARCH_RELEASE_DATE;
-              //   onTouchTap={() => this.onLoadConfirm(search)}
-              return (
-                <ListItem key={idx} >
-                  <Col lg={2}>
-                    <ListItemText>
-                      <Link to={`queries/search?q=${search.queryParams}`}>{search.queryName}</Link>
-                    </ListItemText>
+          {searches.map((search, idx) => {
+            const searchDate = getDateFromTimestamp(search.timestamp);
+            const needsUpdating = searchDate < STORY_SEARCH_RELEASE_DATE;
+            return (
+              <div key={idx} className="query-picker-save-search-item">
+                <Row>
+                  <Col lg={11}>
+                    <DeleteButton className="delete-search" onClick={() => this.onDeleteRequest(search)} />
+                    <h3><Link to={`queries/search?q=${search.queryParams}`}>{search.queryName}</Link></h3>
+                    <p><FormattedDate value={searchDate} /></p>
+                    {needsUpdating && (
+                      <i><FormattedHTMLMessage {...localMessages.needsUpdating} /></i>
+                    )}
                   </Col>
-                  <Col lg={2}>
-                    <ListItemText>
-                      <FormattedDate value={searchDate} />
-                    </ListItemText>
-                  </Col>
-                  {needsUpdating && (
-                    <Col>
-                      <ListItemText className="story-switchover">
-                        <FormattedHTMLMessage {...localMessages.needsUpdating} />
-                      </ListItemText>
-                    </Col>
-                  )}
-                  <Col lg={1}>
-                    <ListItemSecondaryAction>
-                      <DeleteButton className="delete-search" onClick={() => this.onDeleteRequest(search)} />
-                    </ListItemSecondaryAction>
-                  </Col>
-                </ListItem>
-              );
-            })}
-          </List>
+                </Row>
+              </div>
+            );
+          })}
         </div>
       );
     } else {
