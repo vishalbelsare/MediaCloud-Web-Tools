@@ -14,13 +14,8 @@
     &.right {
       float: right;
       li {
-        margin-right: 20px;
-        &.recent-changes-item, &.user-menu-item {
-          margin-right: 0px;
-        }
-        &.about {
-          margin-right: 10px;
-        }
+        margin-left: 0px;
+        margin-right: 5px;
       }
     }
 
