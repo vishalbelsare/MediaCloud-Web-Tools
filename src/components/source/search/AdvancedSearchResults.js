@@ -49,20 +49,20 @@ const AdvancedSearchResults = (props) => {
                 <MenuItem
                   name="chkSelectAllFirstPage"
                   onClick={(...args) => addRemoveAll(ADD_ALL_THIS_PAGE, args[1])}
-                  primaryText={formatMessage(localMessages.checkAllFirstPage)}
                   style={{ fontSize: 13 }}
-                />
+                ><FormattedMessage {...localMessages.checkAllFirstPage} />
+                </MenuItem>
                 <MenuItem
-                  primaryText={formatMessage(localMessages.unCheckAll)}
                   onClick={(...args) => addRemoveAll(REMOVE_ALL, args[1])}
                   style={{ fontSize: 13 }}
-                />
+                ><FormattedMessage {...localMessages.unCheckAll} />
+                </MenuItem>
                 <MenuItem
                   name="chkSelectAllPages"
                   onClick={(...args) => addRemoveAll(ADD_ALL_PAGES, args[1])}
-                  primaryText={formatMessage(localMessages.checkAllPages)}
                   style={{ fontSize: 13 }}
-                />
+                ><FormattedMessage {...localMessages.checkAllPages} />
+                </MenuItem>
               </Select>
             </div>
           </Col>
@@ -72,7 +72,7 @@ const AdvancedSearchResults = (props) => {
                 style={{ marginTop: 30 }}
                 type="submit"
                 label={formatMessage(localMessages.addToCollection)}
-                primary
+                color="primary"
                 onClick={onAddToCollection}
               />
             </div>
@@ -88,7 +88,7 @@ const AdvancedSearchResults = (props) => {
                       checked={collection.selected}
                       key={collection.tags_id}
                       name={`clxn_${collection.tags_id}`}
-                      onCheck={(...args) => addOrRemoveToSelectedCollections(collection.tags_id, args[1])}
+                      onChange={(...args) => addOrRemoveToSelectedCollections(collection.tags_id, args[1])}
                     />
                   </div>
                   <div className="search-result-actions">
@@ -117,7 +117,7 @@ const AdvancedSearchResults = (props) => {
                       checked={source.selected}
                       key={source.media_id}
                       name={`src_${source.media_id}`}
-                      onCheck={(...args) => addOrRemoveToSelectedSources(source.media_id, args[1])}
+                      onChange={(...args) => addOrRemoveToSelectedSources(source.media_id, args[1])}
                     />
                   </div>
                   <div className="search-result-actions">

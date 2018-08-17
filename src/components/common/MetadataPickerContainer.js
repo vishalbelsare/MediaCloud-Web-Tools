@@ -61,7 +61,6 @@ const MetadataPickerContainer = (props) => {
       }
       break;
     case MODE_AUTOCOMPLETE:
-      // need to figure out NoSsr text to prepopulate here
       // commented out because the initialvalues are interfering with the display of the selected values
       /* let initialText = '';
       if ((initialValues) && (initialValues[name]) && (tags.length > 0)) {
