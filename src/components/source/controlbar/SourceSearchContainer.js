@@ -3,7 +3,7 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
+import AutoComplete from 'material-ui/AutoComplete';
 import LoadingSpinner from '../../common/LoadingSpinner';
 import { SearchButton } from '../../common/IconButton';
 import { FETCH_ONGOING, FETCH_SUCCEEDED } from '../../../lib/fetchConstants';
@@ -149,16 +149,23 @@ class SourceSearchContainer extends React.Component {
   render() {
     const { fetchesOngoing } = this.props;
     const { formatMessage } = this.props.intl;
-    // const resultsAsComponents = this.resetIfRequested();
+    const resultsAsComponents = this.resetIfRequested();
     const fetchingStatus = (fetchesOngoing) ? <LoadingSpinner size={15} /> : null;
     return (
       <div className="async-search source-search">
-        <SearchButton color="secondary" variant="outlined" label="Search" />
+        <SearchButton />
         <div className="fetching">{fetchingStatus}</div>
-        <Select
+        <AutoComplete
           label={formatMessage(localMessages.searchHint)}
           fullWidth
-          value=""
+          openOnFocus
+          searchText={this.state.lastSearchString}
+          onClick={this.resetIfRequested}
+          dataSource={resultsAsComponents}
+          onUpdateInput={this.handleUpdateInput}
+          onNewRequest={this.handleNewRequest}
+          maxSearchResults={this.getMaxSourcesToShow() + this.getMaxCollectionsToShow()}
+          filter={() => true}
         />
       </div>
     );
@@ -168,6 +175,7 @@ class SourceSearchContainer extends React.Component {
 
 SourceSearchContainer.propTypes = {
   intl: PropTypes.object.isRequired,
+  theme: PropTypes.object.isRequired,
   // from parent
   searchSources: PropTypes.bool,      // include source results?
   searchCollections: PropTypes.bool,  // include collection results?
@@ -219,6 +227,7 @@ SourceSearchContainer.propTypes = {
   // from context
   intl: PropTypes.object.isRequired,
 };
+
 
 export default
   injectIntl(
