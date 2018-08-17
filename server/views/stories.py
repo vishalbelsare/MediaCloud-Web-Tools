@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 def story_info(stories_id):
     user_mc = user_mediacloud_client()
     admin_mc = user_admin_mediacloud_client()
-    if request.args['text'] == 'true':
+    if 'text' in request.args and request.args['text'] == 'true':
         story = admin_mc.story(stories_id, text=True)
     else:
         story = user_mc.story(stories_id)

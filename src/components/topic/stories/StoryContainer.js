@@ -80,7 +80,7 @@ class StoryContainer extends React.Component {
     const { storyInfo, topicStoryInfo, topicId, storiesId, topicName } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
     let displayTitle = storyInfo.title;
-    if (storyInfo.title.length > MAX_STORY_TITLE_LENGTH) {
+    if (storyInfo.title && storyInfo.title.length > MAX_STORY_TITLE_LENGTH) {
       displayTitle = `${storyInfo.title.substr(0, MAX_STORY_TITLE_LENGTH)}...`;
     }
     const dialogActions = [
