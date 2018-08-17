@@ -51,7 +51,6 @@ class AdvancedMediaPickerSearchForm extends React.Component {
               name={'publicationCountry'}
               form="advancedQueryForm"
               label={formatMessage(localMessages.pubCountrySuggestion)}
-              NoSsr
             />
           </Col>
           <Col lg={6}>
@@ -61,29 +60,24 @@ class AdvancedMediaPickerSearchForm extends React.Component {
               name={'publicationState'}
               form="advancedQueryForm"
               label={formatMessage(localMessages.pubStateSuggestion)}
-              NoSsr
             />
           </Col>
           <Col lg={6}>
             <MetadataPickerContainer
               autocomplete
-              value={initValues}
               id={TAG_SET_PRIMARY_LANGUAGE}
               name={'primaryLanguage'}
               form="advancedQueryForm"
               label={formatMessage(localMessages.pLanguageSuggestion)}
-              NoSsr
             />
           </Col>
           <Col lg={6}>
             <MetadataPickerContainer
               autocomplete
-              value={initValues}
               id={TAG_SET_COUNTRY_OF_FOCUS}
               name={'countryOfFocus'}
               form="advancedQueryForm"
               label={formatMessage(localMessages.pCountryOfFocusSuggestion)}
-              NoSsr
             />
           </Col>
           <Col lg={6}>
