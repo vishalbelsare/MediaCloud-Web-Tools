@@ -78,7 +78,7 @@ const MetadataPickerContainer = (props) => {
           label={formatMessage(localMessages.hintText, { label })}
           openOnFocus
           fullWidth
-          options={tags}
+          dataSource={tags}
           dataSourceConfig={{ text: 'label', value: 'tags_id' }}
           maxSearchResults={10}
         />
