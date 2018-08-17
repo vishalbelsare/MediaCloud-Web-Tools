@@ -24,7 +24,7 @@ const localMessages = {
   needsToActivate: { id: 'user.needsToActivate', defaultMessage: 'You still need to activate your account. Check out email and click the link we sent you, or <a href="/#/user/resend-activation">send the link again</a> if you didn\'t get it.' },
 };
 
-const LoginFormComponent = (props) => {
+const LoginForm = (props) => {
   const { handleSubmit, onSubmitLoginForm, fetchStatus, renderTextField } = props;
   const { formatMessage } = props.intl;
   return (
@@ -84,7 +84,7 @@ const LoginFormComponent = (props) => {
   );
 };
 
-LoginFormComponent.propTypes = {
+LoginForm.propTypes = {
   // from composition
   intl: PropTypes.object.isRequired,
   location: PropTypes.object,
@@ -148,7 +148,7 @@ export default
   withIntlForm(
     reduxForm(reduxFormConfig)(
       connect(mapStateToProps, mapDispatchToProps)(
-        LoginFormComponent
+        LoginForm
       )
     )
   );

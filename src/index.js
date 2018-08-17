@@ -73,7 +73,7 @@ function reallyInitializeApp(routes) {
         },
       },
       MuiModal: {
-        paperWidth: '80%',
+        // paperWidth: '80%',
       },
       zIndex: {
         modal: 900,

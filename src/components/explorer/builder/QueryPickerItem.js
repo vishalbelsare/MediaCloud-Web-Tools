@@ -94,12 +94,14 @@ class QueryPickerItem extends React.Component {
         label={formatMessage(messages.cancel)}
         primary
         onClick={this.handleLabelClose}
+        key="picker-cancel"
       />,
       <AppButton
         label={formatMessage(messages.rename)}
         primary
         keyboardFocused
         onClick={() => this.handleLabelChangeAndClose(query)}
+        key="picker-ok"
       />,
     ];
     if (query) {

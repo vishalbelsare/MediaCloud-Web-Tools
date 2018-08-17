@@ -50,6 +50,8 @@ class UserMenuContainer extends React.Component {
             open={Boolean(this.state.anchorEl)}
             anchorEl={this.state.anchorEl}
             onClose={this.handleClose}
+            anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
+            transformOrigin={{ vertical: 'bottom', horizontal: 'right' }}
           >
             <MenuItem onClick={() => { this.handleClose(); routeToUrl('/user/profile'); }}>
               <FormattedMessage {...messages.userProfile} />

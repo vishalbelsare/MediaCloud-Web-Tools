@@ -47,8 +47,10 @@ class AppButton extends React.Component {
     // material-ui shim
     if (buttonProps.primary) {
       buttonProps.color = 'primary';
+      delete buttonProps.primary;
     } else if (buttonProps.secondary) {
       buttonProps.color = 'secondary';
+      delete buttonProps.secondary;
     }
     let content = null;
 

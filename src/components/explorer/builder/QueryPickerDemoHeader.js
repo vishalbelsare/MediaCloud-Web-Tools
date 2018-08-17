@@ -3,7 +3,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import TextField from '@material-ui/core/TextField';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import IconMenu from '@material-ui/core/Menu';
+import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import IconButton from '@material-ui/core/IconButton';
 import ColorPicker from '../../common/ColorPicker';
@@ -15,12 +15,25 @@ const localMessages = {
 };
 
 class QueryPickerDemoHeader extends React.Component {
+  state = {
+    anchorEl: null,
+  };
+
+  handleClick = (event) => {
+    this.setState({ anchorEl: event.currentTarget });
+  };
+
+  handleClose = () => {
+    this.setState({ anchorEl: null });
+  };
+
   sendToLink = () => {
-    const registrationUrl = '/login';
+    const registrationUrl = '/#/login';
     window.open(registrationUrl, '_blank');
   };
+
   render() {
-    const { query, isLabelEditable, isDeletable, onColorChange, onDelete, handleMenuItemKeyDown, focusUsernameInputField } = this.props;
+    const { query, isLabelEditable, isDeletable, onColorChange, onDelete, handleMenuItemKeyDown } = this.props;
     const { formatMessage } = this.props.intl;
     let nameInfo = <div />;
     const isThisAProtectedQuery = query.searchId !== null && query.searchId !== undefined;
@@ -40,15 +53,20 @@ class QueryPickerDemoHeader extends React.Component {
       if (menuRegister !== null || menuDelete !== null) {
         iconOptions = (
           <div className="query-picker-icon-button">
-            <IconMenu
+            <IconButton onClick={this.handleClick} aria-haspopup="true" aria-owns="logged-in-header-menu"><MoreVertIcon /></IconButton>
+            <Menu
+              id="logged-in-header-menu"
+              open={Boolean(this.state.anchorEl)}
               className="query-picker-icon-button"
-              iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
               anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
-              targetOrigin={{ horizontal: 'left', vertical: 'top' }}
+              transformOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+              anchorEl={this.state.anchorEl}
+              onBackdropClick={this.handleClose}
+              onClose={this.handleClose}
             >
               {menuRegister}
               {menuDelete}
-            </IconMenu>
+            </Menu>
           </div>
         );
       }
@@ -68,9 +86,8 @@ class QueryPickerDemoHeader extends React.Component {
                 id={`query-${query.index}-q`}
                 name="q"
                 defaultValue={query.q}
-                hintText={formatMessage(localMessages.searchHint)}
+                placeholder={formatMessage(localMessages.searchHint)}
                 onKeyPress={handleMenuItemKeyDown}
-                ref={focusUsernameInputField}
               />
               {iconOptions}
             </div>
@@ -103,7 +120,6 @@ QueryPickerDemoHeader.propTypes = {
   updateDemoQueryLabel: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
   handleMenuItemKeyDown: PropTypes.func.isRequired,
-  focusUsernameInputField: PropTypes.func.isRequired,
   // from composition
   intl: PropTypes.object.isRequired,
 };

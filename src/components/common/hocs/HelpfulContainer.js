@@ -43,6 +43,7 @@ function withHelp(contentTitleMsg, contentHTMLTextMsg, showHelpSidebar) {
             variant="outlined"
             label={formatMessage(messages.ok)}
             onClick={this.handleClose}
+            key="help-OK"
           />,
         ];
         const helpButton = <HelpButton color="lightgrey" onClick={this.handleOpen} />;

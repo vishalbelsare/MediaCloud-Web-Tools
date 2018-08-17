@@ -38,8 +38,8 @@ class RecentNewsMenu extends React.Component {
         <Popover
           open={Boolean(this.state.anchorEl)}
           anchorEl={this.state.anchorEl}
-          anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-          targetOrigin={{ horizontal: 'right', vertical: 'top' }}
+          anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
+          transformOrigin={{ vertical: 'bottom', horizontal: 'right' }}
           onClose={this.handleRequestClose}
         >
           <div className="recent-news-menu-content">
