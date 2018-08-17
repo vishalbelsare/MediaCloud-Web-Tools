@@ -1,8 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import MenuItem from '@material-ui/core/MenuItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 import composeSummarizedVisualization from './SummarizedVizualization';
 import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import { DownloadButton } from '../../common/IconButton';
@@ -35,8 +37,6 @@ class QuerySampleStoriesResultsContainer extends React.Component {
 
   render() {
     const { results, queries, selectedTabIndex, tabSelector, internalItemSelected } = this.props;
-    const { formatMessage } = this.props.intl;
-// why isn't this re-rendering if selectedStory has changed?
     return (
       <div>
         {tabSelector}
@@ -53,10 +53,15 @@ class QuerySampleStoriesResultsContainer extends React.Component {
               <MenuItem
                 key={idx}
                 className="action-icon-menu-item"
-                primaryText={formatMessage(localMessages.downloadCsv, { name: q.label })}
-                rightIcon={<DownloadButton />}
-                onTouchTap={() => this.downloadCsv(q)}
-              />
+                onClick={() => this.downloadCsv(q)}
+              >
+                <ListItemText>
+                  <FormattedMessage {...localMessages.downloadCsv} values={{ name: q.label }} />
+                </ListItemText>
+                <ListItemIcon>
+                  <DownloadButton />
+                </ListItemIcon>
+              </MenuItem>
             )}
           </ActionMenu>
         </div>

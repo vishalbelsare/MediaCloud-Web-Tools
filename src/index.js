@@ -69,7 +69,10 @@ function reallyInitializeApp(routes) {
       },
       MuiInput: {
         input: {
-          padding: '10px 0px',
+          padding: '8px 0px',
+        },
+        underline: {
+          borderBottom: '1px solid rgba(0, 0, 0, 0.22)',
         },
       },
       MuiModal: {

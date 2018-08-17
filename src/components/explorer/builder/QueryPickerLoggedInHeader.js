@@ -8,6 +8,7 @@ import IconButton from '@material-ui/core/IconButton';
 import ColorPicker from '../../common/ColorPicker';
 import messages from '../../../resources/messages';
 import { QUERY_LABEL_CHARACTER_LIMIT, ACTION_MENU_ITEM_CLASS } from '../../../lib/explorerUtil';
+import { defaultMenuOriginProps } from '../../util/uiUtil';
 
 const localMessages = {
   title: { id: 'explorer.querypicker.title', defaultMessage: 'Rename Query' },
@@ -25,6 +26,7 @@ class QueryPickerLoggedInHeader extends React.Component {
   handleClose = () => {
     this.setState({ anchorEl: null });
   };
+
   render() {
     const { query, isDeletable, onColorChange, onDelete, onLabelEditRequest } = this.props;
     let nameInfo = <div />;
@@ -50,13 +52,9 @@ class QueryPickerLoggedInHeader extends React.Component {
           <IconButton onClick={this.handleClick} aria-haspopup="true" aria-owns="logged-in-header-menu"><MoreVertIcon /></IconButton>
           <Menu
             id="logged-in-header-menu"
-            open={Boolean(this.state.anchorEl)} // I don't understand why we have to do this - why isn't it part of the compoennt?
+            open={Boolean(this.state.anchorEl)}
             className="query-picker-icon-button"
-            anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
-            transformOrigin={{
-              vertical: 'bottom',
-              horizontal: 'center',
-            }}
+            {...defaultMenuOriginProps}
             anchorEl={this.state.anchorEl}
             onBackdropClick={this.handleClose}
             onClose={this.handleClose}

@@ -6,6 +6,7 @@ import Link from 'react-router/lib/Link';
 import { NotificationsButton } from '../IconButton';
 import messages from '../../../resources/messages';
 import RecentNewsMenuItem from './RecentNewsMenuItem';
+import { defaultMenuOriginProps } from '../../util/uiUtil';
 
 const localMessages = {
   releaseNotes: { id: 'recentNewsMenu.releaseNotes', defaultMessage: 'Read More Release Notes' },
@@ -38,8 +39,7 @@ class RecentNewsMenu extends React.Component {
         <Popover
           open={Boolean(this.state.anchorEl)}
           anchorEl={this.state.anchorEl}
-          anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
-          transformOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          {...defaultMenuOriginProps}
           onClose={this.handleRequestClose}
         >
           <div className="recent-news-menu-content">

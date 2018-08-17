@@ -5,7 +5,7 @@ import Menu from '@material-ui/core/Menu';
 import Button from '@material-ui/core/Button';
 import { MoreOptionsButton, CloseButton } from './IconButton';
 import { getBrandDarkColor, getBrandDarkerColor } from '../../styles/colors';
-// import AppButton from './AppButton';
+import { defaultMenuOriginProps } from '../util/uiUtil';
 
 class ActionMenu extends React.Component {
   state = {
@@ -86,14 +86,7 @@ class ActionMenu extends React.Component {
           id="action-menu"
           anchorEl={anchorEl}
           onClose={this.handlePopupClose}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'left',
-          }}
-          transformOrigin={{
-            vertical: 'bottom',
-            horizontal: 'center',
-          }}
+          {...defaultMenuOriginProps}
           open={Boolean(this.state.anchorEl)}
           getContentAnchorEl={null}
         >
