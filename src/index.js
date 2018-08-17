@@ -71,9 +71,6 @@ function reallyInitializeApp(routes) {
         input: {
           padding: '8px 0px',
         },
-        underline: {
-          borderBottom: '1px solid rgba(0, 0, 0, 0.22)',
-        },
       },
       MuiModal: {
         // paperWidth: '80%',

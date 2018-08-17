@@ -7,6 +7,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import TextField from '@material-ui/core/TextField';
 import AppButton from '../../common/AppButton';
+import messages from '../../../resources/messages';
 
 const localMessages = {
   saveSearchTitle: { id: 'explorer.querypicker.saveSearchTitle', defaultMessage: 'Save Your Search' },
@@ -61,16 +62,18 @@ class QueryPickerSaveUserSearchesDialog extends React.Component {
     const actions = [
       <AppButton
         variant="outlined"
-        label="Cancel"
+        label={formatMessage(messages.cancel)}
         color="secondary"
         onClick={this.handleDialogClose}
+        key="qpsusd-cancel"
       />,
       <AppButton
         variant="outlined"
-        label="Submit"
+        label={formatMessage(messages.save)}
         color="secondary"
         keyboardFocused
         onClick={this.handleLabelChangeAndClose}
+        key="qpsusd-save"
       />,
     ];
     return (
@@ -99,6 +102,7 @@ class QueryPickerSaveUserSearchesDialog extends React.Component {
           onClick={this.onSaveRequest}
           label={formatMessage(localMessages.saveSearch)}
           disabled={submitting}
+          key="qpsusd-reallySave"
         />
       </div>
     );

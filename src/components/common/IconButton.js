@@ -24,7 +24,6 @@ import messages from '../../resources/messages';
 import ExploreIcon from './icons/ExploreIcon';
 import DownloadIcon from './icons/DownloadIcon';
 import DeleteIcon from './icons/DeleteIcon';
-import DeleteMediaIcon from './icons/DeleteMediaIcon';
 import AddIcon from './icons/AddIcon';
 import AddQueryIcon from './icons/AddQueryIcon';
 import EditIcon from './icons/EditIcon';
@@ -133,9 +132,7 @@ export const DownloadButton = composeIconButton(DownloadIcon, messages.download)
 
 export const HelpButton = composeIconButton(HelpIcon, messages.help, false);
 
-export const DeleteButton = composeIconButton(DeleteIcon, messages.delete);
-
-export const DeleteMediaButton = composeIconButton(DeleteMediaIcon, messages.delete, false);
+export const DeleteButton = composeIconButton(DeleteIcon, messages.delete, false);
 
 export const RemoveButton = composeIconButton(RemoveIcon, messages.remove);
 
