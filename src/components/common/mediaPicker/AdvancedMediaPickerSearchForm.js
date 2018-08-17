@@ -46,6 +46,7 @@ class AdvancedMediaPickerSearchForm extends React.Component {
         <Row>
           <Col lg={6}>
             <MetadataPickerContainer
+              autocomplete
               id={TAG_SET_PUBLICATION_COUNTRY}
               name={'publicationCountry'}
               form="advancedQueryForm"
@@ -55,6 +56,7 @@ class AdvancedMediaPickerSearchForm extends React.Component {
           </Col>
           <Col lg={6}>
             <MetadataPickerContainer
+              autocomplete
               id={TAG_SET_PUBLICATION_STATE}
               name={'publicationState'}
               form="advancedQueryForm"
@@ -64,6 +66,7 @@ class AdvancedMediaPickerSearchForm extends React.Component {
           </Col>
           <Col lg={6}>
             <MetadataPickerContainer
+              autocomplete
               value={initValues}
               id={TAG_SET_PRIMARY_LANGUAGE}
               name={'primaryLanguage'}
@@ -74,6 +77,7 @@ class AdvancedMediaPickerSearchForm extends React.Component {
           </Col>
           <Col lg={6}>
             <MetadataPickerContainer
+              autocomplete
               value={initValues}
               id={TAG_SET_COUNTRY_OF_FOCUS}
               name={'countryOfFocus'}
@@ -84,6 +88,7 @@ class AdvancedMediaPickerSearchForm extends React.Component {
           </Col>
           <Col lg={6}>
             <MetadataPickerContainer
+              autocomplete
               id={TAG_SET_MEDIA_TYPE}
               showDescription
               name="mediaType"

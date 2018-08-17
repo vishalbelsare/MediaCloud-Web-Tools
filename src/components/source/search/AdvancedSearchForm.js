@@ -35,6 +35,7 @@ const AdvancedSearchForm = (props) => {
       <Row>
         <Col lg={6}>
           <MetadataPickerContainer
+            autocomplete
             id={TAG_SET_PUBLICATION_COUNTRY}
             name={'publicationCountry'}
             form="advancedQueryForm"
@@ -44,6 +45,7 @@ const AdvancedSearchForm = (props) => {
         </Col>
         <Col lg={6}>
           <MetadataPickerContainer
+            autocomplete
             id={TAG_SET_PUBLICATION_STATE}
             name={'publicationState'}
             form="advancedQueryForm"
@@ -53,6 +55,7 @@ const AdvancedSearchForm = (props) => {
         </Col>
         <Col lg={6}>
           <MetadataPickerContainer
+            autocomplete
             value={initialValues}
             id={TAG_SET_PRIMARY_LANGUAGE}
             name={'primaryLanguage'}
@@ -63,6 +66,7 @@ const AdvancedSearchForm = (props) => {
         </Col>
         <Col lg={6}>
           <MetadataPickerContainer
+            autocomplete
             value={initialValues}
             id={TAG_SET_COUNTRY_OF_FOCUS}
             name={'countryOfFocus'}
@@ -73,6 +77,7 @@ const AdvancedSearchForm = (props) => {
         </Col>
         <Col lg={6}>
           <MetadataPickerContainer
+            autocomplete
             id={TAG_SET_MEDIA_TYPE}
             showDescription
             name="mediaType"
