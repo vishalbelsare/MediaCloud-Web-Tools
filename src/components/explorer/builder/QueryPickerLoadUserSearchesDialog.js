@@ -73,18 +73,18 @@ class QueryPickerLoadUserSearchesDialog extends React.Component {
             const searchDate = getDateFromTimestamp(search.timestamp);
             const needsUpdating = searchDate < STORY_SEARCH_RELEASE_DATE;
             return (
-              <div key={idx} className="query-picker-save-search-item">
-                <Row>
-                  <Col lg={11}>
+              <Row>
+                <Col lg={12}>
+                  <div key={idx} className="query-picker-save-search-item">
                     <DeleteButton className="delete-search" onClick={() => this.onDeleteRequest(search)} />
                     <h3><Link to={`queries/search?q=${search.queryParams}`}>{search.queryName}</Link></h3>
                     <p><FormattedDate value={searchDate} /></p>
                     {needsUpdating && (
                       <i><FormattedHTMLMessage {...localMessages.needsUpdating} /></i>
                     )}
-                  </Col>
-                </Row>
-              </div>
+                  </div>
+                </Col>
+              </Row>
             );
           })}
         </div>

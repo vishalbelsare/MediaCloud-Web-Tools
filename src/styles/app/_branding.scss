@@ -4,6 +4,7 @@
   height: 60px;
   font-family: $font-families;
   color: $white;
+
   ul {
     display: block;
     list-style: none;
@@ -38,20 +39,19 @@
 
     }
   }
+
   .app-menu {
-    .icon-button {
-      button {
-        width: 20px;
-        height: 20px;
-        vertical-align: top;
-        margin-top: 8px;
+    button {
+      svg {
         margin-left: 8px;
       }
     }
   }
+
   .app-logo {
     padding-top: 10px;
     padding-right: 10px;
     float: left;
   }
+
 }
