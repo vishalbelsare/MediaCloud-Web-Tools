@@ -40,7 +40,7 @@ function withHelp(contentTitleMsg, contentHTMLTextMsg, showHelpSidebar) {
         const { formatMessage } = this.props.intl;
         const dialogActions = [
           <AppButton
-            variant="outlined"
+            primary
             label={formatMessage(messages.ok)}
             onClick={this.handleClose}
             key="help-OK"

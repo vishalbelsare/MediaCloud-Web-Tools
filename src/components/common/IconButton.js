@@ -16,7 +16,6 @@ import NextIcon from '@material-ui/icons/SkipNext';
 import PreviousIcon from '@material-ui/icons/SkipPrevious';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
-import HelpIcon from '@material-ui/icons/Help';
 import PersonIcon from '@material-ui/icons/Person';
 
 import slugify from 'slugify';
@@ -32,6 +31,7 @@ import FilledStarIcon from './icons/FilledStarIcon';
 import EmptyStarIcon from './icons/EmptyStarIcon';
 import SettingsIcon from './icons/SettingsIcon';
 import RemoveIcon from './icons/RemoveIcon';
+import HelpIcon from './icons/HelpIcon';
 import CloseIcon from './icons/CloseIcon';
 import MoreOptionsIcon from './icons/MoreOptionsIcon';
 import ResetIcon from './icons/ResetIcon';
