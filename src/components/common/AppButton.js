@@ -26,7 +26,7 @@ class AppButton extends React.Component {
   }
 
   render() {
-    const { variant, className, children } = this.props;
+    const { variant, className, children, icon } = this.props;
     const { formatMessage } = this.props.intl;
     const customClassName = className || '';
     const buttonProps = {
@@ -54,7 +54,12 @@ class AppButton extends React.Component {
     }
     let content = null;
 
-    content = <Button variant={variant || 'contained'} {...buttonProps}>{textLabel}</Button>;
+    content = (
+      <Button variant={variant || 'contained'} {...buttonProps}>
+        {textLabel}
+        {icon}
+      </Button>
+    );
 
     return content;
   }
@@ -67,6 +72,7 @@ AppButton.propTypes = {
   variant: PropTypes.string,
   className: PropTypes.string,
   children: PropTypes.node,
+  icon: PropTypes.node,
   // from composition chain
   intl: PropTypes.object.isRequired,
 };

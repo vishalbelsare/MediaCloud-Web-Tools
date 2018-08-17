@@ -1,7 +1,8 @@
 
 export const defaultMenuOriginProps = {
-  anchorOrigin: { horizontal: 'left', vertical: 'top' },
-  transformOrigin: { vertical: 'bottom', horizontal: 'right' },
+  anchorOrigin: { vertical: 'bottom', horizontal: 'right' },
+  transformOrigin: { vertical: 'top', horizontal: 'right' },
+  getContentAnchorEl: null,
 };
 
 export const TEMP = 'temp';

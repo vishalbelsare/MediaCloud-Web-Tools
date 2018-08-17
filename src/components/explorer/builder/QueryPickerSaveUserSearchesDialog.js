@@ -68,9 +68,8 @@ class QueryPickerSaveUserSearchesDialog extends React.Component {
         key="qpsusd-cancel"
       />,
       <AppButton
-        variant="outlined"
+        primary
         label={formatMessage(messages.save)}
-        color="secondary"
         keyboardFocused
         onClick={this.handleLabelChangeAndClose}
         key="qpsusd-save"
@@ -91,7 +90,7 @@ class QueryPickerSaveUserSearchesDialog extends React.Component {
               name="searchNameInDialog"
               inputRef={this.focusQueryInputField}
               onChange={this.updateTextInDialog}
-              label={searchNickname}
+              placeholder={searchNickname}
             />
           </DialogContent>
           <DialogActions>{actions}</DialogActions>
