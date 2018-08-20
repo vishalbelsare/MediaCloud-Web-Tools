@@ -34,11 +34,9 @@ class QueryWordsResultsContainer extends React.Component {
   }
   render() {
     const { results, queries, tabSelector, selectedQueryIndex, fetchData, internalItemSelected } = this.props;
-    const { formatMessage } = this.props.intl;
     const selectedQuery = queries[selectedQueryIndex];
     return (
       <EditableWordCloudDataCard
-        actionMenuHeaderText={formatMessage(localMessages.menuHeader, { queryName: selectedQuery.label })}
         onViewSampleSizeClick={sampleSize => fetchData(queries, sampleSize)}
         initSampleSize={results[selectedQueryIndex].sample_size}
         subHeaderContent={tabSelector}

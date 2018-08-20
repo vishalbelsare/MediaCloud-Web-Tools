@@ -86,7 +86,7 @@ class QueryTotalAttentionResultsContainer extends React.Component {
             <ActionMenu actionTextMsg={messages.downloadOptions}>
               <SVGAndCSVMenu
                 downloadCsv={() => postToCombinedDownloadUrl('/api/explorer/stories/count.csv', safeResults)}
-                downloadSvg={() => downloadExplorerSvg(formatMessage(localMessages.title), '', BUBBLE_CHART_DOM_ID)}
+                downloadSvg={() => downloadExplorerSvg(formatMessage(localMessages.title), 'total-attention', BUBBLE_CHART_DOM_ID)}
                 label={formatMessage(localMessages.downloadLabel)}
               />
             </ActionMenu>
