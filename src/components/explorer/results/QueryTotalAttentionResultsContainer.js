@@ -24,7 +24,7 @@ const localMessages = {
   helpDetails: { id: 'explorer.storyCount.help.details',
     defaultMessage: '<p>It is harder to determine how much of the media\'s attention your search got. If you want to dig into that, a good place to start is comparing your query to a search for everything from the sources and collections you are searching.  You can do this by searching for * in the same date range and media; that matches every story.</p>',
   },
-  downloadCsv: { id: 'explorer.attention.total.downloadCsv', defaultMessage: 'Download { name } total story count CSV' },
+  downloadCsv: { id: 'explorer.attention.total.downloadCsv', defaultMessage: 'Download combined total story count CSV' },
   viewNormalized: { id: 'explorer.attention.mode.viewNormalized', defaultMessage: 'View by Story Count (default)' },
   viewRegular: { id: 'explorer.attention.mode.viewRegular', defaultMessage: 'View by Story Percentage' },
 };
@@ -48,8 +48,8 @@ class QueryTotalAttentionResultsContainer extends React.Component {
   }
 
   // if demo, use only sample search queries to download
-  downloadCsv = (query) => {
-    postToCombinedDownloadUrl('/api/explorer/stories/count.csv', [query]);
+  downloadCsv = (queries) => {
+    postToCombinedDownloadUrl('/api/explorer/stories/count.csv', queries);
   }
 
   render() {
@@ -90,20 +90,17 @@ class QueryTotalAttentionResultsContainer extends React.Component {
           />
           <div className="actions">
             <ActionMenu actionTextMsg={messages.downloadOptions}>
-              {safeResults.map((q, idx) =>
-                <MenuItem
-                  key={idx}
-                  className="action-icon-menu-item"
-                  onTouchTap={() => this.downloadCsv(q)}
-                >
-                  <ListItemText>
-                    <FormattedMessage {...localMessages.downloadCsv} values={{ name: q.label }} />
-                  </ListItemText>
-                  <ListItemIcon>
-                    <DownloadButton />
-                  </ListItemIcon>
-                </MenuItem>
-              )}
+              <MenuItem
+                className="action-icon-menu-item"
+                onTouchTap={() => this.downloadCsv(safeResults)}
+              >
+                <ListItemText>
+                  <FormattedMessage {...localMessages.downloadCsv} />
+                </ListItemText>
+                <ListItemIcon>
+                  <DownloadButton />
+                </ListItemIcon>
+              </MenuItem>
             </ActionMenu>
             <ActionMenu actionTextMsg={messages.viewOptions}>
               <MenuItem
