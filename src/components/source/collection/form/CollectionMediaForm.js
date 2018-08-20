@@ -129,7 +129,7 @@ class SourceSelectionRendererRaw extends React.Component {
       );
     }
 
-    const firsttest = (
+    const firstTab = (
       <TabContainer text={localMessages.tabSource} intro={localMessages.tabSourceIntro}>
         <SourceSearchContainer
           searchCollections={false}
@@ -138,7 +138,7 @@ class SourceSelectionRendererRaw extends React.Component {
         />
       </TabContainer>
     );
-    const secondtest = (
+    const secondTab = (
       <TabContainer text={localMessages.tabCollection} intro={localMessages.tabCollectionIntro}>
         <SourceSearchContainer
           searchSources={false}
@@ -147,7 +147,7 @@ class SourceSelectionRendererRaw extends React.Component {
         {copyConfirmation}
       </TabContainer>
     );
-    const thirdtest = (
+    const thirdTab = (
       <TabContainer text={localMessages.tabCollection} intro={localMessages.tabCollectionIntro}>
         <Field
           name="sourceUrls"
@@ -160,7 +160,7 @@ class SourceSelectionRendererRaw extends React.Component {
         {addByUrlConfirmer}
       </TabContainer>
     );
-    const fourthtest = (
+    const fourthTab = (
       <TabContainer text={localMessages.tabCollection} intro={localMessages.tabCollectionIntro}>
         <CollectionUploadSourceContainer
           onConfirm={item => this.addSources(item)}
@@ -198,10 +198,10 @@ class SourceSelectionRendererRaw extends React.Component {
                   label={formatMessage(localMessages.tabUpload)}
                 />
               </Tabs>
-              {this.state.value === 0 && firsttest}
-              {this.state.value === 1 && secondtest}
-              {this.state.value === 2 && thirdtest}
-              {this.state.value === 3 && fourthtest}
+              {this.state.value === 0 && firstTab}
+              {this.state.value === 1 && secondTab}
+              {this.state.value === 2 && thirdTab}
+              {this.state.value === 3 && fourthTab}
             </Col>
           </Row>
         </div>

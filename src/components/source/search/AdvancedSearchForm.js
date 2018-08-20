@@ -35,44 +35,43 @@ const AdvancedSearchForm = (props) => {
       <Row>
         <Col lg={6}>
           <MetadataPickerContainer
+            autocomplete
             id={TAG_SET_PUBLICATION_COUNTRY}
             name={'publicationCountry'}
             form="advancedQueryForm"
             label={formatMessage(localMessages.pubCountrySuggestion)}
-            NoSsr
           />
         </Col>
         <Col lg={6}>
           <MetadataPickerContainer
+            autocomplete
             id={TAG_SET_PUBLICATION_STATE}
             name={'publicationState'}
             form="advancedQueryForm"
             label={formatMessage(localMessages.pubStateSuggestion)}
-            NoSsr
           />
         </Col>
         <Col lg={6}>
           <MetadataPickerContainer
-            value={initialValues}
+            autocomplete
             id={TAG_SET_PRIMARY_LANGUAGE}
             name={'primaryLanguage'}
             form="advancedQueryForm"
             label={formatMessage(localMessages.pLanguageSuggestion)}
-            NoSsr
           />
         </Col>
         <Col lg={6}>
           <MetadataPickerContainer
-            value={initialValues}
+            autocomplete
             id={TAG_SET_COUNTRY_OF_FOCUS}
             name={'countryOfFocus'}
             form="advancedQueryForm"
             label={formatMessage(localMessages.pCountryOfFocusSuggestion)}
-            NoSsr
           />
         </Col>
         <Col lg={6}>
           <MetadataPickerContainer
+            autocomplete
             id={TAG_SET_MEDIA_TYPE}
             showDescription
             name="mediaType"
