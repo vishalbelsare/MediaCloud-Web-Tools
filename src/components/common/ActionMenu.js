@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import Menu from '@material-ui/core/Menu';
-import Button from '@material-ui/core/Button';
+import AppButton from './AppButton';
 import { MoreOptionsButton, CloseButton } from './IconButton';
 import { getBrandDarkColor, getBrandDarkerColor } from '../../styles/colors';
 import { defaultMenuOriginProps } from '../util/uiUtil';
@@ -36,6 +36,7 @@ class ActionMenu extends React.Component {
 
   render() {
     const { color, openButton, closeButton, children, actionTextMsg } = this.props;
+    const { formatMessage } = this.props.intl;
     const otherProps = {};
     const { anchorEl } = this.state;
     otherProps.backgroundColor = this.state.backgroundColor;
@@ -65,15 +66,16 @@ class ActionMenu extends React.Component {
     let buttonContent;
     if (actionTextMsg) {
       buttonContent = (
-        <Button
+        <AppButton
+          variant="text"
           className="action-menu-text"
           onClick={this.handlePopupOpenClick}
           aria-controls="action-menu"
           aria-haspopup="true"
           aria-owns="action-menu"
-        >
-          <FormattedMessage {...actionTextMsg} />
-        </Button>
+          label={formatMessage(actionTextMsg)}
+          size="small"
+        />
       );
     } else {
       buttonContent = icon;
@@ -88,7 +90,6 @@ class ActionMenu extends React.Component {
           onClose={this.handlePopupClose}
           {...defaultMenuOriginProps}
           open={Boolean(this.state.anchorEl)}
-          getContentAnchorEl={null}
         >
           {children}
         </Menu>
@@ -99,7 +100,10 @@ class ActionMenu extends React.Component {
 ActionMenu.propTypes = {
   onClick: PropTypes.func,
   topLevelButton: PropTypes.func,
-  children: PropTypes.array,
+  children: PropTypes.oneOfType([
+    PropTypes.array,
+    PropTypes.node,
+  ]).isRequired,
   openButton: PropTypes.object,
   closeButton: PropTypes.object,
   tooltip: PropTypes.string,

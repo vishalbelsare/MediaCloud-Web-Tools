@@ -16,7 +16,6 @@ import NextIcon from '@material-ui/icons/SkipNext';
 import PreviousIcon from '@material-ui/icons/SkipPrevious';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
-import HelpIcon from '@material-ui/icons/Help';
 import PersonIcon from '@material-ui/icons/Person';
 
 import slugify from 'slugify';
@@ -24,7 +23,6 @@ import messages from '../../resources/messages';
 import ExploreIcon from './icons/ExploreIcon';
 import DownloadIcon from './icons/DownloadIcon';
 import DeleteIcon from './icons/DeleteIcon';
-import DeleteMediaIcon from './icons/DeleteMediaIcon';
 import AddIcon from './icons/AddIcon';
 import AddQueryIcon from './icons/AddQueryIcon';
 import EditIcon from './icons/EditIcon';
@@ -33,6 +31,7 @@ import FilledStarIcon from './icons/FilledStarIcon';
 import EmptyStarIcon from './icons/EmptyStarIcon';
 import SettingsIcon from './icons/SettingsIcon';
 import RemoveIcon from './icons/RemoveIcon';
+import HelpIcon from './icons/HelpIcon';
 import CloseIcon from './icons/CloseIcon';
 import MoreOptionsIcon from './icons/MoreOptionsIcon';
 import ResetIcon from './icons/ResetIcon';
@@ -133,9 +132,7 @@ export const DownloadButton = composeIconButton(DownloadIcon, messages.download)
 
 export const HelpButton = composeIconButton(HelpIcon, messages.help, false);
 
-export const DeleteButton = composeIconButton(DeleteIcon, messages.delete);
-
-export const DeleteMediaButton = composeIconButton(DeleteMediaIcon, messages.delete, false);
+export const DeleteButton = composeIconButton(DeleteIcon, messages.delete, false);
 
 export const RemoveButton = composeIconButton(RemoveIcon, messages.remove);
 
@@ -143,7 +140,7 @@ export const AddButton = composeIconButton(AddIcon, messages.add);
 
 export const AddQueryButton = composeIconButton(AddQueryIcon, messages.add, false);
 
-export const FavoriteButton = composeIconButton(FilledStarIcon, messages.unfavorite);
+export const FavoriteButton = composeIconButton(FilledStarIcon, messages.unfavorite, false);
 
 export const FavoriteBorderButton = composeIconButton(EmptyStarIcon, messages.favorite);
 

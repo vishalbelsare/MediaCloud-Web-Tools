@@ -36,7 +36,7 @@ const SearchForm = (props) => {
             component={renderTextField}
             helpertext={localMessages.searchHint}
           />
-          <AppButton type="submit" label={messages.search} color="primary" />
+          <AppButton type="submit" label={messages.search} primary />
         </Col>
       </Row>
     </form>

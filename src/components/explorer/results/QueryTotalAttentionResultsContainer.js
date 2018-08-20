@@ -3,14 +3,13 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import MenuItem from '@material-ui/core/MenuItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import composeSummarizedVisualization from './SummarizedVizualization';
-import { DownloadButton } from '../../common/IconButton';
+import SVGAndCSVMenu from '../../common/SVGAndCSVMenu';
 import ActionMenu from '../../common/ActionMenu';
 import BubbleRowChart from '../../vis/BubbleRowChart';
-import { queryChangedEnoughToUpdate, postToCombinedDownloadUrl } from '../../../lib/explorerUtil';
+import { queryChangedEnoughToUpdate, postToCombinedDownloadUrl, downloadExplorerSvg } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
 import { FETCH_INVALID } from '../../../lib/fetchConstants';
 
@@ -24,7 +23,7 @@ const localMessages = {
   helpDetails: { id: 'explorer.storyCount.help.details',
     defaultMessage: '<p>It is harder to determine how much of the media\'s attention your search got. If you want to dig into that, a good place to start is comparing your query to a search for everything from the sources and collections you are searching.  You can do this by searching for * in the same date range and media; that matches every story.</p>',
   },
-  downloadCsv: { id: 'explorer.attention.total.downloadCsv', defaultMessage: 'Download { name } total story count CSV' },
+  downloadLabel: { id: 'explorer.attention.total.downloadLabel', defaultMessage: 'combined total attention' },
   viewNormalized: { id: 'explorer.attention.mode.viewNormalized', defaultMessage: 'View by Story Count (default)' },
   viewRegular: { id: 'explorer.attention.mode.viewRegular', defaultMessage: 'View by Story Percentage' },
 };
@@ -47,14 +46,9 @@ class QueryTotalAttentionResultsContainer extends React.Component {
     this.setState({ view: nextView });
   }
 
-  // if demo, use only sample search queries to download
-  downloadCsv = (query) => {
-    postToCombinedDownloadUrl('/api/explorer/stories/count.csv', [query]);
-  }
-
   render() {
     const { results, queries } = this.props;
-    const { formatNumber } = this.props.intl;
+    const { formatNumber, formatMessage } = this.props.intl;
     let content = null;
 
     const safeResults = results.map((r, idx) => Object.assign({}, r, queries[idx]));
@@ -90,20 +84,11 @@ class QueryTotalAttentionResultsContainer extends React.Component {
           />
           <div className="actions">
             <ActionMenu actionTextMsg={messages.downloadOptions}>
-              {safeResults.map((q, idx) =>
-                <MenuItem
-                  key={idx}
-                  className="action-icon-menu-item"
-                  onTouchTap={() => this.downloadCsv(q)}
-                >
-                  <ListItemText>
-                    <FormattedMessage {...localMessages.downloadCsv} values={{ name: q.label }} />
-                  </ListItemText>
-                  <ListItemIcon>
-                    <DownloadButton />
-                  </ListItemIcon>
-                </MenuItem>
-              )}
+              <SVGAndCSVMenu
+                downloadCsv={() => postToCombinedDownloadUrl('/api/explorer/stories/count.csv', safeResults)}
+                downloadSvg={() => downloadExplorerSvg(formatMessage(localMessages.title), 'total-attention', BUBBLE_CHART_DOM_ID)}
+                label={formatMessage(localMessages.downloadLabel)}
+              />
             </ActionMenu>
             <ActionMenu actionTextMsg={messages.viewOptions}>
               <MenuItem

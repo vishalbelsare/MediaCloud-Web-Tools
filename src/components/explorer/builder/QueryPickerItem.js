@@ -88,22 +88,6 @@ class QueryPickerItem extends React.Component {
     /* query fields are only editable in place for Demo mode. the user can delete a query
       in Logged-In mode, the user can click the icon button, and edit the label of the query or delete the query
     */
-    const actions = [
-      <AppButton
-        className="query-item-header-dialog-button"
-        label={formatMessage(messages.cancel)}
-        primary
-        onClick={this.handleLabelClose}
-        key="picker-cancel"
-      />,
-      <AppButton
-        label={formatMessage(messages.rename)}
-        primary
-        keyboardFocused
-        onClick={() => this.handleLabelChangeAndClose(query)}
-        key="picker-ok"
-      />,
-    ];
     if (query) {
       if (isLoggedIn) {
         headerInfo = (
@@ -187,9 +171,11 @@ class QueryPickerItem extends React.Component {
           open={this.state.labelChangeDialogOpen}
           onClose={this.handleLabelClose}
         >
-          <DialogTitle><FormattedMessage {...localMessages.queryDialog} /></DialogTitle>
-          <DialogActions>{actions}</DialogActions>
+          <DialogTitle>{formatMessage(localMessages.title)}</DialogTitle>
           <DialogContent>
+            <p>
+              <FormattedMessage {...localMessages.queryDialog} />
+            </p>
             <TextField
               className="query-picker-editable-name"
               id="labelInDialog"
@@ -203,6 +189,22 @@ class QueryPickerItem extends React.Component {
               hintText={query.label || formatMessage(localMessages.searchHint)}
             />
           </DialogContent>
+          <DialogActions>
+            <AppButton
+              className="query-item-header-dialog-button"
+              label={formatMessage(messages.cancel)}
+              variant="outlined"
+              onClick={this.handleLabelClose}
+              key="picker-cancel"
+            />
+            <AppButton
+              label={formatMessage(messages.rename)}
+              primary
+              keyboardFocused
+              onClick={() => this.handleLabelChangeAndClose(query)}
+              key="picker-ok"
+            />,
+          </DialogActions>
         </Dialog>
         {subT}
       </div>

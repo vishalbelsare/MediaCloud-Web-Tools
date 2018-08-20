@@ -180,7 +180,7 @@ class QueryForm extends React.Component {
                     label={buttonLabel}
                     disabled={submitting}
                     onClick={onWillSearch}
-                    color="primary"
+                    primary
                   />
                 </div>
               </Col>

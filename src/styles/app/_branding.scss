@@ -4,6 +4,7 @@
   height: 60px;
   font-family: $font-families;
   color: $white;
+
   ul {
     display: block;
     list-style: none;
@@ -13,13 +14,8 @@
     &.right {
       float: right;
       li {
-        margin-right: 20px;
-        &.recent-changes-item, &.user-menu-item {
-          margin-right: 0px;
-        }
-        &.about {
-          margin-right: 10px;
-        }
+        margin-left: 0px;
+        margin-right: 5px;
       }
     }
 
@@ -38,15 +34,19 @@
 
     }
   }
+
   .app-menu {
-    .icon-button {
-      float: right;
-      margin-top: 5px;
+    button {
+      svg {
+        margin-left: 8px;
+      }
     }
   }
+
   .app-logo {
     padding-top: 10px;
     padding-right: 10px;
     float: left;
   }
+
 }

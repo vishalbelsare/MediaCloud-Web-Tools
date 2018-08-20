@@ -1,18 +1,15 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import MenuItem from '@material-ui/core/MenuItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
 import ActionMenu from '../../common/ActionMenu';
 import composeSummarizedVisualization from './SummarizedVizualization';
-import { DownloadButton } from '../../common/IconButton';
 import { postToDownloadUrl, downloadExplorerSvg } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
 import WordSpace from '../../vis/WordSpace';
 import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import withQueryResults from './QueryResultsSelector';
+import SVGAndCSVMenu from '../../common/SVGAndCSVMenu';
 
 const localMessages = {
   title: { id: 'explorer.topWords.title', defaultMessage: 'Word Space' },
@@ -44,35 +41,11 @@ class QueryWordSpaceResultsContainer extends React.Component {
         />
         <div className="actions">
           <ActionMenu actionTextMsg={messages.downloadOptions}>
-            {queries.map((q, idx) =>
-              <span key={`wordspace-actions-${idx}`}>
-                <MenuItem
-                  className="action-icon-menu-item"
-                  onTouchTap={() => this.handleDownloadCsv(q)}
-                >
-                  <ListItemText>
-                    <FormattedMessage {...localMessages.downloadCsv} values={{ name: q.label }} />
-                  </ListItemText>
-                  <ListItemIcon>
-                    <DownloadButton />
-                  </ListItemIcon>
-                </MenuItem>
-                <MenuItem
-                  className="action-icon-menu-item"
-                  onTouchTap={() => {
-                    const svgChild = document.getElementById(domId);
-                    downloadExplorerSvg(q.label, 'sampled-word-space', svgChild);
-                  }}
-                >
-                  <ListItemText>
-                    <FormattedMessage {...localMessages.downloadSvg} values={{ name: q.label }} />
-                  </ListItemText>
-                  <ListItemIcon>
-                    <DownloadButton />
-                  </ListItemIcon>
-                </MenuItem>
-              </span>
-            )}
+            <SVGAndCSVMenu
+              downloadCsv={() => this.handleDownloadCsv(queries[selectedTabIndex])}
+              downloadSvg={() => downloadExplorerSvg(queries[selectedTabIndex].label, 'sampled-word-space', domId)}
+              label={queries[selectedTabIndex].label}
+            />
           </ActionMenu>
         </div>
       </div>

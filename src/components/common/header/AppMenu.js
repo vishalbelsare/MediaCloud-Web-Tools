@@ -2,11 +2,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import Menu from '@material-ui/core/Menu';
-import ListItemText from '@material-ui/core/ListItemText';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import AppButton from '../AppButton';
-// import MenuItem from '@material-ui/core/MenuItem';
-
-import { ArrowDropDownButton, ArrowDropUpButton } from '../../common/IconButton';
 
 class AppMenu extends React.Component {
 
@@ -14,13 +12,6 @@ class AppMenu extends React.Component {
     super(props);
     this.state = { open: false, iconDown: true };
   }
-
-  whichArrowIcon = () => {
-    if (this.state.iconDown) {
-      return <ArrowDropDownButton color="#FFFFFF" />;
-    }
-    return <ArrowDropUpButton color="#FFFFFF" />;
-  };
 
   toggleMenu = (event) => {
     this.setState({
@@ -43,41 +34,41 @@ class AppMenu extends React.Component {
     let newItems;
     if (menuComponent && menuComponent.props) {
       const flattenedMenu = this.flatten(menuComponent.props.children);
-      newItems = flattenedMenu.map(m => ({ // for each MenuItem, update the onClick event
-        ...m,
-        props: {
-          ...m.props,
-          onClick: () => {
-            this.setState({ open: false, iconDown: true });
-            m.props.onClick();
+      newItems = flattenedMenu.map((m) => {
+        const info = { // for each MenuItem, update the onClick event
+          ...m,
+          props: {
+            ...m.props,
+            onClick: () => {
+              this.setState({ open: false, iconDown: true });
+              m.props.onClick();
+            },
           },
-        },
-      }));
+        };
+        delete info.props.icon;
+        return info;
+      });
     }
     let menuHeader;
     if (showMenu) {
-      const whichIcon = this.whichArrowIcon();
+      const whichIcon = (this.state.iconDown) ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />;
       menuHeader = (
         <div>
           <AppButton
-            color="primary"
             variant="text"
             onClick={this.toggleMenu}
-          >
-            <ListItemText>{formatMessage(titleMsg)}</ListItemText>
-          </AppButton>
-          {whichIcon}
+            label={formatMessage(titleMsg)}
+            icon={whichIcon}
+          />
         </div>
       );
     } else {
       menuHeader = (
         <AppButton
-          color="primary"
           variant="text"
           onClick={event => onTitleClick(event)}
-        >
-          {formatMessage(titleMsg)}
-        </AppButton>
+          label={formatMessage(titleMsg)}
+        />
       );
     }
     return (
@@ -87,6 +78,9 @@ class AppMenu extends React.Component {
           open={this.state.open}
           anchorEl={this.state.anchorEl}
           onClose={this.close}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+          transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+          getContentAnchorEl={null}
         >
           {newItems}
         </Menu>

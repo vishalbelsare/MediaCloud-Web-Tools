@@ -75,15 +75,11 @@ class QueryThemesResultsContainer extends React.Component {
         { content }
         <div className="actions">
           <ActionMenu actionTextMsg={messages.downloadOptions}>
-            {queries.map((q, idx) =>
-              <span key={`q${idx}-items`}>
-                <SVGAndCSVMenu
-                  downloadCsv={() => this.downloadCsv(q.label)}
-                  downloadSvg={() => downloadExplorerSvg(q.label, 'sampled-nyt_themes', BUBBLE_CHART_DOM_ID)}
-                  label={q.label}
-                />
-              </span>
-            )}
+            <SVGAndCSVMenu
+              downloadCsv={() => this.downloadCsv(queries[selectedTabIndex].label)}
+              downloadSvg={() => downloadExplorerSvg(queries[selectedTabIndex].label, 'sampled-nyt_themes', BUBBLE_CHART_DOM_ID)}
+              label={queries[selectedTabIndex].label}
+            />
           </ActionMenu>
         </div>
       </div>

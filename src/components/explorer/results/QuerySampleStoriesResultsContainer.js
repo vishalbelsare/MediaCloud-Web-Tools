@@ -54,20 +54,17 @@ class QuerySampleStoriesResultsContainer extends React.Component {
         />
         <div className="actions">
           <ActionMenu actionTextMsg={messages.downloadOptions}>
-            {queries.map((q, idx) =>
-              <MenuItem
-                key={idx}
-                className="action-icon-menu-item"
-                onClick={() => this.downloadCsv(q)}
-              >
-                <ListItemText>
-                  <FormattedMessage {...localMessages.downloadCsv} values={{ name: q.label }} />
-                </ListItemText>
-                <ListItemIcon>
-                  <DownloadButton />
-                </ListItemIcon>
-              </MenuItem>
-            )}
+            <MenuItem
+              className="action-icon-menu-item"
+              onClick={() => this.downloadCsv(queries[selectedTabIndex])}
+            >
+              <ListItemText>
+                <FormattedMessage {...localMessages.downloadCsv} values={{ name: queries[selectedTabIndex].label }} />
+              </ListItemText>
+              <ListItemIcon>
+                <DownloadButton />
+              </ListItemIcon>
+            </MenuItem>
           </ActionMenu>
         </div>
       </div>
@@ -79,7 +76,6 @@ QuerySampleStoriesResultsContainer.propTypes = {
   lastSearchTime: PropTypes.number.isRequired,
   queries: PropTypes.array.isRequired,
   isLoggedIn: PropTypes.bool.isRequired,
-  location: PropTypes.object,
   // from hocs
   intl: PropTypes.object.isRequired,
   onShowLoginDialog: PropTypes.func.isRequired,

@@ -11,6 +11,9 @@
 
 .icon-button {
   display: inline-block;
+  &.icon-button-help {
+    margin-left: 8px;
+  }
 }
 
 .app-icon {
@@ -23,7 +26,7 @@
   &.app-icon-medium {
     width: 23px;
     height: 23px;
-    border-radius: 11px;
+    border-radius: 50%;
   }
 
   &.app-icon-large {
@@ -58,6 +61,7 @@
   &.app-icon-add {
     svg {
       margin-top: 7px;
+      margin-left: 1px;
     }
   }
 
@@ -69,21 +73,17 @@
   }
 
   &.app-icon-delete {
-    background-color: $material-grey400;
     svg {
-      margin-top: 8px;
+      margin-top: 9px;
+      path {
+        fill: $material-grey600;
+      }
     }
     &:hover {
       background-color: #fc521f !important;
-    }
-  }
-
-  &.app-icon-delete-media {
-    svg {
-      margin-top: 8px;
-    }
-    &:hover {
-      background-color: #fc521f !important;
+      path {
+        fill: $material-grey100;
+      }
     }
   }
 
@@ -98,12 +98,13 @@
   }
 
   &.app-icon-help {
-    width: 16px;
-    height: 16px;
-    border-radius: 8px;
-    background-color: $material-grey400;
+    background-color: rgba(0, 0, 0, 0.08);
     svg {
-      margin-top: 4px;
+      margin-top: 8px;
+      margin-left: 1px;
+      path, circle {
+        fill: black;
+      }
     }
   }
 

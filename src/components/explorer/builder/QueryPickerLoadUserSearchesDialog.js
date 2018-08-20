@@ -5,11 +5,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import { Col } from 'react-flexbox-grid/lib';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import { Row, Col } from 'react-flexbox-grid/lib';
 import Link from 'react-router/lib/Link';
 import { DeleteButton } from '../../common/IconButton';
 import AppButton from '../../common/AppButton';
@@ -61,54 +57,28 @@ class QueryPickerLoadUserSearchesDialog extends React.Component {
   render() {
     const { searches, submitting } = this.props;
     const { formatMessage } = this.props.intl;
-    const actions = [
-      <AppButton
-        color="primary"
-        onClick={this.handleDialogClose}
-      >
-        <FormattedMessage {...messages.done} />
-      </AppButton>,
-    ];
     let searchList;
     if (searches !== null && searches !== undefined && searches.length > 0) {
       searchList = (
         <div className="query-picker-save-search-list">
-          <List
-            id="searchNameInDialog"
-            name="searchNameInDialog"
-          >
-            {searches.map((search, idx) => {
-              const searchDate = getDateFromTimestamp(search.timestamp);
-              const needsUpdating = searchDate < STORY_SEARCH_RELEASE_DATE;
-              //   onTouchTap={() => this.onLoadConfirm(search)}
-              return (
-                <ListItem key={idx} >
-                  <Col lg={2}>
-                    <ListItemText>
-                      <Link to={`queries/search?q=${search.queryParams}`}>{search.queryName}</Link>
-                    </ListItemText>
-                  </Col>
-                  <Col lg={2}>
-                    <ListItemText>
-                      <FormattedDate value={searchDate} />
-                    </ListItemText>
-                  </Col>
-                  {needsUpdating && (
-                    <Col>
-                      <ListItemText className="story-switchover">
-                        <FormattedHTMLMessage {...localMessages.needsUpdating} />
-                      </ListItemText>
-                    </Col>
-                  )}
-                  <Col lg={1}>
-                    <ListItemSecondaryAction>
-                      <DeleteButton className="delete-search" onClick={() => this.onDeleteRequest(search)} />
-                    </ListItemSecondaryAction>
-                  </Col>
-                </ListItem>
-              );
-            })}
-          </List>
+          {searches.map((search, idx) => {
+            const searchDate = getDateFromTimestamp(search.timestamp);
+            const needsUpdating = searchDate < STORY_SEARCH_RELEASE_DATE;
+            return (
+              <Row>
+                <Col lg={12}>
+                  <div key={idx} className="query-picker-save-search-item">
+                    <DeleteButton className="delete-search" onClick={() => this.onDeleteRequest(search)} />
+                    <h3><Link to={`queries/search?q=${search.queryParams}`}>{search.queryName}</Link></h3>
+                    <p><FormattedDate value={searchDate} /></p>
+                    {needsUpdating && (
+                      <i><FormattedHTMLMessage {...localMessages.needsUpdating} /></i>
+                    )}
+                  </div>
+                </Col>
+              </Row>
+            );
+          })}
         </div>
       );
     } else {
@@ -128,7 +98,14 @@ class QueryPickerLoadUserSearchesDialog extends React.Component {
           <DialogContent>
             {searchList}
           </DialogContent>
-          <DialogActions>{actions}</DialogActions>
+          <DialogActions>
+            <AppButton
+              primary
+              onClick={this.handleDialogClose}
+            >
+              <FormattedMessage {...messages.close} />
+            </AppButton>,
+          </DialogActions>
         </Dialog>
         <AppButton
           variant="outlined"

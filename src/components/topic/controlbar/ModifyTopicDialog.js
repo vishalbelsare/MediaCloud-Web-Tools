@@ -49,12 +49,6 @@ class ModifyTopicDialog extends React.Component {
   render() {
     const { topicId, onUrlChange, needsNewSnapshot, onSpiderRequest } = this.props;
     const { formatMessage } = this.props.intl;
-    const dialogActions = [
-      <AppButton
-        label={formatMessage(messages.cancel)}
-        onTouchTap={this.handleRemoveDialogClose}
-      />,
-    ];
     return (
       <div className="modify-topic">
         <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
@@ -115,7 +109,11 @@ class ModifyTopicDialog extends React.Component {
               id="modify-topic-settings"
             />
             <DialogActions>
-              {dialogActions}
+              <AppButton
+                label={formatMessage(messages.cancel)}
+                onTouchTap={this.handleRemoveDialogClose}
+                key="close"
+              />
             </DialogActions>
           </DialogContent>
         </Dialog>
