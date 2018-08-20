@@ -38,7 +38,6 @@ def story_info(stories_id):
 @flask_login.login_required
 @api_error_handler
 def story_raw(stories_id):
-    user_mc = user_mediacloud_client()
     admin_mc = user_admin_mediacloud_client()
     story={}
     story['raw_first_download_file'] = admin_mc.story(stories_id, raw_1st_download=True)
