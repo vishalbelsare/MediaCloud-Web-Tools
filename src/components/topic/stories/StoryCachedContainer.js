@@ -25,7 +25,7 @@ const StoryCachedContainer = (props) => {
       <h1>{story.title}</h1>
       <h3><FormattedHTMLMessage {...localMessages.intro} values={{ publishDate: story.publish_date, ref: story.media.url, link: story.media.name, collectDate: story.collect_date }} /></h3>
       <div className="actions">
-        <ReadItNowButton onClick={() => goToRawStory(`/api/story/${story.stories_id}/raw.html`)} />
+        <ReadItNowButton onClick={() => goToRawStory(`/api/stories/${story.stories_id}/raw.html`)} />
       </div>
       <h2>Story Text</h2>
       <Row>
@@ -40,7 +40,7 @@ StoryCachedContainer.propTypes = {
   story: PropTypes.object.isRequired,
   // from context
   intl: PropTypes.object.isRequired,
-  helpButton: PropTypes.node.isRequired,
+  helpButton: PropTypes.node,
 };
 
 const mapStateToProps = state => ({
