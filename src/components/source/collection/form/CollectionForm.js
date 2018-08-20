@@ -23,10 +23,10 @@ const CollectionForm = (props) => {
     <AppButton
       type="submit"
       disabled={pristine || submitting}
-      color="primary"
+      primary
       className="submit-button"
-    >{buttonLabel}
-    </AppButton>
+      label={buttonLabel}
+    />
   );
   if (!initialValues.disabled) {
     sourceContent = (

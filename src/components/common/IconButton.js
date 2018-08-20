@@ -134,7 +134,7 @@ export const HelpButton = composeIconButton(HelpIcon, messages.help, false);
 
 export const DeleteButton = composeIconButton(DeleteIcon, messages.delete, false);
 
-export const RemoveButton = composeIconButton(RemoveIcon, messages.remove);
+export const RemoveButton = composeIconButton(RemoveIcon, messages.remove, false);
 
 export const AddButton = composeIconButton(AddIcon, messages.add);
 
