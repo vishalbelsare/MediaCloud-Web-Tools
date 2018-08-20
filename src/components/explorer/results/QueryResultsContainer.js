@@ -16,6 +16,7 @@ import QueryGeoResultsContainer from './QueryGeoResultsContainer';
 import QueryWordsResultsContainer from './QueryWordsResultsContainer';
 import QueryWordSpaceResultsContainer from './QueryWordSpaceResultsContainer';
 import TabSelector from '../../common/TabSelector';
+import ErrorBoundary from '../../common/ErrorBoundary';
 import QueryThemesResultsContainer from './QueryThemesResultsContainer';
 import { updateQuery } from '../../../actions/explorerActions';
 import messages from '../../../resources/messages';
@@ -181,7 +182,9 @@ class QueryResultsContainer extends React.Component {
         <div className="tabbed-content-wrapper">
           <Grid>
             <Row>
-              {viewContent}
+              <ErrorBoundary>
+                {viewContent}
+              </ErrorBoundary>
             </Row>
           </Grid>
         </div>

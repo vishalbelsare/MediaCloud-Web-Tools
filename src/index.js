@@ -116,7 +116,7 @@ export default function initializeApp(routes) {
   if (isProdMode()) {
     Raven.config('https://e19420a2c46a4f97942553dfe8322cc4@sentry.io/1229723', {
       release: getVersion(),
-      environment: 'development-test',
+      environment: 'production',
       logger: getAppName(),
     }).install();
     // This wraps the app intialization in a Raven context to catch any init errors (as they recommend).
