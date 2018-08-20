@@ -11,6 +11,8 @@ import { ReadItNowButton } from '../../common/IconButton';
 const localMessages = {
   title: { id: 'story.cached.title', defaultMessage: 'Cached Story' },
   intro: { id: 'story.cached.intro', defaultMessage: 'Originally published on { publishDate } in <a href="{ ref }">{ link }</a>. Collected on { collectDate }.' },
+  readRaw: { id: 'story.cached.read', defaultMessage: 'View Raw Story' },
+
 };
 
 const goToRawStory = (url) => {
@@ -25,7 +27,7 @@ const StoryCachedContainer = (props) => {
       <h1>{story.title}</h1>
       <h3><FormattedHTMLMessage {...localMessages.intro} values={{ publishDate: story.publish_date, ref: story.media.url, link: story.media.name, collectDate: story.collect_date }} /></h3>
       <div className="actions">
-        <ReadItNowButton onClick={() => goToRawStory(`/api/stories/${story.stories_id}/raw.html`)} />
+        <ReadItNowButton tooltip={formatMessage(localMessages.readRaw)} onClick={() => goToRawStory(`/api/stories/${story.stories_id}/raw.html`)} />
       </div>
       <h2>Story Text</h2>
       <Row>
