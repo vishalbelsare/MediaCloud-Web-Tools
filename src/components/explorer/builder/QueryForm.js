@@ -2,12 +2,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { reduxForm, Field, propTypes } from 'redux-form';
-<<<<<<< HEAD
-// import MenuItem from '@material-ui/core/MenuItem';
-=======
 import Link from 'react-router/lib/Link';
 // import MenuItem from 'material-ui/MenuItem';
->>>>>>> b3b7e316aea0df64944b583201e3e1ab6e59bd47
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import withIntlForm from '../../common/hocs/IntlForm';
 import AppButton from '../../common/AppButton';
