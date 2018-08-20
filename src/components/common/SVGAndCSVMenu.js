@@ -5,16 +5,15 @@ import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import { DownloadButton } from './IconButton';
-import { downloadSvg } from '../util/svg';
 import { ACTION_MENU_ITEM_CLASS } from '../../lib/explorerUtil';
 
 const localMessages = {
-  downloadSVG: { id: 'explorer.themes.downloadSvg', defaultMessage: 'Download { name } theme SVG' },
-  downloadCSV: { id: 'explorer.themes.downloadCsv', defaultMessage: 'Download { name } theme CSV' },
+  downloadSVG: { id: 'explorer.themes.downloadSvg', defaultMessage: 'Download { name } SVG' },
+  downloadCSV: { id: 'explorer.themes.downloadCsv', defaultMessage: 'Download { name } CSV' },
 };
 
 const SVGAndCSVMenu = (props) => {
-  const { downloadCsv, label, idx } = props;
+  const { downloadCsv, downloadSvg, label, idx } = props;
   return [(
     <MenuItem
       key={`${idx}-csv`}
