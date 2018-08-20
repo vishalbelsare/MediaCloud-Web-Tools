@@ -38,7 +38,7 @@ const FocusSetSelectorContainer = (props) => {
           }
           {noneOption}
         </Select>
-      </<React.Fragment>>
+      </React.Fragment>
     );
   } else {
     content = (
