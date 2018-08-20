@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Link from 'react-router/lib/Link';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
-import { SelectField, Checkbox, MenuItem } from 'material-ui';
+import { Select, Checkbox, MenuItem } from '@material-ui/core';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import AppButton from '../../common/AppButton';
 import { ExploreButton } from '../../common/IconButton';
@@ -45,7 +45,7 @@ const AdvancedSearchResults = (props) => {
         <Row>
           <Col lg={6}>
             <div className="search-results-controls">
-              <SelectField name="allOrNone" style={{ fontSize: 13 }}>
+              <Select name="allOrNone" style={{ fontSize: 13 }}>
                 <MenuItem
                   name="chkSelectAllFirstPage"
                   onClick={(...args) => addRemoveAll(ADD_ALL_THIS_PAGE, args[1])}
@@ -63,7 +63,7 @@ const AdvancedSearchResults = (props) => {
                   primaryText={formatMessage(localMessages.checkAllPages)}
                   style={{ fontSize: 13 }}
                 />
-              </SelectField>
+              </Select>
             </div>
           </Col>
           <Col lg={6}>

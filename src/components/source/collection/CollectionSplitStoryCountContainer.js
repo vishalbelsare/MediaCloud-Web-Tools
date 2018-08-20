@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import MenuItem from 'material-ui/MenuItem';
+import MenuItem from '@material-ui/core/MenuItem';
 import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import { fetchCollectionSplitStoryCount } from '../../../actions/sourceActions';
 import DataCard from '../../common/DataCard';

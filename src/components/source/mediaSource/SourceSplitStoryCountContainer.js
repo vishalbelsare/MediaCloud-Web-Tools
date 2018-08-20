@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import MenuItem from 'material-ui/MenuItem';
+import MenuItem from '@material-ui/core/MenuItem';
 import { getBrandDarkColor } from '../../../styles/colors';
 import withAsyncFetch from '../../common/hocs/AsyncContainer';
 import { fetchSourceSplitStoryCount } from '../../../actions/sourceActions';
