@@ -34,13 +34,13 @@ class MediaWordsContainer extends React.Component {
   }
 
   render() {
-    const { topicInfo, mediaId, initSampleSize, onViewSampleSizeClick, filters, handleWordCloudClick } = this.props;
-    const urlDownload = `/api/topics/${topicInfo.topics_id}/words.csv?${filtersAsUrlParams({ ...filters, q: combineQueryParams(filters.q, `media_id:${mediaId}`) })}`;
+    const { topicInfo, topicId, mediaId, initSampleSize, onViewSampleSizeClick, filters, handleWordCloudClick } = this.props;
+    const urlDownload = `/api/topics/${topicId}/words.csv?${filtersAsUrlParams({ ...filters, q: combineQueryParams(filters.q, `media_id:${mediaId}`) })}`;
     const { formatMessage } = this.props.intl;
     return (
       <EditableWordCloudDataCard
         words={this.props.words}
-        explore={filteredLinkTo(`/topics/${topicInfo.topicId}/words`, filters)}
+        explore={filteredLinkTo(`/topics/${topicId}/words`, filters)}
         initSampleSize={initSampleSize}
         downloadUrl={urlDownload}
         onViewModeClick={handleWordCloudClick}

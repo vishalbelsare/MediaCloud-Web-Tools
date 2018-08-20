@@ -2,8 +2,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import AutoComplete from 'material-ui/AutoComplete';
-import MenuItem from 'material-ui/MenuItem';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
 import LoadingSpinner from '../../common/LoadingSpinner';
 import { SearchButton } from '../../common/IconButton';
 import { FETCH_ONGOING, FETCH_SUCCEEDED } from '../../../lib/fetchConstants';
@@ -149,23 +149,16 @@ class SourceSearchContainer extends React.Component {
   render() {
     const { fetchesOngoing } = this.props;
     const { formatMessage } = this.props.intl;
-    const resultsAsComponents = this.resetIfRequested();
+    // const resultsAsComponents = this.resetIfRequested();
     const fetchingStatus = (fetchesOngoing) ? <LoadingSpinner size={15} /> : null;
     return (
       <div className="async-search source-search">
-        <SearchButton />
+        <SearchButton color="secondary" variant="outlined" label="Search" />
         <div className="fetching">{fetchingStatus}</div>
-        <AutoComplete
-          hintText={formatMessage(localMessages.searchHint)}
+        <Select
+          label={formatMessage(localMessages.searchHint)}
           fullWidth
-          openOnFocus
-          searchText={this.state.lastSearchString}
-          onClick={this.resetIfRequested}
-          dataSource={resultsAsComponents}
-          onUpdateInput={this.handleUpdateInput}
-          onNewRequest={this.handleNewRequest}
-          maxSearchResults={this.getMaxSourcesToShow() + this.getMaxCollectionsToShow()}
-          filter={() => true}
+          value=""
         />
       </div>
     );
