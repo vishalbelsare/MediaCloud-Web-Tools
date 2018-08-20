@@ -12,7 +12,7 @@ import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import StoryTable from '../../common/StoryTable';
 import { fetchQuerySampleStories, fetchDemoQuerySampleStories, resetSampleStories } from '../../../actions/explorerActions';
-import { selectStory, resetStory } from '../../../actions/storyActions';
+import { selectStory, resetStory, fetchStory } from '../../../actions/storyActions';
 import { postToDownloadUrl } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
 import withQueryResults from './QueryResultsSelector';
@@ -133,7 +133,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     }
   },
   handleStorySelection: (query, story) => {
-    dispatch(selectStory(story));
+    // we should select and fetch since that's the pattern, even if we have the story info
+    dispatch(selectStory(story.stories_id));
+    dispatch(fetchStory(story.stories_id));
   },
 });
 
