@@ -58,7 +58,7 @@ const SourceFeedForm = (props) => {
         <Col md={8}>
           <Field name="type" component={renderSelect} >
             <MenuItem key="syndicated" value="syndicated"><FormattedMessage {...localMessages.typeSyndicated} /></MenuItem>
-            <MenuItem key="web_page" value="web_page"><FormattedMessage {...localMessages.localMessages.typeWebPage} /></MenuItem>
+            <MenuItem key="web_page" value="web_page"><FormattedMessage {...localMessages.typeWebPage} /></MenuItem>
           </Field>
         </Col>
       </Row>
@@ -82,7 +82,7 @@ const SourceFeedForm = (props) => {
         type="submit"
         className="source-feed-updated"
         label={buttonLabel}
-        color="primary"
+        primary
         disabled={pristine || submitting}
       />
     </form>
