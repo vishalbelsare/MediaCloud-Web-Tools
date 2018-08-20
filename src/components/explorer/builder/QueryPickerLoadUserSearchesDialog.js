@@ -57,14 +57,6 @@ class QueryPickerLoadUserSearchesDialog extends React.Component {
   render() {
     const { searches, submitting } = this.props;
     const { formatMessage } = this.props.intl;
-    const actions = [
-      <AppButton
-        color="primary"
-        onClick={this.handleDialogClose}
-      >
-        <FormattedMessage {...messages.done} />
-      </AppButton>,
-    ];
     let searchList;
     if (searches !== null && searches !== undefined && searches.length > 0) {
       searchList = (
@@ -106,7 +98,14 @@ class QueryPickerLoadUserSearchesDialog extends React.Component {
           <DialogContent>
             {searchList}
           </DialogContent>
-          <DialogActions>{actions}</DialogActions>
+          <DialogActions>
+            <AppButton
+              primary
+              onClick={this.handleDialogClose}
+            >
+              <FormattedMessage {...messages.close} />
+            </AppButton>,
+          </DialogActions>
         </Dialog>
         <AppButton
           variant="outlined"
