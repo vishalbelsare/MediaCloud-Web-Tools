@@ -7,6 +7,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import MenuItem from '@material-ui/core/MenuItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { selectStory, fetchStory } from '../../../actions/storyActions';
@@ -102,24 +104,24 @@ class StoryContainer extends React.Component {
                 <StoryActionMenu>
                   <Permissioned onlyRole={PERMISSION_STORY_EDIT}>
                     <MenuItem onClick={() => this.goToEdit(topicId, storiesId)}>
-                      <FormattedMessage {...localMessages.editStory} />
-                      <EditButton tooltip={formatMessage(localMessages.editStory)} />
+                      <ListItemText><FormattedMessage {...localMessages.editStory} /></ListItemText>
+                      <ListItemIcon><EditButton tooltip={formatMessage(localMessages.editStory)} /></ListItemIcon>
                     </MenuItem>
                   </Permissioned>
                   <MenuItem onClick={() => this.goToStory(storyInfo.url)}>
-                    <FormattedMessage {...localMessages.readStory} />
-                    <ReadItNowButton />
+                    <ListItemText><FormattedMessage {...localMessages.readStory} /></ListItemText>
+                    <ListItemIcon><ReadItNowButton /></ListItemIcon>
                   </MenuItem>
                   <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
                     <MenuItem onClick={this.handleRemoveClick}>
-                      <FormattedMessage {...localMessages.removeStory} />
-                      <RemoveButton tooltip={formatMessage(localMessages.removeTitle)} />
+                      <ListItemText><FormattedMessage {...localMessages.removeStory} /></ListItemText>
+                      <ListItemIcon><RemoveButton tooltip={formatMessage(localMessages.removeTitle)} /></ListItemIcon>
                     </MenuItem>
                   </Permissioned>
                   <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
                     <MenuItem onClick={() => this.goToCachedCopy(topicId, storiesId)}>
-                      <FormattedMessage {...localMessages.readCachedCopy} />
-                      <ReadItNowButton tooltip={formatMessage(localMessages.readCachedCopy)} />
+                      <ListItemText><FormattedMessage {...localMessages.readCachedCopy} /></ListItemText>
+                      <ListItemIcon><ReadItNowButton tooltip={formatMessage(localMessages.readCachedCopy)} /></ListItemIcon>
                     </MenuItem>
                   </Permissioned>
                 </StoryActionMenu>
