@@ -120,14 +120,6 @@
     width: 35px;
   }
 
-  &.app-icon-media-source {
-    width: 40px;
-  }
-
-  &.app-icon-collection {
-    width: 50px;
-  }
-
   &.app-icon-snapshot {
     width: 80px;
   }
@@ -162,6 +154,15 @@
     padding-top: 10px;
   }
 
+}
+
+h1 {
+  .app-icon-media-source {
+    width: 40px;
+  }
+  .app-icon-collection {
+    width: 50px;
+  }
 }
 
 h2 {

@@ -37,7 +37,7 @@ const SourceForm = (props) => {
             style={{ marginTop: 30 }}
             label={buttonLabel}
             disabled={pristine || submitting}
-            color="primary"
+            primary
           />
         </Col>
       </Row>
