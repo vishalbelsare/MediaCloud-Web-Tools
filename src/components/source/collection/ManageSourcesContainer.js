@@ -103,13 +103,13 @@ class ManageSourcesContainer extends React.Component {
                           <FormattedMessage {...localMessages.lastScrapeQueuedSince} values={{ date: lastScrapeUpdatedDate }} />
                         </span>
                       );
-                    } else if (source.latest_scrape_job.state === SOURCE_SCRAPE_STATE_RUNNING) {
+                    } else if (source && source.latest_scrape_job.state === SOURCE_SCRAPE_STATE_RUNNING) {
                       scrapeContent = (
                         <span>
                           <FormattedMessage {...localMessages.lastScrapeRunningSince} values={{ date: lastScrapeUpdatedDate }} />
                         </span>
                       );
-                    } else if (source.latest_scrape_job.state === SOURCE_SCRAPE_STATE_COMPLETED) {
+                    } else if (source && source.latest_scrape_job.state === SOURCE_SCRAPE_STATE_COMPLETED) {
                       scrapeContent = (
                         <span>
                           {scrapeButton}
@@ -117,7 +117,7 @@ class ManageSourcesContainer extends React.Component {
                           <FormattedMessage {...localMessages.lastScrapeWorkedOn} values={{ date: lastScrapeUpdatedDate }} />
                         </span>
                       );
-                    } else if (source.latest_scrape_job.state === SOURCE_SCRAPE_STATE_ERROR) {
+                    } else if (source && source.latest_scrape_job.state === SOURCE_SCRAPE_STATE_ERROR) {
                       scrapeContent = (
                         <span>
                           {scrapeButton}
