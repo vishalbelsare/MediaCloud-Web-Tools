@@ -35,12 +35,9 @@ class SourceSearchContainer extends React.Component {
     return maxSources || DEFAULT_MAX_SOURCES_TO_SHOW;
   }
 
-  handleClick = (item) => {
-    const { onMediaSourceSelected } = this.props;
-    if (item) {
-      if (item.type === 'mediaSource') {
-        if (onMediaSourceSelected) onMediaSourceSelected(item);
-      }
+  handleClick = (menuItem) => {
+    if (menuItem.item) {
+      urlToTopicMapper(menuItem.item.media_id);
     }
     // annoyingly need to timeout to reset the field after selection is made (so it fires after menuCloseDelay)
     // @see https://stackoverflow.com/questions/34387787/how-to-clear-the-text-in-a-material-ui-auto-complete-field
@@ -60,7 +57,7 @@ class SourceSearchContainer extends React.Component {
   handleMenuItemKeyDown = (item, event) => {
     switch (event.key) {
       case 'Enter':
-        this.handleClick(item);
+        this.handleClick(item); // should we treat the enter as a trigger to search or a trigger to take them to that media entry?
         break;
       default: break;
     }
@@ -72,7 +69,7 @@ class SourceSearchContainer extends React.Component {
     const resultsAsComponents = results.map((item) => {
       const menuItemValue = (
         <MenuItem
-          onChange={() => this.handleClick(item)}
+          onClick={() => this.handleClick(item)}
           onKeyDown={this.handleMenuItemKeyDown.bind(this, item)}
           id={`searchResult${item.media_id || item.tags_id}`}
         >
@@ -82,6 +79,7 @@ class SourceSearchContainer extends React.Component {
       return ({
         text: item.name,
         value: menuItemValue,
+        item,
       });
     });
 
@@ -96,12 +94,14 @@ class SourceSearchContainer extends React.Component {
     });
   }
 
-  handleNewRequest = (searchString, index) => {
+  handleNewRequest = (item, index) => {
     const { search } = this.props;
     if (index === -1) { // they pressed enter in the text field
-      search(searchString);
+      search(item.text);
+      return;
     }
-    // else: they clicked an item and it will take care of things itself
+    // we want to send the user to the topic media url. The handleClick is no longer triggered in new/old material-ui setup
+    this.handleClick(item);
   }
 
   render() {
