@@ -37,9 +37,12 @@ class SourceSearchContainer extends React.Component {
   }
 
   handleClick = (menuItem) => {
+    const topicIdDummy = '2113';
     if (menuItem.item) { // TODO: handle url generically
-      urlToTopicMapper(`/${topicId}/media/${menuItem.item.media_id}`);
+      window.location = urlToTopicMapper(`/topics/${topicIdDummy}/media/${menuItem.item.media_id}/`);
     }
+    // something like const topicMediaUrl = filteredLinkTo(`/topics/${topics_id}/media`, filters);
+    // dispatch(push(topicSummaryUrl));
     // annoyingly need to timeout to reset the field after selection is made (so it fires after menuCloseDelay)
     // @see https://stackoverflow.com/questions/34387787/how-to-clear-the-text-in-a-material-ui-auto-complete-field
     setTimeout(() => {

@@ -22,67 +22,87 @@ const localMessages = {
   maintenance: { id: 'app.maintenance', defaultMessage: 'Sorry, we have taken our system down right now for maintenance' },
 };
 
-const AppContainer = (props) => {
-  const { children, feedback, handleSnackBarRequestClose, name } = props;
-  const { formatMessage } = props.intl;
+class AppContainer extends React.Component {
+  state = {
+    open: false,
+  };
 
-  let content = children;
-  if (document.appConfig.online === false) {
-    content = (
-      <div className="maintenance">
-        <Row center="lg">
-          <ErrorNotice>
-            <br /><br />
-            <FormattedMessage {...localMessages.maintenance} />
-            <br /><br />
-            <img alt="under-constrction" src={assetUrl('/static/img/under-construction.gif')} />
-            <br /><br />
-          </ErrorNotice>
-        </Row>
+  componentWillReceiveProps(nextProps) {
+    const { feedback } = this.props;
+    if (nextProps.feedback.message !== feedback.message) {
+      this.setState({ open: true });
+    }
+  }
+  handleClose = () => {
+    this.setState({ open: false });
+  };
+
+  render() {
+    const { children, feedback, handleSnackBarRequestClose, name } = this.props;
+    const { formatMessage } = this.props.intl;
+
+    let content = children;
+    if (document.appConfig.online === false) {
+      content = (
+        <div className="maintenance">
+          <Row center="lg">
+            <ErrorNotice>
+              <br /><br />
+              <FormattedMessage {...localMessages.maintenance} />
+              <br /><br />
+              <img alt="under-constrction" src={assetUrl('/static/img/under-construction.gif')} />
+              <br /><br />
+            </ErrorNotice>
+          </Row>
+        </div>
+      );
+    }
+
+    return (
+      <div className={`app-contiainer app-${name}`}>
+        <Helmet><title>{formatMessage(messages.suiteName)}</title></Helmet>
+        <AppNoticesContainer />
+        <header>
+          <NavToolbar />
+        </header>
+        <ErrorBoundary>
+          <div id="content">
+            {content}
+          </div>
+        </ErrorBoundary>
+        <footer>
+          <p><small>
+            {'Created by the '}
+            <a href="https://civic.mit.edu/">
+              <FormattedMessage {...messages.c4cmName} />
+            </a>
+            {' and the '}
+            <a href="https://cyber.law.harvard.edu">
+              <FormattedMessage {...messages.berkmanName} />
+            </a>.
+            <br />
+            <FormattedHTMLMessage {...localMessages.supportOptions} />
+            <br />
+            v{getVersion()}
+          </small>
+          </p>
+        </footer>
+        <Snackbar
+          className={feedback.classes}
+          open={this.state.open}
+          onClose={this.handleClose}
+          onRequestClose={this.handleClose}
+          message={feedback.message}
+          action={feedback.action}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          // onClick={feedback.onActionClick}
+          autoHideDuration={8000}
+          onRequest={handleSnackBarRequestClose}
+        />
       </div>
     );
   }
-
-  return (
-    <div className={`app-contiainer app-${name}`}>
-      <Helmet><title>{formatMessage(messages.suiteName)}</title></Helmet>
-      <AppNoticesContainer />
-      <header>
-        <NavToolbar />
-      </header>
-      <ErrorBoundary>
-        <div id="content">
-          {content}
-        </div>
-      </ErrorBoundary>
-      <footer>
-        <p><small>
-          {'Created by the '}
-          <a href="https://civic.mit.edu/">
-            <FormattedMessage {...messages.c4cmName} />
-          </a>
-          {' and the '}
-          <a href="https://cyber.law.harvard.edu">
-            <FormattedMessage {...messages.berkmanName} />
-          </a>.
-          <br />
-          <FormattedHTMLMessage {...localMessages.supportOptions} />
-          <br />
-          v{getVersion()}
-        </small>
-        </p>
-      </footer>
-      <Snackbar
-        open={feedback.open}
-        message={feedback.message}
-        action={feedback.action}
-        // onClick={feedback.onActionClick}
-        autoHideDuration={8000}
-        onRequest={handleSnackBarRequestClose}
-      />
-    </div>
-  );
-};
+}
 
 AppContainer.propTypes = {
   children: PropTypes.node,

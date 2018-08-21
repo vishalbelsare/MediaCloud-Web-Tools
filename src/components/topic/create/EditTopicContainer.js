@@ -206,7 +206,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       .then((results) => {
         if (results.topics_id) {
           // let them know it worked
-          dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
+          dispatch(updateFeedback({ classes: 'info-notice', open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
           // if the dates changed tell them it needs a new snapshot
           if ((infoToSave.start_date !== topicInfo.start_date) || (infoToSave.end_date !== topicInfo.end_date)) {
             dispatch(setTopicNeedsNewSnapshot(true));
@@ -215,12 +215,12 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
           dispatch(push(topicSummaryUrl));
           // update topic info and redirect back to topic summary
         } else if (results.status === 500 && results.message.indexOf('cannot reduce') > -1) {
-          dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.resetting) }));
+          dispatch(updateFeedback({ classes: 'warning-notice', open: true, message: ownProps.intl.formatMessage(localMessages.resetting) }));
           dispatch(resetTopic(ownProps.params.topicId));
           const topicSummaryUrl = filteredLinkTo(`/topics/${results.topics_id}/summary`, filters);
           dispatch(push(topicSummaryUrl));
         } else {
-          dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.failed) }));
+          dispatch(updateFeedback({ classes: 'error-notice', open: true, message: ownProps.intl.formatMessage(localMessages.failed) }));
         }
       }
     );

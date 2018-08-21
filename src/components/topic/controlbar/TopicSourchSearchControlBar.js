@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { push } from 'react-router-redux';
-import SourceSearchContainer from '../../source/controlbar/SourceSearchContainer';
+import SimpleSourceSearchContainer from '../../common/SimpleSourceSearchContainer';
 
 const TopicSourceSearchControlBar = props => (
   <div className="controlbar controlbar-sources">
@@ -16,7 +16,7 @@ const TopicSourceSearchControlBar = props => (
           </Col>
           <Col lg={6} xs={12} className="right">
             {(props.showSearch === true) && (
-              <SourceSearchContainer
+              <SimpleSourceSearchContainer
                 searchSources
                 maxSources={12}
                 onMediaSourceSelected={props.handleMediaSourceSelected}
@@ -46,12 +46,6 @@ const mapStateToProps = () => ({
 
 const mapDispatchToProps = dispatch => ({
   handleMediaSourceSelected: (item) => {
-    dispatch(push(`/media/${item.id}`));
-  },
-  handleCollectionSelected: (item) => {
-    dispatch(push(`/media/${item.id}`));
-  },
-  handleAdvancedSearchSelected: (searchStr) => {
     dispatch(push(`/media/${item.id}`));
   },
 });
