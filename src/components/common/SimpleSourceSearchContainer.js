@@ -8,6 +8,7 @@ import AutoComplete from 'material-ui/AutoComplete';
 import LoadingSpinner from './LoadingSpinner';
 import { SearchButton } from './IconButton';
 import { FETCH_ONGOING } from '../../lib/fetchConstants';
+import { urlToTopicMapper } from '../../lib/urlUtil';
 import { fetchSystemSourceSearch, resetSystemSourceSearch } from '../../actions/systemActions';
 
 const MAX_SUGGESTION_CHARS = 70;
@@ -36,8 +37,8 @@ class SourceSearchContainer extends React.Component {
   }
 
   handleClick = (menuItem) => {
-    if (menuItem.item) {
-      urlToTopicMapper(menuItem.item.media_id);
+    if (menuItem.item) { // TODO: handle url generically
+      urlToTopicMapper(`/${topicId}/media/${menuItem.item.media_id}`);
     }
     // annoyingly need to timeout to reset the field after selection is made (so it fires after menuCloseDelay)
     // @see https://stackoverflow.com/questions/34387787/how-to-clear-the-text-in-a-material-ui-auto-complete-field
