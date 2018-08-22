@@ -319,7 +319,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = (dispatch, ownProps) => ({
   handleSourceAdded: (sourceCount) => {
     const message = ownProps.intl.formatMessage(localMessages.sourcesAddedFeedback, { sourceCount });
-    dispatch(updateFeedback({ open: true, message }));
+    dispatch(updateFeedback({ classes: 'info-notice', open: true, message }));
   },
 });
 

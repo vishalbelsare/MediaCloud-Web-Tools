@@ -101,10 +101,10 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     return dispatch(suggestSource(infoToSave))
       .then((results) => {
         if (results.success === 1) {
-          dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
+          dispatch(updateFeedback({ classes: 'info-notice', open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
           dispatch(reset('suggestionForm')); // empty it so they don't resubmit by accident
         } else {
-          dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.errorFeedback) }));
+          dispatch(updateFeedback({ classes: 'error-notice', open: true, message: ownProps.intl.formatMessage(localMessages.errorFeedback) }));
         }
       });
   },
