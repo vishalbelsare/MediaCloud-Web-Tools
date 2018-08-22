@@ -118,7 +118,7 @@ const withSaving = (ChildComponent) => {
       };
       dispatch(saveToNotebook(contentToSave))
         .then(() => {
-          updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.savedToNotebook) });
+          updateFeedback({ classes: 'info-notice', open: true, message: ownProps.intl.formatMessage(localMessages.savedToNotebook) });
         });
     },
   });

@@ -416,6 +416,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
           dispatch(loadUserSearches());
         } else {
           dispatch(updateFeedback({
+            classes: 'error-notice',
             open: true,
             message: ownProps.intl.formatMessage(localMessages.deleteFailed),
           }));
