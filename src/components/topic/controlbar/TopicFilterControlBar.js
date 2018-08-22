@@ -218,7 +218,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   handleSpiderRequest: () => {
     dispatch(topicStartSpider(ownProps.topicId))
       .then(() => {
-        dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.startedSpider) }));
+        dispatch(updateFeedback({ classes: 'info-notice', open: true, message: ownProps.intl.formatMessage(localMessages.startedSpider) }));
       });
   },
 });
