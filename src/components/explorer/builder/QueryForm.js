@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { reduxForm, Field, propTypes } from 'redux-form';
-// import MenuItem from 'material-ui/MenuItem';
+// import MenuItem from '@material-ui/core/MenuItem';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import withIntlForm from '../../common/hocs/IntlForm';
 import AppButton from '../../common/AppButton';
@@ -95,7 +95,7 @@ class QueryForm extends React.Component {
                     name="q"
                     type="text"
                     value={currentQ}
-                    multiLine
+                    multiline
                     rows={3}
                     rowsMax={4}
                     fullWidth
@@ -139,7 +139,7 @@ class QueryForm extends React.Component {
                     name="startDate"
                     type="inline"
                     component={renderTextField}
-                    underlineShow={false}
+                    disableunderline="true"
                     disabled={!isEditable}
                     onChange={onDateChange}
                   />
@@ -150,7 +150,7 @@ class QueryForm extends React.Component {
                     name="endDate"
                     type="inline"
                     component={renderTextField}
-                    underlineShow={false}
+                    disableunderline="true"
                     disabled={!isEditable}
                     onChange={onDateChange}
                   />
@@ -196,7 +196,7 @@ QueryForm.propTypes = {
   // from context
   intl: PropTypes.object.isRequired,
   renderTextField: PropTypes.func.isRequired,
-  renderSelectField: PropTypes.func.isRequired,
+  renderSelect: PropTypes.func.isRequired,
   renderTextFieldWithFocus: PropTypes.func.isRequired,
   searchNickname: PropTypes.string.isRequired,
   savedSearches: PropTypes.array,

@@ -22,11 +22,11 @@ const CollectionForm = (props) => {
   const submitButton = (
     <AppButton
       type="submit"
-      label={buttonLabel}
       disabled={pristine || submitting}
-      primary
+      color="primary"
       className="submit-button"
-    />
+    >{buttonLabel}
+    </AppButton>
   );
   if (!initialValues.disabled) {
     sourceContent = (
@@ -68,7 +68,7 @@ CollectionForm.propTypes = {
   // from context
   intl: PropTypes.object.isRequired,
   renderTextField: PropTypes.func.isRequired,
-  renderSelectField: PropTypes.func.isRequired,
+  renderSelect: PropTypes.func.isRequired,
   collections: PropTypes.array,
   // from form healper
   handleSubmit: PropTypes.func,
