@@ -35,6 +35,7 @@
 @import '_story_switchover';
 @import '_homepage';
 @import '_about';
+@import '_signup_form';
 
 #content { 
   min-height: 400px;
@@ -49,4 +50,8 @@
 
 .warning {
   color: $warning-color;
+}
+
+.warning-background {
+  background-color: $warning-color;
 }

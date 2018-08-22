@@ -3,7 +3,7 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import Snackbar from 'material-ui/Snackbar';
+import Snackbar from '@material-ui/core/Snackbar';
 // polyfill for Safari :-(
 import intl from 'intl';  // eslint-disable-line
 import intlEn from 'intl/locale-data/jsonp/en.js';  // eslint-disable-line
@@ -73,9 +73,9 @@ const AppContainer = (props) => {
         open={feedback.open}
         message={feedback.message}
         action={feedback.action}
-        onActionClick={feedback.onActionClick}
+        // onClick={feedback.onActionClick}
         autoHideDuration={8000}
-        onRequestClose={handleSnackBarRequestClose}
+        onRequest={handleSnackBarRequestClose}
       />
     </div>
   );
