@@ -70,7 +70,6 @@ class QueryPickerSaveUserSearchesDialog extends React.Component {
       <AppButton
         primary
         label={formatMessage(messages.save)}
-        keyboardFocused
         onClick={this.handleLabelChangeAndClose}
         key="qpsusd-save"
       />,

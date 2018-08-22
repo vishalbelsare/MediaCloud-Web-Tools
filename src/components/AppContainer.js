@@ -88,7 +88,7 @@ class AppContainer extends React.Component {
           </p>
         </footer>
         <Snackbar
-          className={feedback.classes}
+          className={feedback.classes ? feedback.classes : 'info_notice'}
           open={this.state.open}
           onClose={this.handleClose}
           onRequestClose={this.handleClose}

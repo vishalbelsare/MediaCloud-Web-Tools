@@ -7,12 +7,12 @@ import Link from 'react-router/lib/Link';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import withIntlForm from '../../common/hocs/IntlForm';
 import AppButton from '../../common/AppButton';
-import ColorPicker from '../../common/ColorPicker';
 import withHelp from '../../common/hocs/HelpfulContainer';
 import CopyAllComponent from '../../common/CopyAllComponent';
 import SourceCollectionsFieldList from '../../common/mediaPicker/SourceCollectionsFieldList';
 import MediaPickerDialog from '../../common/mediaPicker/MediaPickerDialog';
 import QueryHelpDialog from '../../common/help/QueryHelpDialog';
+import MediaHelpDialog from '../../common/help/MediaHelpDialog';
 import SavedSearchControls from './SavedSearchControls';
 import { emptyString, validDate } from '../../../lib/formValidators';
 import { isStartDateAfterEndDate, isValidSolrDate } from '../../../lib/dateUtil';
@@ -59,7 +59,7 @@ class QueryForm extends React.Component {
 
   render() {
     const { initialValues, onWillSearch, isEditable, selected, buttonLabel, onMediaDelete, onDateChange, handleLoadSearches, handleDeleteSearch, handleLoadSelectedSearch, savedSearches, searchNickname, handleSaveSearch,
-      submitting, handleSubmit, onSave, onColorChange, onMediaChange, renderTextField, renderTextFieldWithFocus, handleCopyAll } = this.props;
+      submitting, handleSubmit, onSave, onMediaChange, renderTextField, renderTextFieldWithFocus, handleCopyAll } = this.props;
     const { formatMessage } = this.props.intl;
     const cleanedInitialValues = initialValues ? { ...initialValues } : {};
     if (cleanedInitialValues.disabled === undefined) {
@@ -73,7 +73,6 @@ class QueryForm extends React.Component {
       ...selected.sources,
       ...selected.collections,
     ];
-    const currentColor = selected.color; // for ColorPicker
     const currentQ = selected.q;
     let mediaPicker = null;
     let mediaLabel = formatMessage(localMessages.SandC);
@@ -98,11 +97,10 @@ class QueryForm extends React.Component {
                   <CopyAllComponent label={formatMessage(localMessages.query)} title={formatMessage(localMessages.copyQueryKeywordTitle)} msg={formatMessage(localMessages.copyQueryKeywordMsg)} onOk={() => handleCopyAll(KEYWORD)} />
                   <br />
                   <FormattedMessage {...localMessages.queryDesc} />
-                  <Link
-                    to={'https://'}
-                  >
-                    <FormattedMessage {...localMessages.queryDescLink} />
-                  </Link>
+                  <QueryHelpDialog
+                    trigger={formatMessage(localMessages.queryDescLink)}
+                    title={formatMessage(localMessages.query)}
+                  />
                   <Field
                     className="query-field"
                     name="q"
@@ -115,15 +113,6 @@ class QueryForm extends React.Component {
                     onChange={this.focusSelect}
                     component={renderTextFieldWithFocus}
                   />
-                  <QueryHelpDialog />
-                </div>
-                <div className="color-field-wrapper">
-                  <label className="inline" htmlFor="color"><FormattedMessage {...localMessages.color} /></label>
-                  <ColorPicker
-                    name="color"
-                    color={currentColor}
-                    onChange={onColorChange}
-                  />
                 </div>
               </Col>
               <Col lg={1} />
@@ -132,11 +121,9 @@ class QueryForm extends React.Component {
                   <CopyAllComponent label={mediaLabel} title={formatMessage(localMessages.copyQueryMediaTitle)} msg={formatMessage(localMessages.copyQueryMediaMsg)} onOk={() => handleCopyAll(MEDIA)} />
                   <br />
                   <FormattedMessage {...localMessages.selectSandCDesc} />
-                  <Link
-                    to={'https://'}
-                  >
-                    <FormattedMessage {...localMessages.selectSandCDescLink} />
-                  </Link>
+                  <MediaHelpDialog
+                    trigger={formatMessage(localMessages.selectSandCDescLink)}
+                  />
                   <SourceCollectionsFieldList
                     className="query-field"
                     form="queryForm"
@@ -153,6 +140,7 @@ class QueryForm extends React.Component {
                   <CopyAllComponent label={formatMessage(localMessages.dates)} title={formatMessage(localMessages.copyQueryDatesTitle)} msg={formatMessage(localMessages.copyQueryDatesMsg)} onOk={() => handleCopyAll(DATES)} />
                   <br />
                   <FormattedMessage {...localMessages.datesDesc} />
+                  <br />
                 </div>
                 <div className="dates-field-wrapper">
                   <Field
