@@ -140,8 +140,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   handleAddToAllQueries: (word) => {
     ownProps.onQueryModificationRequested(word);
-    dispatch(updateFeedback({ classes: 'info-notice', open: true,
-      message: ownProps.intl.formatMessage(localMessages.addingToQueries, { word }) }));
+    dispatch(updateFeedback({ classes: 'info-notice', open: true, message: ownProps.intl.formatMessage(localMessages.addingToQueries, { word }) }));
   },
   handleClose: () => {
     dispatch(resetSelectedWord());
