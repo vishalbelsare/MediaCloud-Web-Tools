@@ -277,7 +277,7 @@ def stream_story_list_csv(user_key, filename, topics_id, **kwargs):
 @app.route('/api/topics/<topics_id>/stories/story_links.csv', methods=['GET'])
 @flask_login.login_required
 def get_topic_story_links_csv(topics_id):
-    user_mc = user_admin_mediacloud_client()
+    user_mc = user_mediacloud_client()
     topic = user_mc.topic(topics_id)
     #page through results for timespand
     props = [
@@ -298,8 +298,6 @@ def stream_story_link_list_csv(user_key, filename, topics_id, **kwargs):
         'snapshots_id': request.args['snapshotId'],
         'timespans_id': request.args['timespanId'],
         'foci_id': request.args['focusId'] if 'foci_id' in request.args else None,
-        'q': request.args['q'] if 'q' in request.args else None,
-        'sort': request.args['sort'] if 'sort' in request.args else None,
     }
     params.update(merged_args)
     if 'q' in params:
@@ -323,17 +321,19 @@ def stream_story_link_list_csv(user_key, filename, topics_id, **kwargs):
 
 # generator you can use to handle a long list of stories row by row (one row per story)
 def _topic_story_link_list_by_page_as_csv_row(user_key, topics_id, props, **kwargs):
+    local_mc = user_admin_mediacloud_client(user_key)
     yield u','.join(props) + u'\n'  # first send the column names
     link_id = 0
     more_pages = True
     while more_pages:
-        story_link_page = topic_story_link_list_by_page(user_key, topics_id, link_id=link_id, **kwargs)
+        story_link_page = topic_story_link_list_by_page(user_key, topics_id, link_ids=link_id, **kwargs)
 
-        story_ids = [str(s['source_stories_id']) for s in story_link_page['stories']]
-        # source_stories_id
-        # ref_stories_id
-        user_mc = user_admin_mediacloud_client()
-        storiesInfoList = user_mc.topicStoryList(story_ids)
+        story_src_ids = [str(s['source_stories_id']) for s in story_link_page['links']]
+        story_ref_ids = [str(s['ref_stories_id']) for s in story_link_page['links']]
+        story_src_ids = story_src_ids + story_ref_ids
+
+        # TODO there is a cached topic story list... but paging is different...
+        storiesInfoList = local_mc.topicStoryList(story_src_ids)
         # get all source and ref story link ids and fetch them with topicStoryList
 
         if 'next' in story_link_page['link_ids']:
