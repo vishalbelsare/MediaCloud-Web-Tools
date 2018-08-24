@@ -1,13 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/MenuItem';
-import IconButton from '@material-ui/core/DialogTitle';
-import messages from '../../../resources/messages';
-import { QUERY_LABEL_CHARACTER_LIMIT, ACTION_MENU_ITEM_CLASS } from '../../../lib/explorerUtil';
-import { defaultMenuOriginProps } from '../../util/uiUtil';
 
 const localMessages = {
   title: { id: 'explorer.querymediapicker.title', defaultMessage: 'Selecting Media' },
@@ -45,6 +40,7 @@ class QueryPickerLoggedInHeader extends React.Component {
           <li><FormattedMessage {...localMessages.option4} /></li>
         </ul>
       </Dialog>
+    );
   }
 }
 

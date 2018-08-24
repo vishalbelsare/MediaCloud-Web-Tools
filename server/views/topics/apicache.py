@@ -133,6 +133,18 @@ def _cached_topic_story_list_page(user_mc_key, topics_id, link_id, **kwargs):
     return local_mc.topicStoryList(topics_id, link_id=link_id, **kwargs)
 
 
+def topic_story_link_list_by_page(user_mc_key, topics_id, link_id, **kwargs):
+    return _cached_topic_story_link_list_page(user_mc_key, topics_id, link_id, **kwargs)
+
+
+@cache.cache_on_arguments(function_key_generator=key_generator)
+def _cached_topic_story_link_list_page(user_mc_key, topics_id, link_id, **kwargs):
+    # api_key passed in just to make this a user-level cache
+    local_mc = _mc_client(user_mc_key)
+    return local_mc.topicStoryLinks(topics_id, link_id=link_id, **kwargs)
+
+
+
 def get_media(user_mc_key, media_id):
     return _cached_media(user_mc_key, media_id)
 
