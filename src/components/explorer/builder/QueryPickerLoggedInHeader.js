@@ -60,10 +60,11 @@ class QueryPickerLoggedInHeader extends React.Component {
             onClose={this.handleClose}
           >
             {menuChildren}
-            <MenuItem onChange={e => onColorChange(e.value)} className="color-picker-menu-item">
+            <MenuItem className="color-picker-menu-item">
               <ColorPicker
                 name="color"
                 color={query.color}
+                onChange={e => onColorChange(e.value)}
                 showLabel
               />
             </MenuItem>
