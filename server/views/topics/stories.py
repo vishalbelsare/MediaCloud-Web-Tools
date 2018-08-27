@@ -333,7 +333,7 @@ def _topic_story_link_list_by_page_as_csv_row(user_key, topics_id, props, **kwar
         story_src_ids = story_src_ids + story_ref_ids
 
         # TODO there is a cached topic story list... but paging is different...
-        storiesInfoList = local_mc.topicStoryList(story_src_ids)
+        storiesInfoList = local_mc.topicStoryList(topics_id, stories_id=story_src_ids)
         # get all source and ref story link ids and fetch them with topicStoryList
 
         if 'next' in story_link_page['link_ids']:
@@ -341,7 +341,8 @@ def _topic_story_link_list_by_page_as_csv_row(user_key, topics_id, props, **kwar
         else:
             more_pages = False
         for s in storiesInfoList['stories']:
-            row_string = u','.join(s) + u'\n'
+            cleaned_row = csv.dict2row(props, s)
+            row_string = u','.join(cleaned_row) + u'\n'
             yield row_string
 
 
